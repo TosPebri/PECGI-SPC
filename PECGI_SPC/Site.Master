@@ -51,7 +51,7 @@
 			<!-- projects dropdown -->
 			<div class="project-context hidden-xs" >
 				<span></span>
-				<span class="project-selector dropdown-toggle" style="font-family:Tahoma; font-weight:bold; font-size:12pt; margin-top:10px; padding:0px 0px 0px 18px">STATISTICS QUALITY CONTROL</span>
+				<span class="project-selector dropdown-toggle" style="font-family:Tahoma; font-weight:bold; font-size:12pt; margin-top:10px; padding:0px 0px 0px 18px">PANASONIC SPC</span>
 			</div>
 			<!-- end projects dropdown -->
 

@@ -24,7 +24,7 @@
                 <table align="center" width="100%" border="0">
                     <tr>                        
                         <td align="center" style="width: 900px" >
-                            <dx:ASPxLabel ID="ASPxLabel7" runat="server" Text="Statistics Quality Control" 
+                            <dx:ASPxLabel ID="ASPxLabel7" runat="server" Text="Panasonic SPC" 
                                 Font-Names="Candara" ForeColor="#99CC00" Font-Bold="True" 
                                 Font-Size="30px">
                             </dx:ASPxLabel>    
@@ -149,7 +149,7 @@
                         <td align="center" colspan="2">
                             <dx:ASPxLabel ID="ASPxLabel2" runat="server" class="version" CssClass="version" 
                                 ForeColor="White" Font-Size="10pt"
-                                Text="© 2018 - Developed by PT. TOS Information Systems Indonesia">
+                                Text="© 2022 - Developed by PT. TOS Information Systems Indonesia">
                             </dx:ASPxLabel>
                         </td>
                         <td>

@@ -2,9 +2,9 @@
     margin: 0px;
     padding: 0px;
     font-family: 'Segoe UI';
-    background-image: url('images/main2.png');
-    background-repeat:no-repeat;    
-    border-bottom-width:1000%;
+    background-color: #F1F1F1;
+    background-repeat: no-repeat;
+    border-bottom-width: 1000%;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -13,13 +13,12 @@
 
 .form-area{
     position: fixed;
-    top: 50%;
+    top: 23%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 800px;
     height: 475px;
     box-sizing: border-box;
-    background: rgba(0, 0, 0, 0.2);
     padding: 35px;
 }
 

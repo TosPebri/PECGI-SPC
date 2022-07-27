@@ -142,7 +142,9 @@
     <Content Include="ChangePassword.aspx" />
     <Content Include="content\toastr.css" />
     <Content Include="content\toastr.min.css" />
+    <Content Include="img\dashboard.png" />
     <Content Include="img\musashi\ImagePreview1.gif" />
+    <Content Include="img\panasonic-login.png" />
     <Content Include="Machine.aspx" />
     <Content Include="PreviewAttachment.aspx" />
     <Content Include="PreviewPDF.aspx" />
@@ -152,7 +154,10 @@
     <Content Include="QCSXRChart.aspx" />
     <Content Include="QCSXRData.aspx" />
     <Content Include="StretchSession.aspx" />
+    <Content Include="Styles\images\dashboard.png" />
+    <Content Include="Styles\images\main.png" />
     <Content Include="Styles\images\main2.png" />
+    <Content Include="Styles\images\mybg.png" />
     <Content Include="SubLine.aspx" />
     <Content Include="TCCSMaster.aspx" />
     <Content Include="TCCSMasterApproval.aspx" />

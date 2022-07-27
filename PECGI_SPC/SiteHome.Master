@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title id="PageTitle" runat="server">PANASONIC SPC</title>    
+    <title id="PageTitle" runat="server">PANASONIC SPC</title>
     <link href="Styles/images/icon.ico" rel="SHORTCUT ICON" type="image/icon" />
 
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
@@ -35,60 +35,59 @@
     <link rel="Stylesheet" type="text/css" href="content/toastr.css" />
     <link rel="Stylesheet" href="content/toastr.min.css" />
     <%--<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />--%>
-
 </head>
-<body class="smart-style fixed-header">
+<body class="smart-style fixed-header desktop-detected pace-done minified">
     <!-- HEADER -->
     <header id="header">
-			<div id="logo-group" style="width: 220px; margin-left: 0px; padding:8px 0px 0px 35px;">
-				<!-- PLACE YOUR LOGO HERE -->
-				<%--<span id="logo">--%>
-                 <%--<img src="Styles/images/logohead.png" alt="MUSASHI" width="150px"/>--%>
-                <%--</span>--%>
-				 <%--END LOGO PLACEHOLDER --%>
-		    </div>
 
-			<!-- projects dropdown -->
-			<div class="project-context hidden-xs" >
-				<span></span>
-				<span class="project-selector dropdown-toggle" style="font-family:Tahoma; font-weight:bold; font-size:12pt; margin-top:10px; padding:0px 0px 0px 18px">PANASONIC SPC</span>
-			</div>
-			<!-- end projects dropdown -->
+        <%--<div id="logo-group" style="width: 220px; margin-left: 0px; padding:8px 0px 0px 35px;">--%>
+        <!-- PLACE YOUR LOGO HERE -->
+        <%--<span id="logo">--%>
+        <%--<img src="Styles/images/logohead.png" alt="MUSASHI" width="150px"/>--%>
+        <%--</span>--%>
+        <%--END LOGO PLACEHOLDER --%>
+        <%--</div>--%>
 
-			<!-- pulled right: nav area -->
-			<div class="pull-right">
+        <!-- projects dropdown -->
+        <div class="project-context hidden-xs">
+            <span></span>
+            <span class="project-selector dropdown-toggle" style="font-family: Tahoma; font-weight: bold; font-size: 12pt; margin-top: 10px; padding: 8px 0px 0px 18px;">PANASONIC SPC</span>
+        </div>
+        <!-- end projects dropdown -->
 
-                <!-- collapse menu button -->
-				<div id="hide-menu" class="btn-header pull-right">
-					<span> <a href="javascript:void(0);" data-action="toggleMenu" title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
-				</div>
-				<!-- end collapse menu -->
+        <!-- pulled right: nav area -->
+        <div class="pull-right">
 
-				<!-- logout button -->
-				<div id="logout" class="btn-header transparent pull-right">
-					<span> <a href="Default.aspx" title="Sign Out" data-action="userLogout" data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i class="fa fa-sign-out"></i></a> </span>
-				</div>
-				<!-- end logout button -->
+            <!-- collapse menu button -->
+            <div id="hide-menu" class="btn-header pull-right">
+                <span><a href="javascript:void(0);" data-action="toggleMenu" title="Collapse Menu"><i class="fa fa-reorder"></i></a></span>
+            </div>
+            <!-- end collapse menu -->
 
-                <!-- fullscreen button -->
-				<div id="fullscreen" class="btn-header transparent pull-right">
-					<span><a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i class="fa fa-arrows-alt"></i></a> </span>
-				</div>
-				<!-- end fullscreen button -->
-				
-			</div>
-			<!-- end pulled right: nav area -->
-            <iframe src="<%=Page.ResolveClientUrl("~/StretchSession.aspx")%>" width="0" height="0" style="display:none;"></iframe>
+            <!-- logout button -->
+            <div id="logout" class="btn-header transparent pull-right">
+                <span><a href="Default.aspx" title="Sign Out" data-action="userLogout" data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i class="fa fa-sign-out"></i></a></span>
+            </div>
+            <!-- end logout button -->
+
+            <!-- fullscreen button -->
+            <div id="fullscreen" class="btn-header transparent pull-right">
+                <span><a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i class="fa fa-arrows-alt"></i></a></span>
+            </div>
+            <!-- end fullscreen button -->
+
+        </div>
+        <!-- end pulled right: nav area -->
+        <iframe src="<%=Page.ResolveClientUrl("~/StretchSession.aspx")%>" width="0" height="0" style="display: none;"></iframe>
     </header>
     <!-- END HEADER -->
     <!-- Left panel : Navigation area -->
     <!-- Note: This width of the aside area can be adjusted through LESS variables -->
     <aside id="left-panel">
 
-			<!-- User info -->
-			<div class="login-info">
-				<span> <!-- User image size is adjusted inside CSS, it should stay as it --> 
-					
+        <!-- User info -->
+        <div class="login-info">
+				<span> <!-- User image size is adjusted inside CSS, it should stay as it --> 				
 					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
 						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                         &nbsp <asp:Label ID="lblUser" runat="server" Text="lblUser" Font-Names="Tahoma" Font-Size="14pt" Font-Bold="true"></asp:Label>
@@ -97,45 +96,44 @@
 					
 				</span>
 			</div>
-			<!-- end user info -->
+        <!-- end user info -->
 
-			<!-- NAVIGATION : This navigation is also responsive-->
-			<nav >
-                <ul>
-                    <li>
-						<a href="Main.aspx" title="Home"><i class="fa fa-lg fa-fw fa-home"></i><span class="menu-item-parent">Home</span></a>
-					</li>
-                    <asp:Repeater ID="rptMenu" runat="server" >
-                      <ItemTemplate>
-                          <li class="<%#Eval("StatusActiveParent") %>" ><a href='#'><i class="<%#Eval("HelpName") %>"></i><span class="menu-item-parent"><%# Eval("MenuDesc")%></span></a>
-                              <ul>
-                                  <asp:Repeater ID="rptChildMenu" runat="server">
-                                      <ItemTemplate>
-                                          <li class="<%#Eval("StatusActiveChild") %>">
+        <!-- NAVIGATION : This navigation is also responsive-->
+        <nav>
+            <ul>
+                <li>
+                    <a href="Main.aspx" title="Home"><i class="fa fa-lg fa-fw fa-home"></i><span class="menu-item-parent">Home</span></a>
+                </li>
+                <asp:Repeater ID="rptMenu" runat="server">
+                    <ItemTemplate>
+                        <li class="<%#Eval("StatusActiveParent") %>">
+                            <a href='#' title="<%# Eval("MenuDesc")%>"><i class="<%#Eval("HelpName") %>"></i><span class="menu-item-parent"><%#Eval("MenuDesc")%></span></a>
+                            <ul>
+                                <asp:Repeater ID="rptChildMenu" runat="server">
+                                    <ItemTemplate>
+                                        <li class="<%#Eval("StatusActiveChild") %>">
                                             <a href="<%#Eval("MenuName") %>">
                                                 <i class="<%#Eval("HelpName") %>"></i>
                                                 <%#Eval("MenuDesc") %>
-                                               <asp:Label ID="labelnotifQCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSA") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Master Approval", true, false)%>'></asp:Label>
+                                                <asp:Label ID="labelnotifQCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSA") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Master Approval", true, false)%>'></asp:Label>
                                                 <asp:Label ID="labelnotifTCCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifTCCSA") %>' Visible='<%#if(Eval("MenuDesc") = "TCCS Master Approval", true, false)%>'></asp:Label>
                                                 <asp:Label ID="labelnotifTCCSRA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifTCCSRA") %>' Visible='<%#if(Eval("MenuDesc") = "TCCS Result Approval", true, false)%>'></asp:Label>
                                                 <asp:Label ID="labelnotifQCSResult" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSResult") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Result Input", true, false)%>'></asp:Label>
                                             </a>
-                                           </li>
-                                      </ItemTemplate>
-                                  </asp:Repeater>
-                              </ul>
-                          </li>
-                      </ItemTemplate>
-                    </asp:Repeater>
-                </ul>
-                			<span class="minifyme" data-action="minifyMenu"> 
-				<i class="fa fa-arrow-circle-left hit"></i> 
-			</span>
-			</nav>
+                                        </li>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </ul>
+                        </li>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </ul>
+            <span class="minifyme" data-action="minifyMenu">
+                <i class="fa fa-arrow-circle-left hit"></i>
+            </span>
+        </nav>
 
-
-
-	</aside>
+    </aside>
     <!-- END NAVIGATION -->
 
     <!-- MAIN PANEL -->
@@ -144,24 +142,24 @@
         <div id="content">
             <!-- widget grid -->
             <section id="widget-grid" class="">
-				<!-- START ROW -->
-				<div class="row">
-				    <!-- NEW COL START -->
-					<article class="col-sm-12 col-md-12 col-lg-12">
-				        <!-- Widget ID (each widget will need unique ID)-->
-						<div>
-								<!-- widget div-->
+                <!-- START ROW -->
+                <div class="row">
+                    <!-- NEW COL START -->
+                    <article class="col-sm-12 col-md-12 col-lg-12">
+                        <!-- Widget ID (each widget will need unique ID)-->
+                        <div>
+                            <!-- widget div-->
                             <div>
-						        <!-- widget content -->
-						        <div>
+                                <!-- widget content -->
+                                <div>
                                     <%--<asp:ScriptManager ID="ScriptManager" runat="server" />--%>
-                                        <asp:ContentPlaceHolder ID="Content" runat="server"/>
+                                    <asp:ContentPlaceHolder ID="Content" runat="server" />
                                 </div>
-							    <!-- end widget content -->
-							</div>
-						<!-- end widget div -->
-						</div>
-					    <!-- end widget -->
+                                <!-- end widget content -->
+                            </div>
+                            <!-- end widget div -->
+                        </div>
+                        <!-- end widget -->
                     </article>
                     <!-- END COL -->
                 </div>
@@ -172,7 +170,7 @@
     </div>
     <!-- END MAIN PANEL -->
     <!-- PAGE FOOTER -->
-     <div class="page-footer">
+    <div class="page-footer">
         <div class="row">
             <div class="col-xs-12 col-sm-6">
                 <span class="txt-color-white">© 2018 - Developed by PT. TOS Information Systems</span>
@@ -249,7 +247,7 @@
     <script src="js/plugin/fullcalendar/jquery.fullcalendar.min.js"></script>
 
     <script src="Scripts/toastr.js"></script>
-    <%--<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>--%>
+    <%--<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>--%>>
     <script>
         $(document).ready(function () {
 
@@ -644,7 +642,7 @@
                                 end: end,
                                 allDay: allDay
                             }, true // make the event "stick"
-								);
+                            );
                         }
                         calendar.fullCalendar('unselect');
                     },
@@ -818,6 +816,6 @@
             //            s.parentNode.insertBefore(ga, s);
         })();
 
-    </script>    
+    </script>
 </body>
 </html>

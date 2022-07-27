@@ -39,8 +39,13 @@
         <form id="form1" runat="server">
             <table align="center" width="100%">
                 <tr>
+                    <td>                      
+                        <img class="auto-style1" src="img/panasonic-login.png"/>
+                    </td>                  
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
                     <td align="center" style="width: 900px">
-                        <img class="auto-style1" src="img/panasonic-login.png" />
                         <dx:ASPxLabel ID="ASPxLabel7" runat="server" Text="DASBOARD-LOGIN"
                             ForeColor="Black" Font-Bold="True"
                             Font-Size="25px">
@@ -55,12 +60,6 @@
                 <tr>
                     <td align="center" valign="bottom">
                         <table align="center">
-                            <tr>
-                                <td bgcolor="White" class="auto-style2">
-                                    <%--<img alt="PGM" src="Styles/images/logo2.png" style="margin-bottom: 20px" />--%>
-                                </td>
-                            </tr>
-
                             <tr>
                                 <td align="center" bgcolor="White" class="auto-style2">
                                     <table id="tblLogin" border="0">
@@ -77,8 +76,8 @@
                                         <tr>
                                             <td align="left" colspan="3" class="auto-style4">
                                                 <dx:ASPxTextBox ID="txtusername" runat="server" Border-BorderStyle="None"
-                                                    Width="250px" Height="30px" Font-Names="Segoe UI" Font-Size="14px"
-                                                    ClientInstanceName="txtusername">
+                                                    Width="300px" Height="30px" Font-Names="Segoe UI" Font-Size="14px"
+                                                    ClientInstanceName="txtusername" HorizontalAlign="Left">
                                                     <Border BorderStyle="Solid" BorderColor="Silver"></Border>
                                                 </dx:ASPxTextBox>
                                             </td>
@@ -98,7 +97,7 @@
                                         <tr style="height: 35px">
                                             <td align="left" colspan="3">
                                                 <dx:ASPxTextBox ID="txtpassword" runat="server" Password="True" Border-BorderStyle="None"
-                                                    Width="250px" Height="30px" Font-Names="Segoe UI" Font-Size="14px">
+                                                    Width="300px" Height="30px" Font-Names="Segoe UI" Font-Size="14px">
                                                     <Border BorderStyle="Solid" BorderColor="#CCCCCC"></Border>
                                                 </dx:ASPxTextBox>
                                             </td>
@@ -122,7 +121,7 @@
                                         <tr>
                                             <td colspan="3" align="center">
                                                 <dx:ASPxButton ID="btnLogin" runat="server" Text="LOGIN"
-                                                    Width="250px" Height="30px" Font-Names="Segoe UI" Font-Size="10pt"
+                                                    Width="300px" Height="30px" Font-Names="Segoe UI" Font-Size="10pt"
                                                     CssFilePath="~/css/bootstrap-theme.css"
                                                     CssClass="btn-primary" Font-Bold="True" ForeColor="White">
                                                 </dx:ASPxButton>

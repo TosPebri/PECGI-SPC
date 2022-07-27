@@ -37,16 +37,16 @@
     <%--<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />--%>
 
 </head>
-<body class="smart-style fixed-header">
+<body class="smart-style fixed-header desktop-detected pace-done minified">
     <!-- HEADER -->
     <header id="header">
-			<div id="logo-group" style="width: 220px; margin-left: 0px; padding:8px 0px 0px 35px;">
+			<%--<div id="logo-group" style="width: 220px; margin-left: 0px; padding:8px 0px 0px 35px;">--%>
 				<!-- PLACE YOUR LOGO HERE -->
 				<%--<span id="logo">--%>
                  <%--<img src="Styles/images/logohead.png" alt="MUSASHI" width="150px"/>--%>
                 <%--</span>--%>
 				 <%--END LOGO PLACEHOLDER --%>
-		    </div>
+		    <%--</div>--%>
 
 			<!-- projects dropdown -->
 			<div class="project-context hidden-xs" >
@@ -107,7 +107,7 @@
 					</li>
                     <asp:Repeater ID="rptMenu" runat="server" >
                       <ItemTemplate>
-                          <li class="<%#Eval("StatusActiveParent") %>" ><a href='#'><i class="<%#Eval("HelpName") %>"></i><span class="menu-item-parent"><%# Eval("MenuDesc")%></span></a>
+                          <li class="<%#Eval("StatusActiveParent") %>"  title="<%# Eval("MenuDesc")%>"><a href='#'><i class="<%#Eval("HelpName") %>"></i><span class="menu-item-parent"><%# Eval("MenuDesc")%></span></a>
                               <ul>
                                   <asp:Repeater ID="rptChildMenu" runat="server">
                                       <ItemTemplate>

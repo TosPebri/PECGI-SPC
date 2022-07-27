@@ -1,14 +1,14 @@
 ﻿<%@ Page Language="vb" AutoEventWireup="false" CodeBehind="UserPrivilege.aspx.vb" Inherits="PECGI_SPC.UserPrivilege" %>
 
-<%@ Register namespace="DevExpress.Web.ASPxCallbackPanel" tagprefix="ASPxCallbackPanel" %>
-<%@ Register assembly="DevExpress.Web.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.Web.ASPxGridView" tagprefix="dx" %>
-<%@ Register assembly="DevExpress.Web.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.Web.ASPxEditors" tagprefix="dx" %>
+<%@ Register Namespace="DevExpress.Web.ASPxCallbackPanel" TagPrefix="ASPxCallbackPanel" %>
+<%@ Register Assembly="DevExpress.Web.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web.ASPxGridView" TagPrefix="dx" %>
+<%@ Register Assembly="DevExpress.Web.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web.ASPxEditors" TagPrefix="dx" %>
 <%@ Register Assembly="DevExpress.Web.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web.ASPxCallback" TagPrefix="dx" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>PANASONIC SPC</title>    
+    <title>PANASONIC SPC</title>
     <link href="Styles/images/icon.ico" rel="SHORTCUT ICON" type="image/icon" />
 
     <meta charset="utf-8">
@@ -37,125 +37,125 @@
     <link rel="Stylesheet" href="content/toastr.min.css" />
     <%--<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />--%>
 
-<script type="text/javascript">
-    function OnEndCallback(s, e) {        
-        if (s.cp_message != "" && s.cp_val == 1) {
-            if (s.cp_type == "Success" && s.cp_val == 1) {
-                toastr.success(s.cp_message, 'Success');
+    <script type="text/javascript">
+        function OnEndCallback(s, e) {
+            if (s.cp_message != "" && s.cp_val == 1) {
+                if (s.cp_type == "Success" && s.cp_val == 1) {
+                    toastr.success(s.cp_message, 'Success');
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                    //toastr.options.timeOut = 1000;
+                    //toastr.options.extendedTimeOut = 0;
+                    //toastr.options.fadeOut = 250;
+                    //toastr.options.fadeIn = 250;
+                    s.cp_val = 0;
+                    s.cp_message = "";
+                }
+                else if (s.cp_type == "Warning" && s.cp_val == 1) {
+                    toastr.warning(s.cp_message, 'Warning');
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                    //toastr.options.timeOut = 1000;
+                    //toastr.options.extendedTimeOut = 0;
+                    //toastr.options.fadeOut = 250;
+                    //toastr.options.fadeIn = 250;
+                    ss.cp_val = 0;
+                    s.cp_message = "";
+                }
+                else if (s.cp_type == "ErrorMsg" && s.cp_val == 1) {
+                    toastr.error(s.cp_message, 'Error');
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                    //toastr.options.timeOut = 1000;
+                    //toastr.options.extendedTimeOut = 0;
+                    //toastr.options.fadeOut = 250;
+                    //toastr.options.fadeIn = 250;
+                    s.cp_val = 0;
+                    s.cp_message = "";
+                }
+            }
+            else if (s.cp_message == "" && s.cp_val == 0) {
                 toastr.options.closeButton = false;
                 toastr.options.debug = false;
                 toastr.options.newestOnTop = false;
                 toastr.options.progressBar = false;
                 toastr.options.preventDuplicates = true;
                 toastr.options.onclick = null;
-                //toastr.options.timeOut = 1000;
-                //toastr.options.extendedTimeOut = 0;
-                //toastr.options.fadeOut = 250;
-                //toastr.options.fadeIn = 250;
-                s.cp_val = 0;
-                s.cp_message = "";
             }
-            else if (s.cp_type == "Warning" && s.cp_val == 1) {
-                toastr.warning(s.cp_message, 'Warning');
-                toastr.options.closeButton = false;
-                toastr.options.debug = false;
-                toastr.options.newestOnTop = false;
-                toastr.options.progressBar = false;
-                toastr.options.preventDuplicates = true;
-                toastr.options.onclick = null;
-                //toastr.options.timeOut = 1000;
-                //toastr.options.extendedTimeOut = 0;
-                //toastr.options.fadeOut = 250;
-                //toastr.options.fadeIn = 250;
-                ss.cp_val = 0;
-                s.cp_message = "";
-            }
-            else if (s.cp_type == "ErrorMsg" && s.cp_val == 1) {
-                toastr.error(s.cp_message, 'Error');
-                toastr.options.closeButton = false;
-                toastr.options.debug = false;
-                toastr.options.newestOnTop = false;
-                toastr.options.progressBar = false;
-                toastr.options.preventDuplicates = true;
-                toastr.options.onclick = null;
-                //toastr.options.timeOut = 1000;
-                //toastr.options.extendedTimeOut = 0;
-                //toastr.options.fadeOut = 250;
-                //toastr.options.fadeIn = 250;
-                s.cp_val = 0;
-                s.cp_message = "";
-            }
-        }
-        else if (s.cp_message == "" && s.cp_val == 0) {
-            toastr.options.closeButton = false;
-            toastr.options.debug = false;
-            toastr.options.newestOnTop = false;
-            toastr.options.progressBar = false;
-            toastr.options.preventDuplicates = true;
-            toastr.options.onclick = null;
+
         }
 
-    }
-
-    function OnBatchEditStartEditing(s, e) {
-        currentColumnName = e.focusedColumn.fieldName;
-        if (currentColumnName == "GroupID" || currentColumnName == "MenuID" || currentColumnName == "MenuDesc") {
-            e.cancel = true;
+        function OnBatchEditStartEditing(s, e) {
+            currentColumnName = e.focusedColumn.fieldName;
+            if (currentColumnName == "GroupID" || currentColumnName == "MenuID" || currentColumnName == "MenuDesc") {
+                e.cancel = true;
+            }
+            currentEditableVisibleIndex = e.visibleIndex;
         }
-        currentEditableVisibleIndex = e.visibleIndex;
-    }
 
-    function OnAccessCheckedChanged(s, e) {
-        gridMenu.SetFocusedRowIndex(-1);
-        if (s.GetValue() == -1) s.SetValue(1);
-        for (var i = 0; i < gridMenu.GetVisibleRowsOnPage(); i++) {
-            if (gridMenu.batchEditApi.GetCellValue(i, "AllowAccess", false) != s.GetValue()) {
-                gridMenu.batchEditApi.SetCellValue(i, "AllowAccess", s.GetValue());
+        function OnAccessCheckedChanged(s, e) {
+            gridMenu.SetFocusedRowIndex(-1);
+            if (s.GetValue() == -1) s.SetValue(1);
+            for (var i = 0; i < gridMenu.GetVisibleRowsOnPage(); i++) {
+                if (gridMenu.batchEditApi.GetCellValue(i, "AllowAccess", false) != s.GetValue()) {
+                    gridMenu.batchEditApi.SetCellValue(i, "AllowAccess", s.GetValue());
+                }
             }
         }
-    }
 
-    function OnUpdateCheckedChanged(s, e) {
-        if (s.GetValue() == -1) s.SetValue(1);
-        gridMenu.SetFocusedRowIndex(-1);
-        for (var i = 0; i < gridMenu.GetVisibleRowsOnPage(); i++) {
-            if (gridMenu.batchEditApi.GetCellValue(i, "AllowUpdate", false) != s.GetValue()) {
-                gridMenu.batchEditApi.SetCellValue(i, "AllowUpdate", s.GetValue());
+        function OnUpdateCheckedChanged(s, e) {
+            if (s.GetValue() == -1) s.SetValue(1);
+            gridMenu.SetFocusedRowIndex(-1);
+            for (var i = 0; i < gridMenu.GetVisibleRowsOnPage(); i++) {
+                if (gridMenu.batchEditApi.GetCellValue(i, "AllowUpdate", false) != s.GetValue()) {
+                    gridMenu.batchEditApi.SetCellValue(i, "AllowUpdate", s.GetValue());
+                }
             }
         }
-    }
 
-    function SaveData(s, e) {
-        cbkValid.PerformCallback('save|' + cboUser.GetText() + '|' + txtUser.GetText());
-    }
+        function SaveData(s, e) {
+            cbkValid.PerformCallback('save|' + cboUser.GetText() + '|' + txtUser.GetText());
+        }
 
-    function SavePrivilege(s, e) {
-        gridMenu.UpdateEdit();
-        millisecondsToWait = 1000;
-        setTimeout(function () {
-            gridMenu.PerformCallback('save|' + txtUser.GetText());
-        }, millisecondsToWait);
-    }
+        function SavePrivilege(s, e) {
+            gridMenu.UpdateEdit();
+            millisecondsToWait = 1000;
+            setTimeout(function () {
+                gridMenu.PerformCallback('save|' + txtUser.GetText());
+            }, millisecondsToWait);
+        }
     </script>
 </head>
 <body class="smart-style fixed-header">
     <!-- HEADER -->
-<header id="header">
-			<div id="logo-group" style="width: 220px; margin-left: 0px; padding:8px 0px 0px 35px;">
-				<!-- PLACE YOUR LOGO HERE -->
-                <%--<span id="logo">--%>
-                 <img src="Styles/images/logohead.png" alt="MUSASHI" width="150px"/>
-                <%--</span>--%><%--END LOGO PLACEHOLDER --%>
-		    </div>
+    <header id="header">
+        <%--<div id="logo-group" style="width: 220px; margin-left: 0px; padding:8px 0px 0px 35px;">--%>
+        <!-- PLACE YOUR LOGO HERE -->
+        <%--<span id="logo">--%>
+        <%--<img src="Styles/images/logohead.png" alt="MUSASHI" width="150px"/>--%>
+        <%--</span>--%><%--END LOGO PLACEHOLDER --%>
+        <%--</div>--%>
 
-			<!-- projects dropdown -->
-			<div class="project-context hidden-xs" >
-				<span></span>
-				<span class="project-selector dropdown-toggle" style="font-family:Tahoma; font-weight:bold; font-size:12pt; margin-top:10px; padding:0px 0px 0px 18px">PANASONOC SPC</span>
-			</div>
-			<!-- end projects dropdown -->
+        <!-- projects dropdown -->
+        <div class="project-context hidden-xs">
+            <span></span>
+            <span class="project-selector dropdown-toggle" style="font-family: Tahoma; font-weight: bold; font-size: 12pt; margin-top: 10px; padding: 0px 0px 0px 18px">PANASONOC SPC</span>
+        </div>
+        <!-- end projects dropdown -->
 
-    </header>    
+    </header>
     <!-- END HEADER -->
     <!-- Left panel : Navigation area -->
     <!-- Note: This width of the aside area can be adjusted through LESS variables -->
@@ -166,172 +166,168 @@
         <div id="content">
             <!-- widget grid -->
             <section id="widget-grid" class="">
-				<!-- START ROW -->
-				<div class="row">
-				    <!-- NEW COL START -->
-					<article class="col-sm-12 col-md-12 col-lg-12">
-				        <!-- Widget ID (each widget will need unique ID)-->
-						<div class="jarviswidget" id="wid-id-0" data-widget-deletebutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-custombutton="false">
+                <!-- START ROW -->
+                <div class="row">
+                    <!-- NEW COL START -->
+                    <article class="col-sm-12 col-md-12 col-lg-12">
+                        <!-- Widget ID (each widget will need unique ID)-->
+                        <div class="jarviswidget" id="wid-id-0" data-widget-deletebutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-custombutton="false">
                             <header>
-							    <span class="widget-icon"><i class="fa fa-edit"></i> </span>
-								<h2><strong><asp:Label ID="Label1" runat="server" Text="User Privileges"></asp:Label></strong></h2>
+                                <span class="widget-icon"><i class="fa fa-edit"></i></span>
+                                <h2><strong>
+                                    <asp:Label ID="Label1" runat="server" Text="User Privileges"></asp:Label></strong></h2>
                             </header>
-								<!-- widget div-->
+                            <!-- widget div-->
                             <div>
-						        <!-- widget content -->
-						        <div class="widget-body">
-                                    <form class="smart-form" id="Form1" runat="server" >
+                                <!-- widget content -->
+                                <div class="widget-body">
+                                    <form class="smart-form" id="Form1" runat="server">
 
-                                    <div>
-                                        <table>
-                                            <tr style="height: 30px">
-                                                <td style="width: 120px">
-                                                    &nbsp;<dx:ASPxLabel ID="ASPxLabel1" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="User">
+                                        <div>
+                                            <table>
+                                                <tr style="height: 30px">
+                                                    <td style="width: 120px">&nbsp;<dx:ASPxLabel ID="ASPxLabel1" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="User">
                                                     </dx:ASPxLabel>
-                                                </td>
-                                                <td>
-                                                    
-                                                    <dx:ASPxTextBox ID="txtUser" runat="server" ClientInstanceName="txtUser" 
-                                                        Width="170px" ReadOnly="True" Font-Names="Segoe UI" Font-Size="8pt">
-                                                        <ReadOnlyStyle BackColor="WhiteSmoke">
-                                                        </ReadOnlyStyle>
-                                                    </dx:ASPxTextBox>
-                                                    
-                                                </td>
-                                            </tr>
-                                            <tr style="height: 30px">
-                                                <td>
-                                                    &nbsp;<dx:ASPxLabel ID="ASPxLabel2" runat="server" Font-Names="Segoe UI" 
+                                                    </td>
+                                                    <td>
+
+                                                        <dx:ASPxTextBox ID="txtUser" runat="server" ClientInstanceName="txtUser"
+                                                            Width="170px" ReadOnly="True" Font-Names="Segoe UI" Font-Size="8pt">
+                                                            <ReadOnlyStyle BackColor="WhiteSmoke">
+                                                            </ReadOnlyStyle>
+                                                        </dx:ASPxTextBox>
+
+                                                    </td>
+                                                </tr>
+                                                <tr style="height: 30px">
+                                                    <td>&nbsp;<dx:ASPxLabel ID="ASPxLabel2" runat="server" Font-Names="Segoe UI"
                                                         Font-Size="8pt" Text="Copy Privileges From">
                                                     </dx:ASPxLabel>
-                                                </td>
-                                                <td>
-                                                    
-                                                    
-                                                    
-                                                    <dx:ASPxComboBox ID="cboUser" runat="server" Font-Names="Segoe UI" 
-                                                        Font-Size="8pt" Theme="Office2010Black" DataSourceID="dsUser" 
-                                                        EnableTheming="True" TextField="UserID" TextFormatString="{0}" 
-                                                        ValueField="UserID" ClientInstanceName="cboUser">
-                                                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
-	gridMenu.PerformCallback('load|' + cboUser.GetText());
-}" />
-                                                        <Columns>
-                                                            <dx:ListBoxColumn Caption="User ID" FieldName="UserID" Width="60px" />
-                                                            <dx:ListBoxColumn Caption="Full Name" FieldName="FullName" Width="120px" />
-                                                        </Columns>
-                                                    </dx:ASPxComboBox>
-                                                    
-                                                    
-                                                    
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div style="height:10px">
-                                        <asp:SqlDataSource ID="dsUser" runat="server" ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
-                                        SelectCommand="select UserID, FullName from UserSetup order by UserID"></asp:SqlDataSource>
-                                    </div>
+                                                    </td>
+                                                    <td>
+
+                                                        <dx:ASPxComboBox ID="cboUser" runat="server" Font-Names="Segoe UI"
+                                                            Font-Size="8pt" Theme="Office2010Black" DataSourceID="dsUser"
+                                                            EnableTheming="True" TextField="UserID" TextFormatString="{0}"
+                                                            ValueField="UserID" ClientInstanceName="cboUser">
+                                                            <ClientSideEvents SelectedIndexChanged="function(s, e) {
+	                                                                gridMenu.PerformCallback('load|' + cboUser.GetText());
+                                                                }" />
+                                                            <Columns>
+                                                                <dx:ListBoxColumn Caption="User ID" FieldName="UserID" Width="60px" />
+                                                                <dx:ListBoxColumn Caption="Full Name" FieldName="FullName" Width="120px" />
+                                                            </Columns>
+                                                        </dx:ASPxComboBox>
 
 
-                                    <%--<asp:ScriptManager ID="ScriptManager" runat="server" />--%>
 
-<dx:ASPxGridView ID="gridMenu" runat="server" AutoGenerateColumns="False" ClientInstanceName="gridMenu"
-                    Font-Names="Segoe UI" Font-Size="8pt" KeyFieldName="MenuID" Theme="Office2010Black"
-                    Width="100%">
-                                        <ClientSideEvents 
-                                        BatchEditStartEditing="OnBatchEditStartEditing" 
-                                        EndCallback="OnEndCallback" CallbackError="function(s, e) {
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div style="height: 10px">
+                                            <asp:SqlDataSource ID="dsUser" runat="server" ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
+                                                SelectCommand="select UserID, FullName from UserSetup order by UserID"></asp:SqlDataSource>
+                                        </div>
+
+
+                                        <%--<asp:ScriptManager ID="ScriptManager" runat="server" />--%>
+
+                                        <dx:ASPxGridView ID="gridMenu" runat="server" AutoGenerateColumns="False" ClientInstanceName="gridMenu"
+                                            Font-Names="Segoe UI" Font-Size="8pt" KeyFieldName="MenuID" Theme="Office2010Black"
+                                            Width="100%">
+                                            <ClientSideEvents
+                                                BatchEditStartEditing="OnBatchEditStartEditing"
+                                                EndCallback="OnEndCallback" CallbackError="function(s, e) {
 	                                        e.Cancel=True;
-                                        }" />                    
-                    <Columns>
-                        <dx:GridViewDataTextColumn Caption="Menu Group" FieldName="GroupID" Name="GroupID"
-                            ReadOnly="True" VisibleIndex="0" Width="200px">
-                            <CellStyle Font-Names="Segoe UI" Font-Size="8pt">
-                            </CellStyle>
-                        </dx:GridViewDataTextColumn>
-                        <dx:GridViewDataTextColumn Caption="Menu ID" FieldName="MenuID" Name="MenuID"
-                            VisibleIndex="1" Width="100px">
-                            <CellStyle Font-Names="Segoe UI" Font-Size="8pt" HorizontalAlign="Left">
-                            </CellStyle>
-                        </dx:GridViewDataTextColumn>
-                        <dx:GridViewDataTextColumn Caption="Menu Name" FieldName="MenuDesc" 
-                            Name="MenuDesc" VisibleIndex="2" Width="320px">
-                        </dx:GridViewDataTextColumn>
-                        <dx:GridViewDataCheckColumn Caption="" FieldName="AllowAccess" Name="AllowAccess"
-                            VisibleIndex="3" Width="80px">
-                            <PropertiesCheckEdit ValueChecked="1" ValueType="System.String" 
-                                                    ValueUnchecked="0" AllowGrayedByClick="false">
-                                                </PropertiesCheckEdit>
-                            <HeaderCaptionTemplate>
-                            <dx:ASPxCheckBox ID="chkAccess" runat="server" ClientInstanceName="chkAccess" ClientSideEvents-CheckedChanged="OnAccessCheckedChanged" ValueType="System.String" ValueChecked="1" ValueUnchecked="0" Text="Access" Font-Names="Segoe UI" Font-Size="8pt" ForeColor="White"> 
-                            </dx:ASPxCheckBox>
-                            </HeaderCaptionTemplate> 
-                            <HeaderStyle HorizontalAlign="Center" />
-                        </dx:GridViewDataCheckColumn>
-                        <dx:GridViewDataCheckColumn Caption="" FieldName="AllowUpdate" Name="AllowUpdate"
-                            VisibleIndex="4" Width="80px">
-                            <PropertiesCheckEdit ValueChecked="1" ValueType="System.String" 
-                                                    ValueUnchecked="0" AllowGrayedByClick="false">
-                                                </PropertiesCheckEdit>
-                            <HeaderCaptionTemplate>
-                            <dx:ASPxCheckBox ID="chkUpdate" runat="server" ClientInstanceName="chkUpdate" ClientSideEvents-CheckedChanged="OnUpdateCheckedChanged" ValueType="System.String" ValueChecked="1" ValueUnchecked="0" Text="Update" Font-Names="Segoe UI" Font-Size="8pt" ForeColor="White"> 
-                            </dx:ASPxCheckBox>
-                            </HeaderCaptionTemplate>
-                            <HeaderStyle HorizontalAlign="Center" />
-                        </dx:GridViewDataCheckColumn>
-                    </Columns>
-                    <SettingsBehavior AllowFocusedRow="True" AllowSort="False" ColumnResizeMode="Control" EnableRowHotTrack="True" />
-                    <SettingsPager Mode="ShowAllRecords" NumericButtonCount="10">
-                    </SettingsPager>
-                    <SettingsEditing Mode="Batch" NewItemRowPosition="Bottom">
-                        <BatchEditSettings ShowConfirmOnLosingChanges="False" />
-                    </SettingsEditing>
-                    <Settings HorizontalScrollBarMode="Visible" ShowStatusBar="Hidden" ShowVerticalScrollBar="True"
-                        VerticalScrollableHeight="320" VerticalScrollBarMode="Visible" />
-                                        <Styles>
-                                            <Header HorizontalAlign="Center">
-                                                <Paddings PaddingBottom="5px" PaddingTop="5px" />
-                                            </Header>
-                                        </Styles>
-                    <StylesEditors ButtonEditCellSpacing="0">
-                        <ProgressBar Height="21px">
-                        </ProgressBar>
-                    </StylesEditors>
-                </dx:ASPxGridView>   
+                                        }" />
+                                            <Columns>
+                                                <dx:GridViewDataTextColumn Caption="Menu Group" FieldName="GroupID" Name="GroupID"
+                                                    ReadOnly="True" VisibleIndex="0" Width="200px">
+                                                    <CellStyle Font-Names="Segoe UI" Font-Size="8pt">
+                                                    </CellStyle>
+                                                </dx:GridViewDataTextColumn>
+                                                <dx:GridViewDataTextColumn Caption="Menu ID" FieldName="MenuID" Name="MenuID"
+                                                    VisibleIndex="1" Width="100px">
+                                                    <CellStyle Font-Names="Segoe UI" Font-Size="8pt" HorizontalAlign="Left">
+                                                    </CellStyle>
+                                                </dx:GridViewDataTextColumn>
+                                                <dx:GridViewDataTextColumn Caption="Menu Name" FieldName="MenuDesc"
+                                                    Name="MenuDesc" VisibleIndex="2" Width="320px">
+                                                </dx:GridViewDataTextColumn>
+                                                <dx:GridViewDataCheckColumn Caption="" FieldName="AllowAccess" Name="AllowAccess"
+                                                    VisibleIndex="3" Width="80px">
+                                                    <PropertiesCheckEdit ValueChecked="1" ValueType="System.String"
+                                                        ValueUnchecked="0" AllowGrayedByClick="false">
+                                                    </PropertiesCheckEdit>
+                                                    <HeaderCaptionTemplate>
+                                                        <dx:ASPxCheckBox ID="chkAccess" runat="server" ClientInstanceName="chkAccess" ClientSideEvents-CheckedChanged="OnAccessCheckedChanged" ValueType="System.String" ValueChecked="1" ValueUnchecked="0" Text="Access" Font-Names="Segoe UI" Font-Size="8pt" ForeColor="White">
+                                                        </dx:ASPxCheckBox>
+                                                    </HeaderCaptionTemplate>
+                                                    <HeaderStyle HorizontalAlign="Center" />
+                                                </dx:GridViewDataCheckColumn>
+                                                <dx:GridViewDataCheckColumn Caption="" FieldName="AllowUpdate" Name="AllowUpdate"
+                                                    VisibleIndex="4" Width="80px">
+                                                    <PropertiesCheckEdit ValueChecked="1" ValueType="System.String"
+                                                        ValueUnchecked="0" AllowGrayedByClick="false">
+                                                    </PropertiesCheckEdit>
+                                                    <HeaderCaptionTemplate>
+                                                        <dx:ASPxCheckBox ID="chkUpdate" runat="server" ClientInstanceName="chkUpdate" ClientSideEvents-CheckedChanged="OnUpdateCheckedChanged" ValueType="System.String" ValueChecked="1" ValueUnchecked="0" Text="Update" Font-Names="Segoe UI" Font-Size="8pt" ForeColor="White">
+                                                        </dx:ASPxCheckBox>
+                                                    </HeaderCaptionTemplate>
+                                                    <HeaderStyle HorizontalAlign="Center" />
+                                                </dx:GridViewDataCheckColumn>
+                                            </Columns>
+                                            <SettingsBehavior AllowFocusedRow="True" AllowSort="False" ColumnResizeMode="Control" EnableRowHotTrack="True" />
+                                            <SettingsPager Mode="ShowAllRecords" NumericButtonCount="10">
+                                            </SettingsPager>
+                                            <SettingsEditing Mode="Batch" NewItemRowPosition="Bottom">
+                                                <BatchEditSettings ShowConfirmOnLosingChanges="False" />
+                                            </SettingsEditing>
+                                            <Settings HorizontalScrollBarMode="Visible" ShowStatusBar="Hidden" ShowVerticalScrollBar="True"
+                                                VerticalScrollableHeight="320" VerticalScrollBarMode="Visible" />
+                                            <Styles>
+                                                <Header HorizontalAlign="Center">
+                                                    <Paddings PaddingBottom="5px" PaddingTop="5px" />
+                                                </Header>
+                                            </Styles>
+                                            <StylesEditors ButtonEditCellSpacing="0">
+                                                <ProgressBar Height="21px">
+                                                </ProgressBar>
+                                            </StylesEditors>
+                                        </dx:ASPxGridView>
 
-                                <div style="height:10px">
-                                    
-                                    </div>
-                                <div align="right">
-                                    <table>
-                                        <tr>
-                                            <td>
-                                                <dx:ASPxButton ID="btnSave" runat="server" AutoPostBack="False" ClientInstanceName="btnSave"
-                                                    Font-Names="Segoe UI" Font-Size="8pt" Text="Save" Theme="Office2010Silver" 
-                                                    Width="80px">
-                                                    <ClientSideEvents Click="SaveData" />
-                                                </dx:ASPxButton>               
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                            
-                                                <dx:ASPxCallback ID="cbkValid" runat="server" ClientInstanceName="cbkValid">
-                                                    <ClientSideEvents EndCallback="SavePrivilege" />
-                                                </dx:ASPxCallback>
-                                            
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
+                                        <div style="height: 10px">
+                                        </div>
+                                        <div align="right">
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <dx:ASPxButton ID="btnSave" runat="server" AutoPostBack="False" ClientInstanceName="btnSave"
+                                                            Font-Names="Segoe UI" Font-Size="8pt" Text="Save" Theme="Office2010Silver"
+                                                            Width="80px">
+                                                            <ClientSideEvents Click="SaveData" />
+                                                        </dx:ASPxButton>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+
+                                                        <dx:ASPxCallback ID="cbkValid" runat="server" ClientInstanceName="cbkValid">
+                                                            <ClientSideEvents EndCallback="SavePrivilege" />
+                                                        </dx:ASPxCallback>
+
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </form>
                                 </div>
-							    <!-- end widget content -->
-							</div>
-						<!-- end widget div -->
-						</div>
-					    <!-- end widget -->
+                                <!-- end widget content -->
+                            </div>
+                            <!-- end widget div -->
+                        </div>
+                        <!-- end widget -->
                     </article>
                     <!-- END COL -->
                 </div>

@@ -131,12 +131,12 @@
 <body class="smart-style fixed-header">
     <!-- HEADER -->
 <header id="header">
-			<div id="logo-group" style="width: 220px; margin-left: 0px; padding:8px 0px 0px 35px;">
+			<%--<div id="logo-group" style="width: 220px; margin-left: 0px; padding:8px 0px 0px 35px;">--%>
 				<!-- PLACE YOUR LOGO HERE -->
                 <%--<span id="logo">--%>
-                 <img src="Styles/images/logohead.png" alt="MUSASHI" width="150px"/>
+                 <%--<img src="Styles/images/logohead.png" alt="MUSASHI" width="150px"/>--%>
                 <%--</span>--%><%--END LOGO PLACEHOLDER --%>
-		    </div>
+		    <%--</div>--%>
 
 			<!-- projects dropdown -->
 			<div class="project-context hidden-xs" >

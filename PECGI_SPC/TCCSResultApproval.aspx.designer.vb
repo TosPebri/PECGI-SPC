@@ -20,7 +20,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel7 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel7 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''dtstart control.
@@ -29,7 +29,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents dtstart As Global.DevExpress.Web.ASPxEditors.ASPxDateEdit
+    Protected WithEvents dtstart As Global.DevExpress.Web.ASPxDateEdit
 
     '''<summary>
     '''ASPxLabel2 control.
@@ -38,7 +38,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel2 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel2 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cbolineid control.
@@ -47,7 +47,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cbolineid As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cbolineid As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''ASPxLabel4 control.
@@ -56,7 +56,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel4 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel4 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cbomachineno control.
@@ -65,7 +65,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cbomachineno As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cbomachineno As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''ASPxLabel5 control.
@@ -74,7 +74,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel5 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel5 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cbopartid control.
@@ -83,7 +83,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cbopartid As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cbopartid As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''ASPxLabel10 control.
@@ -92,7 +92,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel10 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel10 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cboapprovalstatus control.
@@ -101,7 +101,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cboapprovalstatus As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cboapprovalstatus As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''ASPxLabel8 control.
@@ -110,7 +110,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel8 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel8 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''dtend control.
@@ -119,7 +119,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents dtend As Global.DevExpress.Web.ASPxEditors.ASPxDateEdit
+    Protected WithEvents dtend As Global.DevExpress.Web.ASPxDateEdit
 
     '''<summary>
     '''ASPxLabel3 control.
@@ -128,7 +128,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel3 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel3 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cbosublineid control.
@@ -137,7 +137,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cbosublineid As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cbosublineid As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''ASPxLabel9 control.
@@ -146,7 +146,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel9 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel9 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cbojudgement control.
@@ -155,7 +155,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cbojudgement As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cbojudgement As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''ASPxLabel6 control.
@@ -164,7 +164,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel6 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel6 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''txtpartname control.
@@ -173,7 +173,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtpartname As Global.DevExpress.Web.ASPxEditors.ASPxTextBox
+    Protected WithEvents txtpartname As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
     '''btnRefresh control.
@@ -182,7 +182,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnRefresh As Global.DevExpress.Web.ASPxEditors.ASPxButton
+    Protected WithEvents btnRefresh As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''GridMenu control.
@@ -191,7 +191,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents GridMenu As Global.DevExpress.Web.ASPxGridView.ASPxGridView
+    Protected WithEvents GridMenu As Global.DevExpress.Web.ASPxGridView
 
     '''<summary>
     '''btnClear control.
@@ -200,7 +200,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnClear As Global.DevExpress.Web.ASPxEditors.ASPxButton
+    Protected WithEvents btnClear As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''btnExcel control.
@@ -209,7 +209,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnExcel As Global.DevExpress.Web.ASPxEditors.ASPxButton
+    Protected WithEvents btnExcel As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''btnViewQCS control.
@@ -218,7 +218,7 @@ Partial Public Class TCCSResultApproval
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnViewQCS As Global.DevExpress.Web.ASPxEditors.ASPxButton
+    Protected WithEvents btnViewQCS As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''Master property.

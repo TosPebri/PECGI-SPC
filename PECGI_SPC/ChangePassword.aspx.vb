@@ -3,7 +3,7 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Web.UI
 Imports DevExpress
-Imports DevExpress.Web.ASPxCallback
+Imports DevExpress.Web
 
 Public Class ChangePassword
     Inherits System.Web.UI.Page
@@ -26,7 +26,7 @@ Public Class ChangePassword
         End If
     End Sub
 
-    Private Sub cbProgress_Callback(ByVal source As Object, ByVal e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbProgress.Callback
+    Private Sub cbProgress_Callback(ByVal source As Object, ByVal e As DevExpress.Web.CallbackEventArgs) Handles cbProgress.Callback
         Session("BA020Cancel") = ""
         Try
             Dim Err As String = ""

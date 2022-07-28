@@ -1,4 +1,4 @@
-﻿Imports DevExpress.Web.ASPxGridView
+﻿Imports DevExpress.Web
 Imports System.Data.SqlClient
 Imports OfficeOpenXml
 Imports System.IO
@@ -134,7 +134,7 @@ Public Class QCSResultInquiry
         End With
     End Sub
 
-    Private Sub Grid_HtmlDataCellPrepared(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewTableDataCellEventArgs) Handles grid.HtmlDataCellPrepared
+    Private Sub Grid_HtmlDataCellPrepared(sender As Object, e As DevExpress.Web.ASPxGridViewTableDataCellEventArgs) Handles grid.HtmlDataCellPrepared
         If e.DataColumn.FieldName = "SeqNo" Or e.DataColumn.FieldName = "ProcessName" Or e.DataColumn.FieldName = "KPointStatus" _
         Or e.DataColumn.FieldName = "Item" Or e.DataColumn.FieldName = "Standard" Then
             If e.KeyValue >= 998 Then
@@ -365,7 +365,7 @@ Public Class QCSResultInquiry
         End Using
     End Sub
 
-    Private Sub grid_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewCustomCallbackEventArgs) Handles grid.CustomCallback
+    Private Sub grid_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridViewCustomCallbackEventArgs) Handles grid.CustomCallback
         Dim pFunction As String = Split(e.Parameters, "|")(0)
         Select Case pFunction
             Case "clear"
@@ -408,18 +408,18 @@ Public Class QCSResultInquiry
 
     End Sub
 
-    Protected Sub grid_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewAfterPerformCallbackEventArgs) Handles grid.AfterPerformCallback
+    Protected Sub grid_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles grid.AfterPerformCallback
         Dim commandColumn = TryCast(grid.Columns(0), GridViewCommandColumn)
         If e.CallbackName <> "CANCELEDIT" And e.CallbackName <> "CUSTOMCALLBACK" Then
             GridLoad(Format(dtDate.Value, "yyyy-MM-dd"), cboLineID.Value, cboSubLine.Value, cboPartID.Value, cboShift.Value, cboRevNo.Value, txtLotNo.Text)
         End If
     End Sub
 
-    Protected Sub grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridView.ASPxGridViewEditorEventArgs) Handles grid.CellEditorInitialize
+    Protected Sub grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles grid.CellEditorInitialize
 
     End Sub
 
-    Private Sub cbopartid_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cboPartID.Callback
+    Private Sub cbopartid_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cboPartID.Callback
         Dim pLineID As String = Split(e.Parameter, "|")(1)
         Dim dt As DataTable
         dt = clsQCSResultDB.GetPart(pLineID)
@@ -427,7 +427,7 @@ Public Class QCSResultInquiry
         cboPartID.DataBind()
     End Sub
 
-    Private Sub cboSubLine_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cboSubLine.Callback
+    Private Sub cboSubLine_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cboSubLine.Callback
         Dim pLineID As String = Split(e.Parameter, "|")(1)
         Dim dt As DataTable
         dt = ClsSubLineDB.GetDataSubLine(pLineID, "")
@@ -711,7 +711,7 @@ Public Class QCSResultInquiry
         DownloadExcel()
     End Sub
 
-    Private Sub cbkRefresh_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkRefresh.Callback
+    Private Sub cbkRefresh_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkRefresh.Callback
         Dim pDate As String = Split(e.Parameter, "|")(1)
         Dim pLineID As String = Split(e.Parameter, "|")(2)
         Dim pSubLineID As String = Split(e.Parameter, "|")(3)

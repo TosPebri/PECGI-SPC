@@ -20,7 +20,7 @@ Partial Public Class QCSXRData
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents Grid As Global.DevExpress.Web.ASPxGridView.ASPxGridView
+    Protected WithEvents Grid As Global.DevExpress.Web.ASPxGridView
 
     '''<summary>
     '''Master property.

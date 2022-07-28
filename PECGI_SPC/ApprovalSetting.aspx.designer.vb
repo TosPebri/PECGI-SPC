@@ -20,7 +20,7 @@ Partial Public Class ApprovalSetting
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel1 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel1 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cboqeleader1 control.
@@ -29,7 +29,7 @@ Partial Public Class ApprovalSetting
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cboqeleader1 As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cboqeleader1 As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''ASPxLabel2 control.
@@ -38,7 +38,7 @@ Partial Public Class ApprovalSetting
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel2 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel2 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cboqeleader2 control.
@@ -47,7 +47,7 @@ Partial Public Class ApprovalSetting
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cboqeleader2 As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cboqeleader2 As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''ASPxLabel3 control.
@@ -56,7 +56,7 @@ Partial Public Class ApprovalSetting
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel3 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel3 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cbosectionhead1 control.
@@ -65,7 +65,7 @@ Partial Public Class ApprovalSetting
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cbosectionhead1 As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cbosectionhead1 As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''ASPxLabel4 control.
@@ -74,7 +74,7 @@ Partial Public Class ApprovalSetting
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel4 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel4 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cbosectionhead2 control.
@@ -83,7 +83,7 @@ Partial Public Class ApprovalSetting
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cbosectionhead2 As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cbosectionhead2 As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''btnSave control.
@@ -92,7 +92,7 @@ Partial Public Class ApprovalSetting
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnSave As Global.DevExpress.Web.ASPxEditors.ASPxButton
+    Protected WithEvents btnSave As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''cbSave control.
@@ -101,7 +101,7 @@ Partial Public Class ApprovalSetting
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cbSave As Global.DevExpress.Web.ASPxCallback.ASPxCallback
+    Protected WithEvents cbSave As Global.DevExpress.Web.ASPxCallback
 
     '''<summary>
     '''Master property.

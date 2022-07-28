@@ -5,8 +5,7 @@ Imports System.Drawing
 Imports System.Collections.Generic
 Imports System.Data.SqlClient
 Imports System.IO
-Imports DevExpress.Web.ASPxGridView
-Imports DevExpress.Web.ASPxEditors
+Imports DevExpress.Web
 Imports DevExpress.Web.Data
 
 Public Class Part
@@ -79,7 +78,7 @@ Public Class Part
 #End Region
 
 #Region "Control Event"
-    Protected Sub Grid_AfterPerformCallback(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridView.ASPxGridViewAfterPerformCallbackEventArgs) Handles Grid.AfterPerformCallback
+    Protected Sub Grid_AfterPerformCallback(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles Grid.AfterPerformCallback
         If e.CallbackName <> "CANCELEDIT" Then
             up_GridLoad()
         End If
@@ -148,7 +147,7 @@ Public Class Part
         End If
     End Sub
 
-    Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridView.ASPxGridViewEditorEventArgs) Handles Grid.CellEditorInitialize
+    Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles Grid.CellEditorInitialize
         If Not Grid.IsNewRowEditing Then
             If e.Column.FieldName = "PartID" Then
                 e.Editor.ReadOnly = True
@@ -202,7 +201,7 @@ Public Class Part
     End Sub
 
     Protected Sub Grid_RowValidating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs) Handles Grid.RowValidating
-        Dim GridData As DevExpress.Web.ASPxGridView.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView.ASPxGridView)
+        Dim GridData As DevExpress.Web.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView)
 
         For Each column As GridViewColumn In Grid.Columns
             Dim dataColumn As GridViewDataColumn = TryCast(column, GridViewDataColumn)

@@ -1,9 +1,9 @@
-﻿<%@ Page Language="vb" AutoEventWireup="false" CodeBehind="UserPrivilege.aspx.vb" Inherits="PECGI_SPC.UserPrivilege" %>
+﻿<%@ Page Language="vb" AutoEventWireup="false" MasterPageFile="~/Site.Master" CodeBehind="UserPrivilege.aspx.vb" Inherits="PECGI_SPC.UserPrivilege" %>
+<%@ MasterType VirtualPath="~/Site.Master" %>
+<%@ Register Namespace="DevExpress.Web" TagPrefix="ASPxCallbackPanel" %>
+<%@ Register Assembly="DevExpress.Web.v20.2, Version=20.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
 
-<%@ Register Namespace="DevExpress.Web.ASPxCallbackPanel" TagPrefix="ASPxCallbackPanel" %>
-<%@ Register Assembly="DevExpress.Web.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web.ASPxGridView" TagPrefix="dx" %>
-<%@ Register Assembly="DevExpress.Web.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web.ASPxEditors" TagPrefix="dx" %>
-<%@ Register Assembly="DevExpress.Web.v14.1, Version=14.1.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web.ASPxCallback" TagPrefix="dx" %>
+
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -227,7 +227,7 @@
                                         </div>
                                         <div style="height: 10px">
                                             <asp:SqlDataSource ID="dsUser" runat="server" ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
-                                                SelectCommand="select UserID, FullName from UserSetup order by UserID"></asp:SqlDataSource>
+                                                SelectCommand="select UserID, FullName from spc_UserSetup order by UserID"></asp:SqlDataSource>
                                         </div>
 
 

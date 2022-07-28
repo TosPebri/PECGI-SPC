@@ -287,7 +287,7 @@ Public Class ClsQCSMasterDB
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
                 Dim sql As String = ""
-                sql = "SP_QCS_CekQE"
+                sql = "SP_SPC_CekQE"
 
                 Dim cmd As New SqlCommand(sql, conn)
                 cmd.CommandType = CommandType.StoredProcedure

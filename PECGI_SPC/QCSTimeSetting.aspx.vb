@@ -5,11 +5,8 @@ Imports System.Drawing
 Imports System.Collections.Generic
 Imports System.Data.SqlClient
 Imports System.IO
-Imports DevExpress.Web.ASPxGridView
-Imports DevExpress.Web.ASPxEditors
+Imports DevExpress.Web
 Imports DevExpress.Web.Data
-Imports DevExpress.Web.ASPxCallback
-Imports DevExpress.Web.ASPxClasses
 Imports DevExpress.Data
 
 Public Class QCSTimeSetting

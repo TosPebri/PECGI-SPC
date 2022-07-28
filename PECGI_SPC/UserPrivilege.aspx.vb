@@ -65,7 +65,7 @@
         gridMenu.EndUpdate()
     End Sub
 
-    Private Sub gridMenu_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewCustomCallbackEventArgs) Handles gridMenu.CustomCallback
+    Private Sub gridMenu_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridViewCustomCallbackEventArgs) Handles gridMenu.CustomCallback
         Dim pAction As String = Split(e.Parameters, "|")(0)
         Dim pUserID As String = Split(e.Parameters, "|")(1)
         up_GridLoad(pUserID)
@@ -74,7 +74,7 @@
         End If
     End Sub
 
-    Private Sub cbkValid_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkValid.Callback
+    Private Sub cbkValid_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkValid.Callback
         Dim pAction As String = Split(e.Parameter, "|")(0)
         Dim FromUserID As String = Split(e.Parameter, "|")(1)
         Dim TouserID As String = Split(e.Parameter, "|")(2)

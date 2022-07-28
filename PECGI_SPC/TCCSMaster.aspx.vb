@@ -5,8 +5,7 @@ Imports System.Drawing
 Imports System.Collections.Generic
 Imports System.Data.SqlClient
 Imports System.IO
-Imports DevExpress.Web.ASPxGridView
-Imports DevExpress.Web.ASPxEditors
+Imports DevExpress.Web
 Imports DevExpress.Web.Data
 Imports OfficeOpenXml
 
@@ -121,7 +120,7 @@ Public Class TCCSMaster
     End Sub
 
 #Region "GridMenu"
-    Protected Sub GridMenu_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewAfterPerformCallbackEventArgs) Handles GridMenu.AfterPerformCallback
+    Protected Sub GridMenu_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles GridMenu.AfterPerformCallback
         Dim commandColumn = TryCast(GridMenu.Columns(0), GridViewCommandColumn)
         If e.CallbackName <> "CANCELEDIT" And e.CallbackName <> "CUSTOMCALLBACK" Then
             If cborevno.Text = "--New--" Then
@@ -158,7 +157,7 @@ Public Class TCCSMaster
         End If
     End Sub
 
-    Protected Sub GridMenu_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridView.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
+    Protected Sub GridMenu_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
         If Not GridMenu.IsNewRowEditing Then
 
             If e.Column.FieldName = "ItemID" Then
@@ -618,7 +617,7 @@ Public Class TCCSMaster
     End Sub
 
     Protected Sub GridMenu_RowValidating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs)
-        Dim GridData As DevExpress.Web.ASPxGridView.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView.ASPxGridView)
+        Dim GridData As DevExpress.Web.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView)
 
         For Each column As GridViewColumn In GridMenu.Columns
             Dim dataColumn As GridViewDataColumn = TryCast(column, GridViewDataColumn)
@@ -798,63 +797,63 @@ Public Class TCCSMaster
 #End Region
 
 #Region "Callback"
-    Private Sub cbomachineno_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbomachineno.Callback
+    Private Sub cbomachineno_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbomachineno.Callback
         Dim dsMenu As DataTable
         dsMenu = ClsTCCSMasterDB.GetDataMachine(pUser, "")
         cbomachineno.DataSource = dsMenu
         cbomachineno.DataBind()
     End Sub
 
-    Private Sub cborevno_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cborevno.Callback
+    Private Sub cborevno_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cborevno.Callback
         Dim dsMenu As DataTable
         dsMenu = ClsTCCSMasterDB.GetDataRev(cbomachineno.Value, txtlineid.Value, txtsublineid.Value, cbopartid.Value)
         cborevno.DataSource = dsMenu
         cborevno.DataBind()
     End Sub
 
-    Private Sub cbopartid_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbopartid.Callback
+    Private Sub cbopartid_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbopartid.Callback
         Dim dsMenu As DataTable
         dsMenu = ClsTCCSMasterDB.GetDataPart("")
         cbopartid.DataSource = dsMenu
         cbopartid.DataBind()
     End Sub
 
-    Private Sub cbomachinenopopup_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbomachinenopopup.Callback
+    Private Sub cbomachinenopopup_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbomachinenopopup.Callback
         Dim dsMenu As DataTable
         dsMenu = ClsTCCSMasterDB.GetDataMachinePopUp(cbopartidpopup.Value, "")
         cbomachinenopopup.DataSource = dsMenu
         cbomachinenopopup.DataBind()
     End Sub
 
-    Private Sub cborevnopopup_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cborevnopopup.Callback
+    Private Sub cborevnopopup_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cborevnopopup.Callback
         Dim dsMenu As DataTable
         dsMenu = ClsTCCSMasterDB.GetDataRevPopUp(cbomachinenopopup.Value, txtlineidpopup.Value, txtsublineidpopup.Value, cbopartidpopup.Value)
         cborevnopopup.DataSource = dsMenu
         cborevnopopup.DataBind()
     End Sub
 
-    'Private Sub cbosublineidpopup_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbosublineidpopup.Callback
+    'Private Sub cbosublineidpopup_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbosublineidpopup.Callback
     '    Dim dsMenu As DataTable
     '    dsMenu = ClsTCCSMasterDB.GetDataSubLine(cbolineidpopup.Value, "")
     '    cbosublineidpopup.DataSource = dsMenu
     '    cbosublineidpopup.DataBind()
     'End Sub
 
-    'Private Sub cboprocessidpopup_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cboprocessidpopup.Callback
+    'Private Sub cboprocessidpopup_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cboprocessidpopup.Callback
     '    Dim dsMenu As DataTable
     '    dsMenu = ClsTCCSMasterDB.GetDataProcess(cbolineidpopup.Value, cbosublineidpopup.Value, "")
     '    cboprocessidpopup.DataSource = dsMenu
     '    cboprocessidpopup.DataBind()
     'End Sub
 
-    'Private Sub cbopartidpopup_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbopartidpopup.Callback
+    'Private Sub cbopartidpopup_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbopartidpopup.Callback
     '    Dim dsMenu As DataTable
     '    dsMenu = ClsTCCSMasterDB.GetDataPart("")
     '    cbopartidpopup.DataSource = dsMenu
     '    cbopartidpopup.DataBind()
     'End Sub
 
-    'Private Sub cborevnopopup_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cborevnopopup.Callback
+    'Private Sub cborevnopopup_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cborevnopopup.Callback
     '    Dim dsMenu As DataTable
     '    dsMenu = ClsTCCSMasterDB.GetDataRev(cbolineidpopup.Value, cbosublineidpopup.Value, cboprocessidpopup.Value, cbopartidpopup.Value)
     '    cborevnopopup.DataSource = dsMenu
@@ -1039,7 +1038,7 @@ Public Class TCCSMaster
             End With
 
             exl.Save()
-            DevExpress.Web.ASPxClasses.ASPxWebControl.RedirectOnCallback("Download/" & fi.Name)
+            DevExpress.Web.ASPxWebControl.RedirectOnCallback("Download/" & fi.Name)
         Catch ex As Exception
             pErr = ex.Message
             show_error(MsgTypeEnum.ErrorMsg, pErr, 1)

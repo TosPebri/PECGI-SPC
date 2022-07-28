@@ -80,7 +80,7 @@ Public Module sGlobal
         Using sqlConn As New SqlConnection(Sconn.Stringkoneksi)
             sqlConn.Open()
 
-            Dim ls_SQL As String = "SELECT AllowInsert FROM dbo.UserPrivilege WHERE AppID = 'P01' AND UserID = '" & Trim(pUserID) & "' AND MenuID = '" & Trim(pMenuID) & "'"
+            Dim ls_SQL As String = "SELECT AllowInsert FROM dbo.spc_UserPrivilege WHERE AppID = 'P01' AND UserID = '" & Trim(pUserID) & "' AND MenuID = '" & Trim(pMenuID) & "'"
             Dim sqlCmd As New SqlCommand(ls_SQL, sqlConn)
             Dim sqlRdr As SqlDataReader = sqlCmd.ExecuteReader()
 
@@ -105,7 +105,7 @@ Public Module sGlobal
 
         Using sqlConn As New SqlConnection(Sconn.Stringkoneksi)
             sqlConn.Open()
-            Dim q As String = "select AdminStatus from UserSetup where UserID = '" & pUserID & "' and AdminStatus = 1 "
+            Dim q As String = "select AdminStatus from dbo.spc_UserSetup where UserID = '" & pUserID & "' and AdminStatus = 1 "
             Dim cmd As New SqlCommand(q, sqlConn)
             Dim rd As SqlDataReader = cmd.ExecuteReader()
             If rd.Read() Then
@@ -115,7 +115,7 @@ Public Module sGlobal
             End If
             rd.Close()
 
-            Dim ls_SQL As String = "SELECT AllowUpdate FROM dbo.UserPrivilege WHERE AppID = 'QCS' AND UserID = '" & Trim(pUserID) & "' AND MenuID = '" & Trim(pMenuID) & "'"
+            Dim ls_SQL As String = "SELECT AllowUpdate FROM dbo.spc_UserPrivilege WHERE AppID = 'QCS' AND UserID = '" & Trim(pUserID) & "' AND MenuID = '" & Trim(pMenuID) & "'"
             Dim sqlCmd As New SqlCommand(ls_SQL, sqlConn)
             Dim sqlRdr As SqlDataReader = sqlCmd.ExecuteReader()
 
@@ -138,7 +138,7 @@ Public Module sGlobal
 
         Using sqlConn As New SqlConnection(Sconn.Stringkoneksi)
             sqlConn.Open()
-            Dim q As String = "select AdminStatus from UserSetup where UserID = '" & pUserID & "' and AdminStatus = 1 "
+            Dim q As String = "select AdminStatus from dbo.spc_UserSetup where UserID = '" & pUserID & "' and AdminStatus = 1 "
             Dim cmd As New SqlCommand(q, sqlConn)
             Dim rd As SqlDataReader = cmd.ExecuteReader()
             If rd.Read() Then
@@ -148,7 +148,7 @@ Public Module sGlobal
             End If
             rd.Close()
 
-            Dim ls_SQL As String = "SELECT AllowAccess FROM dbo.UserPrivilege WHERE AppID = 'QCS' AND UserID = '" & Trim(pUserID) & "' AND MenuID = '" & Trim(pMenuID) & "'"
+            Dim ls_SQL As String = "SELECT AllowAccess FROM dbo.spc_UserPrivilege WHERE AppID = 'QCS' AND UserID = '" & Trim(pUserID) & "' AND MenuID = '" & Trim(pMenuID) & "'"
             Dim sqlCmd As New SqlCommand(ls_SQL, sqlConn)
             Dim sqlRdr As SqlDataReader = sqlCmd.ExecuteReader()
 
@@ -172,7 +172,7 @@ Public Module sGlobal
         Using sqlConn As New SqlConnection(Sconn.Stringkoneksi)
             sqlConn.Open()
 
-            Dim ls_SQL As String = "SELECT AllowDelete FROM dbo.UserPrivilege WHERE AppID = 'P01' AND UserID = '" & Trim(pUserID) & "' AND MenuID = '" & Trim(pMenuID) & "'"
+            Dim ls_SQL As String = "SELECT AllowDelete FROM dbo.spc_UserPrivilege WHERE AppID = 'P01' AND UserID = '" & Trim(pUserID) & "' AND MenuID = '" & Trim(pMenuID) & "'"
             Dim sqlCmd As New SqlCommand(ls_SQL, sqlConn)
             Dim sqlRdr As SqlDataReader = sqlCmd.ExecuteReader()
 
@@ -204,10 +204,10 @@ Public Module sGlobal
 
             Using _sConn As New SqlConnection(Sconn.Stringkoneksi)
 
-                sqlstring = " SELECT MenuIndex,GroupIndex,GroupID,MenuName,MenuDesc" & vbCrLf & _
-                            " FROM dbo.UserMenu UM  " & vbCrLf & _
-                            " INNER JOIN dbo.UserPrivilege UP ON UP.MenuID = UM.MenuID  " & vbCrLf & _
-                            " WHERE UP.AllowView = 1 and UserID ='" & username & "'" & vbCrLf & _
+                sqlstring = " SELECT MenuIndex,GroupIndex,GroupID,MenuName,MenuDesc" & vbCrLf &
+                            " FROM dbo.spc_UserMenu UM  " & vbCrLf &
+                            " INNER JOIN dbo.spc_UserPrivilege UP ON UP.MenuID = UM.MenuID  " & vbCrLf &
+                            " WHERE UP.AllowView = 1 and UserID ='" & username & "'" & vbCrLf &
                             " order by SeqNo "
                 sql = New SqlCommand(sqlstring, _sConn)
                 myDataAdapter.SelectCommand = sql
@@ -232,7 +232,7 @@ Public Module sGlobal
             indexMenu = 0
             idMenu = ""
         Else
-            sqlstring = " SELECT * FROM UserMenu WHERE MenuID ='" & MenuID & "' "
+            sqlstring = " SELECT * FROM dbo.spc_UserMenu WHERE MenuID ='" & MenuID & "' "
             ds = DataAccess.uf_GetDataSet(sqlstring, constr)
 
             With ds.Tables(0)

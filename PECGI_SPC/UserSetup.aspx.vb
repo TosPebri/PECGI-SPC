@@ -5,8 +5,7 @@ Imports System.Drawing
 Imports System.Collections.Generic
 Imports System.Data.SqlClient
 Imports System.IO
-Imports DevExpress.Web.ASPxGridView
-Imports DevExpress.Web.ASPxEditors
+Imports DevExpress.Web
 Imports DevExpress.Web.Data
 
 Public Class UserSetup
@@ -59,7 +58,7 @@ Public Class UserSetup
 #End Region
 
 #Region "Control Event"
-    Protected Sub Grid_AfterPerformCallback(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridView.ASPxGridViewAfterPerformCallbackEventArgs) Handles Grid.AfterPerformCallback
+    Protected Sub Grid_AfterPerformCallback(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles Grid.AfterPerformCallback
         If e.CallbackName <> "CANCELEDIT" Then
             up_GridLoad()
         End If
@@ -142,7 +141,7 @@ Public Class UserSetup
         End If
     End Sub
 
-    Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridView.ASPxGridViewEditorEventArgs) Handles Grid.CellEditorInitialize
+    Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles Grid.CellEditorInitialize
         If Not Grid.IsNewRowEditing Then
             If e.Column.FieldName = "UserID" Then
                 e.Editor.ReadOnly = True
@@ -152,7 +151,7 @@ Public Class UserSetup
     End Sub
 
     Protected Sub Grid_RowValidating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs) Handles Grid.RowValidating
-        Dim GridData As DevExpress.Web.ASPxGridView.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView.ASPxGridView)
+        Dim GridData As DevExpress.Web.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView)
         Dim AdaError As Boolean = False
         Dim Password As String = ""
         Dim ConfirmPassword As String = ""
@@ -210,7 +209,7 @@ Public Class UserSetup
     End Sub
 
     Protected Sub PrivilegesLink_Init(ByVal sender As Object, ByVal e As EventArgs)
-        Dim link As DevExpress.Web.ASPxEditors.ASPxHyperLink = CType(sender, DevExpress.Web.ASPxEditors.ASPxHyperLink)
+        Dim link As DevExpress.Web.ASPxHyperLink = CType(sender, DevExpress.Web.ASPxHyperLink)
         Dim templatecontainer As GridViewDataItemTemplateContainer = CType(link.NamingContainer, GridViewDataItemTemplateContainer)
         link.NavigateUrl = "javascript:void(0)"
         link.ForeColor = Color.SteelBlue
@@ -223,7 +222,7 @@ Public Class UserSetup
     End Sub
 
     Protected Sub LinePrivilegesLink_Init(ByVal sender As Object, ByVal e As EventArgs)
-        Dim link As DevExpress.Web.ASPxEditors.ASPxHyperLink = CType(sender, DevExpress.Web.ASPxEditors.ASPxHyperLink)
+        Dim link As DevExpress.Web.ASPxHyperLink = CType(sender, DevExpress.Web.ASPxHyperLink)
         Dim templatecontainer As GridViewDataItemTemplateContainer = CType(link.NamingContainer, GridViewDataItemTemplateContainer)
         link.NavigateUrl = "javascript:void(0)"
         link.ForeColor = Color.SteelBlue

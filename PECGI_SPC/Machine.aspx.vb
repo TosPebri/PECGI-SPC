@@ -5,8 +5,7 @@ Imports System.Drawing
 Imports System.Collections.Generic
 Imports System.Data.SqlClient
 Imports System.IO
-Imports DevExpress.Web.ASPxGridView
-Imports DevExpress.Web.ASPxEditors
+Imports DevExpress.Web
 Imports DevExpress.Web.Data
 
 Public Class Machine
@@ -58,7 +57,7 @@ Public Class Machine
     End Sub
 
 #Region "Control Event"
-    Protected Sub GridMenu_AfterPerformCallback(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridView.ASPxGridViewAfterPerformCallbackEventArgs) Handles GridMenu.AfterPerformCallback
+    Protected Sub GridMenu_AfterPerformCallback(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles GridMenu.AfterPerformCallback
         If e.CallbackName <> "CANCELEDIT" Then
             up_GridLoad()
         End If
@@ -121,7 +120,7 @@ Public Class Machine
         End If
     End Sub
 
-    Private Sub GridMenu_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridView.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
+    Private Sub GridMenu_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
         If Not GridMenu.IsNewRowEditing Then
             If e.Column.FieldName = "MachineNo" Then
                 e.Editor.ReadOnly = True
@@ -131,7 +130,7 @@ Public Class Machine
     End Sub
 
     Protected Sub GridMenu_RowValidating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs) Handles GridMenu.RowValidating
-        Dim GridData As DevExpress.Web.ASPxGridView.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView.ASPxGridView)
+        Dim GridData As DevExpress.Web.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView)
 
         For Each column As GridViewColumn In GridMenu.Columns
             Dim dataColumn As GridViewDataColumn = TryCast(column, GridViewDataColumn)

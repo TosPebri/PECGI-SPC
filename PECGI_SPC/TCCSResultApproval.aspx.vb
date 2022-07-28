@@ -5,8 +5,7 @@ Imports System.Drawing
 Imports System.Collections.Generic
 Imports System.Data.SqlClient
 Imports System.IO
-Imports DevExpress.Web.ASPxGridView
-Imports DevExpress.Web.ASPxEditors
+Imports DevExpress.Web
 Imports DevExpress.Web.Data
 Imports OfficeOpenXml
 
@@ -163,7 +162,7 @@ Public Class TCCSResultApproval
     End Sub
 
 #Region "GridMenu"
-    Protected Sub GridMenu_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewAfterPerformCallbackEventArgs) Handles GridMenu.AfterPerformCallback
+    Protected Sub GridMenu_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles GridMenu.AfterPerformCallback
         Dim commandColumn = TryCast(GridMenu.Columns(0), GridViewCommandColumn)
         If e.CallbackName <> "CANCELEDIT" And e.CallbackName <> "CUSTOMCALLBACK" Then
             up_GridLoadMenu(dtstart.Value, dtend.Value, cbolineid.Value, cbosublineid.Value, cbomachineno.Value, cbojudgement.Value, cbopartid.Value, cboapprovalstatus.Value, StatusApproval1, StatusApproval2, StatusApproval3, StatusApproval4)
@@ -174,7 +173,7 @@ Public Class TCCSResultApproval
         up_GridLoadMenu(dtstart.Value, dtend.Value, cbolineid.Value, cbosublineid.Value, cbomachineno.Value, cbojudgement.Value, cbopartid.Value, cboapprovalstatus.Value, StatusApproval1, StatusApproval2, StatusApproval3, StatusApproval4)
     End Sub
 
-    Private Sub GridMenu_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridView.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
+    Private Sub GridMenu_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
 
     End Sub
 
@@ -289,7 +288,7 @@ Public Class TCCSResultApproval
 
     End Sub
 
-    Private Sub GridMenu_HtmlDataCellPrepared(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewTableDataCellEventArgs) Handles GridMenu.HtmlDataCellPrepared
+    Private Sub GridMenu_HtmlDataCellPrepared(sender As Object, e As DevExpress.Web.ASPxGridViewTableDataCellEventArgs) Handles GridMenu.HtmlDataCellPrepared
 
         If (e.DataColumn.FieldName = "Judgement") Then
             If e.CellValue = "NG" Then
@@ -411,7 +410,7 @@ Public Class TCCSResultApproval
 #End Region
 
 #Region "CallBack"
-    Private Sub cbosublineid_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbosublineid.Callback
+    Private Sub cbosublineid_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbosublineid.Callback
         Dim pLineID As String = Split(e.Parameter, "|")(0)
         Dim dsMenu As DataTable
         dsMenu = ClsTCCSResultApprovalDB.GetDataSubLine(pLineID, pUser, "")
@@ -419,7 +418,7 @@ Public Class TCCSResultApproval
         cbosublineid.DataBind()
     End Sub
 
-    Private Sub cbomachineno_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbomachineno.Callback
+    Private Sub cbomachineno_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbomachineno.Callback
         Dim pLineID As String = Split(e.Parameter, "|")(0)
         Dim pSubLineID As String = Split(e.Parameter, "|")(1)
         Dim dsMenu As DataTable
@@ -428,21 +427,21 @@ Public Class TCCSResultApproval
         cbomachineno.DataBind()
     End Sub
 
-    Private Sub cbojudgement_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbojudgement.Callback
+    Private Sub cbojudgement_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbojudgement.Callback
         Dim dsMenu As DataTable
         dsMenu = ClsTCCSResultApprovalDB.GetDataJudgement("")
         cbojudgement.DataSource = dsMenu
         cbojudgement.DataBind()
     End Sub
 
-    Private Sub cbopartid_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbopartid.Callback
+    Private Sub cbopartid_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbopartid.Callback
         Dim dsMenu As DataTable
         dsMenu = ClsTCCSResultApprovalDB.GetDataPart("")
         cbopartid.DataSource = dsMenu
         cbopartid.DataBind()
     End Sub
 
-    Private Sub cboapprovalstatus_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cboapprovalstatus.Callback
+    Private Sub cboapprovalstatus_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cboapprovalstatus.Callback
         Dim dsMenu As DataTable
         dsMenu = ClsTCCSResultApprovalDB.GetDataApprovalStatus("")
         cboapprovalstatus.DataSource = dsMenu
@@ -1009,7 +1008,7 @@ Public Class TCCSResultApproval
             End With
 
             exl.Save()
-            DevExpress.Web.ASPxClasses.ASPxWebControl.RedirectOnCallback("Download/" & fi.Name)
+            DevExpress.Web.ASPxWebControl.RedirectOnCallback("Download/" & fi.Name)
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, pErr, 1)
         End Try

@@ -5,8 +5,7 @@ Imports System.Drawing
 Imports System.Collections.Generic
 Imports System.Data.SqlClient
 Imports System.IO
-Imports DevExpress.Web.ASPxGridView
-Imports DevExpress.Web.ASPxEditors
+Imports DevExpress.Web
 Imports DevExpress.Web.Data
 Imports OfficeOpenXml
 
@@ -131,7 +130,7 @@ Public Class QCSResultMonitoring
 #End Region
 
 #Region "Grid"
-    Private Sub GridMenu_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewCustomCallbackEventArgs) Handles GridMenu.CustomCallback
+    Private Sub GridMenu_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridViewCustomCallbackEventArgs) Handles GridMenu.CustomCallback
         Dim pFunction As String = Split(e.Parameters, "|")(0)
 
         Select Case pFunction
@@ -160,7 +159,7 @@ Public Class QCSResultMonitoring
         End Select
     End Sub
 
-    Private Sub GridMenu_HtmlDataCellPrepared(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewTableDataCellEventArgs) Handles GridMenu.HtmlDataCellPrepared
+    Private Sub GridMenu_HtmlDataCellPrepared(sender As Object, e As DevExpress.Web.ASPxGridViewTableDataCellEventArgs) Handles GridMenu.HtmlDataCellPrepared
         If (e.DataColumn.FieldName = "Shift1Cycle1") Then
             If e.CellValue = "NG" Then
                 e.Cell.ForeColor = Color.Yellow
@@ -721,7 +720,7 @@ Public Class QCSResultMonitoring
 #End Region
 
 #Region "Other"
-    Private Sub cbopartid_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbopartid.Callback
+    Private Sub cbopartid_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbopartid.Callback
         Dim pParam As String = Split(e.Parameter, "|")(1)
         Dim dsMenu As DataTable
         'If pParam = "ALL" Then
@@ -738,7 +737,7 @@ Public Class QCSResultMonitoring
         cbopartid.DataBind()
     End Sub
 
-    'Private Sub cboapprovalstatus_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cboapprovalstatus.Callback
+    'Private Sub cboapprovalstatus_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cboapprovalstatus.Callback
     '    Dim pSelect As String = Split(e.Parameter, "|")(0)
 
     '    Dim dsMenu As DataTable
@@ -748,7 +747,7 @@ Public Class QCSResultMonitoring
     '    cboapprovalstatus.DataBind()
     'End Sub
 
-    Private Sub cboqcsstatus_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cboqcsstatus.Callback
+    Private Sub cboqcsstatus_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cboqcsstatus.Callback
         Dim pSelect As String = Split(e.Parameter, "|")(0)
 
         Dim dsMenu As DataTable
@@ -1375,7 +1374,7 @@ Public Class QCSResultMonitoring
             End With
 
             exl.Save()
-            DevExpress.Web.ASPxClasses.ASPxWebControl.RedirectOnCallback("Download/" & fi.Name)
+            DevExpress.Web.ASPxWebControl.RedirectOnCallback("Download/" & fi.Name)
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, pErr, 1)
         End Try

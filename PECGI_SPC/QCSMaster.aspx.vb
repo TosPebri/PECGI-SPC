@@ -5,8 +5,7 @@ Imports System.Drawing
 Imports System.Collections.Generic
 Imports System.Data.SqlClient
 Imports System.IO
-Imports DevExpress.Web.ASPxGridView
-Imports DevExpress.Web.ASPxEditors
+Imports DevExpress.Web
 Imports DevExpress.Web.Data
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Drawing
@@ -428,7 +427,7 @@ Public Class QCSMaster
 
 #Region "Control Event"
 #Region "GridMenu"
-    Protected Sub GridMenu_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewAfterPerformCallbackEventArgs) Handles GridMenu.AfterPerformCallback
+    Protected Sub GridMenu_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles GridMenu.AfterPerformCallback
         Dim commandColumn = TryCast(GridMenu.Columns(0), GridViewCommandColumn)
         If e.CallbackName <> "CANCELEDIT" And e.CallbackName <> "CUSTOMCALLBACK" Then
             If cborevno.Text = "--New--" Then
@@ -498,7 +497,7 @@ Public Class QCSMaster
         End If
     End Sub
 
-    Protected Sub GridMenu_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridView.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
+    Protected Sub GridMenu_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
         If Not GridMenu.IsNewRowEditing Then
 
             If e.Column.FieldName = "ItemID" Then
@@ -1296,7 +1295,7 @@ Public Class QCSMaster
     End Sub
 
     Protected Sub GridMenu_RowValidating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs)
-        Dim GridData As DevExpress.Web.ASPxGridView.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView.ASPxGridView)
+        Dim GridData As DevExpress.Web.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView)
 
         For Each column As GridViewColumn In GridMenu.Columns
             Dim dataColumn As GridViewDataColumn = TryCast(column, GridViewDataColumn)
@@ -1453,7 +1452,7 @@ Public Class QCSMaster
 #End Region
 
 #Region "Other"
-    Private Sub cbolineid_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbolineid.Callback
+    Private Sub cbolineid_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbolineid.Callback
         If ClsQCSMasterDB.GetDataQE(pUser, "") = True Then
             up_fillcomboline(1, pUser)
         Else
@@ -1461,7 +1460,7 @@ Public Class QCSMaster
         End If
     End Sub
 
-    Private Sub cbopartid_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbopartid.Callback
+    Private Sub cbopartid_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbopartid.Callback
         'Dim pParam As String = Split(e.Parameter, "|")(1)
 
         'Dim dsMenu As DataTable
@@ -1483,7 +1482,7 @@ Public Class QCSMaster
         End If
     End Sub
 
-    Private Sub cborevno_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cborevno.Callback
+    Private Sub cborevno_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cborevno.Callback
         Dim pPartID As String = Split(e.Parameter, "|")(1)
         Dim pLineID As String = Split(e.Parameter, "|")(2)
 
@@ -1506,7 +1505,7 @@ Public Class QCSMaster
         End If
     End Sub
 
-    Private Sub cbolineidpopup_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbolineidpopup.Callback
+    Private Sub cbolineidpopup_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbolineidpopup.Callback
         Dim pPartID As String = Split(e.Parameter, "|")(1)
 
         Dim dsMenu As DataTable
@@ -1516,7 +1515,7 @@ Public Class QCSMaster
 
     End Sub
 
-    Private Sub cbopartidpopup_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbopartidpopup.Callback
+    Private Sub cbopartidpopup_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbopartidpopup.Callback
         Dim pParam As String = Split(e.Parameter, "|")(1)
 
         Dim dsMenu As DataTable
@@ -1526,7 +1525,7 @@ Public Class QCSMaster
 
     End Sub
 
-    Private Sub cborevnopopup_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cborevnopopup.Callback
+    Private Sub cborevnopopup_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cborevnopopup.Callback
         Dim pPartID As String = Split(e.Parameter, "|")(1)
         Dim pLineID As String = Split(e.Parameter, "|")(2)
 
@@ -1711,7 +1710,7 @@ Public Class QCSMaster
             End With
 
             exl.Save()
-            DevExpress.Web.ASPxClasses.ASPxWebControl.RedirectOnCallback("Download/" & fi.Name)
+            DevExpress.Web.ASPxWebControl.RedirectOnCallback("Download/" & fi.Name)
         Catch ex As Exception
             pErr = ex.Message
             show_error(MsgTypeEnum.ErrorMsg, pErr, 1)

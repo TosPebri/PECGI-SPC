@@ -38,7 +38,7 @@ Partial Public Class PreviewAttachment
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtResultID As Global.DevExpress.Web.ASPxEditors.ASPxTextBox
+    Protected WithEvents txtResultID As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
     '''txtItemID control.
@@ -47,7 +47,7 @@ Partial Public Class PreviewAttachment
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtItemID As Global.DevExpress.Web.ASPxEditors.ASPxTextBox
+    Protected WithEvents txtItemID As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
     '''txtName control.
@@ -56,7 +56,7 @@ Partial Public Class PreviewAttachment
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtName As Global.DevExpress.Web.ASPxEditors.ASPxTextBox
+    Protected WithEvents txtName As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
     '''cbkClear control.
@@ -65,7 +65,7 @@ Partial Public Class PreviewAttachment
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cbkClear As Global.DevExpress.Web.ASPxCallback.ASPxCallback
+    Protected WithEvents cbkClear As Global.DevExpress.Web.ASPxCallback
 
     '''<summary>
     '''lblErr control.
@@ -74,7 +74,7 @@ Partial Public Class PreviewAttachment
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblErr As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents lblErr As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''img2 control.
@@ -83,7 +83,7 @@ Partial Public Class PreviewAttachment
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents img2 As Global.DevExpress.Web.ASPxEditors.ASPxBinaryImage
+    Protected WithEvents img2 As Global.DevExpress.Web.ASPxBinaryImage
 
     '''<summary>
     '''imgPreview control.
@@ -92,5 +92,5 @@ Partial Public Class PreviewAttachment
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents imgPreview As Global.DevExpress.Web.ASPxEditors.ASPxImage
+    Protected WithEvents imgPreview As Global.DevExpress.Web.ASPxImage
 End Class

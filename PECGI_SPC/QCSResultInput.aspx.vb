@@ -1,6 +1,5 @@
-﻿Imports DevExpress.Web.ASPxGridView
+﻿Imports DevExpress.Web
 Imports System.Data.SqlClient
-Imports DevExpress.Web.ASPxEditors
 Imports System.IO
 
 Public Class QCSResultInput
@@ -112,7 +111,7 @@ Public Class QCSResultInput
         End With
     End Sub
 
-    Private Sub Grid_HtmlDataCellPrepared(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewTableDataCellEventArgs) Handles grid.HtmlDataCellPrepared
+    Private Sub Grid_HtmlDataCellPrepared(sender As Object, e As DevExpress.Web.ASPxGridViewTableDataCellEventArgs) Handles grid.HtmlDataCellPrepared
         If e.DataColumn.FieldName = "SeqNo" Or e.DataColumn.FieldName = "ProcessName" Or e.DataColumn.FieldName = "KPointStatus" _
         Or e.DataColumn.FieldName = "Item" Or e.DataColumn.FieldName = "Standard" Then
             Dim KeyValue As Integer = 0
@@ -168,7 +167,7 @@ Public Class QCSResultInput
         Return        
     End Sub
 
-    Private Sub cbkValid_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkValid.Callback
+    Private Sub cbkValid_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkValid.Callback
         Dim pFunction As String = Split(e.Parameter, "|")(0)
         Dim pLineID As String = Split(e.Parameter, "|")(1)
         Dim pPartID As String = Split(e.Parameter, "|")(2)
@@ -384,7 +383,7 @@ Public Class QCSResultInput
         e.Properties("cpReadOnlyColumns") = readOnlyColumns
     End Sub
 
-    Private Sub grid_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewCustomCallbackEventArgs) Handles grid.CustomCallback
+    Private Sub grid_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridViewCustomCallbackEventArgs) Handles grid.CustomCallback
         Dim pFunction As String = Split(e.Parameters, "|")(0)
         Select Case pFunction
             Case "GetData"
@@ -513,14 +512,14 @@ Public Class QCSResultInput
 
     End Sub
 
-    Protected Sub grid_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewAfterPerformCallbackEventArgs) Handles grid.AfterPerformCallback
+    Protected Sub grid_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles grid.AfterPerformCallback
         Dim commandColumn = TryCast(grid.Columns(0), GridViewCommandColumn)
         If e.CallbackName <> "CANCELEDIT" And e.CallbackName <> "CUSTOMCALLBACK" Then
             up_GridLoad(Format(dtrevdate.Value, "yyyy-MM-dd"), cboLineID.Value, cboSubLine.Value, cboPartID.Value, cboShift.Value, cboRevNo.Value)
         End If
     End Sub
 
-    Private Sub cbopartid_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cboPartID.Callback
+    Private Sub cbopartid_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cboPartID.Callback
         Dim pAction As String = Split(e.Parameter, "|")(0)
         Dim pLineID As String = Split(e.Parameter, "|")(1)
         Dim dt As DataTable
@@ -530,7 +529,7 @@ Public Class QCSResultInput
         cboPartID.JSProperties("cpAction") = pAction
     End Sub
 
-    Private Sub cboSubLine_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cboSubLine.Callback
+    Private Sub cboSubLine_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cboSubLine.Callback
         Dim pLineID As String = Split(e.Parameter, "|")(1)
         Dim dt As DataTable
         dt = ClsSubLineDB.GetDataSubLine(pLineID, "")
@@ -610,7 +609,7 @@ Public Class QCSResultInput
         End If
     End Sub
 
-    Private Sub cbkRefresh_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkRefresh.Callback
+    Private Sub cbkRefresh_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkRefresh.Callback
         Dim pDate As String = Split(e.Parameter, "|")(1)
         Dim pLineID As String = Split(e.Parameter, "|")(2)
         Dim pSubLineID As String = Split(e.Parameter, "|")(3)
@@ -621,7 +620,7 @@ Public Class QCSResultInput
         LoadResult(pDate, pLineID, pSubLineID, pPartID, pShift, pRevNo)
     End Sub
 
-    Private Sub cbkApprove_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkApprove.Callback
+    Private Sub cbkApprove_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkApprove.Callback
         Dim pDate As String = Split(e.Parameter, "|")(1)
         Dim pLineID As String = Split(e.Parameter, "|")(2)
         Dim pSubLineID As String = Split(e.Parameter, "|")(3)
@@ -640,7 +639,7 @@ Public Class QCSResultInput
         End If
     End Sub
 
-    Private Sub cbkValidateApprove_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkValidateApprove.Callback
+    Private Sub cbkValidateApprove_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkValidateApprove.Callback
         Dim pDate As String = Split(e.Parameter, "|")(1)
         Dim pLineID As String = Split(e.Parameter, "|")(2)
         Dim pSubLineID As String = Split(e.Parameter, "|")(3)
@@ -738,7 +737,7 @@ Public Class QCSResultInput
         End Try
     End Sub
 
-    Private Sub cbkRemove_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkRemove.Callback
+    Private Sub cbkRemove_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkRemove.Callback
         Dim pDate As String = Split(e.Parameter, "|")(1)
         Dim pLineID As String = Split(e.Parameter, "|")(2)
         Dim pSubLineID As String = Split(e.Parameter, "|")(3)
@@ -769,7 +768,7 @@ Public Class QCSResultInput
         cbkRemove.JSProperties("cpValidationMsg") = ""
     End Sub
 
-    Protected Sub cbkDelete_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkDelete.Callback
+    Protected Sub cbkDelete_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkDelete.Callback
         Dim pDate As String = Split(e.Parameter, "|")(1)
         Dim pLineID As String = Split(e.Parameter, "|")(2)
         Dim pSubLineID As String = Split(e.Parameter, "|")(3)
@@ -799,7 +798,7 @@ Public Class QCSResultInput
         End If
     End Sub
 
-    Private Sub gridApproval_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewCustomCallbackEventArgs) Handles gridApproval.CustomCallback
+    Private Sub gridApproval_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridViewCustomCallbackEventArgs) Handles gridApproval.CustomCallback
         up_GridLoadApproval()
     End Sub
 End Class

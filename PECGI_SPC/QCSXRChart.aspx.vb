@@ -1,9 +1,7 @@
-﻿Imports DevExpress.Web.ASPxGridView
+﻿Imports DevExpress.Web
 Imports System.Data.SqlClient
 Imports DevExpress.XtraCharts
 Imports System.Drawing
-Imports DevExpress.Web.ASPxClasses
-Imports DevExpress.Web.ASPxEditors
 Imports OfficeOpenXml
 Imports System.IO
 Imports DevExpress.XtraPrinting
@@ -381,7 +379,7 @@ Public Class QCSXRChart
         cboLineID.DataBind()
     End Sub
 
-    Private Sub cboSubLine_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cboSubLine.Callback
+    Private Sub cboSubLine_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cboSubLine.Callback
         Dim pLineID As String = Split(e.Parameter, "|")(1)
         Dim dt As DataTable
         dt = ClsSubLineDB.GetDataSubLine(pLineID, "")
@@ -389,11 +387,11 @@ Public Class QCSXRChart
         cboSubLine.DataBind()
     End Sub
 
-    Protected Sub grid_CellEditorInitialize(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewEditorEventArgs)
+    Protected Sub grid_CellEditorInitialize(sender As Object, e As DevExpress.Web.ASPxGridViewEditorEventArgs)
 
     End Sub
 
-    Private Sub grid_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewCustomCallbackEventArgs) Handles grid.CustomCallback
+    Private Sub grid_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridViewCustomCallbackEventArgs) Handles grid.CustomCallback
         Dim pDateFrom As String = Split(e.Parameters, "|")(1)
         Dim pDateTo As String = Split(e.Parameters, "|")(2)
         Dim pLineID As String = Split(e.Parameters, "|")(3) & ""
@@ -436,14 +434,14 @@ Public Class QCSXRChart
 
     End Sub
 
-    Protected Sub grid_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewAfterPerformCallbackEventArgs) Handles grid.AfterPerformCallback
+    Protected Sub grid_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles grid.AfterPerformCallback
         Dim commandColumn = TryCast(grid.Columns(0), GridViewCommandColumn)
         If e.CallbackName <> "CANCELEDIT" And e.CallbackName <> "CUSTOMCALLBACK" Then
 
         End If
     End Sub
 
-    Private Sub cboPartID_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cboPartID.Callback
+    Private Sub cboPartID_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cboPartID.Callback
         Dim pLineID As String = Split(e.Parameter, "|")(2)
         Dim dt As DataTable
         dt = clsQCSResultDB.GetPart(pLineID)
@@ -451,7 +449,7 @@ Public Class QCSXRChart
         cboPartID.DataBind()
     End Sub
 
-    Private Sub grid_HtmlDataCellPrepared(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewTableDataCellEventArgs) Handles grid.HtmlDataCellPrepared
+    Private Sub grid_HtmlDataCellPrepared(sender As Object, e As DevExpress.Web.ASPxGridViewTableDataCellEventArgs) Handles grid.HtmlDataCellPrepared
         If e.KeyValue = 101 Then
             e.Cell.BackColor = System.Drawing.Color.Silver
         ElseIf e.KeyValue = 200 Then            
@@ -514,7 +512,7 @@ Public Class QCSXRChart
         LoadChartR(Val(pUCL), pRBar)
     End Sub
 
-    Private Sub cboMachine_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cboMachine.Callback
+    Private Sub cboMachine_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cboMachine.Callback
         Dim pLineID As String = Split(e.Parameter, "|")(1)
         Dim pSubLineID As String = Split(e.Parameter, "|")(2)
         Dim dt As DataTable
@@ -523,7 +521,7 @@ Public Class QCSXRChart
         cboMachine.DataBind()
     End Sub
 
-    Private Sub cboItem_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cboItem.Callback
+    Private Sub cboItem_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cboItem.Callback
         Dim LineID As String = Split(e.Parameter, "|")(1)
         Dim PartID As String = Split(e.Parameter, "|")(2)
         Dim MachineNo As String = Split(e.Parameter, "|")(3)
@@ -532,13 +530,13 @@ Public Class QCSXRChart
         cboItem.DataBind()
     End Sub
 
-    Private Sub gridAction_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewAfterPerformCallbackEventArgs) Handles gridAction.AfterPerformCallback
+    Private Sub gridAction_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles gridAction.AfterPerformCallback
         If e.CallbackName <> "CANCELEDIT" And e.CallbackName <> "CUSTOMCALLBACK" Then
             GridLoadAction(dtFrom.Value, dtTo.Value, cboLineID.Value, cboSubLine.Value, txtProcessID.Text, cboPartID.Value, txtXRCode.Text)
         End If
     End Sub
 
-    Private Sub gridAction_CellEditorInitialize(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewEditorEventArgs) Handles gridAction.CellEditorInitialize
+    Private Sub gridAction_CellEditorInitialize(sender As Object, e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles gridAction.CellEditorInitialize
         If Not gridAction.IsNewRowEditing Then
             If e.Column.FieldName = "Date" Then
                 e.Editor.ReadOnly = True
@@ -553,7 +551,7 @@ Public Class QCSXRChart
         End If
     End Sub
 
-    Private Sub gridAction_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewCustomCallbackEventArgs) Handles gridAction.CustomCallback
+    Private Sub gridAction_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridViewCustomCallbackEventArgs) Handles gridAction.CustomCallback
         Dim pDateFrom As String = Split(e.Parameters, "|")(0)
         Dim pDateTo As String = Split(e.Parameters, "|")(1)
         Dim pLineID As String = Split(e.Parameters, "|")(2)
@@ -564,7 +562,7 @@ Public Class QCSXRChart
         GridLoadAction(pDateFrom, pDateTo, pLineID, pSubLineID, pProcess, pPartID, pXRCode)
     End Sub
 
-    Private Sub gridSummary_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewCustomCallbackEventArgs) Handles gridSummary.CustomCallback
+    Private Sub gridSummary_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridViewCustomCallbackEventArgs) Handles gridSummary.CustomCallback
         Dim pDateFrom As String = Split(e.Parameters, "|")(0)
         Dim pDateTo As String = Split(e.Parameters, "|")(1)
         Dim pLineID As String = Split(e.Parameters, "|")(2)
@@ -599,7 +597,7 @@ Public Class QCSXRChart
     End Sub
 
     Protected Sub gridAction_RowValidating(sender As Object, e As DevExpress.Web.Data.ASPxDataValidationEventArgs)
-        Dim GridData As DevExpress.Web.ASPxGridView.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView.ASPxGridView)
+        Dim GridData As DevExpress.Web.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView)
         For Each column As GridViewColumn In gridAction.Columns
             Dim dataColumn As GridViewDataColumn = TryCast(column, GridViewDataColumn)
             If dataColumn IsNot Nothing Then
@@ -699,7 +697,7 @@ Public Class QCSXRChart
         End If
     End Function
 
-    Private Sub cbkUpdate_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkUpdate.Callback
+    Private Sub cbkUpdate_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkUpdate.Callback
         Dim pXUCLAdj As String = Split(e.Parameter, "|")(0)
         Dim pXLCLAdj As String = Split(e.Parameter, "|")(1)
         Dim pRUCLAdj As String = Split(e.Parameter, "|")(2)
@@ -1014,7 +1012,7 @@ Public Class QCSXRChart
         ps.Dispose()
     End Sub
 
-    Private Sub grid_HtmlRowPrepared(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewTableRowEventArgs) Handles grid.HtmlRowPrepared
+    Private Sub grid_HtmlRowPrepared(sender As Object, e As DevExpress.Web.ASPxGridViewTableRowEventArgs) Handles grid.HtmlRowPrepared
         e.Row.Visible = False
     End Sub
 End Class

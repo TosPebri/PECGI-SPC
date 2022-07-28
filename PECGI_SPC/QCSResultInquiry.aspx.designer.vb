@@ -20,7 +20,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel1 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel1 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''dtDate control.
@@ -29,7 +29,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents dtDate As Global.DevExpress.Web.ASPxEditors.ASPxDateEdit
+    Protected WithEvents dtDate As Global.DevExpress.Web.ASPxDateEdit
 
     '''<summary>
     '''ASPxLabel4 control.
@@ -38,7 +38,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel4 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel4 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cboLineID control.
@@ -47,7 +47,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cboLineID As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cboLineID As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''ASPxLabel8 control.
@@ -56,7 +56,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel8 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel8 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cboPartID control.
@@ -65,7 +65,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cboPartID As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cboPartID As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''ASPxLabel9 control.
@@ -74,7 +74,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel9 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel9 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''txtLotNo control.
@@ -83,7 +83,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtLotNo As Global.DevExpress.Web.ASPxEditors.ASPxTextBox
+    Protected WithEvents txtLotNo As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
     '''ASPxLabel2 control.
@@ -92,7 +92,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel2 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel2 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cboShift control.
@@ -101,7 +101,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cboShift As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cboShift As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''ASPxLabel6 control.
@@ -110,7 +110,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel6 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel6 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cboSubLine control.
@@ -119,7 +119,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cboSubLine As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cboSubLine As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''lblqeleader0 control.
@@ -128,7 +128,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblqeleader0 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents lblqeleader0 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''txtPartName control.
@@ -137,7 +137,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtPartName As Global.DevExpress.Web.ASPxEditors.ASPxTextBox
+    Protected WithEvents txtPartName As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
     '''lblqeleader1 control.
@@ -146,7 +146,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblqeleader1 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents lblqeleader1 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cboRevNo control.
@@ -155,7 +155,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cboRevNo As Global.DevExpress.Web.ASPxEditors.ASPxComboBox
+    Protected WithEvents cboRevNo As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''btnSearch control.
@@ -164,7 +164,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnSearch As Global.DevExpress.Web.ASPxEditors.ASPxButton
+    Protected WithEvents btnSearch As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''hfRevNo control.
@@ -173,7 +173,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents hfRevNo As Global.DevExpress.Web.ASPxHiddenField.ASPxHiddenField
+    Protected WithEvents hfRevNo As Global.DevExpress.Web.ASPxHiddenField
 
     '''<summary>
     '''grid control.
@@ -182,7 +182,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents grid As Global.DevExpress.Web.ASPxGridView.ASPxGridView
+    Protected WithEvents grid As Global.DevExpress.Web.ASPxGridView
 
     '''<summary>
     '''cbkRefresh control.
@@ -191,7 +191,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cbkRefresh As Global.DevExpress.Web.ASPxCallback.ASPxCallback
+    Protected WithEvents cbkRefresh As Global.DevExpress.Web.ASPxCallback
 
     '''<summary>
     '''btnClear control.
@@ -200,7 +200,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnClear As Global.DevExpress.Web.ASPxEditors.ASPxButton
+    Protected WithEvents btnClear As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''btnExcel control.
@@ -209,7 +209,7 @@ Partial Public Class QCSResultInquiry
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnExcel As Global.DevExpress.Web.ASPxEditors.ASPxButton
+    Protected WithEvents btnExcel As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''SqlDataSource1 control.

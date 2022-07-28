@@ -63,7 +63,7 @@ Public Class PreviewAttachment
         End Using
     End Sub
 
-    Protected Sub cbkClear_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkClear.Callback
+    Protected Sub cbkClear_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkClear.Callback
         Dim ResultID As String = Split(e.Parameter, "|")(0)
         Dim ItemID As String = Split(e.Parameter, "|")(1)
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)

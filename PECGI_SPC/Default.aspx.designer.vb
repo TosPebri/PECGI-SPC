@@ -38,7 +38,7 @@ Partial Public Class _Default
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel7 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel7 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''ASPxLabel1 control.
@@ -47,7 +47,7 @@ Partial Public Class _Default
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel1 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel1 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''txtusername control.
@@ -56,7 +56,7 @@ Partial Public Class _Default
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtusername As Global.DevExpress.Web.ASPxEditors.ASPxTextBox
+    Protected WithEvents txtusername As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
     '''ASPxLabel3 control.
@@ -65,7 +65,7 @@ Partial Public Class _Default
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel3 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel3 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''txtpassword control.
@@ -74,7 +74,7 @@ Partial Public Class _Default
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtpassword As Global.DevExpress.Web.ASPxEditors.ASPxTextBox
+    Protected WithEvents txtpassword As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
     '''lblInfo control.
@@ -83,7 +83,7 @@ Partial Public Class _Default
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblInfo As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents lblInfo As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''linkForgot control.
@@ -92,7 +92,7 @@ Partial Public Class _Default
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents linkForgot As Global.DevExpress.Web.ASPxEditors.ASPxHyperLink
+    Protected WithEvents linkForgot As Global.DevExpress.Web.ASPxHyperLink
 
     '''<summary>
     '''btnLogin control.
@@ -101,7 +101,7 @@ Partial Public Class _Default
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnLogin As Global.DevExpress.Web.ASPxEditors.ASPxButton
+    Protected WithEvents btnLogin As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''btnVersion control.
@@ -110,7 +110,7 @@ Partial Public Class _Default
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnVersion As Global.DevExpress.Web.ASPxEditors.ASPxButton
+    Protected WithEvents btnVersion As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''ASPxLabel2 control.
@@ -119,5 +119,5 @@ Partial Public Class _Default
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel2 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel2 As Global.DevExpress.Web.ASPxLabel
 End Class

@@ -1,8 +1,6 @@
-﻿Imports DevExpress.Web.ASPxGridView
+﻿Imports DevExpress.Web
 Imports System.Data.SqlClient
-Imports DevExpress.Web.ASPxEditors
 Imports System.IO
-Imports DevExpress.Web.ASPxCallback
 Imports OfficeOpenXml
 Imports System.Drawing
 
@@ -184,7 +182,7 @@ Public Class TCCSResultInput
         cbkAttach.JSProperties("cp_val") = pVal
     End Sub
 
-    Protected Sub grid_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewAfterPerformCallbackEventArgs) Handles grid.AfterPerformCallback
+    Protected Sub grid_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles grid.AfterPerformCallback
         If e.CallbackName <> "CANCELEDIT" And e.CallbackName <> "CUSTOMCALLBACK" Then
             GridLoad(dtDate.Value, cboMachine.Value, txtLineID.Text, txtSubLine.Text, cboPartID.Value)
         End If
@@ -320,7 +318,7 @@ Public Class TCCSResultInput
         End Try
     End Sub
 
-    Protected Sub grid_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewCustomCallbackEventArgs) Handles grid.CustomCallback
+    Protected Sub grid_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridViewCustomCallbackEventArgs) Handles grid.CustomCallback
         Dim pFunction As String = Split(e.Parameters, "|")(0)
         Select Case pFunction
             Case "load", "save", "delete"
@@ -545,7 +543,7 @@ Public Class TCCSResultInput
         grid.CancelEdit()
     End Sub
 
-    Private Sub cboPartID_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cboPartID.Callback
+    Private Sub cboPartID_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cboPartID.Callback
         Dim pMachineNo As String = Split(e.Parameter, "|")(0)
         Dim dt As DataTable
         dt = clsTCCSResultDB.GetPart(pMachineNo)
@@ -559,7 +557,7 @@ Public Class TCCSResultInput
         cboOldPartID.DataBind()
     End Sub
 
-    Private Sub cbkValid_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkValid.Callback
+    Private Sub cbkValid_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkValid.Callback
         Dim pDate As String = Split(e.Parameter, "|")(0)
         Dim pMachineNo As String = Split(e.Parameter, "|")(1)
         Dim pPartID As String = Split(e.Parameter, "|")(2)
@@ -570,7 +568,7 @@ Public Class TCCSResultInput
     End Sub
 
     Protected Sub AttachmentLink_Init(ByVal sender As Object, ByVal e As EventArgs)
-        Dim link As DevExpress.Web.ASPxEditors.ASPxHyperLink = CType(sender, DevExpress.Web.ASPxEditors.ASPxHyperLink)
+        Dim link As DevExpress.Web.ASPxHyperLink = CType(sender, DevExpress.Web.ASPxHyperLink)
         If AuthUpdate = False Or ApproveStatus1 = 1 Or ApproveStatus2 = 1 Or ApproveStatus3 = 1 Or ApproveStatus4 = 1 Then
             link.Text = ""
             Return
@@ -616,7 +614,7 @@ Public Class TCCSResultInput
     End Sub
 
     Protected Sub ViewLink_Init(ByVal sender As Object, ByVal e As EventArgs)
-        Dim link As DevExpress.Web.ASPxEditors.ASPxHyperLink = CType(sender, DevExpress.Web.ASPxEditors.ASPxHyperLink)
+        Dim link As DevExpress.Web.ASPxHyperLink = CType(sender, DevExpress.Web.ASPxHyperLink)
         Dim templatecontainer As GridViewDataItemTemplateContainer = CType(link.NamingContainer, GridViewDataItemTemplateContainer)
         link.NavigateUrl = "javascript: Void(0)"
         If templatecontainer.VisibleIndex >= 0 Then
@@ -643,7 +641,7 @@ Public Class TCCSResultInput
     End Sub
 
     Protected Sub RemoveLink_Init(ByVal sender As Object, ByVal e As EventArgs)
-        Dim link As DevExpress.Web.ASPxEditors.ASPxHyperLink = CType(sender, DevExpress.Web.ASPxEditors.ASPxHyperLink)
+        Dim link As DevExpress.Web.ASPxHyperLink = CType(sender, DevExpress.Web.ASPxHyperLink)
         If AuthUpdate = False Or ApproveStatus1 = 1 Or ApproveStatus2 = 1 Or ApproveStatus3 = 1 Or ApproveStatus4 = 1 Then
             link.Text = ""
             Return
@@ -756,7 +754,7 @@ Public Class TCCSResultInput
         btnSave.ClientEnabled = True
     End Sub
 
-    Private Sub cbkApprove_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkApprove.Callback
+    Private Sub cbkApprove_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkApprove.Callback
         Dim pApprove As String = Split(e.Parameter, "|")(0)
         Dim pDate As String = Split(e.Parameter, "|")(1)
         Dim pMachineNo As String = Split(e.Parameter, "|")(2)
@@ -782,7 +780,7 @@ Public Class TCCSResultInput
         cbkApprove.JSProperties("cpValidationMsg") = ""
     End Sub
 
-    Private Sub cbkValidateApprove_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkValidateApprove.Callback
+    Private Sub cbkValidateApprove_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkValidateApprove.Callback
         Dim pDate As String = Split(e.Parameter, "|")(1)
         Dim pMachineNo As String = Split(e.Parameter, "|")(2)
         Dim pPartID As String = Split(e.Parameter, "|")(3)
@@ -811,7 +809,7 @@ Public Class TCCSResultInput
         cbkValidateApprove.JSProperties("cpValidationMsg") = ""
     End Sub
 
-    Private Sub cbkRefresh_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkRefresh.Callback
+    Private Sub cbkRefresh_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkRefresh.Callback
         Dim pDate As String = Split(e.Parameter, "|")(1)
         Dim pMachineNo As String = Split(e.Parameter, "|")(2)
         Dim pPartID As String = Split(e.Parameter, "|")(3)
@@ -899,7 +897,7 @@ Public Class TCCSResultInput
         End If
     End Sub
 
-    Private Sub cbkValidateNG_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkValidateNG.Callback
+    Private Sub cbkValidateNG_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkValidateNG.Callback
         Dim pDate As String = Split(e.Parameter, "|")(1)
         Dim pMachineNo As String = Split(e.Parameter, "|")(2)
         Dim pPartID As String = Split(e.Parameter, "|")(3)
@@ -943,7 +941,7 @@ Public Class TCCSResultInput
         End If
     End Sub
 
-    Protected Sub cbkRemove_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbkRemove.Callback
+    Protected Sub cbkRemove_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkRemove.Callback
         Dim TCCSResultID As String = Split(e.Parameter, "|")(0)
         Dim ItemID As String = Split(e.Parameter, "|")(1)
         Dim MachineNo As String = Split(e.Parameter, "|")(2)
@@ -1165,7 +1163,7 @@ Public Class TCCSResultInput
         DownloadExcel()
     End Sub
 
-    Protected Sub grid_HtmlDataCellPrepared(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewTableDataCellEventArgs) Handles grid.HtmlDataCellPrepared
+    Protected Sub grid_HtmlDataCellPrepared(sender As Object, e As DevExpress.Web.ASPxGridViewTableDataCellEventArgs) Handles grid.HtmlDataCellPrepared
         If (e.DataColumn.FieldName = "Judgement") Then
             If e.CellValue & "" = "NG" Then
                 e.Cell.BackColor = Color.Red

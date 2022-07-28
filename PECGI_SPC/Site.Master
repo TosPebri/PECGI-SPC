@@ -107,7 +107,7 @@
 					</li>
                     <asp:Repeater ID="rptMenu" runat="server" >
                       <ItemTemplate>
-                          <li class="<%#Eval("StatusActiveParent") %>"  title="<%# Eval("MenuDesc")%>"><a href='#'><i class="<%#Eval("HelpName") %>"></i><span class="menu-item-parent"><%# Eval("MenuDesc")%></span></a>
+                          <li class="<%#Eval("StatusActiveParent") %>"><a href='#' title="<%# Eval("MenuDesc")%>"><i class="<%#Eval("HelpName") %>"></i><span class="menu-item-parent"><%# Eval("MenuDesc")%></span></a>
                               <ul>
                                   <asp:Repeater ID="rptChildMenu" runat="server">
                                       <ItemTemplate>
@@ -115,10 +115,10 @@
                                             <a href="<%#Eval("MenuName") %>">
                                                 <i class="<%#Eval("HelpName") %>"></i>
                                                 <%#Eval("MenuDesc") %>
-                                               <asp:Label ID="labelnotifQCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSA") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Master Approval", true, false)%>'></asp:Label>
+<%--                                               <asp:Label ID="labelnotifQCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSA") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Master Approval", true, false)%>'></asp:Label>
                                                 <asp:Label ID="labelnotifTCCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifTCCSA") %>' Visible='<%#if(Eval("MenuDesc") = "TCCS Master Approval", true, false)%>'></asp:Label>
                                                 <asp:Label ID="labelnotifTCCSRA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifTCCSRA") %>' Visible='<%#if(Eval("MenuDesc") = "TCCS Result Approval", true, false)%>'></asp:Label>
-                                                <asp:Label ID="labelnotifQCSResult" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSResult") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Result Input", true, false)%>'></asp:Label>
+                                                <asp:Label ID="labelnotifQCSResult" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSResult") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Result Input", true, false)%>'></asp:Label>--%>
                                             </a>
                                            </li>
                                       </ItemTemplate>

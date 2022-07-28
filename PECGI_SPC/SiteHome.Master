@@ -87,15 +87,17 @@
 
         <!-- User info -->
         <div class="login-info">
-				<span> <!-- User image size is adjusted inside CSS, it should stay as it --> 				
-					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                        &nbsp <asp:Label ID="lblUser" runat="server" Text="lblUser" Font-Names="Tahoma" Font-Size="14pt" Font-Bold="true"></asp:Label>
-                        <asp:Label ID="lblAdmin" runat="server" Text="lblAdmin" Visible="False"></asp:Label>
-					</a> 
-					
-				</span>
-			</div>
+            <span>
+                <!-- User image size is adjusted inside CSS, it should stay as it -->
+                <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    &nbsp
+                    <asp:Label ID="lblUser" runat="server" Text="lblUser" Font-Names="Tahoma" Font-Size="14pt" Font-Bold="true"></asp:Label>
+                    <asp:Label ID="lblAdmin" runat="server" Text="lblAdmin" Visible="False"></asp:Label>
+                </a>
+
+            </span>
+        </div>
         <!-- end user info -->
 
         <!-- NAVIGATION : This navigation is also responsive-->
@@ -104,6 +106,29 @@
                 <li>
                     <a href="Main.aspx" title="Home"><i class="fa fa-lg fa-fw fa-home"></i><span class="menu-item-parent">Home</span></a>
                 </li>
+                <asp:Repeater ID="Repeater1" runat="server">
+                    <ItemTemplate>
+                        <li class="<%#Eval("StatusActiveParent") %>">
+                            <a href='#' title="<%# Eval("MenuDesc")%>"><i class="<%#Eval("HelpName") %>"></i><span class="menu-item-parent"><%#Eval("MenuDesc")%></span></a>
+                            <ul>
+                                <asp:Repeater ID="rptChildMenu" runat="server">
+                                    <ItemTemplate>
+                                        <li class="<%#Eval("StatusActiveChild") %>">
+                                            <a href="<%#Eval("MenuName") %>">
+                                                <i class="<%#Eval("HelpName") %>"></i>
+                                                <%#Eval("MenuDesc") %>
+                                                <%-- <asp:Label ID="labelnotifQCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSA") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Master Approval", true, false)%>'></asp:Label>
+                                                <asp:Label ID="labelnotifTCCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifTCCSA") %>' Visible='<%#if(Eval("MenuDesc") = "TCCS Master Approval", true, false)%>'></asp:Label>
+                                                <asp:Label ID="labelnotifTCCSRA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifTCCSRA") %>' Visible='<%#if(Eval("MenuDesc") = "TCCS Result Approval", true, false)%>'></asp:Label>
+                                                <asp:Label ID="labelnotifQCSResult" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSResult") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Result Input", true, false)%>'></asp:Label>--%>
+                                            </a>
+                                        </li>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </ul>
+                        </li>
+                    </ItemTemplate>
+                </asp:Repeater>
                 <asp:Repeater ID="rptMenu" runat="server">
                     <ItemTemplate>
                         <li class="<%#Eval("StatusActiveParent") %>">
@@ -115,10 +140,10 @@
                                             <a href="<%#Eval("MenuName") %>">
                                                 <i class="<%#Eval("HelpName") %>"></i>
                                                 <%#Eval("MenuDesc") %>
-                                                <asp:Label ID="labelnotifQCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSA") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Master Approval", true, false)%>'></asp:Label>
+                                                <%-- <asp:Label ID="labelnotifQCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSA") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Master Approval", true, false)%>'></asp:Label>
                                                 <asp:Label ID="labelnotifTCCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifTCCSA") %>' Visible='<%#if(Eval("MenuDesc") = "TCCS Master Approval", true, false)%>'></asp:Label>
                                                 <asp:Label ID="labelnotifTCCSRA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifTCCSRA") %>' Visible='<%#if(Eval("MenuDesc") = "TCCS Result Approval", true, false)%>'></asp:Label>
-                                                <asp:Label ID="labelnotifQCSResult" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSResult") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Result Input", true, false)%>'></asp:Label>
+                                                <asp:Label ID="labelnotifQCSResult" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSResult") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Result Input", true, false)%>'></asp:Label>--%>
                                             </a>
                                         </li>
                                     </ItemTemplate>

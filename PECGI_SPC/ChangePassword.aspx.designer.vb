@@ -20,7 +20,7 @@ Partial Public Class ChangePassword
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel1 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel1 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''txtCurrentPassword control.
@@ -29,7 +29,7 @@ Partial Public Class ChangePassword
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtCurrentPassword As Global.DevExpress.Web.ASPxEditors.ASPxTextBox
+    Protected WithEvents txtCurrentPassword As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
     '''ASPxLabel2 control.
@@ -38,7 +38,7 @@ Partial Public Class ChangePassword
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel2 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel2 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''txtNewPassword control.
@@ -47,7 +47,7 @@ Partial Public Class ChangePassword
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtNewPassword As Global.DevExpress.Web.ASPxEditors.ASPxTextBox
+    Protected WithEvents txtNewPassword As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
     '''cbProgress control.
@@ -56,7 +56,7 @@ Partial Public Class ChangePassword
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cbProgress As Global.DevExpress.Web.ASPxCallback.ASPxCallback
+    Protected WithEvents cbProgress As Global.DevExpress.Web.ASPxCallback
 
     '''<summary>
     '''ASPxLabel3 control.
@@ -65,7 +65,7 @@ Partial Public Class ChangePassword
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel3 As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents ASPxLabel3 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''txtConfirmPassword control.
@@ -74,7 +74,7 @@ Partial Public Class ChangePassword
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtConfirmPassword As Global.DevExpress.Web.ASPxEditors.ASPxTextBox
+    Protected WithEvents txtConfirmPassword As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
     '''btnClear control.
@@ -83,7 +83,7 @@ Partial Public Class ChangePassword
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnClear As Global.DevExpress.Web.ASPxEditors.ASPxButton
+    Protected WithEvents btnClear As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''btnSubmit control.
@@ -92,7 +92,7 @@ Partial Public Class ChangePassword
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnSubmit As Global.DevExpress.Web.ASPxEditors.ASPxButton
+    Protected WithEvents btnSubmit As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''Master property.

@@ -38,5 +38,5 @@ Partial Public Class PreviewPDF
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblErr As Global.DevExpress.Web.ASPxEditors.ASPxLabel
+    Protected WithEvents lblErr As Global.DevExpress.Web.ASPxLabel
 End Class

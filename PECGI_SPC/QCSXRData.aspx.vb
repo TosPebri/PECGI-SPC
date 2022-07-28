@@ -5,8 +5,7 @@ Imports System.Drawing
 Imports System.Collections.Generic
 Imports System.Data.SqlClient
 Imports System.IO
-Imports DevExpress.Web.ASPxGridView
-Imports DevExpress.Web.ASPxEditors
+Imports DevExpress.Web
 Imports DevExpress.Web.Data
 Imports OfficeOpenXml
 
@@ -60,7 +59,7 @@ Public Class QCSXRData
     End Sub
 
     '#Region "Grid"
-    '    Protected Sub GridMenu_AfterPerformCallback(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridView.ASPxGridViewAfterPerformCallbackEventArgs) Handles GridMenu.AfterPerformCallback
+    '    Protected Sub GridMenu_AfterPerformCallback(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles GridMenu.AfterPerformCallback
     '        If e.CallbackName <> "CANCELEDIT" Then
     '            'If ClsQCSXRDataDB.Exist(cbopartid.Value, cborevno.Value, cbocheckitem.Value, "") = True Then
     '            '    up_GridLoad(cbopartid.Value, cborevno.Value, cbocheckitem.Value, 0)
@@ -89,7 +88,7 @@ Public Class QCSXRData
     '        End If
     '    End Sub
 
-    '    Private Sub GridMenu_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridView.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
+    '    Private Sub GridMenu_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
     '        'If Not Grid.IsNewRowEditing Then
     '        '    If e.Column.FieldName = "LineID" Then
     '        '        e.Editor.ReadOnly = True
@@ -147,7 +146,7 @@ Public Class QCSXRData
     '    End Sub
 
     '    Protected Sub GridMenu_RowValidating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs) Handles GridMenu.RowValidating
-    '        'Dim GridData As DevExpress.Web.ASPxGridView.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView.ASPxGridView)
+    '        'Dim GridData As DevExpress.Web.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView)
 
     '        'For Each column As GridViewColumn In Grid.Columns
     '        '    Dim dataColumn As GridViewDataColumn = TryCast(column, GridViewDataColumn)
@@ -251,7 +250,7 @@ Public Class QCSXRData
     '        'Next column
     '    End Sub
 
-    '    Private Sub GridMenu_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridView.ASPxGridViewCustomCallbackEventArgs) Handles GridMenu.CustomCallback
+    '    Private Sub GridMenu_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridViewCustomCallbackEventArgs) Handles GridMenu.CustomCallback
     '        'Dim pFunction As String = Split(e.Parameters, "|")(0)
     '        'Dim pErr As String = ""
     '        'Select Case pFunction
@@ -304,7 +303,7 @@ Public Class QCSXRData
 
 
 #Region "Control Event"
-    Protected Sub Grid_AfterPerformCallback(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridView.ASPxGridViewAfterPerformCallbackEventArgs) Handles Grid.AfterPerformCallback
+    Protected Sub Grid_AfterPerformCallback(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles Grid.AfterPerformCallback
         If e.CallbackName <> "CANCELEDIT" Then
             up_GridLoad()
         End If
@@ -362,7 +361,7 @@ Public Class QCSXRData
         End If
     End Sub
 
-    Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridView.ASPxGridViewEditorEventArgs) Handles Grid.CellEditorInitialize
+    Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles Grid.CellEditorInitialize
         If Not Grid.IsNewRowEditing Then
 
             If e.Column.FieldName = "XID" Then
@@ -392,7 +391,7 @@ Public Class QCSXRData
     End Sub
 
     Protected Sub Grid_RowValidating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs) Handles Grid.RowValidating
-        'Dim GridData As DevExpress.Web.ASPxGridView.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView.ASPxGridView)
+        'Dim GridData As DevExpress.Web.ASPxGridView = TryCast(sender, DevExpress.Web.ASPxGridView)
 
         'For Each column As GridViewColumn In Grid.Columns
         '    Dim dataColumn As GridViewDataColumn = TryCast(column, GridViewDataColumn)
@@ -465,7 +464,7 @@ Public Class QCSXRData
 #End Region
 
 #Region "Callback"
-    'Private Sub cbopartid_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbopartid.Callback
+    'Private Sub cbopartid_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbopartid.Callback
     '    Dim pParam As String = Split(e.Parameter, "|")(1)
 
     '    Dim dsMenu As DataTable
@@ -475,7 +474,7 @@ Public Class QCSXRData
 
     'End Sub
 
-    'Private Sub cborevno_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cborevno.Callback
+    'Private Sub cborevno_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cborevno.Callback
     '    Dim pParam As String = Split(e.Parameter, "|")(1)
 
     '    Dim dsMenu As DataTable
@@ -484,7 +483,7 @@ Public Class QCSXRData
     '    cborevno.DataBind()
     'End Sub
 
-    'Private Sub cborevnopopup_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cborevnopopup.Callback
+    'Private Sub cborevnopopup_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cborevnopopup.Callback
     '    Dim pParam As String = Split(e.Parameter, "|")(1)
 
     '    Dim dsMenu As DataTable
@@ -494,7 +493,7 @@ Public Class QCSXRData
     '    cborevnopopup.DataBind()
     'End Sub
 
-    'Private Sub cboprocessid_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cboprocessid.Callback
+    'Private Sub cboprocessid_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cboprocessid.Callback
     '    Dim pPartID As String = Split(e.Parameter, "|")(1)
     '    Dim pRevNo As String = Split(e.Parameter, "|")(2)
 
@@ -504,7 +503,7 @@ Public Class QCSXRData
     '    cboprocessid.DataBind()
     'End Sub
 
-    'Private Sub cbocheckitem_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbocheckitem.Callback
+    'Private Sub cbocheckitem_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbocheckitem.Callback
     '    Dim pPartID As String = Split(e.Parameter, "|")(1)
     '    Dim pRevNo As String = Split(e.Parameter, "|")(2)
     '    Dim pProcessID As String = Split(e.Parameter, "|")(3)
@@ -515,7 +514,7 @@ Public Class QCSXRData
     '    cbocheckitem.DataBind()
     'End Sub
 
-    'Private Sub cbocheckitempopup_Callback(sender As Object, e As DevExpress.Web.ASPxClasses.CallbackEventArgsBase) Handles cbocheckitempopup.Callback
+    'Private Sub cbocheckitempopup_Callback(sender As Object, e As DevExpress.Web.CallbackEventArgsBase) Handles cbocheckitempopup.Callback
     '    Dim pPartID As String = Split(e.Parameter, "|")(1)
     '    Dim pRevNo As String = Split(e.Parameter, "|")(2)
     '    Dim pProcessID As String = Split(e.Parameter, "|")(3)

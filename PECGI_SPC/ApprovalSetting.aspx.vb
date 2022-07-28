@@ -1,4 +1,4 @@
-﻿Imports DevExpress.Web.ASPxEditors
+﻿Imports DevExpress.Web
 
 Public Class ApprovalSetting
     Inherits System.Web.UI.Page
@@ -99,7 +99,7 @@ Public Class ApprovalSetting
 #End Region
 
 #Region "Control Event"
-    Private Sub cbSave_Callback(source As Object, e As DevExpress.Web.ASPxCallback.CallbackEventArgs) Handles cbSave.Callback
+    Private Sub cbSave_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbSave.Callback
         Dim pErr As String = ""
 
         If ClsApprovalSettingDB.isExist("") Then

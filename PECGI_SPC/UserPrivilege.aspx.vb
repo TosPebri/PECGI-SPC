@@ -1,11 +1,20 @@
-﻿Public Class UserPrivilege
+﻿Imports Microsoft.VisualBasic
+Imports System
+Imports DevExpress.Utils
+Imports System.Drawing
+Imports System.Collections.Generic
+Imports System.Data.SqlClient
+Imports System.IO
+Imports DevExpress.Web
+Imports DevExpress.Web.Data
+Public Class UserPrivilege
     Inherits System.Web.UI.Page
     Dim UserID As String
 
     Private Sub UserPrivilege_Init(sender As Object, e As System.EventArgs) Handles Me.Init
         If Request.QueryString("prm") Is Nothing Then
             Exit Sub
-        End If        
+        End If
         UserID = Request.QueryString("prm").ToString()
         txtUser.Text = UserID
         up_GridLoad(UserID)
@@ -81,6 +90,6 @@
         Dim CreateUser As String = Session("user") & ""
         If FromUserID <> "" Then
             Cls_ss_UserPrivilegeDB.Copy(FromUserID, TouserID, CreateUser)
-        End If        
+        End If
     End Sub
 End Class

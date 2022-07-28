@@ -6,9 +6,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
-    <title>PANASONIC SPC</title>
+    <title>Statistic Process Control System</title>
     <link href="~/Styles/SiteLogin.css" type="text/css" rel="Stylesheet" runat="server" />
-    <link href="~/Styles/images/icon.ico" rel="SHORTCUT ICON" type="image/icon" />
+    <link href="~/Styles/images/favicon_pecgi.ico" rel="SHORTCUT ICON" type="image/icon" />
     <style type="text/css">
         .style1 {
             width: 4px;
@@ -46,7 +46,7 @@
                 </tr>
                 <tr>
                     <td align="center" style="width: 900px">
-                        <dx:ASPxLabel ID="ASPxLabel7" runat="server" Text="DASBOARD-LOGIN"
+                        <dx:ASPxLabel ID="ASPxLabel7" runat="server" Text="SPC SYSTEM-LOGIN"
                             ForeColor="Black" Font-Bold="True"
                             Font-Size="25px">
                         </dx:ASPxLabel>

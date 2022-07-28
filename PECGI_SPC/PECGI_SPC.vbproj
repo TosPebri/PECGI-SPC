@@ -164,6 +164,7 @@
     <Content Include="QCSXRData.aspx" />
     <Content Include="StretchSession.aspx" />
     <Content Include="Styles\images\dashboard.png" />
+    <Content Include="Styles\images\favicon_pecgi.ico" />
     <Content Include="Styles\images\logo-panasonic.svg" />
     <Content Include="Styles\images\main.png" />
     <Content Include="Styles\images\main2.png" />

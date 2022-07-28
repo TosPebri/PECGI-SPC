@@ -35,7 +35,7 @@ Public Class Site
         Else
             Title = SiteTitle & " - "
         End If
-        PageTitle.InnerText = Title & "PANASONIC SPC"
+        PageTitle.InnerText = Title & "PANASONIC SPC SYSTEM"
 
         ''notif approve
         If IsNothing(Session("user")) Then

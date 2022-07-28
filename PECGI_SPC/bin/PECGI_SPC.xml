@@ -5767,14 +5767,6 @@ Auto-generated field.
 To modify move field declaration from designer file to code-behind file.
 </remarks>
 </member>
-<member name="P:PECGI_SPC.UserPrivilege.Master">
-<summary>
-Master property.
-</summary>
-<remarks>
-Auto-generated property.
-</remarks>
-</member>
 <member name="F:PECGI_SPC.UserSetup._Grid">
 <summary>
 Grid control.

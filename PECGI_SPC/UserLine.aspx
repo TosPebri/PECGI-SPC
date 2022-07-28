@@ -8,8 +8,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>PANASONIC SPC</title>    
-    <link href="Styles/images/icon.ico" rel="SHORTCUT ICON" type="image/icon" />
+    <title>favicon_pecgi.ico</title>    
+    <link href="Styles/images/favicon_pecgi.ico" rel="SHORTCUT ICON" type="image/icon" />
 
     <meta charset="utf-8">
     <meta name="description" content="">
@@ -141,7 +141,7 @@
 			<!-- projects dropdown -->
 			<div class="project-context hidden-xs" >
 				<span></span>
-				<span class="project-selector dropdown-toggle" style="font-family:Tahoma; font-weight:bold; font-size:12pt; margin-top:10px; padding:0px 0px 0px 18px">PANASONIC SPC</span>
+				<span class="project-selector dropdown-toggle" style="font-family:Tahoma; font-weight:bold; font-size:12pt; margin-top:10px; padding:0px 0px 0px 18px">PANASONIC SPC SYSTEM</span>
 			</div>
 			<!-- end projects dropdown -->
 

@@ -2,13 +2,11 @@
 <%@ Register Namespace="DevExpress.Web" TagPrefix="ASPxCallbackPanel" %>
 <%@ Register Assembly="DevExpress.Web.v20.2, Version=20.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
 
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>PANASONIC SPC</title>
-    <link href="Styles/images/icon.ico" rel="SHORTCUT ICON" type="image/icon" />
+    <title>Statistic Process Control System</title>
+    <link href="Styles/images/favicon_pecgi.ico" rel="SHORTCUT ICON" type="image/icon" />
 
     <meta charset="utf-8">
     <meta name="description" content="">

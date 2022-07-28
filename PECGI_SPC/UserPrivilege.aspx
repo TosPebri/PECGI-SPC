@@ -1,5 +1,4 @@
-﻿<%@ Page Language="vb" AutoEventWireup="false" MasterPageFile="~/Site.Master" CodeBehind="UserPrivilege.aspx.vb" Inherits="PECGI_SPC.UserPrivilege" %>
-<%@ MasterType VirtualPath="~/Site.Master" %>
+﻿<%@ Page Language="vb" AutoEventWireup="false" CodeBehind="UserPrivilege.aspx.vb" Inherits="PECGI_SPC.UserPrivilege" %>
 <%@ Register Namespace="DevExpress.Web" TagPrefix="ASPxCallbackPanel" %>
 <%@ Register Assembly="DevExpress.Web.v20.2, Version=20.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
 

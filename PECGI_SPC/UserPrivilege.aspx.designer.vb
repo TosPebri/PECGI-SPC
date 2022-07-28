@@ -102,16 +102,4 @@ Partial Public Class UserPrivilege
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents cbkValid As Global.DevExpress.Web.ASPxCallback
-
-    '''<summary>
-    '''Master property.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated property.
-    '''</remarks>
-    Public Shadows ReadOnly Property Master() As PECGI_SPC.Site
-        Get
-            Return CType(MyBase.Master, PECGI_SPC.Site)
-        End Get
-    End Property
 End Class

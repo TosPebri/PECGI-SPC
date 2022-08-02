@@ -4,7 +4,7 @@ Public Class Cls_ss_UserPrivilegeDB
     Public Shared Function GetList(Optional ByRef pErr As String = "") As List(Of Cls_ss_UserPrivilege)
         Try
             Using cn As New SqlConnection(Sconn.Stringkoneksi)
-                Dim sql As String = "SELECT * FROM dbo.UserPrivilege"
+                Dim sql As String = "SELECT * FROM dbo.spc_UserPrivilege"
                 Dim Cmd As New SqlCommand(sql, cn)
                 Dim da As New SqlDataAdapter(Cmd)
                 Dim dt As New DataTable
@@ -31,7 +31,7 @@ Public Class Cls_ss_UserPrivilegeDB
                 cn.Open()
                 Dim sql As String = ""
 
-                sql = "SELECT * FROM dbo.UserSetup WHERE AppID='P01' AND UserID='" & pUserID & "' "
+                sql = "SELECT * FROM dbo.spc_UserSetup WHERE AppID='spc' AND UserID='" & pUserID & "' "
 
 
                 Dim ds As New DataSet
@@ -50,15 +50,15 @@ Public Class Cls_ss_UserPrivilegeDB
     Public Shared Function Copy(FromUserID As String, ToUserID As String, CreateUser As String) As Integer
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
-            Dim q As String = "delete from UserPrivilege where UserID = @ToUserID"
+            Dim q As String = "delete from dbo.spc_UserPrivilege where UserID = @ToUserID"
             Dim cmd As New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("ToUserID", ToUserID)
 
             Dim i As Integer = cmd.ExecuteNonQuery
-            q = "Insert into UserPrivilege (" & vbCrLf & _
-                "AppID, UserID, MenuID, AllowAccess, AllowUpdate, AllowSpecial, CreateDate, CreateUser ) " & vbCrLf & _
-                "select AppID, @ToUserID, MenuID, AllowAccess, AllowUpdate, AllowSpecial, GetDate(), @CreateUser " & vbCrLf & _
-                "from UserPrivilege where UserID = @FromUserID"
+            q = "Insert into spc_UserPrivilege (" & vbCrLf &
+                "AppID, UserID, MenuID, AllowAccess, AllowUpdate, AllowSpecial, CreateDate, CreateUser ) " & vbCrLf &
+                "select AppID, @ToUserID, MenuID, AllowAccess, AllowUpdate, AllowSpecial, GetDate(), @CreateUser " & vbCrLf &
+                "from spc_UserPrivilege where UserID = @FromUserID"
             cmd = New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("FromUserID", FromUserID)
             cmd.Parameters.AddWithValue("ToUserID", ToUserID)
@@ -73,21 +73,21 @@ Public Class Cls_ss_UserPrivilegeDB
             pErr = ""
             Using cn As New SqlConnection(Sconn.Stringkoneksi)
                 cn.Open()
-                Dim sql As String = " IF NOT EXISTS (SELECT * FROM dbo.UserPrivilege WHERE UserID =@UserID AND MenuID=@MenuID)" & vbCrLf & _
-                      " BEGIN " & vbCrLf & _
-                    " INSERT INTO dbo.UserPrivilege ( AppID ,UserID ,MenuID ,AllowAccess ,AllowUpdate) " & vbCrLf & _
-                    " VALUES( @AppID ," & vbCrLf & _
-                    " @UserID ," & vbCrLf & _
-                    " @MenuID ," & vbCrLf & _
-                    " @AllowAccess ," & vbCrLf & _
-                    " @AllowUpdate )" & vbCrLf & _
-                    " END " & vbCrLf & _
-                    " ELSE " & vbCrLf & _
+                Dim sql As String = " IF NOT EXISTS (SELECT * FROM dbo.SPC_UserPrivilege WHERE UserID =@UserID AND MenuID=@MenuID)" & vbCrLf &
+                      " BEGIN " & vbCrLf &
+                    " INSERT INTO dbo.SPC_UserPrivilege ( AppID ,UserID ,MenuID ,AllowAccess ,AllowUpdate) " & vbCrLf &
+                    " VALUES( @AppID ," & vbCrLf &
+                    " @UserID ," & vbCrLf &
+                    " @MenuID ," & vbCrLf &
+                    " @AllowAccess ," & vbCrLf &
+                    " @AllowUpdate )" & vbCrLf &
+                    " END " & vbCrLf &
+                    " ELSE " & vbCrLf &
                     " BEGIN "
-                sql = sql + " UPDATE dbo.UserPrivilege " & vbCrLf & _
-                      " SET AllowAccess=@AllowAccess, " & vbCrLf & _
-                      " AllowUpdate=@AllowUpdate " & vbCrLf & _
-                      " WHERE AppID=@AppID AND UserID =@UserID AND MenuID=@MenuID " & vbCrLf & _
+                sql = sql + " UPDATE dbo.SPC_UserPrivilege " & vbCrLf &
+                      " SET AllowAccess=@AllowAccess, " & vbCrLf &
+                      " AllowUpdate=@AllowUpdate " & vbCrLf &
+                      " WHERE AppID=@AppID AND UserID =@UserID AND MenuID=@MenuID " & vbCrLf &
                       " END "
                 Dim Cmd As New SqlCommand(sql, cn)
                 With Cmd.Parameters
@@ -111,7 +111,7 @@ Public Class Cls_ss_UserPrivilegeDB
         Try
             Using cn As New SqlConnection(Sconn.Stringkoneksi)
                 cn.Open()
-                Dim sql As String = "DELETE UserPrivilege WHERE UserID=@UserID"
+                Dim sql As String = "DELETE spc_UserPrivilege WHERE UserID=@UserID"
                 Dim Cmd As New SqlCommand(sql, cn)
                 With Cmd.Parameters
                     .AddWithValue("UserID", pUserP.UserID)

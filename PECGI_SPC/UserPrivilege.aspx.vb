@@ -9,21 +9,15 @@ Imports DevExpress.Web
 Imports DevExpress.Web.Data
 Public Class UserPrivilege
     Inherits System.Web.UI.Page
-    Dim UserID As String
 
-    Private Sub UserPrivilege_Init(sender As Object, e As System.EventArgs) Handles Me.Init
-        If Request.QueryString("prm") Is Nothing Then
-            Exit Sub
-        End If
-        UserID = Request.QueryString("prm").ToString()
-        txtUser.Text = UserID
-        up_GridLoad(UserID)
-    End Sub
+#Region "Declaration"
+    Dim UserID As String = ""
+    Public AuthInsert As Boolean = False
+    Public AuthUpdate As Boolean = False
+    Public AuthDelete As Boolean = False
+#End Region
 
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-
-    End Sub
-
+#Region "Procedure"
     Private Sub up_GridLoad(ByVal pUserID As String)
         Dim pErr As String = ""
         Dim dsMenu As List(Of Cls_ss_UserMenu)
@@ -44,32 +38,70 @@ Public Class UserPrivilege
         gridMenu.JSProperties("cp_type") = msgType
         gridMenu.JSProperties("cp_val") = pVal
     End Sub
+#End Region
 
+#Region "Initialization"
+    Private Sub UserPrivilege_Init(sender As Object, e As System.EventArgs) Handles Me.Init
+        If Request.QueryString("prm") Is Nothing Then
+            UserID = Session("user")
+            btnCancel.Visible = False
+            Exit Sub
+        Else
+            btnCancel.Visible = True
+            UserID = Request.QueryString("prm").ToString()
+        End If
+    End Sub
+
+    Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
+        If Request.QueryString("prm") Is Nothing Then
+            UserID = Session("user")
+            btnCancel.Visible = False
+            Exit Sub
+        Else
+            btnCancel.Visible = True
+            UserID = Request.QueryString("prm").ToString()
+        End If
+    End Sub
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        sGlobal.getMenu("Z020")
+        Master.SiteTitle = sGlobal.menuName
+        show_error(MsgTypeEnum.Info, "", 0)
+        txtUser.Text = UserID
+        up_GridLoad(UserID)
+    End Sub
+#End Region
+
+#Region "Control Event"
     Private Sub gridMenu_BatchUpdate(sender As Object, e As DevExpress.Web.Data.ASPxDataBatchUpdateEventArgs) Handles gridMenu.BatchUpdate
         Dim ls_AllowAccess As String = "", ls_AllowUpdate As String = "", ls_AllowSpecial As String = "", ls_Active As String = ""
         Dim MenuID As String = ""
 
         Dim a As Integer = e.UpdateValues.Count
         For iLoop = 0 To a - 1
-            ls_AllowAccess = (e.UpdateValues(iLoop).NewValues("AllowAccess").ToString())
-            ls_AllowUpdate = (e.UpdateValues(iLoop).NewValues("AllowUpdate").ToString())
+            Try
+                ls_AllowAccess = (e.UpdateValues(iLoop).NewValues("AllowAccess").ToString())
+                ls_AllowUpdate = (e.UpdateValues(iLoop).NewValues("AllowUpdate").ToString())
 
-            If ls_AllowAccess = True Then ls_AllowAccess = "1" Else ls_AllowAccess = "0"
-            If ls_AllowUpdate = True Then ls_AllowUpdate = "1" Else ls_AllowUpdate = "0"
+                If ls_AllowAccess = True Then ls_AllowAccess = "1" Else ls_AllowAccess = "0"
+                If ls_AllowUpdate = True Then ls_AllowUpdate = "1" Else ls_AllowUpdate = "0"
 
-            MenuID = Trim(e.UpdateValues(iLoop).NewValues("MenuID").ToString())
-            Dim UserPrevilege As New Cls_ss_UserPrivilege With {
-                .AppID = "QCS",
-                .UserID = UserID,
-                .MenuID = MenuID,
-                .AllowAccess = ls_AllowAccess,
-                .AllowUpdate = ls_AllowUpdate
-            }
-            Dim pErr As String = ""
-            Dim iUpd As Integer = Cls_ss_UserPrivilegeDB.Save(UserPrevilege, pErr)
-            If pErr <> "" Then
-                Exit For
-            End If
+                MenuID = Trim(e.UpdateValues(iLoop).NewValues("MenuID").ToString())
+                Dim UserPrevilege As New Cls_ss_UserPrivilege With {
+                    .AppID = "SPC",
+                    .UserID = UserID,
+                    .MenuID = MenuID,
+                    .AllowAccess = ls_AllowAccess,
+                    .AllowUpdate = ls_AllowUpdate
+                }
+                Dim pErr As String = ""
+                Dim iUpd As Integer = Cls_ss_UserPrivilegeDB.Save(UserPrevilege, pErr)
+                If pErr <> "" Then
+                    Exit For
+                End If
+            Catch ex As Exception
+                Throw ex
+            End Try
         Next iLoop
         gridMenu.EndUpdate()
     End Sub
@@ -92,4 +124,5 @@ Public Class UserPrivilege
             Cls_ss_UserPrivilegeDB.Copy(FromUserID, TouserID, CreateUser)
         End If
     End Sub
+#End Region
 End Class

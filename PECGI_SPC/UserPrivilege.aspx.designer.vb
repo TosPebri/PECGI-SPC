@@ -14,31 +14,13 @@ Option Explicit On
 Partial Public Class UserPrivilege
 
     '''<summary>
-    '''Label1 control.
+    '''ASPxLabel3 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents Label1 As Global.System.Web.UI.WebControls.Label
-
-    '''<summary>
-    '''Form1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents Form1 As Global.System.Web.UI.HtmlControls.HtmlForm
-
-    '''<summary>
-    '''ASPxLabel1 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ASPxLabel1 As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents ASPxLabel3 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''txtUser control.
@@ -50,13 +32,13 @@ Partial Public Class UserPrivilege
     Protected WithEvents txtUser As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
-    '''ASPxLabel2 control.
+    '''ASPxLabel4 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel2 As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents ASPxLabel4 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cboUser control.
@@ -86,6 +68,15 @@ Partial Public Class UserPrivilege
     Protected WithEvents gridMenu As Global.DevExpress.Web.ASPxGridView
 
     '''<summary>
+    '''btnCancel control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnCancel As Global.DevExpress.Web.ASPxButton
+
+    '''<summary>
     '''btnSave control.
     '''</summary>
     '''<remarks>
@@ -102,4 +93,16 @@ Partial Public Class UserPrivilege
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents cbkValid As Global.DevExpress.Web.ASPxCallback
+
+    '''<summary>
+    '''Master property.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated property.
+    '''</remarks>
+    Public Shadows ReadOnly Property Master() As PECGI_SPC.Site
+        Get
+            Return CType(MyBase.Master, PECGI_SPC.Site)
+        End Get
+    End Property
 End Class

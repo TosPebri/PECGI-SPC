@@ -217,7 +217,7 @@ Public Class UserSetup
         Dim UserID As String = ""
         UserID = templatecontainer.Grid.GetRowValues(templatecontainer.VisibleIndex, "UserID") & ""
         If UserID <> "" Then
-            link.ClientSideEvents.Click = "function (s,e) {window.open('UserPrivilege.aspx?prm=" + UserID + "', 'ModalPopUp', 'height=600,width=960,left=200,top=10'); }"
+            link.ClientSideEvents.Click = "function (s,e) {window.open('UserPrivilege.aspx?prm=" + UserID + "', '_self'); }"
         End If
     End Sub
 

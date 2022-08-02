@@ -18,7 +18,7 @@ Public Class clsUserSetupDB
             Dim cmd As New SqlCommand(q, Cn)
             Dim des As New clsDESEncryption("TOS")
             With cmd.Parameters
-                .AddWithValue("AppID", "QCS")
+                .AddWithValue("AppID", "SPC")
                 .AddWithValue("UserID", pUser.UserID)
                 .AddWithValue("FullName", pUser.FullName)
                 .AddWithValue("AdminStatus", Val(pUser.AdminStatus & ""))
@@ -109,7 +109,7 @@ Public Class clsUserSetupDB
             Dim des As New clsDESEncryption("TOS")
             Dim cmd As New SqlCommand(q, Cn)
             With cmd.Parameters
-                .AddWithValue("AppID", "QCS")
+                .AddWithValue("AppID", "SPC")
                 .AddWithValue("UserID", pUser.UserID)
                 .AddWithValue("FullName", pUser.FullName)
                 .AddWithValue("AdminStatus", pUser.AdminStatus)
@@ -205,7 +205,7 @@ Public Class clsUserSetupDB
                   "  FROM dbo.spc_UserMenu USM " & vbCrLf &
                   "  LEFT JOIN (SELECT * FROM dbo.spc_UserPrivilege WHERE UserID='" & pUserID & "' ) UP   " & vbCrLf &
                   "  ON USM.AppID = UP.AppID AND USM.MenuID=UP.MenuID    " & vbCrLf &
-                  "  WHERE USM.AppID='QCS' and USM.MenuID <> 'Z010' " & vbCrLf &
+                  "  WHERE USM.AppID='SPC' and USM.MenuID <> 'Z010' " & vbCrLf &
                   "  ORDER BY USM.MenuID  "
                 Dim Cmd As New SqlCommand(sql, cn)
                 Dim da As New SqlDataAdapter(Cmd)

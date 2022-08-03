@@ -41,34 +41,28 @@ Public Class UserPrivilege
 #End Region
 
 #Region "Initialization"
-    Private Sub UserPrivilege_Init(sender As Object, e As System.EventArgs) Handles Me.Init
-        If Request.QueryString("prm") Is Nothing Then
-            UserID = Session("user")
-            btnCancel.Visible = False
-            Exit Sub
-        Else
-            btnCancel.Visible = True
-            UserID = Request.QueryString("prm").ToString()
-        End If
-    End Sub
-
     Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
-        If Request.QueryString("prm") Is Nothing Then
-            UserID = Session("user")
-            btnCancel.Visible = False
-            Exit Sub
-        Else
-            btnCancel.Visible = True
-            UserID = Request.QueryString("prm").ToString()
-        End If
-    End Sub
-
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         sGlobal.getMenu("Z020")
         Master.SiteTitle = sGlobal.menuName
         show_error(MsgTypeEnum.Info, "", 0)
+
+        If Request.QueryString("prm") Is Nothing Then
+            UserID = Session("user")
+            btnCancel.Visible = False
+            Exit Sub
+        Else
+            btnCancel.Visible = True
+            UserID = Request.QueryString("prm").ToString()
+        End If
+
+        If Not Page.IsPostBack Then
+            up_GridLoad(UserID)
+        End If
         txtUser.Text = UserID
-        up_GridLoad(UserID)
+    End Sub
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
     End Sub
 #End Region
 
@@ -108,11 +102,12 @@ Public Class UserPrivilege
 
     Private Sub gridMenu_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridViewCustomCallbackEventArgs) Handles gridMenu.CustomCallback
         Dim pAction As String = Split(e.Parameters, "|")(0)
-        Dim pUserID As String = Split(e.Parameters, "|")(1)
-        up_GridLoad(pUserID)
+        Dim sUserID As String = Split(e.Parameters, "|")(1)
+        up_GridLoad(sUserID)
         If pAction = "save" Then
             show_error(MsgTypeEnum.Success, "Update data successful", 1)
         End If
+
     End Sub
 
     Private Sub cbkValid_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkValid.Callback

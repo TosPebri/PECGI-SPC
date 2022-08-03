@@ -83,6 +83,34 @@
             }
         }
 
+        function OnBatchEditStartEditing(s, e) {
+            currentColumnName = e.focusedColumn.fieldName;
+            if (currentColumnName == "GroupID" || currentColumnName == "MenuID" || currentColumnName == "MenuDesc") {
+                e.cancel = true;
+            }
+            currentEditableVisibleIndex = e.visibleIndex;
+        }
+
+        function OnAccessCheckedChanged(s, e) {
+            gridMenu.SetFocusedRowIndex(-1);
+            if (s.GetValue() == -1) s.SetValue(1);
+            for (var i = 0; i < gridMenu.GetVisibleRowsOnPage(); i++) {
+                if (gridMenu.batchEditApi.GetCellValue(i, "AllowAccess", false) != s.GetValue()) {
+                    gridMenu.batchEditApi.SetCellValue(i, "AllowAccess", s.GetValue());
+                }
+            }
+        }
+
+        function OnUpdateCheckedChanged(s, e) {
+            if (s.GetValue() == -1) s.SetValue(1);
+            gridMenu.SetFocusedRowIndex(-1);
+            for (var i = 0; i < gridMenu.GetVisibleRowsOnPage(); i++) {
+                if (gridMenu.batchEditApi.GetCellValue(i, "AllowUpdate", false) != s.GetValue()) {
+                    gridMenu.batchEditApi.SetCellValue(i, "AllowUpdate", s.GetValue());
+                }
+            }
+        }
+
         function SaveData(s, e) {
             cbkValid.PerformCallback('save|' + cboUser.GetText() + '|' + txtUser.GetText());
         }
@@ -128,7 +156,7 @@
                                     Font-Size="8pt" Theme="Office2010Black" DataSourceID="dsUser"
                                     EnableTheming="True" TextField="UserID" TextFormatString="{0}"
                                     ValueField="UserID" ClientInstanceName="cboUser">
-                                    <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                      <ClientSideEvents SelectedIndexChanged="function(s, e) {
 	                                                                gridMenu.PerformCallback('load|' + cboUser.GetText());
                                                                 }" />
                                     <Columns>
@@ -148,7 +176,11 @@
                 <dx:ASPxGridView ID="gridMenu" runat="server" AutoGenerateColumns="False" ClientInstanceName="gridMenu"
                     Font-Names="Segoe UI" Font-Size="8pt" KeyFieldName="MenuID" Theme="Office2010Black"
                     Width="100%">
-                    <ClientSideEvents EndCallback="OnEndCallback" />
+                    <ClientSideEvents
+                        BatchEditStartEditing="OnBatchEditStartEditing"
+                        EndCallback="OnEndCallback" CallbackError="function(s, e) {
+	                                        e.Cancel=True;
+                                        }" />
                     <Columns>
                         <dx:GridViewDataTextColumn Caption="Menu Group" FieldName="GroupID" Name="GroupID"
                             ReadOnly="True" VisibleIndex="0" Width="200px">
@@ -211,11 +243,11 @@
                     <table>
                         <tr>
                             <td>
-                                 <dx:ASPxButton ID="btnCancel" TabIndex="2" runat="server" AutoPostBack="False" ClientInstanceName="btnCancel"
-                                      Font-Names="Segoe UI" Font-Size="8pt" Text="Cancel" Theme="Office2010Silver"
-                                      Width="80px">
-                                     <ClientSideEvents Click="function close() {window.open('UserSetup.aspx', '_self' );}" />
-                                 </dx:ASPxButton>
+                                <dx:ASPxButton ID="btnCancel" TabIndex="2" runat="server" AutoPostBack="False" ClientInstanceName="btnCancel"
+                                    Font-Names="Segoe UI" Font-Size="8pt" Text="Cancel" Theme="Office2010Silver"
+                                    Width="80px">
+                                    <ClientSideEvents Click="function close() {window.open('UserSetup.aspx', '_self' );}" />
+                                </dx:ASPxButton>
                                 &nbsp;&nbsp;
                                 <dx:ASPxButton ID="btnSave" TabIndex="1" runat="server" AutoPostBack="False" ClientInstanceName="btnSave"
                                     Font-Names="Segoe UI" Font-Size="8pt" Text="Save" Theme="Office2010Silver"

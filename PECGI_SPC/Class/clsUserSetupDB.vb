@@ -7,13 +7,9 @@ Public Class clsUserSetupDB
             Dim q As String
             q = "INSERT INTO dbo.spc_UserSetup (" & vbCrLf &
                 "   [AppID],[UserID],[FullName],[Password],[Description],[AdminStatus],[LockStatus]," &
-                "   LineLeaderStatus, LineForemanStatus, ProdSectionHeadStatus, " & vbCrLf &
-                "   QELeaderStatus, QESectionHeadStatus, " & vbCrLf &
                 "   CreateDate, CreateUser " & vbCrLf &
                 ") VALUES ( " & vbCrLf &
                 "   @AppID, @UserID, @FullName, @Password, @Description, @AdminStatus, @LockStatus, " & vbCrLf &
-                "   @LineLeaderStatus, @LineForemanStatus, @ProdSectionHeadStatus, " & vbCrLf &
-                "   @QELeaderStatus, @QESectionHeadStatus, " & vbCrLf &
                 "   GETDATE(), @CreateUser )"
             Dim cmd As New SqlCommand(q, Cn)
             Dim des As New clsDESEncryption("TOS")
@@ -25,11 +21,6 @@ Public Class clsUserSetupDB
                 Dim pwd As String = des.EncryptData(pUser.Password)
                 .AddWithValue("Password", pwd)
                 .AddWithValue("Description", pUser.Description)
-                .AddWithValue("LineLeaderStatus", Val(pUser.LineLeaderStatus & ""))
-                .AddWithValue("LineForemanStatus", Val(pUser.LineForemanStatus & ""))
-                .AddWithValue("ProdSectionHeadStatus", Val(pUser.ProdSectionHeadStatus & ""))
-                .AddWithValue("QELeaderStatus", Val(pUser.QELeaderStatus & ""))
-                .AddWithValue("QESectionHeadStatus", Val(pUser.QESectionHeadStatus & ""))
                 .AddWithValue("LockStatus", Val(pUser.LockStatus & ""))
                 .AddWithValue("CreateUser", pUser.CreateUser)
             End With
@@ -98,11 +89,6 @@ Public Class clsUserSetupDB
             q = "UPDATE dbo.spc_UserSetup SET FullName=@FullName, Password=@Password," &
                 "Description=@Description, " &
                 "AdminStatus = @AdminStatus, " &
-                "LineLeaderStatus = @LineLeaderStatus, " &
-                "LineForemanStatus = @LineForemanStatus, " &
-                "ProdSectionHeadStatus = @ProdSectionHeadStatus, " &
-                "QELeaderStatus = @QELeaderStatus, " &
-                "QESectionHeadStatus = @QESectionHeadStatus, " &
                 "LockStatus=@LockStatus, " & vbCrLf &
                 "FailedLogin = 0, UpdateDate = GETDATE(), UpdateUser = @UpdateUser " &
                 "WHERE UserID = @UserID and AppID = @AppID "
@@ -116,11 +102,6 @@ Public Class clsUserSetupDB
                 Dim pwd As String = des.EncryptData(pUser.Password)
                 .AddWithValue("Password", pwd)
                 .AddWithValue("Description", pUser.Description)
-                .AddWithValue("LineLeaderStatus", Val(pUser.LineLeaderStatus & ""))
-                .AddWithValue("LineForemanStatus", Val(pUser.LineForemanStatus & ""))
-                .AddWithValue("ProdSectionHeadStatus", Val(pUser.ProdSectionHeadStatus & ""))
-                .AddWithValue("QELeaderStatus", Val(pUser.QELeaderStatus & ""))
-                .AddWithValue("QESectionHeadStatus", Val(pUser.QESectionHeadStatus & ""))
                 .AddWithValue("LockStatus", pUser.LockStatus)
                 .AddWithValue("UpdateUser", pUser.UpdateUser)
             End With
@@ -146,11 +127,6 @@ Public Class clsUserSetupDB
                     .FullName = Trim(dt.Rows(i)("FullName")),
                     .Password = clsDESEncryption.DecryptData(dt.Rows(i)("Password")),
                     .Description = Trim(dt.Rows(i)("Description") & ""),
-                    .LineLeaderStatus = Val(dt.Rows(i)("LineLeaderStatus") & ""),
-                    .LineForemanStatus = Val(dt.Rows(i)("LineForemanStatus") & ""),
-                    .ProdSectionHeadStatus = Val(dt.Rows(i)("ProdSectionHeadStatus") & ""),
-                    .QELeaderStatus = Val(dt.Rows(i)("QELeaderStatus") & ""),
-                    .QESectionHeadStatus = Val(dt.Rows(i)("QESectionHeadStatus") & ""),
                     .LockStatus = dt.Rows(i)("LockStatus"),
                     .AdminStatus = dt.Rows(i)("AdminStatus") & ""
                 }
@@ -161,38 +137,38 @@ Public Class clsUserSetupDB
     End Function
 
     Public Shared Function GetData(UserID As String) As clsUserSetup
-        Using cn As New SqlConnection(Sconn.Stringkoneksi)
-            Dim sql As String
-            Dim clsDESEncryption As New clsDESEncryption("TOS")
-            sql = " SELECT * FROM dbo.spc_UserSetup where UserID = @UserID " & vbCrLf
-            Dim cmd As New SqlCommand(sql, cn)
-            Dim da As New SqlDataAdapter(cmd)
-            cmd.Parameters.AddWithValue("UserID", UserID)
-            Dim dt As New DataTable
-            da.Fill(dt)
-            Dim Users As New List(Of clsUserSetup)
-            If dt.Rows.Count > 0 Then
-                Dim i As Integer = 0
-                Dim User As New clsUserSetup With {
-                        .AppID = dt.Rows(i)("AppID"),
-                        .UserID = Trim(dt.Rows(i)("UserID")),
-                        .FullName = Trim(dt.Rows(i)("FullName")),
-                        .Password = clsDESEncryption.DecryptData(dt.Rows(i)("Password")),
-                        .Description = Trim(dt.Rows(i)("Description") & ""),
-                        .LineLeaderStatus = Val(dt.Rows(i)("LineLeaderStatus") & ""),
-                        .LineForemanStatus = Val(dt.Rows(i)("LineForemanStatus") & ""),
-                        .ProdSectionHeadStatus = Val(dt.Rows(i)("ProdSectionHeadStatus") & ""),
-                        .QELeaderStatus = Val(dt.Rows(i)("QELeaderStatus") & ""),
-                        .QESectionHeadStatus = Val(dt.Rows(i)("QESectionHeadStatus") & ""),
-                        .LockStatus = Val(dt.Rows(i)("LockStatus") & ""),
-                        .FailedLogin = Val(dt.Rows(i)("FailedLogin") & ""),
-                        .AdminStatus = Val(dt.Rows(i)("AdminStatus") & "")
-                    }
-                Return User
-            Else
-                Return Nothing
-            End If
-        End Using
+        Try
+            Using cn As New SqlConnection(Sconn.Stringkoneksi)
+                Dim sql As String
+                Dim clsDESEncryption As New clsDESEncryption("TOS")
+                sql = " SELECT * FROM dbo.spc_UserSetup where UserID = @UserID " & vbCrLf
+                Dim cmd As New SqlCommand(sql, cn)
+                Dim da As New SqlDataAdapter(cmd)
+                cmd.Parameters.AddWithValue("UserID", UserID)
+                Dim dt As New DataTable
+                da.Fill(dt)
+                Dim Users As New List(Of clsUserSetup)
+                If dt.Rows.Count > 0 Then
+                    Dim i As Integer = 0
+                    Dim User As New clsUserSetup With {
+                            .AppID = dt.Rows(i)("AppID"),
+                            .UserID = Trim(dt.Rows(i)("UserID")),
+                            .FullName = Trim(dt.Rows(i)("FullName")),
+                            .Password = clsDESEncryption.DecryptData(dt.Rows(i)("Password")),
+                            .Description = Trim(dt.Rows(i)("Description") & ""),
+                            .LockStatus = Val(dt.Rows(i)("LockStatus") & ""),
+                            .FailedLogin = Val(dt.Rows(i)("FailedLogin") & ""),
+                            .AdminStatus = Val(dt.Rows(i)("AdminStatus") & "")
+                        }
+                    Return User
+                Else
+                    Return Nothing
+                End If
+            End Using
+        Catch ex As Exception
+            Throw ex
+        End Try
+
     End Function
 
     Public Shared Function GetListMenu(ByVal pUserID As String, Optional ByRef pErr As String = "") As List(Of Cls_ss_UserMenu)

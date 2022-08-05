@@ -204,7 +204,7 @@ Public Class SiteHome
                 "FROM dbo.spc_UserMenu USM INNER JOIN dbo.spc_UserPrivilege UP ON USM.AppID = UP.AppID AND USM.MenuID = UP.MenuID  " & vbCrLf &
                 "WHERE UP.AllowAccess = '1' " & vbCrLf &
                 "AND UP.UserID='" & Session("User").ToString & "' " & vbCrLf &
-                "AND USM.MenuID <> 'Z01  ' " & vbCrLf &
+                "AND USM.MenuID <> 'Z010  ' " & vbCrLf &
                 "and ActiveStatus = '1' " & vbCrLf &
                 "group by USM.GroupID, USM.GroupIndex, USM.GroupID, USM.GroupID " & vbCrLf &
                 "order by USM.GroupIndex "

@@ -30,9 +30,9 @@ Public Class QCSResultInput
         If User Is Nothing Then
             btnApprove.Enabled = False
             btnList.Enabled = False
-        ElseIf User.LineLeaderStatus = "1" Then
-            btnApprove.Enabled = True
-            btnList.Enabled = True
+            'ElseIf User.LineLeaderStatus = "1" Then
+            '    btnApprove.Enabled = True
+            '    btnList.Enabled = True
         Else
             btnApprove.Enabled = False
             btnList.Enabled = False

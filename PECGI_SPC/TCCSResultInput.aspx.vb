@@ -30,9 +30,9 @@ Public Class TCCSResultInput
         If SelUser Is Nothing Then
             AuthApprove = False
             btnApprove.Enabled = False
-        ElseIf SelUser.LineLeaderStatus = "1" Or SelUser.QELeaderStatus = "1" Or SelUser.ProdSectionHeadStatus = "1" Or SelUser.QESectionHeadStatus = "1" Then
-            AuthApprove = True
-            btnApprove.Enabled = True
+            'ElseIf SelUser.LineLeaderStatus = "1" Or SelUser.QELeaderStatus = "1" Or SelUser.ProdSectionHeadStatus = "1" Or SelUser.QESectionHeadStatus = "1" Then
+            '    AuthApprove = True
+            '    btnApprove.Enabled = True
         Else
             AuthApprove = False
             btnApprove.Enabled = False
@@ -140,19 +140,19 @@ Public Class TCCSResultInput
                             cbkAttach.JSProperties("cpEnableSave") = "1"
                             cbkAttach.JSProperties("cpEnableDelete") = "1"
                         End If
-                        If SelUser.QELeaderStatus = "1" And R.ApprovalStatus1 = 0 Then
-                            cbkAttach.JSProperties("cpEnableApprove") = "1"
-                            cbkAttach.JSProperties("cpEnableApproveNG") = "1"
-                        ElseIf SelUser.LineLeaderStatus = "1" And R.ApprovalStatus2 = 0 Then
-                            cbkAttach.JSProperties("cpEnableApprove") = "1"
-                            cbkAttach.JSProperties("cpEnableApproveNG") = "1"
-                        ElseIf SelUser.ProdSectionHeadStatus = "1" And R.ApprovalStatus3 = 0 And R.ApprovalStatus2 = 1 And R.Judgement = "NG" Then
-                            cbkAttach.JSProperties("cpEnableApprove") = "1"
-                            cbkAttach.JSProperties("cpEnableApproveNG") = "1"
-                        ElseIf SelUser.QESectionHeadStatus = "1" And R.ApprovalStatus4 = 0 And R.ApprovalStatus3 = 1 And R.Judgement = "NG" Then
-                            cbkAttach.JSProperties("cpEnableApprove") = "1"
-                            cbkAttach.JSProperties("cpEnableApproveNG") = "1"
-                        End If
+                        'If SelUser.QELeaderStatus = "1" And R.ApprovalStatus1 = 0 Then
+                        '    cbkAttach.JSProperties("cpEnableApprove") = "1"
+                        '    cbkAttach.JSProperties("cpEnableApproveNG") = "1"
+                        'ElseIf SelUser.LineLeaderStatus = "1" And R.ApprovalStatus2 = 0 Then
+                        '    cbkAttach.JSProperties("cpEnableApprove") = "1"
+                        '    cbkAttach.JSProperties("cpEnableApproveNG") = "1"
+                        'ElseIf SelUser.ProdSectionHeadStatus = "1" And R.ApprovalStatus3 = 0 And R.ApprovalStatus2 = 1 And R.Judgement = "NG" Then
+                        '    cbkAttach.JSProperties("cpEnableApprove") = "1"
+                        '    cbkAttach.JSProperties("cpEnableApproveNG") = "1"
+                        'ElseIf SelUser.QESectionHeadStatus = "1" And R.ApprovalStatus4 = 0 And R.ApprovalStatus3 = 1 And R.Judgement = "NG" Then
+                        '    cbkAttach.JSProperties("cpEnableApprove") = "1"
+                        '    cbkAttach.JSProperties("cpEnableApproveNG") = "1"
+                        'End If
                         ApproveStatus1 = R.ApprovalStatus1
                         ApproveStatus2 = R.ApprovalStatus2
                         ApproveStatus3 = R.ApprovalStatus3
@@ -232,19 +232,19 @@ Public Class TCCSResultInput
                     cbkAttach.JSProperties("cpEnableApprove") = ""
                     cbkAttach.JSProperties("cpEnableApproveNG") = ""
                 Else
-                    If SelUser.QELeaderStatus = "1" And Rs.ApprovalStatus1 = 0 Then
-                        cbkAttach.JSProperties("cpEnableApprove") = "1"
-                        cbkAttach.JSProperties("cpEnableApproveNG") = "1"
-                    ElseIf SelUser.LineLeaderStatus = "1" And Rs.ApprovalStatus2 = 0 Then
-                        cbkAttach.JSProperties("cpEnableApprove") = "1"
-                        cbkAttach.JSProperties("cpEnableApproveNG") = "1"
-                    ElseIf SelUser.ProdSectionHeadStatus = "1" And Rs.ApprovalStatus3 = 0 And Rs.ApprovalStatus2 = 1 And Rs.Judgement = "NG" Then
-                        cbkAttach.JSProperties("cpEnableApprove") = "1"
-                        cbkAttach.JSProperties("cpEnableApproveNG") = "1"
-                    ElseIf SelUser.QESectionHeadStatus = "1" And Rs.ApprovalStatus4 = 0 And Rs.ApprovalStatus3 = 1 And Rs.Judgement = "NG" Then
-                        cbkAttach.JSProperties("cpEnableApprove") = "1"
-                        cbkAttach.JSProperties("cpEnableApproveNG") = "1"
-                    End If
+                    'If SelUser.QELeaderStatus = "1" And Rs.ApprovalStatus1 = 0 Then
+                    '    cbkAttach.JSProperties("cpEnableApprove") = "1"
+                    '    cbkAttach.JSProperties("cpEnableApproveNG") = "1"
+                    'ElseIf SelUser.LineLeaderStatus = "1" And Rs.ApprovalStatus2 = 0 Then
+                    '    cbkAttach.JSProperties("cpEnableApprove") = "1"
+                    '    cbkAttach.JSProperties("cpEnableApproveNG") = "1"
+                    'ElseIf SelUser.ProdSectionHeadStatus = "1" And Rs.ApprovalStatus3 = 0 And Rs.ApprovalStatus2 = 1 And Rs.Judgement = "NG" Then
+                    '    cbkAttach.JSProperties("cpEnableApprove") = "1"
+                    '    cbkAttach.JSProperties("cpEnableApproveNG") = "1"
+                    'ElseIf SelUser.QESectionHeadStatus = "1" And Rs.ApprovalStatus4 = 0 And Rs.ApprovalStatus3 = 1 And Rs.Judgement = "NG" Then
+                    '    cbkAttach.JSProperties("cpEnableApprove") = "1"
+                    '    cbkAttach.JSProperties("cpEnableApproveNG") = "1"
+                    'End If
                 End If
             Else
                 cbkAttach.JSProperties("cpEnableApprove") = ""
@@ -459,19 +459,19 @@ Public Class TCCSResultInput
                                 grid.JSProperties("cpEnableApprove") = ""
                                 grid.JSProperties("cpEnableApproveNG") = ""
                             Else
-                                If SelUser.QELeaderStatus = "1" And Rs.ApprovalStatus1 = 0 Then
-                                    grid.JSProperties("cpEnableApprove") = "1"
-                                    grid.JSProperties("cpEnableApproveNG") = "1"
-                                ElseIf SelUser.LineLeaderStatus = "1" And Rs.ApprovalStatus2 = 0 Then
-                                    grid.JSProperties("cpEnableApprove") = "1"
-                                    grid.JSProperties("cpEnableApproveNG") = "1"
-                                ElseIf SelUser.ProdSectionHeadStatus = "1" And Rs.ApprovalStatus3 = 0 And Rs.ApprovalStatus2 = 1 And Rs.Judgement = "NG" Then
-                                    grid.JSProperties("cpEnableApprove") = "1"
-                                    grid.JSProperties("cpEnableApproveNG") = "1"
-                                ElseIf SelUser.QESectionHeadStatus = "1" And Rs.ApprovalStatus4 = 0 And Rs.ApprovalStatus3 = 1 And Rs.Judgement = "NG" Then
-                                    grid.JSProperties("cpEnableApprove") = "1"
-                                    grid.JSProperties("cpEnableApproveNG") = "1"
-                                End If
+                                'If SelUser.QELeaderStatus = "1" And Rs.ApprovalStatus1 = 0 Then
+                                '    grid.JSProperties("cpEnableApprove") = "1"
+                                '    grid.JSProperties("cpEnableApproveNG") = "1"
+                                'ElseIf SelUser.LineLeaderStatus = "1" And Rs.ApprovalStatus2 = 0 Then
+                                '    grid.JSProperties("cpEnableApprove") = "1"
+                                '    grid.JSProperties("cpEnableApproveNG") = "1"
+                                'ElseIf SelUser.ProdSectionHeadStatus = "1" And Rs.ApprovalStatus3 = 0 And Rs.ApprovalStatus2 = 1 And Rs.Judgement = "NG" Then
+                                '    grid.JSProperties("cpEnableApprove") = "1"
+                                '    grid.JSProperties("cpEnableApproveNG") = "1"
+                                'ElseIf SelUser.QESectionHeadStatus = "1" And Rs.ApprovalStatus4 = 0 And Rs.ApprovalStatus3 = 1 And Rs.Judgement = "NG" Then
+                                '    grid.JSProperties("cpEnableApprove") = "1"
+                                '    grid.JSProperties("cpEnableApproveNG") = "1"
+                                'End If
                             End If
                         Else
                             grid.JSProperties("cpEnableApprove") = ""
@@ -764,15 +764,15 @@ Public Class TCCSResultInput
         Dim pUser As String = Session("User") & ""
         Dim Rs As clsTCCSResult = clsTCCSResultDB.GetData(pDate, pMachineNo, pPartID, pLineID, pSubLineID)
         Dim ApproveLevel As Integer
-        If SelUser.QELeaderStatus = "1" And Rs.ApprovalStatus1 = 0 Then
-            ApproveLevel = 1
-        ElseIf SelUser.LineLeaderStatus = "1" And Rs.ApprovalStatus2 = 0 Then
-            ApproveLevel = 2
-        ElseIf SelUser.ProdSectionHeadStatus = "1" And Rs.ApprovalStatus2 = 1 And Rs.ApprovalStatus3 = 0 And Rs.Judgement = "NG" Then
-            ApproveLevel = 3
-        ElseIf SelUser.QESectionHeadStatus = "1" And Rs.ApprovalStatus3 = 1 And Rs.ApprovalStatus4 = 0 And Rs.Judgement = "NG" Then
-            ApproveLevel = 4
-        End If
+        'If SelUser.QELeaderStatus = "1" And Rs.ApprovalStatus1 = 0 Then
+        '    ApproveLevel = 1
+        'ElseIf SelUser.LineLeaderStatus = "1" And Rs.ApprovalStatus2 = 0 Then
+        '    ApproveLevel = 2
+        'ElseIf SelUser.ProdSectionHeadStatus = "1" And Rs.ApprovalStatus2 = 1 And Rs.ApprovalStatus3 = 0 And Rs.Judgement = "NG" Then
+        '    ApproveLevel = 3
+        'ElseIf SelUser.QESectionHeadStatus = "1" And Rs.ApprovalStatus3 = 1 And Rs.ApprovalStatus4 = 0 And Rs.Judgement = "NG" Then
+        '    ApproveLevel = 4
+        'End If
         Rs.ApprovalStatus1 = "1"
         Rs.ApprovalPIC1 = pUser
         Rs.ApprovalJudgement1 = pApprove
@@ -792,15 +792,15 @@ Public Class TCCSResultInput
             Return
         End If
         Dim ApproveLevel As Integer
-        If SelUser.QELeaderStatus = "1" And Rs.ApprovalStatus1 = 0 Then
-            ApproveLevel = 1
-        ElseIf SelUser.LineLeaderStatus = "1" And Rs.ApprovalStatus2 = 0 Then
-            ApproveLevel = 2
-        ElseIf SelUser.ProdSectionHeadStatus = "1" And Rs.ApprovalStatus2 = 1 And Rs.ApprovalStatus3 = 0 And Rs.Judgement = "NG" Then
-            ApproveLevel = 3
-        ElseIf SelUser.QESectionHeadStatus = "1" And Rs.ApprovalStatus3 = 1 And Rs.ApprovalStatus4 = 0 And Rs.Judgement = "NG" Then
-            ApproveLevel = 4
-        End If
+        'If SelUser.QELeaderStatus = "1" And Rs.ApprovalStatus1 = 0 Then
+        '    ApproveLevel = 1
+        'ElseIf SelUser.LineLeaderStatus = "1" And Rs.ApprovalStatus2 = 0 Then
+        '    ApproveLevel = 2
+        'ElseIf SelUser.ProdSectionHeadStatus = "1" And Rs.ApprovalStatus2 = 1 And Rs.ApprovalStatus3 = 0 And Rs.Judgement = "NG" Then
+        '    ApproveLevel = 3
+        'ElseIf SelUser.QESectionHeadStatus = "1" And Rs.ApprovalStatus3 = 1 And Rs.ApprovalStatus4 = 0 And Rs.Judgement = "NG" Then
+        '    ApproveLevel = 4
+        'End If
         If ApproveLevel = 0 Then
             cbkValidateApprove.JSProperties("cpValidationMsg") = "You cannot approve this data!"
             Return
@@ -862,22 +862,22 @@ Public Class TCCSResultInput
             cbkRefresh.JSProperties("cpDate4") = Format(Rs.ApprovalDate4, "dd MMM yyyy")
             cbkRefresh.JSProperties("cpJudge4") = Rs.ApprovalJudgement4
 
-            If SelUser.QELeaderStatus = "1" And Rs.ApprovalStatus1 = 0 Then
-                cbkRefresh.JSProperties("cpEnableApprove") = "1"
-                cbkRefresh.JSProperties("cpEnableApproveNG") = "1"
-            ElseIf SelUser.LineLeaderStatus = "1" And Rs.ApprovalStatus2 = 0 Then
-                cbkRefresh.JSProperties("cpEnableApprove") = "1"
-                cbkRefresh.JSProperties("cpEnableApproveNG") = "1"
-            ElseIf SelUser.ProdSectionHeadStatus = "1" And Rs.ApprovalStatus2 = 1 And Rs.ApprovalStatus3 = 0 And Rs.Judgement = "NG" Then
-                cbkRefresh.JSProperties("cpEnableApprove") = "1"
-                cbkRefresh.JSProperties("cpEnableApproveNG") = "1"
-            ElseIf SelUser.QESectionHeadStatus = "1" And Rs.ApprovalStatus3 = 1 And Rs.ApprovalStatus4 = 0 And Rs.Judgement = "NG" Then
-                cbkRefresh.JSProperties("cpEnableApprove") = "1"
-                cbkRefresh.JSProperties("cpEnableApproveNG") = "1"
-            Else
-                cbkRefresh.JSProperties("cpEnableApprove") = ""
-                cbkRefresh.JSProperties("cpEnableApproveNG") = ""
-            End If
+            'If SelUser.QELeaderStatus = "1" And Rs.ApprovalStatus1 = 0 Then
+            '    cbkRefresh.JSProperties("cpEnableApprove") = "1"
+            '    cbkRefresh.JSProperties("cpEnableApproveNG") = "1"
+            'ElseIf SelUser.LineLeaderStatus = "1" And Rs.ApprovalStatus2 = 0 Then
+            '    cbkRefresh.JSProperties("cpEnableApprove") = "1"
+            '    cbkRefresh.JSProperties("cpEnableApproveNG") = "1"
+            'ElseIf SelUser.ProdSectionHeadStatus = "1" And Rs.ApprovalStatus2 = 1 And Rs.ApprovalStatus3 = 0 And Rs.Judgement = "NG" Then
+            '    cbkRefresh.JSProperties("cpEnableApprove") = "1"
+            '    cbkRefresh.JSProperties("cpEnableApproveNG") = "1"
+            'ElseIf SelUser.QESectionHeadStatus = "1" And Rs.ApprovalStatus3 = 1 And Rs.ApprovalStatus4 = 0 And Rs.Judgement = "NG" Then
+            '    cbkRefresh.JSProperties("cpEnableApprove") = "1"
+            '    cbkRefresh.JSProperties("cpEnableApproveNG") = "1"
+            'Else
+            '    cbkRefresh.JSProperties("cpEnableApprove") = ""
+            '    cbkRefresh.JSProperties("cpEnableApproveNG") = ""
+            'End If
             cbkRefresh.JSProperties("cpEnableSave") = ""
         End If
         If btnSave.Enabled = False Then
@@ -909,19 +909,19 @@ Public Class TCCSResultInput
             Return
         End If
         Dim ApproveLevel As Integer
-        If SelUser.QELeaderStatus = "1" And Rs.ApprovalStatus1 = 0 Then
-            ApproveLevel = 1
-        ElseIf SelUser.LineLeaderStatus = "1" And Rs.ApprovalStatus1 = 1 And Rs.ApprovalStatus2 = 0 Then
-            ApproveLevel = 2
-        ElseIf SelUser.ProdSectionHeadStatus = "1" And Rs.ApprovalStatus2 = 1 And Rs.ApprovalStatus3 = 0 And Rs.Judgement = "NG" Then
-            ApproveLevel = 3
-        ElseIf SelUser.QESectionHeadStatus = "1" And Rs.ApprovalStatus3 = 1 And Rs.ApprovalStatus4 = 0 And Rs.Judgement = "NG" Then
-            ApproveLevel = 4
-        End If
-        If ApproveLevel = 0 Then
-            cbkValidateNG.JSProperties("cpValidationMsg") = "You cannot approve this data!"
-            Return
-        End If
+        'If SelUser.QELeaderStatus = "1" And Rs.ApprovalStatus1 = 0 Then
+        '    ApproveLevel = 1
+        'ElseIf SelUser.LineLeaderStatus = "1" And Rs.ApprovalStatus1 = 1 And Rs.ApprovalStatus2 = 0 Then
+        '    ApproveLevel = 2
+        'ElseIf SelUser.ProdSectionHeadStatus = "1" And Rs.ApprovalStatus2 = 1 And Rs.ApprovalStatus3 = 0 And Rs.Judgement = "NG" Then
+        '    ApproveLevel = 3
+        'ElseIf SelUser.QESectionHeadStatus = "1" And Rs.ApprovalStatus3 = 1 And Rs.ApprovalStatus4 = 0 And Rs.Judgement = "NG" Then
+        '    ApproveLevel = 4
+        'End If
+        'If ApproveLevel = 0 Then
+        '    cbkValidateNG.JSProperties("cpValidationMsg") = "You cannot approve this data!"
+        '    Return
+        'End If
         cbkValidateNG.JSProperties("cpApproveLevel") = ApproveLevel
         cbkValidateNG.JSProperties("cpValidationMsg") = ""
     End Sub

@@ -12,11 +12,11 @@
     Public Property SecurityQuestion As String
     Public Property SecurityAnswer As String
     Public Property PasswordHint As String
-    Public Property LineLeaderStatus As String
-    Public Property LineForemanStatus As String
-    Public Property ProdSectionHeadStatus As String
-    Public Property QELeaderStatus As String
-    Public Property QESectionHeadStatus As String
+    Public Property FactoryCode As String
+    Public Property JobPosition As String
+    Public Property Email As String
+    Public Property LastUpdate As String
+    Public Property LastUser As String
     Public Property UpdateDate As String
     Public Property UpdateUser As String
     Public Property CreateDate As String

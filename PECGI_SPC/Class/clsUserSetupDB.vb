@@ -1,44 +1,104 @@
 ﻿Imports System.Data.SqlClient
 
 Public Class clsUserSetupDB
-    Public Shared Function Insert(pUser As clsUserSetup) As Integer
-        Using Cn As New SqlConnection(Sconn.Stringkoneksi)
-            Cn.Open()
-            Dim q As String
-            q = "INSERT INTO dbo.spc_UserSetup (" & vbCrLf &
-                "   [AppID],[UserID],[FullName],[Password],[Description],[AdminStatus],[LockStatus]," &
-                "   CreateDate, CreateUser " & vbCrLf &
-                ") VALUES ( " & vbCrLf &
-                "   @AppID, @UserID, @FullName, @Password, @Description, @AdminStatus, @LockStatus, " & vbCrLf &
-                "   GETDATE(), @CreateUser )"
-            Dim cmd As New SqlCommand(q, Cn)
-            Dim des As New clsDESEncryption("TOS")
-            With cmd.Parameters
-                .AddWithValue("AppID", "SPC")
-                .AddWithValue("UserID", pUser.UserID)
-                .AddWithValue("FullName", pUser.FullName)
-                .AddWithValue("AdminStatus", Val(pUser.AdminStatus & ""))
-                Dim pwd As String = des.EncryptData(pUser.Password)
-                .AddWithValue("Password", pwd)
-                .AddWithValue("Description", pUser.Description)
-                .AddWithValue("LockStatus", Val(pUser.LockStatus & ""))
-                .AddWithValue("CreateUser", pUser.CreateUser)
-            End With
-            Dim i As Integer = cmd.ExecuteNonQuery
-            Return i
-        End Using
+    Public Shared Function Insert(pUser As clsUserSetup) As String
+        Dim Msg = ""
+        Try
+            Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+                Cn.Open()
+                Dim sqL As String
+                sqL = "INSERT INTO dbo.spc_UserSetup (" & vbCrLf &
+                        "   [AppID],[UserID],[FullName],[Password],[Description],[AdminStatus]," & vbCrLf &
+                        "   [FactoryCode],[JobPosition],[Email],[LockStatus]," & vbCrLf &
+                        "   [RegisterDate],[RegisterUser],[UpdateDate],[UpdateUser]" & vbCrLf &
+                        ") VALUES ( " & vbCrLf &
+                        "   @AppID, @UserID, @FullName, @Password, @Description, @AdminStatus," & vbCrLf &
+                        "   @FactoryCode, @JobPosition, @Email, @LockStatus, " & vbCrLf &
+                        "   GETDATE(), @RegisterUser, GETDATE(), @RegisterUser )"
+                Dim cmd As New SqlCommand(sqL, Cn)
+                Dim des As New clsDESEncryption("TOS")
+                With cmd.Parameters
+                    .AddWithValue("AppID", "SPC")
+                    .AddWithValue("UserID", pUser.UserID)
+                    .AddWithValue("FullName", pUser.FullName)
+                    .AddWithValue("AdminStatus", Val(pUser.AdminStatus & ""))
+                    Dim pwd As String = des.EncryptData(pUser.Password)
+                    .AddWithValue("Password", pwd)
+                    .AddWithValue("Description", pUser.Description)
+                    .AddWithValue("FactoryCode", pUser.FactoryCode)
+                    .AddWithValue("JobPosition", pUser.JobPosition)
+                    .AddWithValue("Email", pUser.Email)
+                    .AddWithValue("LockStatus", Val(pUser.LockStatus & ""))
+                    .AddWithValue("RegisterUser", pUser.CreateUser)
+                End With
+                cmd.ExecuteNonQuery()
+                Return Msg
+            End Using
+        Catch ex As Exception
+            Msg = ex.Message
+            Throw ex
+            Return Msg
+        End Try
     End Function
 
-    Public Shared Function Delete(pUserID As String) As Integer
-        Using Cn As New SqlConnection(Sconn.Stringkoneksi)
-            Cn.Open()
-            Dim q As String = "Delete from dbo.spc_UserSetup where UserID = @UserID" & vbCrLf &
-                "Delete from dbo.spc_UserPrivilege where UserID = @UserID"
-            Dim cmd As New SqlCommand(q, Cn)
-            cmd.Parameters.AddWithValue("UserID", pUserID)
-            Dim i As Integer = cmd.ExecuteNonQuery
-            Return i
-        End Using
+    Public Shared Function Update(pUser As clsUserSetup) As String
+        Dim Msg = ""
+        Try
+            Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+                Cn.Open()
+                Dim q As String
+                q = "UPDATE dbo.spc_UserSetup SET FullName=@FullName, Password=@Password," &
+                    "Description=@Description, " &
+                    "AdminStatus = @AdminStatus, " &
+                    "FactoryCode = @FactoryCode, " &
+                    "JobPosition = @JobPosition, " &
+                    "Email = @Email, " &
+                    "LockStatus = @LockStatus, " & vbCrLf &
+                    "FailedLogin = 0, UpdateDate = GETDATE(), UpdateUser = @UpdateUser " &
+                    "WHERE UserID = @UserID and AppID = @AppID "
+                Dim des As New clsDESEncryption("TOS")
+                Dim cmd As New SqlCommand(q, Cn)
+                With cmd.Parameters
+                    .AddWithValue("AppID", "SPC")
+                    .AddWithValue("UserID", pUser.UserID)
+                    .AddWithValue("FullName", pUser.FullName)
+                    .AddWithValue("AdminStatus", pUser.AdminStatus)
+                    Dim pwd As String = des.EncryptData(pUser.Password)
+                    .AddWithValue("Password", pwd)
+                    .AddWithValue("Description", pUser.Description)
+                    .AddWithValue("FactoryCode", pUser.FactoryCode)
+                    .AddWithValue("JobPosition", pUser.JobPosition)
+                    .AddWithValue("Email", pUser.Email)
+                    .AddWithValue("LockStatus", pUser.LockStatus)
+                    .AddWithValue("UpdateUser", pUser.UpdateUser)
+                End With
+                cmd.ExecuteNonQuery()
+                Return Msg
+            End Using
+        Catch ex As Exception
+            Msg = ex.Message
+            Throw ex
+            Return Msg
+        End Try
+    End Function
+
+    Public Shared Function Delete(pUserID As String) As String
+        Dim Msg = ""
+        Try
+            Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+                Cn.Open()
+                Dim q As String = "Delete from dbo.spc_UserSetup where UserID = @UserID" & vbCrLf &
+                    "Delete from dbo.spc_UserPrivilege where UserID = @UserID"
+                Dim cmd As New SqlCommand(q, Cn)
+                cmd.Parameters.AddWithValue("UserID", pUserID)
+                cmd.ExecuteNonQuery()
+                Return Msg
+            End Using
+        Catch ex As Exception
+            Msg = ex.Message
+            Throw ex
+            Return Msg
+        End Try
     End Function
 
     Public Shared Function UpdatePassword(pUserID As String, pNewPassword As String) As Integer
@@ -82,34 +142,6 @@ Public Class clsUserSetupDB
         End Using
     End Function
 
-    Public Shared Function Update(pUser As clsUserSetup) As Integer
-        Using Cn As New SqlConnection(Sconn.Stringkoneksi)
-            Cn.Open()
-            Dim q As String
-            q = "UPDATE dbo.spc_UserSetup SET FullName=@FullName, Password=@Password," &
-                "Description=@Description, " &
-                "AdminStatus = @AdminStatus, " &
-                "LockStatus=@LockStatus, " & vbCrLf &
-                "FailedLogin = 0, UpdateDate = GETDATE(), UpdateUser = @UpdateUser " &
-                "WHERE UserID = @UserID and AppID = @AppID "
-            Dim des As New clsDESEncryption("TOS")
-            Dim cmd As New SqlCommand(q, Cn)
-            With cmd.Parameters
-                .AddWithValue("AppID", "SPC")
-                .AddWithValue("UserID", pUser.UserID)
-                .AddWithValue("FullName", pUser.FullName)
-                .AddWithValue("AdminStatus", pUser.AdminStatus)
-                Dim pwd As String = des.EncryptData(pUser.Password)
-                .AddWithValue("Password", pwd)
-                .AddWithValue("Description", pUser.Description)
-                .AddWithValue("LockStatus", pUser.LockStatus)
-                .AddWithValue("UpdateUser", pUser.UpdateUser)
-            End With
-            Dim i As Integer = cmd.ExecuteNonQuery
-            Return i
-        End Using
-    End Function
-
     Public Shared Function GetList() As List(Of clsUserSetup)
         Using cn As New SqlConnection(Sconn.Stringkoneksi)
             Dim sql As String
@@ -126,9 +158,14 @@ Public Class clsUserSetupDB
                     .UserID = Trim(dt.Rows(i)("UserID")),
                     .FullName = Trim(dt.Rows(i)("FullName")),
                     .Password = clsDESEncryption.DecryptData(dt.Rows(i)("Password")),
+                    .AdminStatus = If(dt.Rows(i)("AdminStatus") = "1", "Yes", "No"),
                     .Description = Trim(dt.Rows(i)("Description") & ""),
                     .LockStatus = dt.Rows(i)("LockStatus"),
-                    .AdminStatus = dt.Rows(i)("AdminStatus") & ""
+                    .FactoryCode = dt.Rows(i)("FactoryCode") & "",
+                    .JobPosition = dt.Rows(i)("JobPosition") & "",
+                    .Email = dt.Rows(i)("Email") & "",
+                    .LastUpdate = Date.Parse(dt.Rows(i)("UpdateDate").ToString()).ToString("yyyy MMM dd HH:mm:ss"),
+                    .LastUser = dt.Rows(i)("UpdateUser") & ""
                 }
                 Users.Add(User)
             Next
@@ -143,8 +180,8 @@ Public Class clsUserSetupDB
                 Dim clsDESEncryption As New clsDESEncryption("TOS")
                 sql = " SELECT * FROM dbo.spc_UserSetup where UserID = @UserID " & vbCrLf
                 Dim cmd As New SqlCommand(sql, cn)
-                Dim da As New SqlDataAdapter(cmd)
                 cmd.Parameters.AddWithValue("UserID", UserID)
+                Dim da As New SqlDataAdapter(cmd)
                 Dim dt As New DataTable
                 da.Fill(dt)
                 Dim Users As New List(Of clsUserSetup)

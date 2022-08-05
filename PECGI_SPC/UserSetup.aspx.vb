@@ -71,13 +71,11 @@ Public Class UserSetup
             .UserID = e.NewValues("UserID") & "",
             .FullName = e.NewValues("FullName") & "",
             .Password = e.NewValues("Password") & "",
-            .AdminStatus = e.NewValues("AdminStatus"),
+            .AdminStatus = If(e.NewValues("AdminStatus") = "Yes", "1", "0"),
             .Description = e.NewValues("Description") & "",
-            .LineLeaderStatus = e.NewValues("LineLeaderStatus"),
-            .LineForemanStatus = e.NewValues("LineForemanStatus"),
-            .ProdSectionHeadStatus = e.NewValues("ProdSectionHeadStatus"),
-            .QELeaderStatus = e.NewValues("QELeaderStatus"),
-            .QESectionHeadStatus = e.NewValues("QESectionHeadStatus"),
+            .FactoryCode = e.NewValues("FactoryCode"),
+            .JobPosition = e.NewValues("JobPosition"),
+            .Email = e.NewValues("Email"),
             .LockStatus = e.NewValues("LockStatus"),
             .CreateUser = pUser
         }
@@ -87,10 +85,14 @@ Public Class UserSetup
                 show_error(MsgTypeEnum.ErrorMsg, "User already exists!", 1)
                 Return
             End If
-            clsUserSetupDB.Insert(User)
-            Grid.CancelEdit()
-            up_GridLoad()
-            show_error(MsgTypeEnum.Success, "Save data successfully!", 1)
+            pErr = clsUserSetupDB.Insert(User)
+            If pErr = "" Then
+                show_error(MsgTypeEnum.Success, "Save data successfully!", 1)
+                Grid.CancelEdit()
+                up_GridLoad()
+            Else
+                show_error(MsgTypeEnum.ErrorMsg, pErr, 1)
+            End If
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
@@ -102,13 +104,11 @@ Public Class UserSetup
             .UserID = e.OldValues("UserID"),
             .FullName = e.NewValues("FullName") & "",
             .Password = e.NewValues("Password"),
-            .AdminStatus = e.NewValues("AdminStatus"),
+            .AdminStatus = If(e.NewValues("AdminStatus") = "Yes", "1", "0"),
             .Description = e.NewValues("Description") & "",
-            .LineLeaderStatus = e.NewValues("LineLeaderStatus"),
-            .LineForemanStatus = e.NewValues("LineForemanStatus"),
-            .ProdSectionHeadStatus = e.NewValues("ProdSectionHeadStatus"),
-            .QELeaderStatus = e.NewValues("QELeaderStatus"),
-            .QESectionHeadStatus = e.NewValues("QESectionHeadStatus"),
+            .FactoryCode = e.NewValues("FactoryCode"),
+            .JobPosition = e.NewValues("JobPosition") & "",
+            .Email = e.NewValues("Email"),
             .LockStatus = e.NewValues("LockStatus"),
             .UpdateUser = pUser
         }

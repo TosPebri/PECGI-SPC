@@ -214,7 +214,8 @@ Public Class clsUserSetupDB
                 Dim sql As String = "  SELECT GroupID, USM.MenuID,   " & vbCrLf &
                   "  MenuDesc, " & vbCrLf &
                   "  ISNULL(AllowAccess,'0') AS AllowAccess,  " & vbCrLf &
-                  "  ISNULL(AllowUpdate,'0') AS AllowUpdate  " & vbCrLf &
+                  "  ISNULL(AllowUpdate,'0') AS AllowUpdate,  " & vbCrLf &
+                  "  ISNULL(AllowDelete,'0') AS AllowDelete  " & vbCrLf &
                   "  FROM dbo.spc_UserMenu USM " & vbCrLf &
                   "  LEFT JOIN (SELECT * FROM dbo.spc_UserPrivilege WHERE UserID='" & pUserID & "' ) UP   " & vbCrLf &
                   "  ON USM.AppID = UP.AppID AND USM.MenuID=UP.MenuID    " & vbCrLf &
@@ -232,6 +233,7 @@ Public Class clsUserSetupDB
                     Menu.MenuDesc = dt.Rows(i)("MenuDesc")
                     Menu.AllowAccess = dt.Rows(i)("AllowAccess")
                     Menu.AllowUpdate = dt.Rows(i)("AllowUpdate")
+                    Menu.AllowDelete = dt.Rows(i)("AllowDelete")
                     Menus.Add(Menu)
                 Next
                 Return Menus

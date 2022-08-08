@@ -54,31 +54,31 @@ Public Class UserPrivilege
             btnCancel.Visible = True
             UserID = Request.QueryString("prm").ToString()
         End If
+    End Sub
 
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             up_GridLoad(UserID)
         End If
         txtUser.Text = UserID
-    End Sub
-
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-
     End Sub
 #End Region
 
 #Region "Control Event"
     Private Sub gridMenu_BatchUpdate(sender As Object, e As DevExpress.Web.Data.ASPxDataBatchUpdateEventArgs) Handles gridMenu.BatchUpdate
         Dim ls_AllowAccess As String = "", ls_AllowUpdate As String = "", ls_AllowSpecial As String = "", ls_Active As String = ""
-        Dim MenuID As String = ""
+        Dim MenuID As String = "", ls_AllowDelete As String = ""
 
         Dim a As Integer = e.UpdateValues.Count
         For iLoop = 0 To a - 1
             Try
                 ls_AllowAccess = (e.UpdateValues(iLoop).NewValues("AllowAccess").ToString())
                 ls_AllowUpdate = (e.UpdateValues(iLoop).NewValues("AllowUpdate").ToString())
+                ls_AllowDelete = (e.UpdateValues(iLoop).NewValues("AllowDelete").ToString())
 
                 If ls_AllowAccess = True Then ls_AllowAccess = "1" Else ls_AllowAccess = "0"
                 If ls_AllowUpdate = True Then ls_AllowUpdate = "1" Else ls_AllowUpdate = "0"
+                If ls_AllowDelete = True Then ls_AllowDelete = "1" Else ls_AllowDelete = "0"
 
                 MenuID = Trim(e.UpdateValues(iLoop).NewValues("MenuID").ToString())
                 Dim UserPrevilege As New Cls_ss_UserPrivilege With {
@@ -86,10 +86,11 @@ Public Class UserPrivilege
                     .UserID = UserID,
                     .MenuID = MenuID,
                     .AllowAccess = ls_AllowAccess,
-                    .AllowUpdate = ls_AllowUpdate
+                    .AllowUpdate = ls_AllowUpdate,
+                    .AllowDelete = ls_AllowDelete
                 }
                 Dim pErr As String = ""
-                Dim iUpd As Integer = Cls_ss_UserPrivilegeDB.Save(UserPrevilege, pErr)
+                pErr  = Cls_ss_UserPrivilegeDB.Save(UserPrevilege, pErr)
                 If pErr <> "" Then
                     Exit For
                 End If

@@ -83,32 +83,22 @@
             }
         }
 
+        function OnDeleteCheckedChanged(s, e) {
+            if (s.GetValue() == -1) s.SetValue(1);
+            gridMenu.SetFocusedRowIndex(-1);
+            for (var i = 0; i < gridMenu.GetVisibleRowsOnPage(); i++) {
+                if (gridMenu.batchEditApi.GetCellValue(i, "AllowDelete", false) != s.GetValue()) {
+                    gridMenu.batchEditApi.SetCellValue(i, "AllowDelete", s.GetValue());
+                }
+            }
+        }
+
         function OnBatchEditStartEditing(s, e) {
             currentColumnName = e.focusedColumn.fieldName;
             if (currentColumnName == "GroupID" || currentColumnName == "MenuID" || currentColumnName == "MenuDesc") {
                 e.cancel = true;
             }
             currentEditableVisibleIndex = e.visibleIndex;
-        }
-
-        function OnAccessCheckedChanged(s, e) {
-            gridMenu.SetFocusedRowIndex(-1);
-            if (s.GetValue() == -1) s.SetValue(1);
-            for (var i = 0; i < gridMenu.GetVisibleRowsOnPage(); i++) {
-                if (gridMenu.batchEditApi.GetCellValue(i, "AllowAccess", false) != s.GetValue()) {
-                    gridMenu.batchEditApi.SetCellValue(i, "AllowAccess", s.GetValue());
-                }
-            }
-        }
-
-        function OnUpdateCheckedChanged(s, e) {
-            if (s.GetValue() == -1) s.SetValue(1);
-            gridMenu.SetFocusedRowIndex(-1);
-            for (var i = 0; i < gridMenu.GetVisibleRowsOnPage(); i++) {
-                if (gridMenu.batchEditApi.GetCellValue(i, "AllowUpdate", false) != s.GetValue()) {
-                    gridMenu.batchEditApi.SetCellValue(i, "AllowUpdate", s.GetValue());
-                }
-            }
         }
 
         function SaveData(s, e) {
@@ -187,15 +177,18 @@
                             <CellStyle Font-Names="Segoe UI" Font-Size="8pt">
                             </CellStyle>
                         </dx:GridViewDataTextColumn>
+
                         <dx:GridViewDataTextColumn Caption="Menu ID" FieldName="MenuID" Name="MenuID"
                             VisibleIndex="1" Width="100px">
                             <CellStyle Font-Names="Segoe UI" Font-Size="8pt" HorizontalAlign="Left">
                             </CellStyle>
                         </dx:GridViewDataTextColumn>
+
                         <dx:GridViewDataTextColumn Caption="Menu Name" FieldName="MenuDesc"
                             Name="MenuDesc" VisibleIndex="2" Width="320px">
                         </dx:GridViewDataTextColumn>
-                        <dx:GridViewDataCheckColumn Caption="" FieldName="AllowAccess" Name="AllowAccess"
+
+                        <dx:GridViewDataCheckColumn Caption="" FieldName="AllowAccess" Name="Access"
                             VisibleIndex="3" Width="80px">
                             <PropertiesCheckEdit ValueChecked="1" ValueType="System.String"
                                 ValueUnchecked="0" AllowGrayedByClick="false">
@@ -206,7 +199,8 @@
                             </HeaderCaptionTemplate>
                             <HeaderStyle HorizontalAlign="Center" />
                         </dx:GridViewDataCheckColumn>
-                        <dx:GridViewDataCheckColumn Caption="" FieldName="AllowUpdate" Name="AllowUpdate"
+
+                        <dx:GridViewDataCheckColumn Caption="" FieldName="AllowUpdate" Name="Update"
                             VisibleIndex="4" Width="80px">
                             <PropertiesCheckEdit ValueChecked="1" ValueType="System.String"
                                 ValueUnchecked="0" AllowGrayedByClick="false">
@@ -217,6 +211,19 @@
                             </HeaderCaptionTemplate>
                             <HeaderStyle HorizontalAlign="Center" />
                         </dx:GridViewDataCheckColumn>
+
+                         <dx:GridViewDataCheckColumn Caption="" FieldName="AllowDelete" Name="Delete"
+                            VisibleIndex="4" Width="80px">
+                            <PropertiesCheckEdit ValueChecked="1" ValueType="System.String"
+                                ValueUnchecked="0" AllowGrayedByClick="false">
+                            </PropertiesCheckEdit>
+                            <HeaderCaptionTemplate>
+                                <dx:ASPxCheckBox ID="chkDelete" runat="server" ClientInstanceName="chkDelete" ClientSideEvents-CheckedChanged="OnDeleteCheckedChanged" ValueType="System.String" ValueChecked="1" ValueUnchecked="0" Text="Delete" Font-Names="Segoe UI" Font-Size="8pt" ForeColor="White">
+                                </dx:ASPxCheckBox>
+                            </HeaderCaptionTemplate>
+                            <HeaderStyle HorizontalAlign="Center" />
+                        </dx:GridViewDataCheckColumn>
+
                     </Columns>
                     <SettingsBehavior AllowFocusedRow="True" AllowSort="False" ColumnResizeMode="Control" EnableRowHotTrack="True" />
                     <SettingsPager Mode="ShowAllRecords" NumericButtonCount="10">

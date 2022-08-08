@@ -10,20 +10,37 @@ Public Class ChangePassword
 
 #Region "DECLARATION"
     Public lb_AuthUpdate As Boolean = False
+    Dim UserID As String = ""
     Dim clsDESEncryption As New clsDESEncryption("TOS")
 #End Region
 
 #Region "FORM EVENTS"
+    Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
+
+        Dim data As New clsUserSetup
+        sGlobal.getMenu("Z030")
+        Master.SiteTitle = sGlobal.menuName
+
+        If Session("user") IsNot Nothing Then
+            UserID = Session("user")
+            Data = clsUserSetupDB.GetData(UserID)
+            txtUserID.Text = UserID
+            txtFullName.Text = Data.FullName
+            'txtCurrentPassword.Text = Data.Password
+        End If
+
+    End Sub
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        Master.SiteTitle = "Change Password"
+
         If (Not Page.IsPostBack) AndAlso (Not Page.IsCallback) Then
             txtCurrentPassword.Focus()
         End If
-        lb_AuthUpdate = sGlobal.Auth_UserUpdate(Session("user"), "Z020")
+        lb_AuthUpdate = sGlobal.Auth_UserUpdate(Session("user"), "Z030")
         If lb_AuthUpdate = False Then
             btnClear.Enabled = False
             btnSubmit.Enabled = False
         End If
+
     End Sub
 
     Private Sub cbProgress_Callback(ByVal source As Object, ByVal e As DevExpress.Web.CallbackEventArgs) Handles cbProgress.Callback

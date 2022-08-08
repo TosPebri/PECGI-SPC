@@ -33,34 +33,51 @@
         </style>
     </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
-    <table style="width: 100%;">
-        <tr style="height:25px">
-            <td style="width:160px">
-                &nbsp;</td>
-            <td style="width:160px">
-                &nbsp;</td>
-            <td style="width:160px">
+    <table style="width: 500px;  border: 1px solid silver"  cellpadding="5" cellspacing="6">
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr style="height:30px">
+            <td style="width:160px" align="right">
+                <dx:ASPxLabel ID="ASPxLabel4" runat="server" Font-Names="Segoe UI" Font-Size="10pt" Text="UserID">
+                </dx:ASPxLabel>
+            </td>
+             <td style="width:20px"> &nbsp;</td>
+             <td style="width:50px"> 
+                <dx:ASPxTextBox ID="txtUserID" runat="server" Font-Names="Verdana" Width="200px" ClientInstanceName="txtUserID" ClientEnabled="false">
+                </dx:ASPxTextBox>
+            </td>
+        </tr>
+        <tr style="height:30px">
+            <td style="width:160px" align="right">
+                <dx:ASPxLabel ID="ASPxLabel5" runat="server" Font-Names="Segoe UI" Font-Size="10pt" Text="Full Name">
+                </dx:ASPxLabel>
+            </td>
+             <td style="width:20px"> &nbsp;</td>
+             <td style="width:50px"> 
+                <dx:ASPxTextBox ID="txtFullName" runat="server" Font-Names="Verdana" Width="200px" ClientInstanceName="txtFullName" ClientEnabled="false">
+                </dx:ASPxTextBox>
+            </td>
+        </tr>
+        <tr style="height:30px"  align="right">
+            <td style="width:160px" >
                 <dx:ASPxLabel ID="ASPxLabel1" runat="server" Font-Names="Segoe UI" Font-Size="10pt" Text="Current Password">
                 </dx:ASPxLabel>
             </td>
             <td style="width:20px"> &nbsp;</td>
             <td style="width:50px"> 
-                <dx:ASPxTextBox ID="txtCurrentPassword" runat="server" Font-Names="Verdana" Width="200px" ClientInstanceName="txtCurrentPassword" Password="True">
+                <dx:ASPxTextBox ID="txtCurrentPassword" runat="server" Font-Names="Verdana" Width="200px" ClientInstanceName="txtCurrentPassword" Password="True" >
                 </dx:ASPxTextBox>
             </td>
-            <td>
-                &nbsp;</td>
         </tr>
-        <tr style="height:25px">
-            <td>
-                &nbsp;</td>
-            <td>
-                &nbsp;</td>
+        <tr style="height:30px" align="right">
             <td>
                 <dx:ASPxLabel ID="ASPxLabel2" runat="server" Font-Names="Segoe UI" Font-Size="10pt" Text="New Password">
                 </dx:ASPxLabel>
             </td>
-            <td>&nbsp;</td>
+             <td style="width:20px"> &nbsp;</td>
             <td>
                 <dx:ASPxTextBox ID="txtNewPassword" runat="server" Font-Names="Verdana" Width="200px" ClientInstanceName="txtNewPassword" Password="True">
                 </dx:ASPxTextBox>
@@ -71,56 +88,36 @@
                 </dx:ASPxCallback>
             </td>
         </tr>
-        <tr style="height:25px">
-            <td>
-                &nbsp;</td>
-            <td>
-                &nbsp;</td>
+        <tr style="height:30px" align="right">
             <td>
                 <dx:ASPxLabel ID="ASPxLabel3" runat="server" Font-Names="Segoe UI" Font-Size="10pt" Text="Confirm New Password">
                 </dx:ASPxLabel>
             </td>
-            <td>&nbsp;</td>
+           <td style="width:20px"> &nbsp;</td>
             <td>
                 <dx:ASPxTextBox ID="txtConfirmPassword" runat="server" Font-Names="Verdana" Width="200px" ClientInstanceName="txtConfirmPassword" Password="True">
                 </dx:ASPxTextBox>
             </td>
-            <td>
-                &nbsp;</td>
         </tr>
 
-        <tr style="height:25px">
+<%--        <tr style="height:25px">
             <td colspan="6"></td>
-        </tr>
-
-
+        </tr>--%>
 
         <tr>
-            <td style="width:100px">
-                &nbsp;</td>
-            <td style="width:100px">
-                &nbsp;</td>
-            <td style="width:100px">
-                &nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
         </tr>
         <tr>
-            <td style="width:100px">
-                &nbsp;</td>
-            <td style="width:100px">
-                &nbsp;</td>
-            <td style="width:100px">
-                &nbsp;</td>
-            <td>
-                &nbsp;</td>
-            <td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td colspan="2">
                 <dx:ASPxButton ID="btnClear" runat="server" Text="Clear" AutoPostBack="False" Height="16px" Width="80px" Font-Names="Segoe UI" Font-Size="10pt" UseSubmitBehavior="False">
                     <ClientSideEvents Click="function(s, e) {
 	                    txtCurrentPassword.SetText('');
 	                    txtNewPassword.SetText('');
-	                    txtConfirmPassword.SetText('');
+                        txtConfirmPassword.SetText('');
                         txtCurrentPassword.Focus();
                     }" />                
                 </dx:ASPxButton>
@@ -150,7 +147,8 @@
 		                    e.processOnServer = false;
                             return;
 	                    }      
-                        if (txtConfirmPassword.GetText() == ''){
+                  
+                         if (txtConfirmPassword.GetText() == ''){
                             toastr.warning('Please Confirm New Password!', 'Warning');
                             toastr.options.closeButton = false;
                             toastr.options.debug = false;
@@ -172,26 +170,15 @@
 		                    e.processOnServer = false;
                             return;
 	                    }
+
                          cbProgress.PerformCallback();                             
                         }" />
                 </dx:ASPxButton>
             </td>
-            <td style="width:100px">
-                &nbsp;</td>
-            <td>
-            </td>
         </tr>
         <tr>
-            <td style="width:100px">
-                &nbsp;</td>
-            <td style="width:100px">
-                &nbsp;</td>
-            <td style="width:100px">
-                &nbsp;</td>
-            <td>
-                &nbsp;</td>
-            <td>
-                &nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
             <td>&nbsp;</td>
         </tr>
     </table>

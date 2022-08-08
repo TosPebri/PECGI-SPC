@@ -5,17 +5,29 @@ Public Class clsUserLineDB
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
             Dim q As String
-            If UL.Allow = "1" Then
-                q = "if not exists (select top 1 * from UserLine where AppID = 'QCS' " & vbCrLf & _
-                    "And UserID = @UserID and LineID = @LineID) " & vbCrLf & _
-                    "Insert into UserLine (AppID, UserID, LineID) values (" & vbCrLf & _
-                    "'QCS', @UserID, @LineID )"
-            Else
-                q = "Delete from UserLine where AppID = 'QCS' And UserID = @UserID and LineID = @LineID"
-            End If
+            q = "if not exists (select top 1 * from dbo.spc_UserLine where AppID = 'SPC' " & vbCrLf &
+                "And UserID = @UserID and LineID = @LineID) " & vbCrLf &
+                "Insert into dbo.spc_UserLine (AppID, UserID, LineID, AllowShow, AllowUpdate, AllowVerify, RegisterDate, RegisterUser, Register) values (" & vbCrLf &
+                "'SPC', @UserID, @LineID, @AllowShow, @AllowUpdate, @AllowVerify, GETDATE(), @UserID,GETDATE(), @UserID)" & vbCrLf &
+                "ELSE" & vbCrLf &
+                "BEGIN"
+
+            q = q + " UPDATE dbo.spc_UserLine " & vbCrLf &
+                      " SET AllowAccess=@AllowAccess, " & vbCrLf &
+                      " AllowUpdate=@AllowUpdate ," & vbCrLf &
+                      " AllowDelete=@AllowDelete ," & vbCrLf &
+                      " UpdateDate=GetDate()," & vbCrLf &
+                      " UpdateUser=@UserID " & vbCrLf &
+                      " WHERE AppID=@AppID AND UserID =@UserID AND LineID=@LineID " & vbCrLf &
+                      " END "
             Dim cmd As New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("UserID", UL.UserID)
             cmd.Parameters.AddWithValue("LineID", UL.LineID)
+            cmd.Parameters.AddWithValue("AllowShow", UL.AllowShow)
+            cmd.Parameters.AddWithValue("AllowUpdate", UL.AllowUpdate)
+            cmd.Parameters.AddWithValue("AllowVerify", UL.AllowVerify)
+            cmd.Parameters.AddWithValue("UserID", UL.UserID)
+
             Dim i As Integer = cmd.ExecuteNonQuery
             Return i
         End Using
@@ -24,7 +36,7 @@ Public Class clsUserLineDB
     Public Shared Function Delete(UserID As String) As Integer
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
-            Dim q As String = "Delete UserLine where " & vbCrLf & _
+            Dim q As String = "Delete dbo.spc_UserLine where " & vbCrLf &
                 "UserID = @UserID and AppID = 'QCS' "
             Dim cmd As New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("UserID", UserID)
@@ -36,8 +48,8 @@ Public Class clsUserLineDB
     Public Shared Function GetData(UserID As String, LineID As String) As clsUserLine
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
-            Dim q As String = "Select * from UserLine where " & vbCrLf & _
-                "UserID = @UserID and LineID = @LineID and AppID = 'QCS' "
+            Dim q As String = "Select * from dbo.spc_UserLine where " & vbCrLf &
+                "UserID = @UserID and LineID = @LineID and AppID = 'SPC' "
             Dim cmd As New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("UserID", UserID)
             cmd.Parameters.AddWithValue("LineID", LineID)
@@ -57,10 +69,10 @@ Public Class clsUserLineDB
 
     Public Shared Function GetList(pUserID As String) As List(Of clsUserLine)
         Using cn As New SqlConnection(Sconn.Stringkoneksi)
-            Dim sql As String = _
-                "select L.LineID, L.LineName, case when U.UserID is Null then 0 else 1 end Allow " & vbCrLf & _
-                "from Line L left join UserLine U on U.LineID = L.LineID " & vbCrLf & _
-                "and U.UserID = '" & pUserID & "' and U.AppID='QCS' " & vbCrLf & _
+            Dim sql As String =
+                "select A.LineID, B.LineName, A.AllowShow, A.AlloUpdate, A.AllowVerify " & vbCrLf &
+                "from dbo.spc_UserLine A left join dbo.MS_Line B on A.LineID = B.LineID " & vbCrLf &
+                "and A.UserID = '" & pUserID & "' and A.AppID='SPC' " & vbCrLf &
                 "ORDER BY L.LineID "
             Dim Cmd As New SqlCommand(sql, cn)
             Dim da As New SqlDataAdapter(Cmd)
@@ -71,7 +83,9 @@ Public Class clsUserLineDB
                 Dim Menu As New clsUserLine
                 Menu.LineID = dt.Rows(i)("LineID")
                 Menu.LineName = dt.Rows(i)("LineName")
-                Menu.Allow = dt.Rows(i)("Allow")
+                Menu.AllowShow = dt.Rows(i)("AllowShow")
+                Menu.AllowUpdate = dt.Rows(i)("AllowUpdate")
+                Menu.AllowVerify = dt.Rows(i)("AllowVerify")
                 Lines.Add(Menu)
             Next
             Return Lines
@@ -81,14 +95,14 @@ Public Class clsUserLineDB
     Public Shared Function Copy(FromUserID As String, ToUserID As String, CreateUser As String) As Integer
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
-            Dim q As String = "delete from UserLine where UserID = @ToUserID and AppID = 'QCS' "
+            Dim q As String = "delete from dbo.spc_UserLine where UserID = @ToUserID and AppID = 'SPC' "
             Dim cmd As New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("ToUserID", ToUserID)
 
             Dim i As Integer = cmd.ExecuteNonQuery
-            q = "Insert into UserLine (AppID, UserID, LineID) " & vbCrLf & _
-                "select AppID, @ToUserID, LineID " & vbCrLf & _
-                "from UserLine where UserID = @FromUserID and AppID = 'QCS' "
+            q = "Insert into UserLine (AppID, UserID, LineID, AllowShow, AllowUpdate, AllowVerify, RegisterDate, RegisterUser, UpdateDate, UpdateUser) " & vbCrLf &
+                "select AppID, @ToUserID, LineID, AllowShow, AllowUpdate, AllowVerify, GETDATE(), @CreateUser, GETDATE(), @CreateUser " & vbCrLf &
+                "from dbo.UserLine where UserID = @FromUserID and AppID = 'SPC' "
             cmd = New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("FromUserID", FromUserID)
             cmd.Parameters.AddWithValue("ToUserID", ToUserID)

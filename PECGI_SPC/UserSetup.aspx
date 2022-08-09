@@ -117,7 +117,7 @@
 
                     <dx:GridViewDataTextColumn Caption="User ID" FieldName="UserID"
                         VisibleIndex="3" Width="100px" Settings-AutoFilterCondition="Contains">
-                        <PropertiesTextEdit MaxLength="15" Width="120px">
+                        <PropertiesTextEdit MaxLength="50" Width="120px">
                             <Style HorizontalAlign="Left"></Style>
                         </PropertiesTextEdit>
                         <Settings AutoFilterCondition="Contains"></Settings>
@@ -147,7 +147,7 @@
 
                     <dx:GridViewDataTextColumn Caption="Description" FieldName="Description"
                         VisibleIndex="5" Width="150px" Settings-AutoFilterCondition="Contains">
-                        <PropertiesTextEdit MaxLength="50" Width="200px">
+                        <PropertiesTextEdit MaxLength="100" Width="200px">
                             <Style HorizontalAlign="Left"></Style>
                         </PropertiesTextEdit>
                         <Settings AutoFilterCondition="Contains"></Settings>
@@ -230,7 +230,7 @@
 
                     <dx:GridViewDataTextColumn Caption="Email" FieldName="Email"
                         VisibleIndex="9" Width="200px" Settings-AutoFilterCondition="Contains">
-                        <PropertiesTextEdit MaxLength="15" Width="200px">
+                        <PropertiesTextEdit MaxLength="50" Width="200px">
                             <Style HorizontalAlign="Left"></Style>
                         </PropertiesTextEdit>
                         <Settings AutoFilterCondition="Contains"></Settings>

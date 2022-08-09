@@ -87,8 +87,9 @@ Public Class clsUserSetupDB
         Try
             Using Cn As New SqlConnection(Sconn.Stringkoneksi)
                 Cn.Open()
-                Dim q As String = "Delete from dbo.spc_UserSetup where UserID = @UserID" & vbCrLf &
-                    "Delete from dbo.spc_UserPrivilege where UserID = @UserID"
+                Dim q As String = "Delete from dbo.spc_UserPrivilege where AppID = 'SPC' AND UserID = @UserID" & vbCrLf &
+                                  "Delete from dbo.spc_UserLine where AppID = 'SPC' AND UserID = @UserID" & vbCrLf &
+                                  "Delete from dbo.spc_UserSetup where AppID = 'SPC' AND UserID = @UserID"
                 Dim cmd As New SqlCommand(q, Cn)
                 cmd.Parameters.AddWithValue("UserID", pUserID)
                 cmd.ExecuteNonQuery()

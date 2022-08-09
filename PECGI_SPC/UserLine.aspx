@@ -117,7 +117,20 @@
                             </dx:ASPxLabel>
                             </td>
                             <td>
-                                <dx:ASPxTextBox ID="txtUser" runat="server" ClientInstanceName="txtUser"
+                               <%--<dx:ASPxComboBox ID="txtUser" runat="server" Font-Names="Segoe UI"
+                                    Font-Size="8pt" Theme="Office2010Black" DataSourceID="dsUser"
+                                    EnableTheming="True" TextField="UserID" TextFormatString="{0}"
+                                    ValueField="UserID" ClientInstanceName="txtUser">
+                                    <ClientSideEvents SelectedIndexChanged="function(s, e) {
+	                                            gridMenu.PerformCallback('load|' + txtUser.GetText());
+                                            }" />
+                                    <Columns>
+                                        <dx:ListBoxColumn Caption="User ID" FieldName="UserID" Width="60px" />
+                                        <dx:ListBoxColumn Caption="Full Name" FieldName="FullName" Width="120px" />
+                                    </Columns>
+                                </dx:ASPxComboBox>--%>
+
+                               <dx:ASPxTextBox ID="txtUser" runat="server" ClientInstanceName="txtUser"
                                     Width="170px" ReadOnly="True" Font-Names="Segoe UI" Font-Size="8pt">
                                     <ReadOnlyStyle BackColor="WhiteSmoke">
                                     </ReadOnlyStyle>

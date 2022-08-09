@@ -8,7 +8,7 @@ Public Class clsUserLineDB
             q = "if not exists (select top 1 * from dbo.spc_UserLine where AppID = 'SPC' " & vbCrLf &
                 "And UserID = @UserID and LineCode = @LineCode) " & vbCrLf &
                 "Insert into dbo.spc_UserLine (AppID, UserID, LineCode, AllowShow, AllowUpdate, AllowVerify, RegisterDate, RegisterUser, UpdateDate, UpdateUser) values (" & vbCrLf &
-                "'SPC', @UserID, @LineCode, @AllowShow, @AllowUpdate, @AllowVerify, GETDATE(), @UserID,GETDATE(), @UserID)" & vbCrLf &
+                "'SPC', @UserID, @LineCode, @AllowShow, @AllowUpdate, @AllowVerify, GETDATE(), @RegisterUser,GETDATE(), @RegisterUser)" & vbCrLf &
                 "ELSE" & vbCrLf &
                 "BEGIN"
 
@@ -17,7 +17,7 @@ Public Class clsUserLineDB
                       " AllowUpdate=@AllowUpdate ," & vbCrLf &
                       " AllowVerify=@AllowVerify ," & vbCrLf &
                       " UpdateDate=GetDate()," & vbCrLf &
-                      " UpdateUser=@UserID " & vbCrLf &
+                      " UpdateUser=@RegisterUser " & vbCrLf &
                       " WHERE AppID='SPC' AND UserID =@UserID AND LineCode=@LineCode " & vbCrLf &
                       " END "
             Dim cmd As New SqlCommand(q, Cn)
@@ -26,6 +26,7 @@ Public Class clsUserLineDB
             cmd.Parameters.AddWithValue("AllowShow", UL.AllowShow)
             cmd.Parameters.AddWithValue("AllowUpdate", UL.AllowUpdate)
             cmd.Parameters.AddWithValue("AllowVerify", UL.AllowVerify)
+            cmd.Parameters.AddWithValue("RegisterUser", UL.RegisterUser)
 
             Dim i As Integer = cmd.ExecuteNonQuery
             Return i
@@ -69,10 +70,13 @@ Public Class clsUserLineDB
     Public Shared Function GetList(pUserID As String) As List(Of clsUserLine)
         Try
             Using cn As New SqlConnection(Sconn.Stringkoneksi)
-                Dim sql As String =
-                    "select A.LineCode, B.LineName, A.AllowShow, A.AllowUpdate, A.AllowVerify " & vbCrLf &
-                    "from dbo.spc_UserLine A left join dbo.MS_Line B on A.LineCode = B.LineCode " & vbCrLf &
-                    "Where A.UserID = '" & pUserID & "' and A.AppID='SPC' " & vbCrLf &
+                Dim sql As String = "select A.LineCode, A.LineName," & vbCrLf &
+                    "ISNULL(AllowShow,0) AS AllowShow, " & vbCrLf &
+                    "ISNULL(AllowUpdate,0) AS AllowUpdate, " & vbCrLf &
+                    "ISNULL(AllowVerify,0) AS AllowVerify" & vbCrLf &
+                    "FROM dbo.MS_Line A " & vbCrLf &
+                    "LEFT JOIN (Select * FROM dbo.spc_UserLine WHERE UserID='" & pUserID & "' AND AppID = 'SPC') UP " & vbCrLf &
+                    "ON A.LineCode = UP.LineCode" & vbCrLf &
                     "ORDER BY A.LineCode "
                 Dim Cmd As New SqlCommand(sql, cn)
                 Dim da As New SqlDataAdapter(Cmd)

@@ -12,6 +12,7 @@ Public Class UserLine
     Inherits System.Web.UI.Page
 
 #Region "Declaration"
+    Dim RegisterUser As String = ""
     Dim UserID As String
 #End Region
 
@@ -35,9 +36,9 @@ Public Class UserLine
         sGlobal.getMenu("Z040")
         Master.SiteTitle = sGlobal.menuName
         show_error(MsgTypeEnum.Info, "", 0)
-
+        RegisterUser = Session("user")
         If Request.QueryString("prm") Is Nothing Then
-            UserID = Session("user")
+            UserID = RegisterUser
             btnCancel.Visible = False
             Exit Sub
         Else
@@ -76,7 +77,8 @@ Public Class UserLine
                 .LineID = LineID,
                 .AllowShow = ls_AllowShow,
                 .AllowUpdate = ls_AllowUpdate,
-                .AllowVerify = ls_AllowVerify
+                .AllowVerify = ls_AllowVerify,
+                .RegisterUser = RegisterUser
             }
             Dim pErr As String = ""
             Dim iUpd As Integer = clsUserLineDB.InsertUpdate(UserLine)
@@ -100,9 +102,8 @@ Public Class UserLine
         Dim pAction As String = Split(e.Parameter, "|")(0)
         Dim FromUserID As String = Split(e.Parameter, "|")(1)
         Dim TouserID As String = Split(e.Parameter, "|")(2)
-        Dim CreateUser As String = Session("user") & ""
         If FromUserID <> "" Then
-            clsUserLineDB.Copy(FromUserID, TouserID, CreateUser)
+            clsUserLineDB.Copy(FromUserID, TouserID, RegisterUser)
         End If
     End Sub
 #End Region

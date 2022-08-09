@@ -6,27 +6,26 @@ Public Class clsUserLineDB
             Cn.Open()
             Dim q As String
             q = "if not exists (select top 1 * from dbo.spc_UserLine where AppID = 'SPC' " & vbCrLf &
-                "And UserID = @UserID and LineID = @LineID) " & vbCrLf &
-                "Insert into dbo.spc_UserLine (AppID, UserID, LineID, AllowShow, AllowUpdate, AllowVerify, RegisterDate, RegisterUser, Register) values (" & vbCrLf &
-                "'SPC', @UserID, @LineID, @AllowShow, @AllowUpdate, @AllowVerify, GETDATE(), @UserID,GETDATE(), @UserID)" & vbCrLf &
+                "And UserID = @UserID and LineCode = @LineCode) " & vbCrLf &
+                "Insert into dbo.spc_UserLine (AppID, UserID, LineCode, AllowShow, AllowUpdate, AllowVerify, RegisterDate, RegisterUser, UpdateDate, UpdateUser) values (" & vbCrLf &
+                "'SPC', @UserID, @LineCode, @AllowShow, @AllowUpdate, @AllowVerify, GETDATE(), @UserID,GETDATE(), @UserID)" & vbCrLf &
                 "ELSE" & vbCrLf &
                 "BEGIN"
 
             q = q + " UPDATE dbo.spc_UserLine " & vbCrLf &
-                      " SET AllowAccess=@AllowAccess, " & vbCrLf &
+                      " SET AllowShow=@AllowShow, " & vbCrLf &
                       " AllowUpdate=@AllowUpdate ," & vbCrLf &
-                      " AllowDelete=@AllowDelete ," & vbCrLf &
+                      " AllowVerify=@AllowVerify ," & vbCrLf &
                       " UpdateDate=GetDate()," & vbCrLf &
                       " UpdateUser=@UserID " & vbCrLf &
-                      " WHERE AppID=@AppID AND UserID =@UserID AND LineID=@LineID " & vbCrLf &
+                      " WHERE AppID='SPC' AND UserID =@UserID AND LineCode=@LineCode " & vbCrLf &
                       " END "
             Dim cmd As New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("UserID", UL.UserID)
-            cmd.Parameters.AddWithValue("LineID", UL.LineID)
+            cmd.Parameters.AddWithValue("LineCode", UL.LineID)
             cmd.Parameters.AddWithValue("AllowShow", UL.AllowShow)
             cmd.Parameters.AddWithValue("AllowUpdate", UL.AllowUpdate)
             cmd.Parameters.AddWithValue("AllowVerify", UL.AllowVerify)
-            cmd.Parameters.AddWithValue("UserID", UL.UserID)
 
             Dim i As Integer = cmd.ExecuteNonQuery
             Return i
@@ -49,10 +48,10 @@ Public Class clsUserLineDB
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
             Dim q As String = "Select * from dbo.spc_UserLine where " & vbCrLf &
-                "UserID = @UserID and LineID = @LineID and AppID = 'SPC' "
+                "UserID = @UserID and LineCode = @LineCode and AppID = 'SPC' "
             Dim cmd As New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("UserID", UserID)
-            cmd.Parameters.AddWithValue("LineID", LineID)
+            cmd.Parameters.AddWithValue("LineCode", LineID)
             Dim da As New SqlDataAdapter(cmd)
             Dim dt As New DataTable
             da.Fill(dt)
@@ -73,7 +72,7 @@ Public Class clsUserLineDB
                 Dim sql As String =
                     "select A.LineCode, B.LineName, A.AllowShow, A.AllowUpdate, A.AllowVerify " & vbCrLf &
                     "from dbo.spc_UserLine A left join dbo.MS_Line B on A.LineCode = B.LineCode " & vbCrLf &
-                    "and A.UserID = '" & pUserID & "' and A.AppID='SPC' " & vbCrLf &
+                    "Where A.UserID = '" & pUserID & "' and A.AppID='SPC' " & vbCrLf &
                     "ORDER BY A.LineCode "
                 Dim Cmd As New SqlCommand(sql, cn)
                 Dim da As New SqlDataAdapter(Cmd)
@@ -104,9 +103,9 @@ Public Class clsUserLineDB
             cmd.Parameters.AddWithValue("ToUserID", ToUserID)
 
             Dim i As Integer = cmd.ExecuteNonQuery
-            q = "Insert into UserLine (AppID, UserID, LineID, AllowShow, AllowUpdate, AllowVerify, RegisterDate, RegisterUser, UpdateDate, UpdateUser) " & vbCrLf &
-                "select AppID, @ToUserID, LineID, AllowShow, AllowUpdate, AllowVerify, GETDATE(), @CreateUser, GETDATE(), @CreateUser " & vbCrLf &
-                "from dbo.UserLine where UserID = @FromUserID and AppID = 'SPC' "
+            q = "Insert into dbo.spc_UserLine (AppID, UserID, LineCode, AllowShow, AllowUpdate, AllowVerify, RegisterDate, RegisterUser, UpdateDate, UpdateUser) " & vbCrLf &
+                "select AppID, @ToUserID, LineCode, AllowShow, AllowUpdate, AllowVerify, GETDATE(), @CreateUser, GETDATE(), @CreateUser " & vbCrLf &
+                "from dbo.spc_UserLine where UserID = @FromUserID and AppID = 'SPC' "
             cmd = New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("FromUserID", FromUserID)
             cmd.Parameters.AddWithValue("ToUserID", ToUserID)

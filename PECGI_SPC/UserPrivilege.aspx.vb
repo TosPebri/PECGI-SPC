@@ -11,6 +11,7 @@ Public Class UserPrivilege
     Inherits System.Web.UI.Page
 
 #Region "Declaration"
+    Dim RegisterUser As String = ""
     Dim UserID As String = ""
     Public AuthInsert As Boolean = False
     Public AuthUpdate As Boolean = False
@@ -45,9 +46,10 @@ Public Class UserPrivilege
         sGlobal.getMenu("Z020")
         Master.SiteTitle = sGlobal.menuName
         show_error(MsgTypeEnum.Info, "", 0)
+        RegisterUser = Session("user")
 
         If Request.QueryString("prm") Is Nothing Then
-            UserID = Session("user")
+            UserID = RegisterUser
             btnCancel.Visible = False
             Exit Sub
         Else
@@ -87,7 +89,8 @@ Public Class UserPrivilege
                     .MenuID = MenuID,
                     .AllowAccess = ls_AllowAccess,
                     .AllowUpdate = ls_AllowUpdate,
-                    .AllowDelete = ls_AllowDelete
+                    .AllowDelete = ls_AllowDelete,
+                    .RegisterUser = RegisterUser
                 }
                 Dim pErr As String = ""
                 pErr  = Cls_ss_UserPrivilegeDB.Save(UserPrevilege, pErr)
@@ -104,20 +107,33 @@ Public Class UserPrivilege
     Private Sub gridMenu_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridViewCustomCallbackEventArgs) Handles gridMenu.CustomCallback
         Dim pAction As String = Split(e.Parameters, "|")(0)
         Dim sUserID As String = Split(e.Parameters, "|")(1)
+        'Dim pAction As String = e.Parameters
+        'Dim stxtUser As String = txtUser.Text
+        'Dim scboUser As String = cboUser.Text
+
         up_GridLoad(sUserID)
         If pAction = "save" Then
             show_error(MsgTypeEnum.Success, "Update data successful", 1)
         End If
 
+        'If pAction = "save" Then
+        '    show_error(MsgTypeEnum.Success, "Update data successful", 1)
+        'ElseIf pAction = "loadtxtUser" Then
+        '    up_GridLoad(stxtUser)
+        'ElseIf pAction = "loadcboUser" Then
+        '    up_GridLoad(scboUser)
+        'End If
     End Sub
 
     Private Sub cbkValid_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkValid.Callback
         Dim pAction As String = Split(e.Parameter, "|")(0)
         Dim FromUserID As String = Split(e.Parameter, "|")(1)
         Dim TouserID As String = Split(e.Parameter, "|")(2)
-        Dim CreateUser As String = Session("user") & ""
+        'Dim pAction As String = e.Parameter
+        'Dim FromUserID As String = cboUser.Text
+        'Dim TouserID As String = txtUser.Text
         If FromUserID <> "" Then
-            Cls_ss_UserPrivilegeDB.Copy(FromUserID, TouserID, CreateUser)
+            Cls_ss_UserPrivilegeDB.Copy(FromUserID, TouserID, RegisterUser)
         End If
     End Sub
 #End Region

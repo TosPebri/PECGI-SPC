@@ -91,9 +91,9 @@ Public Class Cls_ss_UserPrivilegeDB
                     " @AllowUpdate ," & vbCrLf &
                     " @AllowDelete ," & vbCrLf &
                     " GetDate() ," & vbCrLf &
-                    " @UserID ," & vbCrLf &
+                    " @RegisterUser ," & vbCrLf &
                     " GetDate() ," & vbCrLf &
-                    " @UserID" & vbCrLf &
+                    " @RegisterUser" & vbCrLf &
                     ")" & vbCrLf &
                     " END " & vbCrLf &
                     " ELSE " & vbCrLf &
@@ -103,7 +103,7 @@ Public Class Cls_ss_UserPrivilegeDB
                       " AllowUpdate=@AllowUpdate ," & vbCrLf &
                       " AllowDelete=@AllowDelete ," & vbCrLf &
                       " UpdateDate=GetDate()," & vbCrLf &
-                      " UpdateUser=@UserID " & vbCrLf &
+                      " UpdateUser=@RegisterUser " & vbCrLf &
                       " WHERE AppID=@AppID AND UserID =@UserID AND MenuID=@MenuID " & vbCrLf &
                       " END "
                 Dim Cmd As New SqlCommand(sql, cn)
@@ -115,6 +115,7 @@ Public Class Cls_ss_UserPrivilegeDB
                     .AddWithValue("AllowAccess", pUserP.AllowAccess)
                     .AddWithValue("AllowUpdate", pUserP.AllowUpdate)
                     .AddWithValue("AllowDelete", pUserP.AllowDelete)
+                    .AddWithValue("RegisterUser", pUserP.RegisterUser)
                 End With
                 Cmd.ExecuteNonQuery()
                 Return pErr

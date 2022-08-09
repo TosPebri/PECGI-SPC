@@ -68,28 +68,32 @@ Public Class clsUserLineDB
     End Function
 
     Public Shared Function GetList(pUserID As String) As List(Of clsUserLine)
-        Using cn As New SqlConnection(Sconn.Stringkoneksi)
-            Dim sql As String =
-                "select A.LineID, B.LineName, A.AllowShow, A.AlloUpdate, A.AllowVerify " & vbCrLf &
-                "from dbo.spc_UserLine A left join dbo.MS_Line B on A.LineID = B.LineID " & vbCrLf &
-                "and A.UserID = '" & pUserID & "' and A.AppID='SPC' " & vbCrLf &
-                "ORDER BY L.LineID "
-            Dim Cmd As New SqlCommand(sql, cn)
-            Dim da As New SqlDataAdapter(Cmd)
-            Dim dt As New DataTable
-            da.Fill(dt)
-            Dim Lines As New List(Of clsUserLine)
-            For i = 0 To dt.Rows.Count - 1
-                Dim Menu As New clsUserLine
-                Menu.LineID = dt.Rows(i)("LineID")
-                Menu.LineName = dt.Rows(i)("LineName")
-                Menu.AllowShow = dt.Rows(i)("AllowShow")
-                Menu.AllowUpdate = dt.Rows(i)("AllowUpdate")
-                Menu.AllowVerify = dt.Rows(i)("AllowVerify")
-                Lines.Add(Menu)
-            Next
-            Return Lines
-        End Using
+        Try
+            Using cn As New SqlConnection(Sconn.Stringkoneksi)
+                Dim sql As String =
+                    "select A.LineCode, B.LineName, A.AllowShow, A.AllowUpdate, A.AllowVerify " & vbCrLf &
+                    "from dbo.spc_UserLine A left join dbo.MS_Line B on A.LineCode = B.LineCode " & vbCrLf &
+                    "and A.UserID = '" & pUserID & "' and A.AppID='SPC' " & vbCrLf &
+                    "ORDER BY A.LineCode "
+                Dim Cmd As New SqlCommand(sql, cn)
+                Dim da As New SqlDataAdapter(Cmd)
+                Dim dt As New DataTable
+                da.Fill(dt)
+                Dim Lines As New List(Of clsUserLine)
+                For i = 0 To dt.Rows.Count - 1
+                    Dim Menu As New clsUserLine
+                    Menu.LineID = dt.Rows(i)("LineCode")
+                    Menu.LineName = dt.Rows(i)("LineName")
+                    Menu.AllowShow = dt.Rows(i)("AllowShow")
+                    Menu.AllowUpdate = dt.Rows(i)("AllowUpdate")
+                    Menu.AllowVerify = dt.Rows(i)("AllowVerify")
+                    Lines.Add(Menu)
+                Next
+                Return Lines
+            End Using
+        Catch ex As Exception
+            Throw ex
+        End Try
     End Function
 
     Public Shared Function Copy(FromUserID As String, ToUserID As String, CreateUser As String) As Integer

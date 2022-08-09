@@ -149,7 +149,7 @@
                 </div>
                 <div style="height: 10px">
                     <asp:SqlDataSource ID="dsUser" runat="server" ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
-                        SelectCommand="select UserID, FullName from UserSetup order by UserID"></asp:SqlDataSource>
+                        SelectCommand="select UserID, FullName from dbo.spc_UserSetup order by UserID"></asp:SqlDataSource>
                 </div>
                 <dx:ASPxGridView ID="gridMenu" runat="server" AutoGenerateColumns="False" ClientInstanceName="gridMenu"
                     Font-Names="Segoe UI" Font-Size="8pt" KeyFieldName="LineID" Theme="Office2010Black"

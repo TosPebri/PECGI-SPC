@@ -68,6 +68,15 @@ Partial Public Class ChangePassword
     Protected WithEvents txtCurrentPassword As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
+    '''cbCurrentPassword control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cbCurrentPassword As Global.DevExpress.Web.ASPxCheckBox
+
+    '''<summary>
     '''ASPxLabel2 control.
     '''</summary>
     '''<remarks>
@@ -95,22 +104,13 @@ Partial Public Class ChangePassword
     Protected WithEvents cbProgress As Global.DevExpress.Web.ASPxCallback
 
     '''<summary>
-    '''ASPxLabel3 control.
+    '''cbNewPassword control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel3 As Global.DevExpress.Web.ASPxLabel
-
-    '''<summary>
-    '''txtConfirmPassword control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents txtConfirmPassword As Global.DevExpress.Web.ASPxTextBox
+    Protected WithEvents cbNewPassword As Global.DevExpress.Web.ASPxCheckBox
 
     '''<summary>
     '''btnClear control.

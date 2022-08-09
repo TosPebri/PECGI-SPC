@@ -14,26 +14,49 @@ Public Class ChangePassword
     Dim clsDESEncryption As New clsDESEncryption("TOS")
 #End Region
 
+#Region "PROCEDURE"
+    Private Function ValidasiInput() As Boolean
+        Dim UserID As String = Session("user").ToString.Trim
+
+        Dim cUser As clsUserSetup = clsUserSetupDB.GetData(UserID)
+        If txtCurrentPassword.Text <> cUser.Password Then
+            cbProgress.JSProperties("cpMessage") = "Current Password is not correct!"
+            Return False
+        Else
+            Return True
+        End If
+    End Function
+
+    Private Sub up_GridLoad(user As String)
+        Dim data As New clsUserSetup
+        If user <> "" Then
+            data = clsUserSetupDB.GetData(user)
+            txtUserID.Text = user
+            txtFullName.Text = data.FullName
+            txtCurrentPassword.Text = data.Password
+        End If
+        cbCurrentPassword.Checked = True
+        cbNewPassword.Checked = True
+    End Sub
+
+#End Region
+
 #Region "FORM EVENTS"
     Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
 
-        Dim data As New clsUserSetup
         sGlobal.getMenu("Z030")
         Master.SiteTitle = sGlobal.menuName
 
         If Session("user") IsNot Nothing Then
             UserID = Session("user")
-            Data = clsUserSetupDB.GetData(UserID)
-            txtUserID.Text = UserID
-            txtFullName.Text = Data.FullName
-            'txtCurrentPassword.Text = Data.Password
         End If
 
     End Sub
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         If (Not Page.IsPostBack) AndAlso (Not Page.IsCallback) Then
-            txtCurrentPassword.Focus()
+            txtNewPassword.Focus()
+            up_GridLoad(UserID)
         End If
         lb_AuthUpdate = sGlobal.Auth_UserUpdate(Session("user"), "Z030")
         If lb_AuthUpdate = False Then
@@ -58,19 +81,5 @@ Public Class ChangePassword
             cbProgress.JSProperties("cpError") = ex.Message.ToString
         End Try
     End Sub
-#End Region
-
-#Region "PROCEDURE"
-    Private Function ValidasiInput() As Boolean
-        Dim UserID As String = Session("user").ToString.Trim
-
-        Dim cUser As clsUserSetup = clsUserSetupDB.GetData(UserID)
-        If txtCurrentPassword.Text <> cUser.Password Then
-            cbProgress.JSProperties("cpMessage") = "Current Password is not correct!"
-            Return False
-        Else
-            Return True
-        End If
-    End Function
 #End Region
 End Class

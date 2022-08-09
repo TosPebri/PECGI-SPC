@@ -28,7 +28,7 @@
     End Property
     Public ReadOnly Property LinePrivileges As String
         Get
-            Return "Lines"
+            Return "View"
         End Get
     End Property
 End Class

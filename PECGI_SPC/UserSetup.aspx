@@ -86,6 +86,12 @@
                         </HeaderStyle>
                     </dx:GridViewCommandColumn>
 
+                     <%--<dx:GridViewDataTextColumn Caption="" FieldName="" 
+                        VisibleIndex="0" Width="70px">
+                        <Settings AllowAutoFilter="False" AllowSort="False" />
+                        <EditFormSettings Visible="true" />
+                    </dx:GridViewDataTextColumn>--%>
+
                     <dx:GridViewDataTextColumn Caption="Privileges" FieldName="Privileges"
                         VisibleIndex="1" Width="70px">
                         <Settings AllowAutoFilter="False" AllowSort="False" />
@@ -97,7 +103,7 @@
                         </DataItemTemplate>
                     </dx:GridViewDataTextColumn>
 
-                    <dx:GridViewDataTextColumn Caption="Machine Process" FieldName="MachineProcess"
+                    <dx:GridViewDataTextColumn Caption="Machine Process" FieldName="LinePrivileges"
                         VisibleIndex="2" Width="55px">
                         <Settings AllowAutoFilter="False" AllowSort="False" />
                         <EditFormSettings Visible="False" />
@@ -176,21 +182,6 @@
                         <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"></CellStyle>
                     </dx:GridViewDataComboBoxColumn>
 
-                    <%--      <dx:GridViewDataTextColumn Caption="Admin Status" FieldName="AdminStatus"
-                        VisibleIndex="6" Width="100px" Settings-AutoFilterCondition="Contains">
-                        <PropertiesTextEdit MaxLength="15" Width="120px">
-                            <Style HorizontalAlign="Left"></Style>
-                        </PropertiesTextEdit>
-                        <Settings AutoFilterCondition="Contains"></Settings>
-                        <FilterCellStyle Paddings-PaddingRight="4px">
-                            <Paddings PaddingRight="4px"></Paddings>
-                        </FilterCellStyle>
-                        <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
-                            <Paddings PaddingLeft="5px"></Paddings>
-                        </HeaderStyle>
-                        <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"></CellStyle>
-                    </dx:GridViewDataTextColumn>--%>
-
                     <dx:GridViewDataComboBoxColumn Caption="FactoryCode" FieldName="FactoryCode"
                         VisibleIndex="7" Width="130px" Settings-AutoFilterCondition="Contains">
                         <PropertiesComboBox DataSourceID="dsFactory" DropDownStyle="DropDownList" TextFormatString="{0}"
@@ -212,21 +203,6 @@
                         </HeaderStyle>
                         <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"></CellStyle>
                     </dx:GridViewDataComboBoxColumn>
-
-                  <%--  <dx:GridViewDataTextColumn Caption="Factory" FieldName="Factory"
-                        VisibleIndex="7" Width="100px" Settings-AutoFilterCondition="Contains" Visible="false">
-                        <PropertiesTextEdit MaxLength="15" Width="120px">
-                            <Style HorizontalAlign="Left"></Style>
-                        </PropertiesTextEdit>
-                        <Settings AutoFilterCondition="Contains"></Settings>
-                        <FilterCellStyle Paddings-PaddingRight="4px">
-                            <Paddings PaddingRight="4px"></Paddings>
-                        </FilterCellStyle>
-                        <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
-                            <Paddings PaddingLeft="5px"></Paddings>
-                        </HeaderStyle>
-                        <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"></CellStyle>
-                    </dx:GridViewDataTextColumn>--%>
 
                     <dx:GridViewDataComboBoxColumn Caption="Job Position (OP/MK/QC)" FieldName="JobPosition"
                         VisibleIndex="8" Width="90px" Settings-AutoFilterCondition="Contains">
@@ -251,21 +227,6 @@
                         </HeaderStyle>
                         <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"></CellStyle>
                     </dx:GridViewDataComboBoxColumn>
-
-                    <%-- <dx:GridViewDataTextColumn Caption="Job Position (OP/MK/QC)" FieldName="JobPosition"
-                        VisibleIndex="8" Width="100px" Settings-AutoFilterCondition="Contains">
-                        <PropertiesTextEdit MaxLength="15" Width="120px">
-                            <Style HorizontalAlign="Left"></Style>
-                        </PropertiesTextEdit>
-                        <Settings AutoFilterCondition="Contains"></Settings>
-                        <FilterCellStyle Paddings-PaddingRight="4px">
-                            <Paddings PaddingRight="4px"></Paddings>
-                        </FilterCellStyle>
-                        <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
-                            <Paddings PaddingLeft="5px"></Paddings>
-                        </HeaderStyle>
-                        <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"></CellStyle>
-                    </dx:GridViewDataTextColumn>--%>
 
                     <dx:GridViewDataTextColumn Caption="Email" FieldName="Email"
                         VisibleIndex="9" Width="200px" Settings-AutoFilterCondition="Contains">
@@ -357,7 +318,7 @@
                         <div style="padding: 15px 15px 15px 15px; width: 300px">
                             <dx:ContentControl ID="ContentControl1" runat="server">
                                 <table align="center">
-                                    <tr style="height: 25px">
+                                    <tr style="height: 30px">
                                         <td>
                                             <dx:ASPxLabel ID="ASPxLabel1" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="User ID" Width="90px"></dx:ASPxLabel>
                                         </td>
@@ -366,28 +327,28 @@
                                                 runat="server" ColumnID="UserID"></dx:ASPxGridViewTemplateReplacement>
                                         </td>
                                     </tr>
-                                    <tr style="height: 25px">
+                                    <tr style="height: 30px">
                                         <td>Full Name</td>
                                         <td>
                                             <dx:ASPxGridViewTemplateReplacement ID="editFullName" ReplacementType="EditFormCellEditor"
                                                 runat="server" ColumnID="FullName"></dx:ASPxGridViewTemplateReplacement>
                                         </td>
                                     </tr>
-                                    <tr style="height: 25px">
+                                    <tr style="height:30px">
                                         <td>Password</td>
                                         <td>
                                             <dx:ASPxGridViewTemplateReplacement ID="editPassword" ReplacementType="EditFormCellEditor"
                                                 runat="server" ColumnID="Password"></dx:ASPxGridViewTemplateReplacement>
                                         </td>
                                     </tr>
-                                    <tr style="height: 25px">
+                                    <tr style="height: 30px">
                                         <td>Description</td>
                                         <td>
                                             <dx:ASPxGridViewTemplateReplacement ID="editDescription" ReplacementType="EditFormCellEditor"
                                                 runat="server" ColumnID="Description"></dx:ASPxGridViewTemplateReplacement>
                                         </td>
                                     </tr>
-                                    <tr style="height: 25px">
+                                    <tr style="height: 30px">
                                         <td>Admin Status
                                         </td>
                                         <td>
@@ -397,7 +358,7 @@
                                                 <dx:LayoutItemNestedControlContainer>
                                         </td>
                                     </tr>
-                                    <tr style="height: 25px">
+                                    <tr style="height: 30px">
                                         <td>Factory
                                         </td>
                                         <td>
@@ -407,7 +368,7 @@
                                                 <dx:LayoutItemNestedControlContainer>
                                         </td>
                                     </tr>
-                                    <tr style="height: 25px">
+                                    <tr style="height: 30px">
                                         <td>Job Position
                                         </td>
                                         <td>
@@ -417,7 +378,7 @@
                                             </dx:LayoutItemNestedControlContainer>
                                         </td>
                                     </tr>
-                                    <tr style="height: 25px">
+                                    <tr style="height: 30px">
                                         <td>Email
                                         </td>
                                         <td>
@@ -427,7 +388,7 @@
                                             </dx:LayoutItemNestedControlContainer>
                                         </td>
                                     </tr>
-                                    <tr style="height: 25px">
+                                    <tr style="height: 30px">
                                         <td>Lock Status
                                         </td>
                                         <td>

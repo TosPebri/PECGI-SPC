@@ -172,7 +172,7 @@ Public Module sGlobal
         Using sqlConn As New SqlConnection(Sconn.Stringkoneksi)
             sqlConn.Open()
 
-            Dim ls_SQL As String = "SELECT AllowDelete FROM dbo.spc_UserPrivilege WHERE AppID = 'P01' AND UserID = '" & Trim(pUserID) & "' AND MenuID = '" & Trim(pMenuID) & "'"
+            Dim ls_SQL As String = "SELECT AllowDelete FROM dbo.spc_UserPrivilege WHERE AppID = 'SPC' AND UserID = '" & Trim(pUserID) & "' AND MenuID = '" & Trim(pMenuID) & "'"
             Dim sqlCmd As New SqlCommand(ls_SQL, sqlConn)
             Dim sqlRdr As SqlDataReader = sqlCmd.ExecuteReader()
 

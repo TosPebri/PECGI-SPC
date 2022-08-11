@@ -219,8 +219,8 @@ Public Class clsUserSetupDB
                   "  ISNULL(AllowDelete,'0') AS AllowDelete  " & vbCrLf &
                   "  FROM dbo.spc_UserMenu USM " & vbCrLf &
                   "  LEFT JOIN (SELECT * FROM dbo.spc_UserPrivilege WHERE UserID='" & pUserID & "' ) UP   " & vbCrLf &
-                  "  ON USM.AppID = UP.AppID AND USM.MenuID=UP.MenuID    " & vbCrLf &
-                  "  WHERE USM.AppID='SPC' and USM.MenuID <> 'Z010' " & vbCrLf &
+                  "  ON USM.AppID = UP.AppID AND USM.MenuID=UP.MenuID" & vbCrLf &
+                  "  WHERE USM.AppID='SPC'" & vbCrLf &
                   "  ORDER BY USM.MenuID  "
                 Dim Cmd As New SqlCommand(sql, cn)
                 Dim da As New SqlDataAdapter(Cmd)

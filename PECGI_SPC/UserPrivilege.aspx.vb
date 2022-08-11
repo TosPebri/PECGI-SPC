@@ -13,9 +13,10 @@ Public Class UserPrivilege
 #Region "Declaration"
     Dim RegisterUser As String = ""
     Dim UserID As String = ""
-    Public AuthInsert As Boolean = False
+
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
+    Public AuthAccess As Boolean = False
 #End Region
 
 #Region "Procedure"
@@ -47,6 +48,21 @@ Public Class UserPrivilege
         Master.SiteTitle = sGlobal.menuName
         show_error(MsgTypeEnum.Info, "", 0)
         RegisterUser = Session("user")
+
+        AuthAccess = sGlobal.Auth_UserAccess(RegisterUser, "Z020")
+        If AuthAccess = False Then
+            Response.Redirect("~/Main.aspx")
+        End If
+
+        AuthUpdate = sGlobal.Auth_UserUpdate(RegisterUser, "Z020")
+        If AuthUpdate = False Then
+            btnSave.Enabled = False
+        End If
+
+        AuthDelete = sGlobal.Auth_UserDelete(RegisterUser, "Z020")
+        If AuthDelete = False Then
+            btnSave.Enabled = False
+        End If
 
         If Request.QueryString("prm") Is Nothing Then
             UserID = RegisterUser

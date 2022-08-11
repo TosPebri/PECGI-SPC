@@ -13,9 +13,10 @@ Public Class UserSetup
 
 #Region "Declaration"
     Dim pUser As String = ""
-    Public AuthInsert As Boolean = False
+
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
+    Public AuthAccess As Boolean = False
 #End Region
 
 #Region "Procedure"
@@ -47,10 +48,22 @@ Public Class UserSetup
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         sGlobal.getMenu("Z010")
         Master.SiteTitle = sGlobal.menuName
-        pUser = Session("user")
-        AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "A010")
         show_error(MsgTypeEnum.Info, "", 0)
+
+        pUser = Session("user")
+        AuthAccess = sGlobal.Auth_UserAccess(pUser, "Z010")
+        If AuthAccess = False Then
+            Response.Redirect("~/Main.aspx")
+        End If
+
+        AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "Z010")
         If AuthUpdate = False Then
+            Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
+            commandColumn.Visible = False
+        End If
+
+        AuthDelete = sGlobal.Auth_UserDelete(pUser, "Z010")
+        If AuthDelete = False Then
             Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
             commandColumn.Visible = False
         End If

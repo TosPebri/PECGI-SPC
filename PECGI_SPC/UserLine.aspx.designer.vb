@@ -77,13 +77,13 @@ Partial Public Class UserLine
     Protected WithEvents btnCancel As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
-    '''ASPxButton1 control.
+    '''btnSave control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxButton1 As Global.DevExpress.Web.ASPxButton
+    Protected WithEvents btnSave As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''cbkValid control.

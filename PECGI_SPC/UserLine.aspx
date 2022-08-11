@@ -251,7 +251,7 @@
                                     <ClientSideEvents Click="function close() {window.open('UserSetup.aspx', '_self' );}" />
                                 </dx:ASPxButton>
                                 &nbsp;&nbsp;
-                                <dx:ASPxButton ID="ASPxButton1" runat="server" AutoPostBack="False" ClientInstanceName="btnSave"
+                                <dx:ASPxButton ID="btnSave" runat="server" AutoPostBack="False" ClientInstanceName="btnSave"
                                     Font-Names="Segoe UI" Font-Size="8pt" Text="Save" Theme="Office2010Silver"
                                     Width="80px">
                                     <ClientSideEvents Click="SaveData" />

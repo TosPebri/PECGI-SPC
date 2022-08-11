@@ -12,6 +12,10 @@ Public Class ChangePassword
     Public lb_AuthUpdate As Boolean = False
     Dim UserID As String = ""
     Dim clsDESEncryption As New clsDESEncryption("TOS")
+
+    Public AuthUpdate As Boolean = False
+    Public AuthDelete As Boolean = False
+    Public AuthAccess As Boolean = False
 #End Region
 
 #Region "PROCEDURE"
@@ -49,6 +53,21 @@ Public Class ChangePassword
 
         If Session("user") IsNot Nothing Then
             UserID = Session("user")
+        End If
+
+        AuthAccess = sGlobal.Auth_UserAccess(UserID, "Z030")
+        If AuthAccess = False Then
+            Response.Redirect("~/Main.aspx")
+        End If
+
+        AuthUpdate = sGlobal.Auth_UserUpdate(UserID, "Z030")
+        If AuthUpdate = False Then
+            btnSubmit.Enabled = False
+        End If
+
+        AuthDelete = sGlobal.Auth_UserDelete(UserID, "Z030")
+        If AuthUpdate = False Then
+            btnSubmit.Enabled = False
         End If
 
     End Sub

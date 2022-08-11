@@ -14,6 +14,10 @@ Public Class UserLine
 #Region "Declaration"
     Dim RegisterUser As String = ""
     Dim UserID As String
+
+    Public AuthUpdate As Boolean = False
+    Public AuthDelete As Boolean = False
+    Public AuthAccess As Boolean = False
 #End Region
 
 #Region "Procedure"
@@ -37,6 +41,22 @@ Public Class UserLine
         Master.SiteTitle = sGlobal.menuName
         show_error(MsgTypeEnum.Info, "", 0)
         RegisterUser = Session("user")
+
+        AuthAccess = sGlobal.Auth_UserAccess(RegisterUser, "Z040")
+        If AuthAccess = False Then
+            Response.Redirect("~/Main.aspx")
+        End If
+
+        AuthUpdate = sGlobal.Auth_UserUpdate(RegisterUser, "Z040")
+        If AuthUpdate = False Then
+            btnSave.Enabled = False
+        End If
+
+        AuthDelete = sGlobal.Auth_UserDelete(RegisterUser, "Z040")
+        If AuthDelete = False Then
+            btnSave.Enabled = False
+        End If
+
         If Request.QueryString("prm") Is Nothing Then
             UserID = RegisterUser
             btnCancel.Visible = False

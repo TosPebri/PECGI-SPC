@@ -59,13 +59,13 @@ Public Class UserSetup
         AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "Z010")
         If AuthUpdate = False Then
             Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
-            commandColumn.Visible = False
+            commandColumn.ShowEditButton = False
         End If
 
         AuthDelete = sGlobal.Auth_UserDelete(pUser, "Z010")
         If AuthDelete = False Then
             Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
-            commandColumn.Visible = False
+            commandColumn.ShowDeleteButton = False
         End If
     End Sub
 #End Region
@@ -76,6 +76,15 @@ Public Class UserSetup
             up_GridLoad()
         End If
     End Sub
+
+    'Protected Sub Grid_RowDataBound(sender As Object, e As GridViewRowEventArgs)
+    '    If e.Row.RowType = DataControlRowType.DataRow Then
+    '        Dim lb As LinkButton = e.Row.Cells(0).Controls(0)
+    '        lb.Visible = False
+    '    End If
+    'End Sub
+
+
 
     Protected Sub Grid_RowInserting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles Grid.RowInserting
         e.Cancel = True

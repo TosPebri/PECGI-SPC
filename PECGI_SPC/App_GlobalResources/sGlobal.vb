@@ -102,20 +102,23 @@ Public Module sGlobal
 
     Public Function Auth_UserUpdate(ByVal pUserID As String, ByVal pMenuID As String) As Boolean
         Dim retVal As Boolean = False
-
         Using sqlConn As New SqlConnection(Sconn.Stringkoneksi)
             sqlConn.Open()
-            Dim q As String = "select AdminStatus from dbo.spc_UserSetup A" & vbCrLf &
-                               "Inner Join dbo.spc_UserPrivilege B ON A.AppID = B.AppID AND A.UserID = B.UserID" & vbCrLf &
-                               "where A.UserID = '" & pUserID & "' and A.AdminStatus = 1 AND B.MenuID = 'Z020'"
-            Dim cmd As New SqlCommand(q, sqlConn)
-            Dim rd As SqlDataReader = cmd.ExecuteReader()
-            If rd.Read() Then
-                retVal = True
+
+            If pMenuID = "Z020" Then
+                Dim q As String = "select AdminStatus from dbo.spc_UserSetup A" & vbCrLf &
+                              "Inner Join dbo.spc_UserPrivilege B ON A.AppID = B.AppID AND A.UserID = B.UserID" & vbCrLf &
+                              "where A.UserID = '" & pUserID & "' and A.AdminStatus = 1"
+                Dim cmd As New SqlCommand(q, sqlConn)
+                Dim rd As SqlDataReader = cmd.ExecuteReader()
+                If rd.Read() Then
+                    retVal = True
+                    rd.Close()
+                    Return retVal
+                End If
                 rd.Close()
-                Return retVal
             End If
-            rd.Close()
+
 
             Dim ls_SQL As String = "SELECT AllowUpdate FROM dbo.spc_UserPrivilege WHERE AppID = 'SPC' AND UserID = '" & Trim(pUserID) & "' AND MenuID = '" & Trim(pMenuID) & "'"
             Dim sqlCmd As New SqlCommand(ls_SQL, sqlConn)
@@ -137,20 +140,23 @@ Public Module sGlobal
 
     Public Function Auth_UserAccess(ByVal pUserID As String, ByVal pMenuID As String) As Boolean
         Dim retVal As Boolean = False
-
         Using sqlConn As New SqlConnection(Sconn.Stringkoneksi)
             sqlConn.Open()
-            Dim q As String = "select AdminStatus from dbo.spc_UserSetup A" & vbCrLf &
-                               "Inner Join dbo.spc_UserPrivilege B ON A.AppID = B.AppID AND A.UserID = B.UserID" & vbCrLf &
-                               "where A.UserID = '" & pUserID & "' and A.AdminStatus = 1 AND B.MenuID = 'Z020'"
-            Dim cmd As New SqlCommand(q, sqlConn)
-            Dim rd As SqlDataReader = cmd.ExecuteReader()
-            If rd.Read() Then
-                retVal = True
+
+            If pMenuID = "Z020" Then
+                Dim q As String = "select AdminStatus from dbo.spc_UserSetup A" & vbCrLf &
+                              "Inner Join dbo.spc_UserPrivilege B ON A.AppID = B.AppID AND A.UserID = B.UserID" & vbCrLf &
+                              "where A.UserID = '" & pUserID & "' and A.AdminStatus = 1"
+                Dim cmd As New SqlCommand(q, sqlConn)
+                Dim rd As SqlDataReader = cmd.ExecuteReader()
+                If rd.Read() Then
+                    retVal = True
+                    rd.Close()
+                    Return retVal
+                End If
                 rd.Close()
-                Return retVal
             End If
-            rd.Close()
+
 
             Dim ls_SQL As String = "SELECT AllowAccess FROM dbo.spc_UserPrivilege WHERE AppID = 'SPC' AND UserID = '" & Trim(pUserID) & "' AND MenuID = '" & Trim(pMenuID) & "'"
             Dim sqlCmd As New SqlCommand(ls_SQL, sqlConn)

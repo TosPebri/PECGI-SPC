@@ -1,0 +1,683 @@
+﻿<%@ Page Language="vb" AutoEventWireup="false" CodeBehind="ControlChartSetup.aspx.vb" Inherits="PECGI_SPC.ControlChartSetup" MasterPageFile="~/Site.Master" %>
+
+<%@ Register Assembly="DevExpress.Web.v20.2, Version=20.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
+<%@ MasterType VirtualPath="~/Site.Master" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <style type="text/css">
+        .ButtonStyleNo * {
+            background-color: #003fbe;
+            color: #fff;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function OnEndCallback(s, e) {
+            if (s.cp_message != "" && s.cp_val == 1) {
+
+                if (s.cp_type == "Success" && s.cp_val == 1) {
+                    toastr.success(s.cp_message, 'Success');
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                    s.cp_val = 0;
+                    s.cp_message = "";
+                }
+                else if (s.cp_type == "ErrorMsg" && s.cp_val == 1) {
+                    toastr.error(s.cp_message, 'Error');
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                    s.cp_val = 0;
+                    s.cp_message = "";
+
+                }
+                else if (s.cp_type == "Warning" && s.cp_val == 1) {
+                    toastr.warning(s.cp_message, 'Warning');
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                    s.cp_val = 0;
+                    s.cp_message = "";
+                }
+                else if (s.cp_message == "" && s.cp_val == 0) {
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                }
+
+            }
+        }
+
+        function up_Browse() {
+            Grid.PerformCallback('Load');
+        }
+
+        function gridFactorySelected() {
+            var a = Grid.GetEditor("Factory").GetValue().toString();
+            Grid.GetEditor("MachineEditGrid").PerformCallback(a);
+        }
+    </script>
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
+    <div style="padding: 5px 5px 5px 5px; border-bottom-color: #a9a9a9; border-bottom-style: inset; border-bottom-width: 1px">
+        <table>
+            <tr>
+                <td style="padding-right: 1em">
+                    <dx:ASPxLabel ID="ASPxLabel1" runat="server" Text="Factory" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt">
+                    </dx:ASPxLabel>
+                </td>
+
+                <td style="padding-right: 1em">
+                    <dx:ASPxComboBox ID="cboFactory" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFactory">
+                        <ItemStyle Height="10px" Paddings-Padding="4px" />
+                        <ButtonStyle Width="5px" Paddings-Padding="4px" />
+                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                var FactoryCode = cboFactory.GetValue();
+                                cboMachine.PerformCallback(FactoryCode);
+                                HF.Set('FactoryCode', FactoryCode);
+                                Grid.PerformCallback('Kosong');
+                            }" />
+                    </dx:ASPxComboBox>
+                </td>
+
+                <td style="padding-right: 1em">
+                    <dx:ASPxLabel ID="ASPxLabel2" runat="server" Text="Machine Process" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt">
+                    </dx:ASPxLabel>
+                </td>
+
+                <td style="padding-right: 1em">
+                    <dx:ASPxComboBox ID="cboMachine" runat="server" Theme="Office2010Black" Width="200px" Height="25px" ClientInstanceName="cboMachine">
+                        <ItemStyle Height="10px" Paddings-Padding="4px" />
+                        <ButtonStyle Width="5px" Paddings-Padding="4px" />
+                        <ClientSideEvents EndCallback="OnEndCallback" />
+                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                var MachineCode = cboMachine.GetValue();
+                                HF.Set('MachineCode', MachineCode);
+                                Grid.PerformCallback('Kosong');
+                            }" />
+                    </dx:ASPxComboBox>
+                </td>
+            </tr>
+
+            <tr>
+                <td style="padding-right: 1em; padding-top: 0.5em">
+                    <dx:ASPxLabel ID="ASPxLabel3" runat="server" Text="Type" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt">
+                    </dx:ASPxLabel>
+                </td>
+
+                <td style="padding-right: 1em; padding-top: 0.5em">
+                    <dx:ASPxComboBox ID="cboType" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboType">
+                        <ItemStyle Height="10px" Paddings-Padding="4px" />
+                        <ButtonStyle Width="5px" Paddings-Padding="4px" />
+                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                var TypeCode = cboType.GetValue();
+                                HF.Set('Type', TypeCode);
+                                Grid.PerformCallback('Kosong');
+                            }" />
+                    </dx:ASPxComboBox>
+                </td>
+
+                <td style="padding-right: 1em; padding-top: 0.5em">
+                    <dx:ASPxLabel ID="ASPxLabel4" runat="server" Text="Period" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt">
+                    </dx:ASPxLabel>
+                </td>
+
+                <td style="padding-right: 1em; padding-top: 0.5em">
+                    <dx:ASPxDateEdit ID="dtPeriod" runat="server" Theme="Office2010Black" EditFormat="Date" ClientInstanceName="dtPeriod" Height="25px" Width="100px"
+                        DisplayFormatString="dd MMM yyyy" EditFormatString="dd MMM yyyy" AutoPostBack="false">
+                        <ClientSideEvents Init="function(s, e){var today = new Date(); dtPeriod.SetDate(today);}" />
+                        <CalendarProperties>
+                            <HeaderStyle Font-Size="12pt" Paddings-Padding="5px" />
+                            <DayStyle Font-Size="9pt" Paddings-Padding="5px" />
+                            <WeekNumberStyle Font-Size="9pt" Paddings-Padding="5px"></WeekNumberStyle>
+                            <FooterStyle Font-Size="9pt" Paddings-Padding="5px" />
+                            <ButtonStyle Font-Size="9pt" Paddings-Padding="5px"></ButtonStyle>
+                        </CalendarProperties>
+                        <ButtonStyle Width="5px" Paddings-Padding="4px" ></ButtonStyle>
+                    </dx:ASPxDateEdit>
+
+                </td>
+
+                <td style="padding-right: 1em; padding-top: 0.5em">
+                    <dx:ASPxButton ID="ASPxButton1" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse" Theme="Office2010Black" CssClass="ButtonStyleNo" Height="28px"
+                        Text="Browse" RenderMode="Outline" >
+                        <ClientSideEvents Click="up_Browse" />
+                    </dx:ASPxButton>
+                </td>
+
+                <td style="padding-right: 1em; padding-top: 0.5em">
+                    <dx:ASPxButton ID="ASPxButton2" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Theme="Office2010Black" CssClass="ButtonStyleNo" Height="28px"
+                        Text="Clear">
+                        <ClientSideEvents Click="function(s, e) {
+                                cboFactory.SetSelectedIndex(0);
+                                cboMachine.SetSelectedIndex(0);
+                                cboType.SetSelectedIndex(0);
+                                var today = new Date(); dtPeriod.SetDate(today);
+                            }" />
+                    </dx:ASPxButton>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="padding: 20px 5px 5px 5px">
+        <asp:SqlDataSource ID="dsType" runat="server"
+            ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
+            SelectCommand="Exec sp_ChartSetup_FillCombo '1' "></asp:SqlDataSource>
+
+        <asp:SqlDataSource ID="dsMachine" runat="server"
+            ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
+            SelectCommand="Exec sp_ChartSetup_FillCombo '4' "></asp:SqlDataSource>
+
+        <asp:SqlDataSource ID="dsItemCheck" runat="server"
+            ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
+            SelectCommand="Exec sp_ChartSetup_FillCombo '5' "></asp:SqlDataSource>
+
+        <dx:ASPxGridView ID="Grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="Grid"
+            EnableTheming="True" Theme="Office2010Black" Width="100%" KeyFieldName="Factory;Type;Machine;Start"
+            Font-Names="Segoe UI" Font-Size="9pt"
+            OnRowValidating="Grid_RowValidating" OnStartRowEditing="Grid_StartRowEditing"
+            OnRowInserting="Grid_RowInserting" OnRowDeleting="Grid_RowDeleting"
+            OnAfterPerformCallback="Grid_AfterPerformCallback">
+            <ClientSideEvents EndCallback="OnEndCallback" />
+            <Columns>
+                <dx:GridViewCommandColumn FixedStyle="Left"
+                    VisibleIndex="0" ShowEditButton="true" ShowDeleteButton="true"
+                    ShowNewButtonInHeader="true" ShowClearFilterButton="true" Width="80px">
+                    <HeaderStyle Paddings-PaddingLeft="3px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="3px"></Paddings>
+                    </HeaderStyle>
+                </dx:GridViewCommandColumn>
+
+                <dx:GridViewDataComboBoxColumn Caption="Type" FieldName="Type" VisibleIndex="1"
+                    Width="100px" Settings-AutoFilterCondition="Contains">
+                    <PropertiesComboBox DataSourceID="dsType" DropDownStyle="DropDownList" TextFormatString="{0}" DisplayFormatString="{1}"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="95px"
+                        TextField="Description" ValueField="Description" ClientInstanceName="Type">
+                        <ItemStyle Height="10px" Paddings-Padding="4px">
+                            <Paddings Padding="4px"></Paddings>
+                        </ItemStyle>
+                        <ButtonStyle Width="5px" Paddings-Padding="2px">
+                            <Paddings Padding="2px"></Paddings>
+                        </ButtonStyle>
+                    </PropertiesComboBox>
+                    <Settings AutoFilterCondition="Contains"></Settings>
+                    <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                    </FilterCellStyle>
+                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                    </HeaderStyle>
+                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                </dx:GridViewDataComboBoxColumn>
+
+                <dx:GridViewDataComboBoxColumn Caption="Machine Process" FieldName="Machine" VisibleIndex="2"
+                    Width="200px" Settings-AutoFilterCondition="Contains">
+                    <PropertiesComboBox DataSourceID="dsMachine" DropDownStyle="DropDownList" TextFormatString="{0}"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="195px"
+                        TextField="Description" ValueField="Description" ClientInstanceName="Machine">
+                        <ItemStyle Height="10px" Paddings-Padding="4px">
+                            <Paddings Padding="4px"></Paddings>
+                        </ItemStyle>
+                        <ButtonStyle Width="5px" Paddings-Padding="2px">
+                            <Paddings Padding="2px"></Paddings>
+                        </ButtonStyle>
+                    </PropertiesComboBox>
+                    <Settings AutoFilterCondition="Contains"></Settings>
+                    <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                    </FilterCellStyle>
+                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                    </HeaderStyle>
+                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                </dx:GridViewDataComboBoxColumn>
+
+                <dx:GridViewDataComboBoxColumn Caption="Item Check" FieldName="ItemCheck" VisibleIndex="3"
+                    Width="175px" Settings-AutoFilterCondition="Contains">
+                    <PropertiesComboBox DataSourceID="dsItemCheck" DropDownStyle="DropDownList" TextFormatString="{0}"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="170px"
+                        TextField="Description" ValueField="Description" ClientInstanceName="ItemCheck">
+                        <ItemStyle Height="10px" Paddings-Padding="4px">
+                            <Paddings Padding="4px"></Paddings>
+                        </ItemStyle>
+                        <ButtonStyle Width="5px" Paddings-Padding="2px">
+                            <Paddings Padding="2px"></Paddings>
+                        </ButtonStyle>
+                    </PropertiesComboBox>
+                    <Settings AutoFilterCondition="Contains"></Settings>
+                    <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                    </FilterCellStyle>
+                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                    </HeaderStyle>
+                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                </dx:GridViewDataComboBoxColumn>
+
+                <dx:GridViewBandColumn Caption="Period">
+                    <HeaderStyle HorizontalAlign="Center" />
+                    <Columns>
+                        <dx:GridViewDataDateColumn Caption="Start" FieldName="Start" VisibleIndex="4"
+                            Width="100px" Settings-AutoFilterCondition="Contains">
+                            <PropertiesDateEdit DisplayFormatString="dd MMM yyyy" EditFormat="Custom" EditFormatString="dd MMM yyyy" MaxDate="9999-12-31" MinDate="2000-12-01">
+                                <ButtonStyle Width="5px" Paddings-Padding="2px"/>
+                                <CalendarProperties>
+                                    <HeaderStyle Font-Size="12pt" Paddings-Padding="5px" />
+                                    <DayStyle Font-Size="9pt" Paddings-Padding="5px" />
+                                    <WeekNumberStyle Font-Size="9pt" Paddings-Padding="5px"></WeekNumberStyle>
+                                    <FooterStyle Font-Size="9pt" Paddings-Padding="5px" />
+                                    <ButtonStyle Font-Size="9pt" Paddings-Padding="5px"></ButtonStyle>
+                                </CalendarProperties>
+                            </PropertiesDateEdit>
+                            <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                        </dx:GridViewDataDateColumn>
+
+                        <dx:GridViewDataDateColumn Caption="End" FieldName="End" VisibleIndex="5"
+                            Width="100px" Settings-AutoFilterCondition="Contains">
+                            <PropertiesDateEdit DisplayFormatString="dd MMM yyyy" EditFormat="Custom" EditFormatString="dd MMM yyyy" MaxDate="9999-12-31" MinDate="2000-12-01">
+                                <ButtonStyle Width="5px" Paddings-Padding="2px"/>
+                                <CalendarProperties>
+                                    <HeaderStyle Font-Size="12pt" Paddings-Padding="5px" />
+                                    <DayStyle Font-Size="9pt" Paddings-Padding="5px" />
+                                    <WeekNumberStyle Font-Size="9pt" Paddings-Padding="5px"></WeekNumberStyle>
+                                    <FooterStyle Font-Size="9pt" Paddings-Padding="5px" />
+                                    <ButtonStyle Font-Size="9pt" Paddings-Padding="5px"></ButtonStyle>
+                                </CalendarProperties>
+                            </PropertiesDateEdit>
+                            <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                        </dx:GridViewDataDateColumn>
+                    </Columns>
+                </dx:GridViewBandColumn>
+
+                <dx:GridViewDataTextColumn Caption="Measuring Unit" FieldName="MeasuringUnit" VisibleIndex="6"
+                    Width="75px" Settings-AutoFilterCondition="Contains">
+                    <PropertiesTextEdit MaxLength="15" Width="55px">
+                        <Style HorizontalAlign="Left"></Style>
+                    </PropertiesTextEdit>
+                    <Settings AutoFilterCondition="Contains"></Settings>
+                    <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                    </FilterCellStyle>
+                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                    </HeaderStyle>
+                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                </dx:GridViewDataTextColumn>
+
+                <dx:GridViewBandColumn Caption="Specification">
+                    <HeaderStyle HorizontalAlign="Center" />
+                    <Columns>
+                        <dx:GridViewDataSpinEditColumn Caption="USL" FieldName="SpecUSL" VisibleIndex="7"
+                            width="75px" Settings-AutoFilterCondition="Contains">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                                <ButtonStyle Width="5px" Paddings-Padding="2px">
+                                    <Paddings Padding="2px" />
+                                </ButtonStyle>
+                            </PropertiesSpinEdit>
+                            <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                        </dx:GridViewDataSpinEditColumn>
+
+                        <dx:GridViewDataSpinEditColumn Caption="LSL" FieldName="SpecLSL" VisibleIndex="8"
+                            width="75px" Settings-AutoFilterCondition="Contains">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                                <ButtonStyle Width="5px" Paddings-Padding="2px">
+                                    <Paddings Padding="2px" />
+                                </ButtonStyle>
+                            </PropertiesSpinEdit>
+                            <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                        </dx:GridViewDataSpinEditColumn>
+                    </Columns>
+                </dx:GridViewBandColumn>
+
+                <dx:GridViewBandColumn Caption="X Bar Control">
+                    <HeaderStyle HorizontalAlign="Center" />
+                    <Columns>
+                        <dx:GridViewDataSpinEditColumn Caption="CL" FieldName="XCL" VisibleIndex="9"
+                            width="75px" Settings-AutoFilterCondition="Contains">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                                <ButtonStyle Width="5px" Paddings-Padding="2px">
+                                    <Paddings Padding="2px" />
+                                </ButtonStyle>
+                            </PropertiesSpinEdit>
+                            <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                        </dx:GridViewDataSpinEditColumn>
+
+                        <dx:GridViewDataSpinEditColumn Caption="UCL" FieldName="XUCL" VisibleIndex="10"
+                            width="75px" Settings-AutoFilterCondition="Contains">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                                <ButtonStyle Width="5px" Paddings-Padding="2px">
+                                    <Paddings Padding="2px" />
+                                </ButtonStyle>
+                            </PropertiesSpinEdit>
+                            <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                        </dx:GridViewDataSpinEditColumn>
+
+                        <dx:GridViewDataSpinEditColumn Caption="LCL" FieldName="XLCL" VisibleIndex="11"
+                            width="75px" Settings-AutoFilterCondition="Contains">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                                <ButtonStyle Width="5px" Paddings-Padding="2px">
+                                    <Paddings Padding="2px" />
+                                </ButtonStyle>
+                            </PropertiesSpinEdit>
+                            <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                        </dx:GridViewDataSpinEditColumn>
+                    </Columns>
+                </dx:GridViewBandColumn>
+
+                <dx:GridViewBandColumn Caption="R Control">
+                    <HeaderStyle HorizontalAlign="Center" />
+                    <Columns>
+                        <dx:GridViewDataSpinEditColumn Caption="CL" FieldName="RCL" VisibleIndex="12"
+                            width="75px" Settings-AutoFilterCondition="Contains">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                                <ButtonStyle Width="5px" Paddings-Padding="2px">
+                                    <Paddings Padding="2px" />
+                                </ButtonStyle>
+                            </PropertiesSpinEdit>
+                            <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                        </dx:GridViewDataSpinEditColumn>
+
+                        <dx:GridViewDataSpinEditColumn Caption="UCL" FieldName="RUCL" VisibleIndex="13"
+                            width="75px" Settings-AutoFilterCondition="Contains">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                                <ButtonStyle Width="5px" Paddings-Padding="2px">
+                                    <Paddings Padding="2px" />
+                                </ButtonStyle>
+                            </PropertiesSpinEdit>
+                            <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                        </dx:GridViewDataSpinEditColumn>
+
+                        <dx:GridViewDataSpinEditColumn Caption="LCL" FieldName="RLCL" VisibleIndex="14"
+                            width="75px" Settings-AutoFilterCondition="Contains">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                                <ButtonStyle Width="5px" Paddings-Padding="2px">
+                                    <Paddings Padding="2px" />
+                                </ButtonStyle>
+                            </PropertiesSpinEdit>
+                            <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                        </dx:GridViewDataSpinEditColumn>
+                    </Columns>
+                </dx:GridViewBandColumn>
+
+                <dx:GridViewDataTextColumn Caption="Last User" FieldName="LastUser" VisibleIndex="15"
+                    Width="100px" Settings-AutoFilterCondition="Contains">
+                    <PropertiesTextEdit MaxLength="15" Width="100px">
+                        <Style HorizontalAlign="Left"></Style>
+                    </PropertiesTextEdit>
+                    <Settings AutoFilterCondition="Contains"></Settings>
+                    <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                    </FilterCellStyle>
+                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                    </HeaderStyle>
+                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                </dx:GridViewDataTextColumn>
+
+                <dx:GridViewDataTextColumn Caption="Last Update" FieldName="LastUpdate" VisibleIndex="16"
+                    Width="150px" Settings-AutoFilterCondition="Contains">
+                    <PropertiesTextEdit MaxLength="15" Width="100px">
+                        <Style HorizontalAlign="Left"></Style>
+                    </PropertiesTextEdit>
+                    <Settings AutoFilterCondition="Contains"></Settings>
+                    <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                    </FilterCellStyle>
+                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                    </HeaderStyle>
+                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                </dx:GridViewDataTextColumn>
+
+                <dx:GridViewDataComboBoxColumn Caption="Factory" FieldName="Factory" VisibleIndex="17"
+                    Width="100px" Settings-AutoFilterCondition="Contains" Visible="false">
+                    <PropertiesComboBox DropDownStyle="DropDownList" TextFormatString="{0}"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="95px"
+                        TextField="Description" ValueField="Code" ClientInstanceName="Factory">
+                        <ClientSideEvents ValueChanged = "gridFactorySelected" />
+                        <ItemStyle Height="10px" Paddings-Padding="4px">
+                            <Paddings Padding="4px"></Paddings>
+                        </ItemStyle>
+                        <ButtonStyle Width="5px" Paddings-Padding="2px">
+                            <Paddings Padding="2px"></Paddings>
+                        </ButtonStyle>
+                    </PropertiesComboBox>
+                    <Settings AutoFilterCondition="Contains"></Settings>
+                    <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                    </FilterCellStyle>
+                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                    </HeaderStyle>
+                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                </dx:GridViewDataComboBoxColumn>
+
+                <dx:GridViewDataComboBoxColumn Caption="Machine EDIT" FieldName="MachineEditGrid" VisibleIndex="18"
+                    Width="200px" Settings-AutoFilterCondition="Contains" Visible="false">
+                    <PropertiesComboBox DropDownStyle="DropDownList" TextFormatString="{0}"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="195px"
+                        TextField="Description" ValueField="Code" ClientInstanceName="MachineEditGrid">
+                        <ItemStyle Height="10px" Paddings-Padding="4px">
+                            <Paddings Padding="4px"></Paddings>
+                        </ItemStyle>
+                        <ButtonStyle Width="5px" Paddings-Padding="2px">
+                            <Paddings Padding="2px"></Paddings>
+                        </ButtonStyle>
+                    </PropertiesComboBox>
+                    <Settings AutoFilterCondition="Contains"></Settings>
+                    <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                    </FilterCellStyle>
+                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                    </HeaderStyle>
+                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                </dx:GridViewDataComboBoxColumn>
+
+                <dx:GridViewDataComboBoxColumn Caption="Item EDIT" FieldName="ItemCheckEditGrid" VisibleIndex="19"
+                    Width="200px" Settings-AutoFilterCondition="Contains" Visible="false">
+                    <PropertiesComboBox DropDownStyle="DropDownList" TextFormatString="{0}"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="195px"
+                        TextField="Description" ValueField="Code" ClientInstanceName="ItemCheckEditGrid">
+                        <ItemStyle Height="10px" Paddings-Padding="4px">
+                            <Paddings Padding="4px"></Paddings>
+                        </ItemStyle>
+                        <ButtonStyle Width="5px" Paddings-Padding="2px">
+                            <Paddings Padding="2px"></Paddings>
+                        </ButtonStyle>
+                    </PropertiesComboBox>
+                    <Settings AutoFilterCondition="Contains"></Settings>
+                    <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                    </FilterCellStyle>
+                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                    </HeaderStyle>
+                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                </dx:GridViewDataComboBoxColumn>
+
+                <dx:GridViewDataComboBoxColumn Caption="Type EDIT" FieldName="TypeEditGrid" VisibleIndex="20"
+                    Width="200px" Settings-AutoFilterCondition="Contains" Visible="false">
+                    <PropertiesComboBox DropDownStyle="DropDownList" TextFormatString="{0}"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="195px"
+                        TextField="Description" ValueField="Code" ClientInstanceName="TypeEditGrid">
+                        <ItemStyle Height="10px" Paddings-Padding="4px">
+                            <Paddings Padding="4px"></Paddings>
+                        </ItemStyle>
+                        <ButtonStyle Width="5px" Paddings-Padding="2px">
+                            <Paddings Padding="2px"></Paddings>
+                        </ButtonStyle>
+                    </PropertiesComboBox>
+                    <Settings AutoFilterCondition="Contains"></Settings>
+                    <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                    </FilterCellStyle>
+                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                    </HeaderStyle>
+                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                </dx:GridViewDataComboBoxColumn>
+            </Columns>
+
+            <SettingsBehavior ConfirmDelete="True" ColumnResizeMode="Control" />
+            <SettingsEditing EditFormColumnCount="1" Mode="PopupEditForm" />
+            <SettingsPager Mode="ShowPager" PageSize="20" AlwaysShowPager="true">
+                <PageSizeItemSettings Visible="True" />
+            </SettingsPager>
+            <Settings ShowFilterRow="True" VerticalScrollBarMode="Auto"
+                VerticalScrollableHeight="300" HorizontalScrollBarMode="Auto" />
+            <SettingsText ConfirmDelete="Are you sure want to delete ?"></SettingsText>
+            <SettingsPopup>
+                <EditForm Modal="false" HorizontalAlign="WindowCenter" VerticalAlign="WindowCenter" Width="200" />
+            </SettingsPopup>
+
+            <Styles EditFormColumnCaption-Paddings-PaddingLeft="10px" EditFormColumnCaption-Paddings-PaddingRight="10px">
+                <Header Wrap="True">
+                    <Paddings Padding="2px"></Paddings>
+                </Header>
+
+                <EditFormColumnCaption Font-Size="9pt" Font-Names="Segoe UI">
+                    <Paddings PaddingLeft="5px" PaddingTop="5px" PaddingBottom="5px"></Paddings>
+                </EditFormColumnCaption>
+            </Styles>
+
+             <Templates>
+                <EditForm>
+                    <div style="padding: 5px 15px 5px 15px; width: 325px">
+                        <dx:ContentControl ID="ContentControl1" runat="server">
+                            <table>
+                                <tr style="height: 30px">
+                                    <td>
+                                        <dx:ASPxLabel ID="ASPxLabel1" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Factory" Width="120px"></dx:ASPxLabel>
+                                    </td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editFactory" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="Factory"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>Machine Process</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editMachine" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="MachineEditGrid"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>Item Check</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editItemCheck" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="ItemCheckEditGrid"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>Type</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editType" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="TypeEditGrid"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>Start</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editStart" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="Start"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>Spesification USL</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editSpecUSL" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="SpecUSL"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>Spesification LSL</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editSpecLSL" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="SpecLSL"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>X Bar CL</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editXCL" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="XCL"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>X Bar UCL</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editXUCL" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="XUCL"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>X Bar LCL</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editXLCL" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="XLCL"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>R CL</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editRCL" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="RCL"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>R UCL</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editRUCL" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="RUCL"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>R LCL</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editRLCL" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="RLCL"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                            </table>
+                        </dx:ContentControl>
+                    </div>
+                    <div style="text-align: left; padding: 5px 5px 5px 15px">
+                        <dx:ASPxGridViewTemplateReplacement ID="UpdateButton" ReplacementType="EditFormUpdateButton"
+                            runat="server"></dx:ASPxGridViewTemplateReplacement>
+                        <dx:ASPxGridViewTemplateReplacement ID="CancelButton" ReplacementType="EditFormCancelButton"
+                            runat="server"></dx:ASPxGridViewTemplateReplacement>
+                    </div>
+                </EditForm>
+            </Templates>
+
+        </dx:ASPxGridView>
+        <dx:ASPxHiddenField ID="HF" runat="server" ClientInstanceName="HF"></dx:ASPxHiddenField>
+    </div>
+    
+</asp:Content>

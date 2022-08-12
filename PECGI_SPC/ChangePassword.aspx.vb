@@ -65,11 +65,6 @@ Public Class ChangePassword
             btnSubmit.Enabled = False
         End If
 
-        AuthDelete = sGlobal.Auth_UserDelete(UserID, "Z030")
-        If AuthUpdate = False Then
-            btnSubmit.Enabled = False
-        End If
-
     End Sub
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 

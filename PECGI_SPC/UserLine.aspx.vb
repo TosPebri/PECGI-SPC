@@ -52,11 +52,6 @@ Public Class UserLine
             btnSave.Enabled = False
         End If
 
-        AuthDelete = sGlobal.Auth_UserDelete(RegisterUser, "Z040")
-        If AuthDelete = False Then
-            btnSave.Enabled = False
-        End If
-
         If Request.QueryString("prm") Is Nothing Then
             UserID = RegisterUser
             btnCancel.Visible = False

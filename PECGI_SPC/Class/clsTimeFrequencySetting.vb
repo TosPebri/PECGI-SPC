@@ -95,6 +95,7 @@ Public Class clsTimeFrequencySettingDB
                 cmd.Parameters.AddWithValue("Shift", cls.Shift)
                 cmd.Parameters.AddWithValue("Start", cls.StartTime)
                 cmd.Parameters.AddWithValue("End", cls.EndTime)
+                cmd.Parameters.AddWithValue("@SequenceNo", CInt(cls.Nomor))
 
                 cmd.ExecuteNonQuery()
             End Using

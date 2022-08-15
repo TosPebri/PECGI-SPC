@@ -202,7 +202,8 @@ Public Class TimeFrequencySetting
                 .FrequencyCode = e.NewValues("Frequency"),
                 .Shift = e.NewValues("Shift"),
                 .StartTime = StTime.ToString("HH:mm"),
-                .EndTime = EnTime.ToString("HH:mm")
+                .EndTime = EnTime.ToString("HH:mm"),
+                .Nomor = IIf(e.IsNewRow, 0, e.NewValues("No"))
             }
 
             If Convert.ToDateTime(e.NewValues("Start")).ToString("HH:mm") <> Convert.ToDateTime(e.OldValues("Start")).ToString("HH:mm") Or _

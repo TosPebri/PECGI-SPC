@@ -182,6 +182,7 @@ Public Class ControlChartSetup
 
     Protected Sub Grid_RowValidating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs) Handles Grid.RowValidating
         Dim dataCol As New GridViewDataColumn
+        Dim tmpdataCol As New GridViewDataColumn
         Dim AdaError As Boolean = False
 
         For Each column As GridViewColumn In Grid.Columns
@@ -222,84 +223,75 @@ Public Class ControlChartSetup
                 End If
             End If
 
-            If dataColumn.FieldName = "Start" Then
-                If IsNothing(e.NewValues("Start")) OrElse e.NewValues("Start").ToString.Trim = "" Then
-                    e.Errors(dataColumn) = "Please Choose Period Start!"
-                    show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
-                    AdaError = True
-                End If
-            End If
-
-            If dataColumn.FieldName = "SpecUSL" Then
-                If IsNothing(e.NewValues("SpecUSL")) OrElse e.NewValues("SpecUSL").ToString.Trim = "" OrElse e.NewValues("SpecUSL").ToString.Trim = "0" Then
-                    e.Errors(dataColumn) = "Please Input Minimum 0.001!"
-                    show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
-                    AdaError = True
-                End If
-            End If
-
-            If dataColumn.FieldName = "SpecLSL" Then
-                If IsNothing(e.NewValues("SpecLSL")) OrElse e.NewValues("SpecLSL").ToString.Trim = "" OrElse e.NewValues("SpecLSL").ToString.Trim = "0" Then
-                    e.Errors(dataColumn) = "Please Input Minimum 0.001!"
-                    show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
-                    AdaError = True
-                End If
-            End If
-
-            If dataColumn.FieldName = "XCL" Then
-                If IsNothing(e.NewValues("XCL")) OrElse e.NewValues("XCL").ToString.Trim = "" OrElse e.NewValues("XCL").ToString.Trim = "0" Then
-                    e.Errors(dataColumn) = "Please Input Minimum 0.001!"
-                    show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
-                    AdaError = True
-                End If
-            End If
-
-            If dataColumn.FieldName = "XUCL" Then
-                If IsNothing(e.NewValues("XUCL")) OrElse e.NewValues("XUCL").ToString.Trim = "" OrElse e.NewValues("XUCL").ToString.Trim = "0" Then
-                    e.Errors(dataColumn) = "Please Input Minimum 0.001!"
-                    show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
-                    AdaError = True
-                End If
-            End If
-
-            If dataColumn.FieldName = "XLCL" Then
-                If IsNothing(e.NewValues("XLCL")) OrElse e.NewValues("XLCL").ToString.Trim = "" OrElse e.NewValues("XLCL").ToString.Trim = "0" Then
-                    e.Errors(dataColumn) = "Please Input Minimum 0.001!"
-                    show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
-                    AdaError = True
-                End If
-            End If
-
-            If dataColumn.FieldName = "RCL" Then
-                If IsNothing(e.NewValues("RCL")) OrElse e.NewValues("RCL").ToString.Trim = "" OrElse e.NewValues("RCL").ToString.Trim = "0" Then
-                    e.Errors(dataColumn) = "Please Input Minimum 0.001!"
-                    show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
-                    AdaError = True
-                End If
-            End If
-
-            If dataColumn.FieldName = "RUCL" Then
-                If IsNothing(e.NewValues("RUCL")) OrElse e.NewValues("RUCL").ToString.Trim = "" OrElse e.NewValues("RUCL").ToString.Trim = "0" Then
-                    e.Errors(dataColumn) = "Please Input Minimum 0.001!"
-                    show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
-                    AdaError = True
-                End If
-            End If
-
-            If dataColumn.FieldName = "RLCL" Then
-                If IsNothing(e.NewValues("RLCL")) OrElse e.NewValues("RLCL").ToString.Trim = "" OrElse e.NewValues("RLCL").ToString.Trim = "0" Then
-                    e.Errors(dataColumn) = "Please Input Minimum 0.001!"
-                    show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
-                    AdaError = True
-                End If
-            End If
-
             If dataColumn.FieldName = "LastUser" Then
                 dataCol = dataColumn
             End If
         Next column
 
-        If e.IsNewRow Then
+        tmpdataCol = Grid.DataColumns("Start")
+        If IsNothing(e.NewValues("Start")) OrElse e.NewValues("Start").ToString.Trim = "" Then
+            e.Errors(tmpdataCol) = "Please Choose Period Start!"
+            show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
+            AdaError = True
+        End If
+
+        tmpdataCol = Grid.DataColumns("SpecUSL")
+        If IsNothing(e.NewValues("SpecUSL")) OrElse e.NewValues("SpecUSL").ToString.Trim = "" Then
+            e.Errors(tmpdataCol) = "please Input a Number!"
+            show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
+            AdaError = True
+        End If
+
+        tmpdataCol = Grid.DataColumns("SpecLSL")
+        If IsNothing(e.NewValues("SpecLSL")) OrElse e.NewValues("SpecLSL").ToString.Trim = "" Then
+            e.Errors(tmpdataCol) = "please Input a Number!"
+            show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
+            AdaError = True
+        End If
+
+        tmpdataCol = Grid.DataColumns("XCL")
+        If IsNothing(e.NewValues("XCL")) OrElse e.NewValues("XCL").ToString.Trim = "" Then
+            e.Errors(tmpdataCol) = "please Input a Number!"
+            show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
+            AdaError = True
+        End If
+
+        tmpdataCol = Grid.DataColumns("XUCL")
+        If IsNothing(e.NewValues("XUCL")) OrElse e.NewValues("XUCL").ToString.Trim = "" Then
+            e.Errors(tmpdataCol) = "please Input a Number!"
+            show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
+            AdaError = True
+        End If
+
+        tmpdataCol = Grid.DataColumns("XLCL")
+        If IsNothing(e.NewValues("XLCL")) OrElse e.NewValues("XLCL").ToString.Trim = "" Then
+            e.Errors(tmpdataCol) = "please Input a Number!"
+            show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
+            AdaError = True
+        End If
+
+        tmpdataCol = Grid.DataColumns("RCL")
+        If IsNothing(e.NewValues("RCL")) OrElse e.NewValues("RCL").ToString.Trim = "" Then
+            e.Errors(tmpdataCol) = "please Input a Number!"
+            show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
+            AdaError = True
+        End If
+
+        tmpdataCol = Grid.DataColumns("RUCL")
+        If IsNothing(e.NewValues("RUCL")) OrElse e.NewValues("RUCL").ToString.Trim = "" Then
+            e.Errors(tmpdataCol) = "please Input a Number!"
+            show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
+            AdaError = True
+        End If
+
+        tmpdataCol = Grid.DataColumns("RLCL")
+        If IsNothing(e.NewValues("RLCL")) OrElse e.NewValues("RLCL").ToString.Trim = "" Then
+            e.Errors(tmpdataCol) = "please Input a Number!"
+            show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
+            AdaError = True
+        End If
+
+        If e.IsNewRow And Not AdaError Then
             Dim pErr As String = ""
             Dim StTime As DateTime = Convert.ToDateTime(e.NewValues("Start"))
 

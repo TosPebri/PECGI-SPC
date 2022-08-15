@@ -140,6 +140,9 @@
                     <dx:ASPxDateEdit ID="dtPeriod" runat="server" Theme="Office2010Black" EditFormat="Date" ClientInstanceName="dtPeriod" Height="25px" Width="100px"
                         DisplayFormatString="dd MMM yyyy" EditFormatString="dd MMM yyyy" AutoPostBack="false">
                         <ClientSideEvents Init="function(s, e){var today = new Date(); dtPeriod.SetDate(today);}" />
+                        <ClientSideEvents ValueChanged="function(s, e){
+                                Grid.PerformCallback('Kosong');
+                            }" />
                         <CalendarProperties>
                             <HeaderStyle Font-Size="12pt" Paddings-Padding="5px" />
                             <DayStyle Font-Size="9pt" Paddings-Padding="5px" />
@@ -167,6 +170,7 @@
                                 cboMachine.SetSelectedIndex(0);
                                 cboType.SetSelectedIndex(0);
                                 var today = new Date(); dtPeriod.SetDate(today);
+                                Grid.PerformCallback('Kosong');
                             }" />
                     </dx:ASPxButton>
                 </td>
@@ -318,7 +322,7 @@
                     <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
                         <Paddings PaddingLeft="5px"></Paddings>
                     </HeaderStyle>
-                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewBandColumn Caption="Specification">
@@ -332,18 +336,18 @@
                                 </ButtonStyle>
                             </PropertiesSpinEdit>
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
-                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                            <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                         </dx:GridViewDataSpinEditColumn>
 
                         <dx:GridViewDataSpinEditColumn Caption="LSL" FieldName="SpecLSL" VisibleIndex="8"
                             width="75px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0.001" DecimalPlaces="3">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
                             </PropertiesSpinEdit>
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
-                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                            <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                         </dx:GridViewDataSpinEditColumn>
                     </Columns>
                 </dx:GridViewBandColumn>
@@ -359,7 +363,7 @@
                                 </ButtonStyle>
                             </PropertiesSpinEdit>
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
-                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                            <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                         </dx:GridViewDataSpinEditColumn>
 
                         <dx:GridViewDataSpinEditColumn Caption="UCL" FieldName="XUCL" VisibleIndex="10"
@@ -370,7 +374,7 @@
                                 </ButtonStyle>
                             </PropertiesSpinEdit>
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
-                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                            <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                         </dx:GridViewDataSpinEditColumn>
 
                         <dx:GridViewDataSpinEditColumn Caption="LCL" FieldName="XLCL" VisibleIndex="11"
@@ -381,7 +385,7 @@
                                 </ButtonStyle>
                             </PropertiesSpinEdit>
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
-                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                            <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                         </dx:GridViewDataSpinEditColumn>
                     </Columns>
                 </dx:GridViewBandColumn>
@@ -397,7 +401,7 @@
                                 </ButtonStyle>
                             </PropertiesSpinEdit>
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
-                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                            <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                         </dx:GridViewDataSpinEditColumn>
 
                         <dx:GridViewDataSpinEditColumn Caption="UCL" FieldName="RUCL" VisibleIndex="13"
@@ -408,7 +412,7 @@
                                 </ButtonStyle>
                             </PropertiesSpinEdit>
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
-                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                            <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                         </dx:GridViewDataSpinEditColumn>
 
                         <dx:GridViewDataSpinEditColumn Caption="LCL" FieldName="RLCL" VisibleIndex="14"
@@ -419,7 +423,7 @@
                                 </ButtonStyle>
                             </PropertiesSpinEdit>
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
-                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                            <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                         </dx:GridViewDataSpinEditColumn>
                     </Columns>
                 </dx:GridViewBandColumn>
@@ -436,7 +440,7 @@
                     <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
                         <Paddings PaddingLeft="5px"></Paddings>
                     </HeaderStyle>
-                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewDataTextColumn Caption="Last Update" FieldName="LastUpdate" VisibleIndex="16"
@@ -588,17 +592,17 @@
                                     </td>
                                 </tr>
                                 <tr style="height: 30px">
-                                    <td>Item Check</td>
-                                    <td>
-                                        <dx:ASPxGridViewTemplateReplacement ID="editItemCheck" ReplacementType="EditFormCellEditor"
-                                            runat="server" ColumnID="ItemCheckEditGrid"></dx:ASPxGridViewTemplateReplacement>
-                                    </td>
-                                </tr>
-                                <tr style="height: 30px">
                                     <td>Type</td>
                                     <td>
                                         <dx:ASPxGridViewTemplateReplacement ID="editType" ReplacementType="EditFormCellEditor"
                                             runat="server" ColumnID="TypeEditGrid"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>Item Check</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editItemCheck" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="ItemCheckEditGrid"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
                                 </tr>
                                 <tr style="height: 30px">

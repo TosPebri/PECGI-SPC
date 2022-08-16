@@ -156,6 +156,7 @@
     <Content Include="img\panasonic-login.png" />
     <Content Include="ItemCheck.aspx" />
     <Content Include="ItemCheckByBattery.aspx" />
+    <Content Include="ProdSampleInput.aspx" />
     <Content Include="ProductionSampleVerificationList.aspx" />
     <Content Include="StretchSession.aspx" />
     <Content Include="Styles\images\dashboard.png" />
@@ -867,6 +868,11 @@
     </Compile>
     <Compile Include="Class\clsControlChartSetup.vb" />
     <Compile Include="Class\clsDESEncryption.vb" />
+    <Compile Include="Class\clsFactory.vb" />
+    <Compile Include="Class\clsItemCheck.vb" />
+    <Compile Include="Class\clsItemType.vb" />
+    <Compile Include="Class\ClsLine.vb" />
+    <Compile Include="Class\ClsLineDB.vb" />
     <Compile Include="Class\clsProductionSampleVerificationList.vb" />
     <Compile Include="Class\clsProductionSampleVerificationListDB.vb" />
     <Compile Include="Class\clsSPCItemCheckByType.vb" />
@@ -901,6 +907,13 @@
     </Compile>
     <Compile Include="ItemCheckByBattery.aspx.vb">
       <DependentUpon>ItemCheckByBattery.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProdSampleInput.aspx.designer.vb">
+      <DependentUpon>ProdSampleInput.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProdSampleInput.aspx.vb">
+      <DependentUpon>ProdSampleInput.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ProductionSampleVerificationList.aspx.designer.vb">

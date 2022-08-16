@@ -11,6 +11,34 @@ Public Class clsProductionSampleVerificationListDB
                 cmd.Parameters.AddWithValue("Status", Status)
                 cmd.Parameters.AddWithValue("FactoryCode", If(data.FactoryCode, ""))
                 cmd.Parameters.AddWithValue("LineCode", If(data.LineCode, ""))
+                cmd.Parameters.AddWithValue("ItemTypeCode", If(data.ItemType_Code, ""))
+                Dim da As New SqlDataAdapter(cmd)
+                Dim dt As New DataTable
+                da.Fill(dt)
+                Return dt
+            End Using
+        Catch ex As Exception
+            pErr = ex.Message
+            Return Nothing
+        End Try
+    End Function
+
+    Public Shared Function LoadGrid(data As clsProductionSampleVerificationList, Optional ByRef pErr As String = "") As DataTable
+        Try
+            Using conn As New SqlConnection(Sconn.Stringkoneksi)
+                conn.Open()
+                Dim sql As String = ""
+                sql = "SP_SPC_ProdSampleVerificationList_Grid"
+                Dim cmd As New SqlCommand(sql, conn)
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.Parameters.AddWithValue("FactoryCode", If(data.FactoryCode, ""))
+                cmd.Parameters.AddWithValue("ItemTypeCode", If(data.ItemType_Code, ""))
+                cmd.Parameters.AddWithValue("LineCode", If(data.LineCode, ""))
+                cmd.Parameters.AddWithValue("ItemCheckCode", If(data.ItemCheck_Code, ""))
+                cmd.Parameters.AddWithValue("ProdDateFrom", data.ProdDateFrom)
+                cmd.Parameters.AddWithValue("ProdDateTo", data.ProdDateTo)
+                cmd.Parameters.AddWithValue("MKVerification", If(data.MKVerification, ""))
+                cmd.Parameters.AddWithValue("QCVerification", If(data.QCVerification, ""))
                 Dim da As New SqlDataAdapter(cmd)
                 Dim dt As New DataTable
                 da.Fill(dt)

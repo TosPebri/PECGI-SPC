@@ -52,56 +52,100 @@
                 }
             }
         }
+
+        function OnInitToDate(s, e) {
+            var today = new Date();
+            dtToDate.SetDate(today);
+        }
+
+        function OnInitFromDate(s, e) {
+            var today = new Date();
+            dtFromDate.SetDate(today);
+        }
+
+        function up_Browse() {
+            Grid.PerformCallback('Load');
+        }
+
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
-    <div style="padding: 5px 5px 5px 5px; padding-bottom:20px; border-bottom:groove">
+    <div style="padding: 5px 5px 5px 5px; padding-bottom: 20px; border-bottom: groove">
         <table class="auto-style3">
-            <tr style="height:40px">
-                <td> 
-                    <dx:ASPxLabel ID="lblFactory" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Factory">
+            <tr style="height: 40px">
+                <td>
+                    <dx:ASPxLabel ID="lblFactory" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="Factory">
                     </dx:ASPxLabel>
                 </td>
-                <td style="width:20px">&nbsp;</td>
+                <td style="width: 20px">&nbsp;</td>
                 <td>
-                    <dx:ASPxComboBox ID="cboFactory" runat="server" Font-Names="Segoe UI"
-                        Font-Size="8pt" Theme="Office2010Black" EnableTheming="True" Height="25px"
-                        TextField="CODE" ValueField="CODENAME" ClientInstanceName="cboFactory">
+                    <dx:ASPxComboBox ID="cboFactory" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                        Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" TextFormatString="{1}"
+                        TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboFactory" SelectedIndex="0">
+                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                var FactoryCode = cboFactory.GetValue(); 
+                                var LineCode = cboLineID.GetValue(); 
+                                var ItemType_Code = cboItemType.GetValue(); 
+                                HideValue.Set('FactoryCode', FactoryCode);
+                                HideValue.Set('LineCode', LineCode);
+                                HideValue.Set('ItemType_Code', ItemType_Code);
+
+                                cboLineID.PerformCallback(FactoryCode);
+                                cboItemCheck.PerformCallback(FactoryCode + '|' + LineCode + '|' + ItemType_Code);
+                                GridMenu.PerformCallback('Kosong');
+                            }" />
                         <Columns>
                             <dx:ListBoxColumn Caption="CODE" FieldName="CODE" Width="60px" />
                             <dx:ListBoxColumn Caption="CODE NAME" FieldName="CODENAME" Width="120px" />
                         </Columns>
+                        <ItemStyle Height="10px" Paddings-Padding="4px" Font-Size="11px" />
+                        <ButtonStyle Paddings-Padding="4px" Width="5px">
+                        </ButtonStyle>
                     </dx:ASPxComboBox>
                 </td>
 
-                <td style="width:10px">&nbsp;</td>
+                <td style="width: 10px">&nbsp;</td>
                 <td>
-                    <dx:ASPxLabel ID="lblLineID" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Machine Process">
+                    <dx:ASPxLabel ID="lblLineID" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="Machine Process">
                     </dx:ASPxLabel>
                 </td>
-                <td style="width:20px">&nbsp;</td>
+                <td style="width: 20px">&nbsp;</td>
                 <td>
-                    <dx:ASPxComboBox ID="cboLineID" runat="server" Font-Names="Segoe UI"
-                        Font-Size="8pt" Theme="Office2010Black" EnableTheming="True" Height="25px"
-                        TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboLineID">
+                    <dx:ASPxComboBox ID="cboLineID" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                        Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" TextFormatString="{1}"
+                        TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboLineID" SelectedIndex="0">
+                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                var FactoryCode = cboFactory.GetValue(); 
+                                var LineCode = cboLineID.GetValue(); 
+                                var ItemType_Code = cboItemType.GetValue(); 
+                                HideValue.Set('FactoryCode', FactoryCode);
+                                HideValue.Set('LineCode', LineCode);
+                                HideValue.Set('ItemType_Code', ItemType_Code);
+                                cboItemCheck.PerformCallback(FactoryCode + '|' + LineCode + '|' + ItemType_Code);
+                                GridMenu.PerformCallback('Kosong');
+                            }" />
                         <Columns>
                             <dx:ListBoxColumn Caption="CODE" FieldName="CODE" Width="60px" />
                             <dx:ListBoxColumn Caption="CODE NAME" FieldName="CODENAME" Width="120px" />
                         </Columns>
+                        <ItemStyle Height="10px" Paddings-Padding="4px" Font-Size="11px" />
+                        <ButtonStyle Paddings-Padding="4px" Width="5px">
+                        </ButtonStyle>
                     </dx:ASPxComboBox>
                 </td>
 
-                <td style="width:10px">&nbsp;</td>
+                <td style="width: 10px">&nbsp;</td>
                 <td>
-                    <dx:ASPxLabel ID="lblFromDate" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Date">
+                    <dx:ASPxLabel ID="lblFromDate" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="Date">
                     </dx:ASPxLabel>
                 </td>
-                   <td style="width:20px">&nbsp;</td>
+                <td style="width: 20px">&nbsp;</td>
                 <td colspan="3">
-                     <dx:ASPxDateEdit ID="dtFromDate" runat="server" Theme="Office2010Black" AutoPostBack="false"
+                    <dx:ASPxDateEdit ID="dtFromDate" runat="server" Theme="Office2010Black" AutoPostBack="false"
                         ClientInstanceName="dtFromDate" EditFormatString="dd MMM yyyy" DisplayFormatString="dd MMM yyyy"
                         Font-Names="Segoe UI" Font-Size="9pt" Height="25px" TabIndex="5">
-                        <ClientSideEvents Init="OnInitDate" />
+                        <ClientSideEvents Init="OnInitFromDate" />
                         <CalendarProperties>
                             <HeaderStyle Font-Size="12pt" Paddings-Padding="5px" />
                             <DayStyle Font-Size="9pt" Paddings-Padding="5px" />
@@ -113,18 +157,18 @@
                     </dx:ASPxDateEdit>
                 </td>
 
-                 <td style="width:20px">&nbsp;</td>
-                <td style="width:60px" align="center">
-                    <dx:ASPxLabel ID="lblToDate" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="To">
+                <td style="width: 20px">&nbsp;</td>
+                <td style="width: 60px" align="center">
+                    <dx:ASPxLabel ID="lblToDate" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="To">
                     </dx:ASPxLabel>
                 </td>
 
-                 <td style="width:20px">&nbsp;</td>
+                <td style="width: 20px">&nbsp;</td>
                 <td colspan="3">
                     <dx:ASPxDateEdit ID="dtToDate" runat="server" Theme="Office2010Black" AutoPostBack="false"
                         ClientInstanceName="dtToDate" EditFormatString="dd MMM yyyy" DisplayFormatString="dd MMM yyyy"
                         Font-Names="Segoe UI" Font-Size="9pt" Height="25px" TabIndex="5">
-                        <ClientSideEvents Init="OnInitDate" />
+                        <ClientSideEvents Init="OnInitToDate" />
                         <CalendarProperties>
                             <HeaderStyle Font-Size="12pt" Paddings-Padding="5px" />
                             <DayStyle Font-Size="9pt" Paddings-Padding="5px" />
@@ -138,81 +182,103 @@
             </tr>
             <tr>
                 <td>
-                    <dx:ASPxLabel ID="lblItemType" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Type">
+                    <dx:ASPxLabel ID="lblItemType" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="Type">
                     </dx:ASPxLabel>
                 </td>
-                <td style="width:20px">&nbsp;</td>
+                <td style="width: 20px">&nbsp;</td>
                 <td>
-                    <dx:ASPxComboBox ID="cboItemType" runat="server" Font-Names="Segoe UI"
-                        Font-Size="8pt" Theme="Office2010Black" EnableTheming="True" Height="25px"
+                    <dx:ASPxComboBox ID="cboItemType" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                        Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" SelectedIndex="0" TextFormatString="{1}"
                         TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboItemType">
+                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                var FactoryCode = cboFactory.GetValue(); 
+                                var LineCode = cboLineID.GetValue(); 
+                                var ItemType_Code = cboItemType.GetValue(); 
+                                HideValue.Set('FactoryCode', FactoryCode);
+                                HideValue.Set('LineCode', LineCode);
+                                HideValue.Set('ItemType_Code', ItemType_Code);
+                                cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode );
+                                GridMenu.PerformCallback('Kosong');
+                            }" />
                         <Columns>
                             <dx:ListBoxColumn Caption="CODE" FieldName="CODE" Width="60px" />
                             <dx:ListBoxColumn Caption="CODE NAME" FieldName="CODENAME" Width="120px" />
                         </Columns>
+                        <ItemStyle Height="10px" Paddings-Padding="4px" Font-Size="11px" />
+                        <ButtonStyle Paddings-Padding="4px" Width="5px">
+                        </ButtonStyle>
                     </dx:ASPxComboBox>
                 </td>
 
-                 <td style="width:10px">&nbsp;</td>
+                <td style="width: 10px">&nbsp;</td>
                 <td>
-                    <dx:ASPxLabel ID="lblItemCheck" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Item Check">
+                    <dx:ASPxLabel ID="lblItemCheck" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="Item Check">
                     </dx:ASPxLabel>
                 </td>
-                <td style="width:20px">&nbsp;</td>
+                <td style="width: 20px">&nbsp;</td>
                 <td>
-                    <dx:ASPxComboBox ID="cboItemCheck" runat="server" Font-Names="Segoe UI"
-                        Font-Size="8pt" Theme="Office2010Black" EnableTheming="True" Height="25px"
+                    <dx:ASPxComboBox ID="cboItemCheck" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                        Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" SelectedIndex="0" TextFormatString="{1}"
                         TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboItemCheck">
                         <Columns>
                             <dx:ListBoxColumn Caption="CODE" FieldName="CODE" Width="60px" />
                             <dx:ListBoxColumn Caption="CODE NAME" FieldName="CODENAME" Width="120px" />
                         </Columns>
+                        <ItemStyle Height="10px" Paddings-Padding="4px" Font-Size="11px" />
+                        <ButtonStyle Paddings-Padding="4px" Width="5px">
+                        </ButtonStyle>
                     </dx:ASPxComboBox>
                 </td>
 
-                 <td style="width:10px">&nbsp;</td>
+                <td style="width: 10px">&nbsp;</td>
                 <td>
-                    <dx:ASPxLabel ID="lblMK" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="MK Verification">
+                    <dx:ASPxLabel ID="lblMK" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="MK Verification">
                     </dx:ASPxLabel>
                 </td>
-                   <td style="width:20px">&nbsp;</td>
+                <td style="width: 20px">&nbsp;</td>
                 <td>
-                    <dx:ASPxComboBox ID="cboMK" runat="server" Font-Names="Segoe UI" Height="25px"
-                        Font-Size="8pt" Theme="Office2010Black" EnableTheming="True" Width="80px">
-                         <Items>
-                            <dx:ListEditItem Text="ALL" Value="ALL" />
-                            <dx:ListEditItem Text="Yes" Value="1" />
-                            <dx:ListEditItem Text="No" Value="0" />
-                        </Items>
-                    </dx:ASPxComboBox>
-                </td>
-
-                <td style="width:5px">&nbsp;</td>
-                <td>
-                    <dx:ASPxLabel ID="lblQC" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="QC Verification">
-                    </dx:ASPxLabel>
-                </td>
-
-                <td style="width:20px">&nbsp;</td>
-                <td>
-                    <dx:ASPxComboBox ID="cboQC" runat="server" Font-Names="Segoe UI" Height="25px"
-                        Font-Size="8pt" Theme="Office2010Black" EnableTheming="True"  Width="80px">
+                    <dx:ASPxComboBox ID="cboMK" runat="server" Font-Names="Segoe UI" Height="25px" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                        Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Width="80px" EnableIncrementalFiltering="True" TextFormatString="{0}" SelectedIndex="0">
                         <Items>
                             <dx:ListEditItem Text="ALL" Value="ALL" />
-                            <dx:ListEditItem Text="Yes" Value="1" />
-                            <dx:ListEditItem Text="No" Value="0" />
+                            <dx:ListEditItem Text="YES" Value="1" />
+                            <dx:ListEditItem Text="NO" Value="0" />
                         </Items>
+                        <ItemStyle Height="10px" Paddings-Padding="4px" Font-Size="11px" />
+                        <ButtonStyle Paddings-Padding="4px" Width="5px">
+                        </ButtonStyle>
                     </dx:ASPxComboBox>
                 </td>
 
-                <td style="width:10px">&nbsp;</td>
+                <td style="width: 5px">&nbsp;</td>
+                <td>
+                    <dx:ASPxLabel ID="lblQC" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="QC Verification">
+                    </dx:ASPxLabel>
+                </td>
+
+                <td style="width: 20px">&nbsp;</td>
+                <td>
+                    <dx:ASPxComboBox ID="cboQC" runat="server" Font-Names="Segoe UI" Height="25px" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                        Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Width="80px" EnableIncrementalFiltering="True" TextFormatString="{0}" SelectedIndex="0">
+                        <Items>
+                            <dx:ListEditItem Text="ALL" Value="ALL" />
+                            <dx:ListEditItem Text="YES" Value="1" />
+                            <dx:ListEditItem Text="NO" Value="0" />
+                        </Items>
+                        <ItemStyle Height="10px" Paddings-Padding="4px" Font-Size="11px" />
+                        <ButtonStyle Paddings-Padding="4px" Width="5px">
+                        </ButtonStyle>
+                    </dx:ASPxComboBox>
+                </td>
+
+                <td style="width: 10px">&nbsp;</td>
                 <td>
                     <dx:ASPxButton ID="btnBrowse" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse"
                         Font-Names="Segoe UI" Font-Size="10pt" Text="Browse" Theme="Office2010Silver" Width="80px">
                         <ClientSideEvents Click="Browse" />
                     </dx:ASPxButton>
                 </td>
-                 <td style="width:10px">&nbsp;</td>
+                <td style="width: 10px">&nbsp;</td>
                 <td>
                     <dx:ASPxButton ID="btnClear" runat="server" AutoPostBack="False" ClientInstanceName="btnClear"
                         Font-Names="Segoe UI" Font-Size="10pt" Text="Clear" Theme="Office2010Silver" Width="80px">
@@ -222,7 +288,7 @@
             </tr>
         </table>
     </div>
-    <div style="padding: 5px 5px 5px 5px; padding-top:20px; padding-bottom:20px">
+    <div style="padding: 5px 5px 5px 5px; padding-top: 20px; padding-bottom: 20px">
         <table>
             <tr>
                 <td>
@@ -231,14 +297,14 @@
                         <ClientSideEvents Click="Verification" />
                     </dx:ASPxButton>
                 </td>
-                <td style="width:10px">&nbsp;</td>
+                <td style="width: 10px">&nbsp;</td>
                 <td>
                     <dx:ASPxButton ID="btnViewSampleInput" runat="server" AutoPostBack="False" ClientInstanceName="btnViewSampleInput"
                         Font-Names="Segoe UI" Font-Size="10pt" Text="View Sample Input" Theme="Office2010Silver" Width="100px">
                         <ClientSideEvents Click="ViewSampleInput" />
                     </dx:ASPxButton>
                 </td>
-                <td style="width:10px">&nbsp;</td>
+                <td style="width: 10px">&nbsp;</td>
                 <td>
                     <dx:ASPxButton ID="btnExcel" runat="server" AutoPostBack="False" ClientInstanceName="btnExcel"
                         Font-Names="Segoe UI" Font-Size="10pt" Text="Excel" Theme="Office2010Silver" Width="100px">
@@ -253,8 +319,7 @@
             EnableTheming="True" KeyFieldName="PartID;SubLineID;LineID" Theme="Office2010Black"
             Width="100%"
             Font-Names="Segoe UI" Font-Size="9pt">
-            <ClientSideEvents EndCallback="OnEndCallback" Init="function grid_Init(s, e) {scheduleGridUpdate(s);}"
-                BeginCallback="function grid_BeginCallback(s, e) {window.clearTimeout(timeout);}" />
+            <ClientSideEvents EndCallback="OnEndCallback" />
             <Columns>
                 <dx:GridViewCommandColumn ShowSelectCheckbox="True"
                     ShowClearFilterButton="true" VisibleIndex="1" SelectAllCheckboxMode="Page"
@@ -262,7 +327,7 @@
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                 </dx:GridViewCommandColumn>
 
-                <dx:GridViewDataTextColumn Caption="Date" VisibleIndex="2" Width="55px"
+                <dx:GridViewDataTextColumn Caption="Date" VisibleIndex="2" Width="150px"
                     FieldName="ProdDate">
                     <PropertiesTextEdit ClientInstanceName="ProdDate">
                     </PropertiesTextEdit>
@@ -289,7 +354,7 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="Item Check" VisibleIndex="5" Width="55px"
+                <dx:GridViewDataTextColumn Caption="Item Check" VisibleIndex="5" Width="200px"
                     FieldName="ItemCheck">
                     <PropertiesTextEdit ClientInstanceName="ItemCheck">
                     </PropertiesTextEdit>
@@ -325,7 +390,7 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="Correction Status" VisibleIndex="9" Width="55px"
+                <dx:GridViewDataTextColumn Caption="Correction Status" VisibleIndex="9" Width="120px"
                     FieldName="Correction_Sts">
                     <PropertiesTextEdit ClientInstanceName="Correction_Sts">
                     </PropertiesTextEdit>
@@ -343,7 +408,7 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="SampleTime" VisibleIndex="11" Width="55px"
+                <dx:GridViewDataTextColumn Caption="SampleTime" VisibleIndex="11" Width="150px"
                     FieldName="SampleTime">
                     <PropertiesTextEdit ClientInstanceName="SampleTime">
                     </PropertiesTextEdit>
@@ -352,7 +417,7 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="Operator" VisibleIndex="12" Width="55px"
+                <dx:GridViewDataTextColumn Caption="Operator" VisibleIndex="12" Width="100px"
                     FieldName="Operator">
                     <PropertiesTextEdit ClientInstanceName="Operator">
                     </PropertiesTextEdit>
@@ -361,18 +426,18 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewBandColumn Caption="Verification by MK" VisibleIndex="13" HeaderStyle-HorizontalAlign="Center">
+                <dx:GridViewBandColumn Caption="Verification by MK" VisibleIndex="13" HeaderStyle-HorizontalAlign="Center" HeaderStyle-Paddings-PaddingBottom="3px" HeaderStyle-Paddings-PaddingTop="3px">
                     <Columns>
-                        <dx:GridViewDataTextColumn Caption="PIC" VisibleIndex="0" Width="50px"
-                            FieldName="MK_PIC">
+                        <dx:GridViewDataTextColumn Caption="PIC" VisibleIndex="1" Width="80px"
+                            FieldName="MK_PIC" HeaderStyle-Paddings-PaddingBottom="2px" HeaderStyle-Paddings-PaddingTop="2px">
                             <PropertiesTextEdit ClientInstanceName="MK_PIC"></PropertiesTextEdit>
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                             <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
                             </CellStyle>
                         </dx:GridViewDataTextColumn>
 
-                        <dx:GridViewDataTextColumn Caption="Time" VisibleIndex="0" Width="50px"
-                            FieldName="MK_Time">
+                        <dx:GridViewDataTextColumn Caption="Time" VisibleIndex="2" Width="80px"
+                            FieldName="MK_Time" HeaderStyle-Paddings-PaddingBottom="2px" HeaderStyle-Paddings-PaddingTop="2px">
                             <PropertiesTextEdit ClientInstanceName="MK_Time"></PropertiesTextEdit>
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                             <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
@@ -381,18 +446,18 @@
                     </Columns>
                 </dx:GridViewBandColumn>
 
-                <dx:GridViewBandColumn Caption="Verification by QC" VisibleIndex="14" HeaderStyle-HorizontalAlign="Center">
+                <dx:GridViewBandColumn Caption="Verification by QC" VisibleIndex="14" HeaderStyle-HorizontalAlign="Center" HeaderStyle-Paddings-PaddingBottom="3px" HeaderStyle-Paddings-PaddingTop="3px">
                     <Columns>
-                        <dx:GridViewDataTextColumn Caption="PIC" VisibleIndex="0" Width="50px"
-                            FieldName="QC_PIC">
+                        <dx:GridViewDataTextColumn Caption="PIC" VisibleIndex="1" Width="80px"
+                            FieldName="QC_PIC" HeaderStyle-Paddings-PaddingBottom="2px" HeaderStyle-Paddings-PaddingTop="2px">
                             <PropertiesTextEdit ClientInstanceName="QC_PIC"></PropertiesTextEdit>
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                             <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
                             </CellStyle>
                         </dx:GridViewDataTextColumn>
 
-                        <dx:GridViewDataTextColumn Caption="Time" VisibleIndex="0" Width="50px"
-                            FieldName="QC_Time">
+                        <dx:GridViewDataTextColumn Caption="Time" VisibleIndex="2" Width="80px"
+                            FieldName="QC_Time" HeaderStyle-Paddings-PaddingBottom="2px" HeaderStyle-Paddings-PaddingTop="2px">
                             <PropertiesTextEdit ClientInstanceName="QC_Time"></PropertiesTextEdit>
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                             <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
@@ -401,6 +466,16 @@
                     </Columns>
                 </dx:GridViewBandColumn>
             </Columns>
+            <SettingsBehavior ColumnResizeMode="control" />
+            <SettingsPager Mode="ShowPager" PageSize="20" AlwaysShowPager="true" PageSizeItemSettings-Visible="true">
+                <PageSizeItemSettings Visible="True"></PageSizeItemSettings>
+            </SettingsPager>
+            <Settings HorizontalScrollBarMode="Auto"
+                VerticalScrollBarMode="Auto" />
+
+
         </dx:ASPxGridView>
     </div>
+
+    <dx:ASPxHiddenField ID="HideValue" runat="server" ClientInstanceName="HideValue"></dx:ASPxHiddenField>
 </asp:Content>

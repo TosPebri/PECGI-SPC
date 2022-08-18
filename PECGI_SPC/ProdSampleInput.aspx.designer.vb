@@ -11,16 +11,16 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class ProductionSampleVerificationList
+Partial Public Class ProdSampleInput
 
     '''<summary>
-    '''lblFactory control.
+    '''ASPxLabel1 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblFactory As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents ASPxLabel1 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cboFactory control.
@@ -32,85 +32,85 @@ Partial Public Class ProductionSampleVerificationList
     Protected WithEvents cboFactory As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
-    '''lblLineID control.
+    '''ASPxLabel4 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblLineID As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents ASPxLabel4 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
-    '''cboLineID control.
+    '''cboLine control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cboLineID As Global.DevExpress.Web.ASPxComboBox
+    Protected WithEvents cboLine As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
-    '''lblFromDate control.
+    '''ASPxLabel8 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblFromDate As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents ASPxLabel8 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
-    '''dtFromDate control.
+    '''dtDate control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents dtFromDate As Global.DevExpress.Web.ASPxDateEdit
+    Protected WithEvents dtDate As Global.DevExpress.Web.ASPxDateEdit
 
     '''<summary>
-    '''lblToDate control.
+    '''ASPxLabel9 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblToDate As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents ASPxLabel9 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
-    '''dtToDate control.
+    '''cboShow control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents dtToDate As Global.DevExpress.Web.ASPxDateEdit
+    Protected WithEvents cboShow As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
-    '''lblItemType control.
+    '''ASPxLabel2 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblItemType As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents ASPxLabel2 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
-    '''cboItemType control.
+    '''cboType control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cboItemType As Global.DevExpress.Web.ASPxComboBox
+    Protected WithEvents cboType As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
-    '''lblItemCheck control.
+    '''ASPxLabel6 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblItemCheck As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents ASPxLabel6 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cboItemCheck control.
@@ -122,103 +122,67 @@ Partial Public Class ProductionSampleVerificationList
     Protected WithEvents cboItemCheck As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
-    '''lblMK control.
+    '''lblqeleader0 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblMK As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents lblqeleader0 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
-    '''cboMK control.
+    '''cboShift control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cboMK As Global.DevExpress.Web.ASPxComboBox
+    Protected WithEvents cboShift As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
-    '''lblQC control.
+    '''lblqeleader2 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblQC As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents lblqeleader2 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
-    '''cboQC control.
+    '''cboSeq control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cboQC As Global.DevExpress.Web.ASPxComboBox
+    Protected WithEvents cboSeq As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
-    '''btnBrowse control.
+    '''btnSearch control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnBrowse As Global.DevExpress.Web.ASPxButton
+    Protected WithEvents btnSearch As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
-    '''btnClear control.
+    '''hfRevNo control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnClear As Global.DevExpress.Web.ASPxButton
+    Protected WithEvents hfRevNo As Global.DevExpress.Web.ASPxHiddenField
 
     '''<summary>
-    '''btnVerification control.
+    '''grid control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents btnVerification As Global.DevExpress.Web.ASPxButton
-
-    '''<summary>
-    '''btnViewSampleInput control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnViewSampleInput As Global.DevExpress.Web.ASPxButton
-
-    '''<summary>
-    '''btnExcel control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnExcel As Global.DevExpress.Web.ASPxButton
-
-    '''<summary>
-    '''GridMenu control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents GridMenu As Global.DevExpress.Web.ASPxGridView
-
-    '''<summary>
-    '''HideValue control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents HideValue As Global.DevExpress.Web.ASPxHiddenField
+    Protected WithEvents grid As Global.DevExpress.Web.ASPxGridView
 
     '''<summary>
     '''Master property.

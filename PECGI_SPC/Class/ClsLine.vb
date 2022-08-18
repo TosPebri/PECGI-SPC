@@ -1,17 +1,40 @@
-﻿Public Class ClsLine
-    Public Property LineID As String
+﻿Imports System.Data.SqlClient
+
+Public Class ClsLine
+    Public Property FactoryCode As String
+    Public Property ProcessCode As String
+    Public Property LineCode As String
+    Public Property VisualProcessCode As String
     Public Property LineName As String
-    Public Property EZRLineID As String
-    Public Property Leader1 As String
-    Public Property Leader2 As String
-    Public Property Leader3 As String
-    Public Property Foreman1 As String
-    Public Property Foreman2 As String
-    Public Property Foreman3 As String
-    Public Property SectionHead1 As String
-    Public Property SectionHead2 As String
-    Public Property CreateDate As String
-    Public Property CreateUser As String
-    Public Property UpdateDate As String
-    Public Property UpdateUser As String
+End Class
+
+
+Public Class ClsLineDB
+    Public Shared Function GetList(Optional FactoryCode As String = "", Optional ProcessCode As String = "") As List(Of ClsLine)
+        Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+            Cn.Open()
+            Dim q As String = "select * from MS_Line where LineCode is not Null " & vbCrLf
+            If FactoryCode <> "" Then
+                q = q & "and FactoryCode = @FactoryCode "
+            End If
+            If ProcessCode <> "" Then
+                q = q & "and ProcessCode = @ProcessCode "
+            End If
+            Dim cmd As New SqlCommand(q, Cn)
+            cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
+            cmd.Parameters.AddWithValue("ProcessCode", ProcessCode)
+            Dim rd As SqlDataReader = cmd.ExecuteReader
+            Dim FactoryList As New List(Of ClsLine)
+            Do While rd.Read
+                Dim Factory As New ClsLine
+                Factory.FactoryCode = rd("FactoryCode")
+                Factory.ProcessCode = rd("ProcessCode")
+                Factory.LineCode = rd("LineCode")
+                Factory.LineName = rd("LineName")
+                FactoryList.Add(Factory)
+            Loop
+            rd.Close()
+            Return FactoryList
+        End Using
+    End Function
 End Class

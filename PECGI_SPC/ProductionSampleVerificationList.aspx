@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="vb" AutoEventWireup="false" MasterPageFile="~/Site.Master" CodeBehind="ProductionSampleVerificationList.aspx.vb" Inherits="PECGI_SPC.ProductionSampleVerificationList" %>
+﻿ <%@ Page Title="" Language="vb" AutoEventWireup="false" MasterPageFile="~/Site.Master" CodeBehind="ProductionSampleVerificationList.aspx.vb" Inherits="PECGI_SPC.ProductionSampleVerificationList" %>
 
 <%@ MasterType VirtualPath="~/Site.Master" %>
 <%@ Register Assembly="DevExpress.Web.v20.2, Version=20.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
@@ -63,8 +63,62 @@
             dtFromDate.SetDate(today);
         }
 
-        function up_Browse() {
-            Grid.PerformCallback('Load');
+        function Browse() {
+            GridMenu.PerformCallback('Load');
+        }
+
+        function Clear() {
+            var today = new Date();
+            dtFromDate.SetDate(today);
+            dtToDate.SetDate(today);
+
+            cboFactory.SetSelectedIndex(0);
+            cboItemType.SetSelectedIndex(0);
+            cboMK.SetSelectedIndex(0);
+            cboQC.SetSelectedIndex(0);
+            ChangeFactory()
+
+            GridMenu.PerformCallback('Clear');
+        }
+
+        function ChangeFactory() {
+            var FactoryCode = cboFactory.GetValue();
+            var ItemType_Code = cboItemType.GetValue();
+            var LineCode = cboLineID.GetValue();
+            HideValue.Set('FactoryCode', FactoryCode);
+            HideValue.Set('ItemType_Code', ItemType_Code);
+            HideValue.Set('LineCode', LineCode);
+            cboLineID.PerformCallback(FactoryCode);
+            cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode);
+            GridMenu.PerformCallback('Kosong');
+        }
+
+        function ChangeItemType() {
+            var FactoryCode = cboFactory.GetValue();
+            var ItemType_Code = cboItemType.GetValue();
+            var LineCode = cboLineID.GetValue();
+            HideValue.Set('FactoryCode', FactoryCode);
+            HideValue.Set('ItemType_Code', ItemType_Code);
+            HideValue.Set('LineCode', LineCode);
+            cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode);
+            GridMenu.PerformCallback('Kosong');
+        }
+
+        function ChangeLine() {
+            var FactoryCode = cboFactory.GetValue();
+            var LineCode = cboLineID.GetValue();
+            var ItemType_Code = cboItemType.GetValue();
+            HideValue.Set('FactoryCode', FactoryCode);
+            HideValue.Set('ItemType_Code', ItemType_Code);
+            HideValue.Set('LineCode', LineCode);
+            cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode);
+            GridMenu.PerformCallback('Kosong');
+        }
+
+        function ChangeItemCheck() {
+            var ItemCheck_Code = cboItemCheck.GetValue();
+            HideValue.Set('ItemCheck_Code', ItemCheck_Code);
+            GridMenu.PerformCallback('Kosong');
         }
 
 
@@ -83,18 +137,7 @@
                     <dx:ASPxComboBox ID="cboFactory" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
                         Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" TextFormatString="{1}"
                         TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboFactory" SelectedIndex="0">
-                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
-                                var FactoryCode = cboFactory.GetValue(); 
-                                var LineCode = cboLineID.GetValue(); 
-                                var ItemType_Code = cboItemType.GetValue(); 
-                                HideValue.Set('FactoryCode', FactoryCode);
-                                HideValue.Set('LineCode', LineCode);
-                                HideValue.Set('ItemType_Code', ItemType_Code);
-
-                                cboLineID.PerformCallback(FactoryCode);
-                                cboItemCheck.PerformCallback(FactoryCode + '|' + LineCode + '|' + ItemType_Code);
-                                GridMenu.PerformCallback('Kosong');
-                            }" />
+                          <ClientSideEvents SelectedIndexChanged="ChangeFactory"/>
                         <Columns>
                             <dx:ListBoxColumn Caption="CODE" FieldName="CODE" Width="60px" />
                             <dx:ListBoxColumn Caption="CODE NAME" FieldName="CODENAME" Width="120px" />
@@ -115,16 +158,7 @@
                     <dx:ASPxComboBox ID="cboLineID" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
                         Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" TextFormatString="{1}"
                         TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboLineID" SelectedIndex="0">
-                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
-                                var FactoryCode = cboFactory.GetValue(); 
-                                var LineCode = cboLineID.GetValue(); 
-                                var ItemType_Code = cboItemType.GetValue(); 
-                                HideValue.Set('FactoryCode', FactoryCode);
-                                HideValue.Set('LineCode', LineCode);
-                                HideValue.Set('ItemType_Code', ItemType_Code);
-                                cboItemCheck.PerformCallback(FactoryCode + '|' + LineCode + '|' + ItemType_Code);
-                                GridMenu.PerformCallback('Kosong');
-                            }" />
+                        <ClientSideEvents SelectedIndexChanged="ChangeLine"/>
                         <Columns>
                             <dx:ListBoxColumn Caption="CODE" FieldName="CODE" Width="60px" />
                             <dx:ListBoxColumn Caption="CODE NAME" FieldName="CODENAME" Width="120px" />
@@ -190,16 +224,7 @@
                     <dx:ASPxComboBox ID="cboItemType" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
                         Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" SelectedIndex="0" TextFormatString="{1}"
                         TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboItemType">
-                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
-                                var FactoryCode = cboFactory.GetValue(); 
-                                var LineCode = cboLineID.GetValue(); 
-                                var ItemType_Code = cboItemType.GetValue(); 
-                                HideValue.Set('FactoryCode', FactoryCode);
-                                HideValue.Set('LineCode', LineCode);
-                                HideValue.Set('ItemType_Code', ItemType_Code);
-                                cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode );
-                                GridMenu.PerformCallback('Kosong');
-                            }" />
+                         <ClientSideEvents SelectedIndexChanged="ChangeItemType"/>
                         <Columns>
                             <dx:ListBoxColumn Caption="CODE" FieldName="CODE" Width="60px" />
                             <dx:ListBoxColumn Caption="CODE NAME" FieldName="CODENAME" Width="120px" />
@@ -220,6 +245,7 @@
                     <dx:ASPxComboBox ID="cboItemCheck" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
                         Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" SelectedIndex="0" TextFormatString="{1}"
                         TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboItemCheck">
+                         <ClientSideEvents SelectedIndexChanged="ChangeItemCheck"/>
                         <Columns>
                             <dx:ListBoxColumn Caption="CODE" FieldName="CODE" Width="60px" />
                             <dx:ListBoxColumn Caption="CODE NAME" FieldName="CODENAME" Width="120px" />
@@ -237,7 +263,7 @@
                 </td>
                 <td style="width: 20px">&nbsp;</td>
                 <td>
-                    <dx:ASPxComboBox ID="cboMK" runat="server" Font-Names="Segoe UI" Height="25px" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                    <dx:ASPxComboBox ID="cboMK" runat="server" Font-Names="Segoe UI" Height="25px" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains" ClientInstanceName="cboMK"
                         Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Width="80px" EnableIncrementalFiltering="True" TextFormatString="{0}" SelectedIndex="0">
                         <Items>
                             <dx:ListEditItem Text="ALL" Value="ALL" />
@@ -258,7 +284,7 @@
 
                 <td style="width: 20px">&nbsp;</td>
                 <td>
-                    <dx:ASPxComboBox ID="cboQC" runat="server" Font-Names="Segoe UI" Height="25px" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                    <dx:ASPxComboBox ID="cboQC" runat="server" Font-Names="Segoe UI" Height="25px" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains" ClientInstanceName="cboQC"
                         Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Width="80px" EnableIncrementalFiltering="True" TextFormatString="{0}" SelectedIndex="0">
                         <Items>
                             <dx:ListEditItem Text="ALL" Value="ALL" />
@@ -316,18 +342,16 @@
     </div>
     <div style="padding: 5px 5px 5px 5px">
         <dx:ASPxGridView ID="GridMenu" runat="server" AutoGenerateColumns="False" ClientInstanceName="GridMenu"
-            EnableTheming="True" KeyFieldName="PartID;SubLineID;LineID" Theme="Office2010Black"
-            Width="100%"
+            EnableTheming="True" KeyFieldName="PartID;SubLineID;LineID" Theme="Office2010Black" 
+            Width="100%" 
             Font-Names="Segoe UI" Font-Size="9pt">
             <ClientSideEvents EndCallback="OnEndCallback" />
             <Columns>
-                <dx:GridViewCommandColumn ShowSelectCheckbox="True"
-                    ShowClearFilterButton="true" VisibleIndex="1" SelectAllCheckboxMode="Page"
-                    Width="30px" FixedStyle="Left">
+                <dx:GridViewCommandColumn ShowSelectCheckbox="True" VisibleIndex="1" Width="30px" FixedStyle="Left" Caption=" ">
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                 </dx:GridViewCommandColumn>
 
-                <dx:GridViewDataTextColumn Caption="Date" VisibleIndex="2" Width="150px"
+                <dx:GridViewDataTextColumn Caption="Date" VisibleIndex="2" Width="100px"
                     FieldName="ProdDate">
                     <PropertiesTextEdit ClientInstanceName="ProdDate">
                     </PropertiesTextEdit>
@@ -337,8 +361,8 @@
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewDataTextColumn Caption="Shift" VisibleIndex="3" Width="55px"
-                    FieldName="Shift">
-                    <PropertiesTextEdit ClientInstanceName="Shift">
+                    FieldName="ShiftCode">
+                    <PropertiesTextEdit ClientInstanceName="ShiftCode">
                     </PropertiesTextEdit>
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                     <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
@@ -346,8 +370,8 @@
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewDataTextColumn Caption="Seq" VisibleIndex="4" Width="55px"
-                    FieldName="Seq">
-                    <PropertiesTextEdit ClientInstanceName="Seq">
+                    FieldName="SequenceNo">
+                    <PropertiesTextEdit ClientInstanceName="SequenceNo">
                     </PropertiesTextEdit>
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                     <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
@@ -363,9 +387,18 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
+                 <dx:GridViewDataTextColumn Caption="Max" VisibleIndex="6" Width="55px"
+                    FieldName="nMax">
+                    <PropertiesTextEdit ClientInstanceName="nMax">
+                    </PropertiesTextEdit>
+                    <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
+                    </CellStyle>
+                </dx:GridViewDataTextColumn>
+
                 <dx:GridViewDataTextColumn Caption="Min" VisibleIndex="6" Width="55px"
-                    FieldName="Min">
-                    <PropertiesTextEdit ClientInstanceName="Min">
+                    FieldName="nMin">
+                    <PropertiesTextEdit ClientInstanceName="nMin">
                     </PropertiesTextEdit>
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                     <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
@@ -373,8 +406,8 @@
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewDataTextColumn Caption="Avg" VisibleIndex="7" Width="55px"
-                    FieldName="Avg">
-                    <PropertiesTextEdit ClientInstanceName="Avg">
+                    FieldName="nAvg">
+                    <PropertiesTextEdit ClientInstanceName="nAvg">
                     </PropertiesTextEdit>
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                     <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
@@ -382,20 +415,20 @@
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewDataTextColumn Caption="R" VisibleIndex="8" Width="55px"
-                    FieldName="R">
-                    <PropertiesTextEdit ClientInstanceName="R">
+                    FieldName="nR">
+                    <PropertiesTextEdit ClientInstanceName="nR">
                     </PropertiesTextEdit>
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                     <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="Correction Status" VisibleIndex="9" Width="120px"
-                    FieldName="Correction_Sts">
-                    <PropertiesTextEdit ClientInstanceName="Correction_Sts">
+                <dx:GridViewDataTextColumn Caption="Correction Status" VisibleIndex="9" Width="70px" 
+                    FieldName="Cor_Sts">
+                    <PropertiesTextEdit ClientInstanceName="Cor_Sts">
                     </PropertiesTextEdit>
-                    <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
+                    <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Wrap="True"/>
+                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" > 
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
@@ -436,7 +469,7 @@
                             </CellStyle>
                         </dx:GridViewDataTextColumn>
 
-                        <dx:GridViewDataTextColumn Caption="Time" VisibleIndex="2" Width="80px"
+                        <dx:GridViewDataTextColumn Caption="Time" VisibleIndex="2" Width="150px"
                             FieldName="MK_Time" HeaderStyle-Paddings-PaddingBottom="2px" HeaderStyle-Paddings-PaddingTop="2px">
                             <PropertiesTextEdit ClientInstanceName="MK_Time"></PropertiesTextEdit>
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
@@ -456,7 +489,7 @@
                             </CellStyle>
                         </dx:GridViewDataTextColumn>
 
-                        <dx:GridViewDataTextColumn Caption="Time" VisibleIndex="2" Width="80px"
+                        <dx:GridViewDataTextColumn Caption="Time" VisibleIndex="2" Width="150px"
                             FieldName="QC_Time" HeaderStyle-Paddings-PaddingBottom="2px" HeaderStyle-Paddings-PaddingTop="2px">
                             <PropertiesTextEdit ClientInstanceName="QC_Time"></PropertiesTextEdit>
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
@@ -470,10 +503,8 @@
             <SettingsPager Mode="ShowPager" PageSize="20" AlwaysShowPager="true" PageSizeItemSettings-Visible="true">
                 <PageSizeItemSettings Visible="True"></PageSizeItemSettings>
             </SettingsPager>
-            <Settings HorizontalScrollBarMode="Auto"
-                VerticalScrollBarMode="Auto" />
-
-
+            <Settings HorizontalScrollBarMode="Auto" VerticalScrollBarMode="Auto" VerticalScrollableHeight="300" />
+            
         </dx:ASPxGridView>
     </div>
 

@@ -9,6 +9,7 @@ Imports DevExpress.Web.ASPxGridView
 Imports DevExpress.Web.Data
 Imports OfficeOpenXml
 Imports DevExpress.Web
+Imports DevExpress.XtraGrid.Views.Grid
 
 Public Class ProductionSampleVerificationList
     Inherits System.Web.UI.Page
@@ -24,12 +25,13 @@ Public Class ProductionSampleVerificationList
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
     Public AuthAccess As Boolean = False
+
 #End Region
 
 #Region "Procedure"
     Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
         If Not Page.IsPostBack Then
-            up_fillcombo()
+            up_Fillcombo()
         End If
     End Sub
 
@@ -48,12 +50,86 @@ Public Class ProductionSampleVerificationList
     Private Sub GridMenu_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles GridMenu.CustomCallback
         Try
             Dim pAction As String = Split(e.Parameters, "|")(0)
+            Dim cls As New clsProductionSampleVerificationList
 
-            If pAction = "Kosong" Then
+            If pAction = "Load" Then
+
+                Dim Factory As String = HideValue.Get("FactoryCode")
+                Dim Itemtype As String = HideValue.Get("ItemType_Code")
+                Dim Line As String = HideValue.Get("LineCode")
+                Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
+                Dim ProdDateFrom As String = Convert.ToDateTime(dtFromDate.Value).ToString("yyyy-MM-dd")
+                Dim ProdDateTo As String = Convert.ToDateTime(dtToDate.Value).ToString("yyyy-MM-dd")
+                Dim MKVerification As String = cboMK.Value
+                Dim QCVerification As String = cboQC.Value
+                Dim msgErr As String = ""
+
+                cls.FactoryCode = Factory
+                cls.ItemType_Code = Itemtype
+                cls.LineCode = Line
+                cls.ItemCheck_Code = ItemCheck
+                cls.ProdDateFrom = ProdDateFrom
+                cls.ProdDateTo = ProdDateTo
+                cls.MKVerification = MKVerification
+                cls.QCVerification = QCVerification
+
+                UpGridLoad(cls)
+            ElseIf pAction = "Clear" Then
+                UpGridLoad(cls)
             End If
 
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
+        End Try
+    End Sub
+
+    Private Sub cboFactory_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboFactory.Callback
+        Try
+            Dim data As New clsProductionSampleVerificationList()
+            Dim a As String
+
+            Dim ErrMsg As String = ""
+            dt = clsProductionSampleVerificationListDB.FillCombo(Factory_Sel, data, ErrMsg)
+            With cboFactory
+                .DataSource = dt
+                .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+            End With
+            If cboFactory.SelectedIndex < 0 Then
+                a = ""
+            Else
+                a = cboFactory.SelectedItem.GetFieldValue("CODE")
+            End If
+            HideValue.Set("FactoryCode", a)
+            data.FactoryCode = HideValue.Get("FactoryCode")
+
+        Catch ex As Exception
+            show_error(MsgTypeEnum.Info, ex.Message, 0)
+        End Try
+    End Sub
+
+    Private Sub cboItemType_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboItemType.Callback
+        Try
+            Dim data As New clsProductionSampleVerificationList()
+            Dim a As String
+
+            Dim ErrMsg As String = ""
+            dt = clsProductionSampleVerificationListDB.FillCombo(ItemType_Sel, data, ErrMsg)
+            With cboItemType
+                .DataSource = dt
+                .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+            End With
+            If cboItemType.SelectedIndex < 0 Then
+                a = ""
+            Else
+                a = cboItemType.SelectedItem.GetFieldValue("CODE")
+            End If
+            HideValue.Set("ItemType_Code", a)
+            data.ItemType_Code = HideValue.Get("ItemType_Code")
+
+        Catch ex As Exception
+            show_error(MsgTypeEnum.Info, ex.Message, 0)
         End Try
     End Sub
 
@@ -104,12 +180,39 @@ Public Class ProductionSampleVerificationList
                 a = cboItemCheck.SelectedItem.GetFieldValue("CODE")
             End If
             HideValue.Set("ItemCheck_Code", a)
-            data.LineCode = HideValue.Get("ItemCheck_Code")
+            data.ItemCheck_Code = HideValue.Get("ItemCheck_Code")
 
         Catch ex As Exception
             show_error(MsgTypeEnum.Info, ex.Message, 0)
         End Try
     End Sub
+
+    'Private Sub GridMenu_RowStyle(ByVal sender As Object, ByVal e As RowStyleEventArgs)
+    '    e.Appearance.BackColor = Color.LightGreen
+    'End Sub
+
+    'Private Sub gridView_RowCellStyle(ByVal sender As Object, ByVal e As RowStyleEventArgs)
+    '    Dim View As GridView = TryCast(sender, GridView)
+
+    '    Dim status As String = View.GetRowCellDisplayText(e.RowHandle, View.Columns("Status"))
+    '    Dim priority As String = View.GetRowCellDisplayText(e.RowHandle, View.Columns("Priority"))
+
+    '    If status = "New" AndAlso priority = "High" Then
+    '        e.Appearance.BackColor = Color.FromArgb(150, Color.Salmon)
+    '        e.Appearance.BackColor2 = Color.FromArgb(150, Color.Salmon)
+    '    End If
+    'End Sub
+
+    'Private Sub GridMenu1_RowCellStyle(ByVal sender As Object, ByVal e As RowCellStyleEventArgs) Handles GridMenu.RowCellStyle
+    '    Dim view As GridView = sender
+    '    If view Is Nothing Then
+    '        Return
+    '    End If
+    '    If e.RowHandle <> view.FocusedRowHandle And
+    '    ((e.RowHandle Mod 2 = 0 And e.Column.VisibleIndex Mod 2 = 1) Or
+    '    (e.Column.VisibleIndex Mod 2 = 0 And e.RowHandle Mod 2 = 1)) Then _
+    '        e.Appearance.BackColor = Color.NavajoWhite
+    'End Sub
 
 #End Region
 
@@ -130,6 +233,7 @@ Public Class ProductionSampleVerificationList
             With cboFactory
                 .DataSource = dt
                 .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With
             If cboFactory.SelectedIndex < 0 Then
                 a = ""
@@ -146,6 +250,7 @@ Public Class ProductionSampleVerificationList
             With cboItemType
                 .DataSource = dt
                 .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With
             If cboItemType.SelectedIndex < 0 Then
                 a = ""
@@ -162,6 +267,7 @@ Public Class ProductionSampleVerificationList
             With cboLineID
                 .DataSource = dt
                 .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With
             If cboLineID.SelectedIndex < 0 Then
                 a = ""
@@ -178,6 +284,7 @@ Public Class ProductionSampleVerificationList
             With cboItemCheck
                 .DataSource = dt
                 .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With
             If cboItemCheck.SelectedIndex < 0 Then
                 a = ""
@@ -193,28 +300,10 @@ Public Class ProductionSampleVerificationList
         End Try
     End Sub
 
-    Private Sub up_GridLoad()
+    Private Sub UpGridLoad(cls As clsProductionSampleVerificationList)
+        Dim msgErr As String = ""
         Try
-            Dim Factory As String = HideValue.Get("FactoryCode")
-            Dim Itemtype As String = HideValue.Get("ItemType_Code")
-            Dim Line As String = HideValue.Get("LineCode")
-            Dim ItemCheck As String = HideValue.Get("ItemCheck_code")
-            Dim ProdDateFrom As String = Convert.ToDateTime(dtFromDate.Value).ToString("yyyy-MM-dd")
-            Dim ProdDateTo As String = Convert.ToDateTime(dtToDate.Value).ToString("yyyy-MM-dd")
-            Dim MKVerification As String = cboMK.Value
-            Dim QCVerification As String = cboQC.Value
-            Dim msgErr As String = ""
 
-            Dim cls As New clsProductionSampleVerificationList With {
-                .FactoryCode = Factory,
-                .ItemType_Code = Itemtype,
-                .LineCode = Line,
-                .ItemCheck_Code = ItemCheck,
-                .ProdDateFrom = ProdDateFrom,
-                .ProdDateTo = ProdDateTo,
-                .MKVerification = MKVerification,
-                .QCVerification = QCVerification
-            }
             dt = clsProductionSampleVerificationListDB.LoadGrid(cls, msgErr)
             GridMenu.DataSource = dt
             GridMenu.DataBind()
@@ -222,6 +311,7 @@ Public Class ProductionSampleVerificationList
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
+
 #End Region
 
 End Class

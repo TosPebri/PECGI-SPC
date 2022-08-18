@@ -387,15 +387,6 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                 <dx:GridViewDataTextColumn Caption="Max" VisibleIndex="6" Width="55px"
-                    FieldName="nMax">
-                    <PropertiesTextEdit ClientInstanceName="nMax">
-                    </PropertiesTextEdit>
-                    <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
-                    </CellStyle>
-                </dx:GridViewDataTextColumn>
-
                 <dx:GridViewDataTextColumn Caption="Min" VisibleIndex="6" Width="55px"
                     FieldName="nMin">
                     <PropertiesTextEdit ClientInstanceName="nMin">
@@ -405,7 +396,16 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="Avg" VisibleIndex="7" Width="55px"
+                 <dx:GridViewDataTextColumn Caption="Max" VisibleIndex="7" Width="55px"
+                    FieldName="nMax">
+                    <PropertiesTextEdit ClientInstanceName="nMax">
+                    </PropertiesTextEdit>
+                    <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
+                    </CellStyle>
+                </dx:GridViewDataTextColumn>
+
+                <dx:GridViewDataTextColumn Caption="Avg" VisibleIndex="8" Width="55px"
                     FieldName="nAvg">
                     <PropertiesTextEdit ClientInstanceName="nAvg">
                     </PropertiesTextEdit>
@@ -414,7 +414,7 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="R" VisibleIndex="8" Width="55px"
+                <dx:GridViewDataTextColumn Caption="R" VisibleIndex="9" Width="55px"
                     FieldName="nR">
                     <PropertiesTextEdit ClientInstanceName="nR">
                     </PropertiesTextEdit>
@@ -423,7 +423,7 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="Correction Status" VisibleIndex="9" Width="70px" 
+                <dx:GridViewDataTextColumn Caption="Correction Status" VisibleIndex="10" Width="70px" 
                     FieldName="Cor_Sts">
                     <PropertiesTextEdit ClientInstanceName="Cor_Sts">
                     </PropertiesTextEdit>
@@ -432,7 +432,7 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="Result" VisibleIndex="10" Width="55px"
+                <dx:GridViewDataTextColumn Caption="Result" VisibleIndex="11" Width="55px"
                     FieldName="Result">
                     <PropertiesTextEdit ClientInstanceName="Result">
                     </PropertiesTextEdit>
@@ -441,7 +441,7 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="SampleTime" VisibleIndex="11" Width="150px"
+                <dx:GridViewDataTextColumn Caption="SampleTime" VisibleIndex="12" Width="150px"
                     FieldName="SampleTime">
                     <PropertiesTextEdit ClientInstanceName="SampleTime">
                     </PropertiesTextEdit>
@@ -450,7 +450,7 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="Operator" VisibleIndex="12" Width="100px"
+                <dx:GridViewDataTextColumn Caption="Operator" VisibleIndex="13" Width="100px"
                     FieldName="Operator">
                     <PropertiesTextEdit ClientInstanceName="Operator">
                     </PropertiesTextEdit>
@@ -459,7 +459,7 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewBandColumn Caption="Verification by MK" VisibleIndex="13" HeaderStyle-HorizontalAlign="Center" HeaderStyle-Paddings-PaddingBottom="3px" HeaderStyle-Paddings-PaddingTop="3px">
+                <dx:GridViewBandColumn Caption="Verification by MK" VisibleIndex="14" HeaderStyle-HorizontalAlign="Center" HeaderStyle-Paddings-PaddingBottom="3px" HeaderStyle-Paddings-PaddingTop="3px">
                     <Columns>
                         <dx:GridViewDataTextColumn Caption="PIC" VisibleIndex="1" Width="80px"
                             FieldName="MK_PIC" HeaderStyle-Paddings-PaddingBottom="2px" HeaderStyle-Paddings-PaddingTop="2px">
@@ -479,7 +479,7 @@
                     </Columns>
                 </dx:GridViewBandColumn>
 
-                <dx:GridViewBandColumn Caption="Verification by QC" VisibleIndex="14" HeaderStyle-HorizontalAlign="Center" HeaderStyle-Paddings-PaddingBottom="3px" HeaderStyle-Paddings-PaddingTop="3px">
+                <dx:GridViewBandColumn Caption="Verification by QC" VisibleIndex="15" HeaderStyle-HorizontalAlign="Center" HeaderStyle-Paddings-PaddingBottom="3px" HeaderStyle-Paddings-PaddingTop="3px">
                     <Columns>
                         <dx:GridViewDataTextColumn Caption="PIC" VisibleIndex="1" Width="80px"
                             FieldName="QC_PIC" HeaderStyle-Paddings-PaddingBottom="2px" HeaderStyle-Paddings-PaddingTop="2px">

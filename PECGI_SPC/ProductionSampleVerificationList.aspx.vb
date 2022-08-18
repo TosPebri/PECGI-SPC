@@ -20,6 +20,8 @@ Public Class ProductionSampleVerificationList
     Dim ItemType_Sel As String = "2"
     Dim Line_Sel As String = "3"
     Dim ItemCheck_Sel As String = "4"
+    Dim UCL As Decimal = 0
+    Dim LCL As Decimal = 0
     Private dt As DataTable
 
     Public AuthUpdate As Boolean = False
@@ -187,32 +189,48 @@ Public Class ProductionSampleVerificationList
         End Try
     End Sub
 
-    'Private Sub GridMenu_RowStyle(ByVal sender As Object, ByVal e As RowStyleEventArgs)
-    '    e.Appearance.BackColor = Color.LightGreen
-    'End Sub
-
-    'Private Sub gridView_RowCellStyle(ByVal sender As Object, ByVal e As RowStyleEventArgs)
-    '    Dim View As GridView = TryCast(sender, GridView)
-
-    '    Dim status As String = View.GetRowCellDisplayText(e.RowHandle, View.Columns("Status"))
-    '    Dim priority As String = View.GetRowCellDisplayText(e.RowHandle, View.Columns("Priority"))
-
-    '    If status = "New" AndAlso priority = "High" Then
-    '        e.Appearance.BackColor = Color.FromArgb(150, Color.Salmon)
-    '        e.Appearance.BackColor2 = Color.FromArgb(150, Color.Salmon)
-    '    End If
-    'End Sub
-
-    'Private Sub GridMenu1_RowCellStyle(ByVal sender As Object, ByVal e As RowCellStyleEventArgs) Handles GridMenu.RowCellStyle
-    '    Dim view As GridView = sender
-    '    If view Is Nothing Then
-    '        Return
-    '    End If
-    '    If e.RowHandle <> view.FocusedRowHandle And
-    '    ((e.RowHandle Mod 2 = 0 And e.Column.VisibleIndex Mod 2 = 1) Or
-    '    (e.Column.VisibleIndex Mod 2 = 0 And e.RowHandle Mod 2 = 1)) Then _
-    '        e.Appearance.BackColor = Color.NavajoWhite
-    'End Sub
+    Private Sub GridMenu_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles GridMenu.HtmlDataCellPrepared
+        If (e.DataColumn.FieldName = "nMin") Then
+            If e.CellValue < LCL Then
+                e.Cell.BackColor = Color.Red
+            End If
+        End If
+        If (e.DataColumn.FieldName = "nMax") Then
+            If e.CellValue > UCL Then
+                e.Cell.BackColor = Color.Red
+            End If
+        End If
+        If (e.DataColumn.FieldName = "Cor_Sts") Then
+            If e.CellValue = "C" Then
+                e.Cell.BackColor = Color.Orange
+            End If
+        End If
+        If (e.DataColumn.FieldName = "Result") Then
+            If e.CellValue = "NG" Then
+                e.Cell.BackColor = Color.Red
+            End If
+        End If
+        If (e.DataColumn.FieldName = "MK_PIC") Then
+            If IsDBNull(e.CellValue) Then
+                e.Cell.BackColor = Color.Yellow
+            End If
+        End If
+        If (e.DataColumn.FieldName = "MK_Time") Then
+            If IsDBNull(e.CellValue) Then
+                e.Cell.BackColor = Color.Yellow
+            End If
+        End If
+        If (e.DataColumn.FieldName = "QC_PIC") Then
+            If IsDBNull(e.CellValue) Then
+                e.Cell.BackColor = Color.Yellow
+            End If
+        End If
+        If (e.DataColumn.FieldName = "QC_Time") Then
+            If IsDBNull(e.CellValue) Then
+                e.Cell.BackColor = Color.Yellow
+            End If
+        End If
+    End Sub
 
 #End Region
 
@@ -303,10 +321,13 @@ Public Class ProductionSampleVerificationList
     Private Sub UpGridLoad(cls As clsProductionSampleVerificationList)
         Dim msgErr As String = ""
         Try
-
             dt = clsProductionSampleVerificationListDB.LoadGrid(cls, msgErr)
             GridMenu.DataSource = dt
             GridMenu.DataBind()
+
+            LCL = dt.Rows(0)("LCL")
+            UCL = dt.Rows(0)("UCL")
+
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try

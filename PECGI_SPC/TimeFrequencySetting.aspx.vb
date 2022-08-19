@@ -134,6 +134,15 @@ Public Class TimeFrequencySetting
                 e.Editor.ReadOnly = True
                 e.Editor.ForeColor = Color.Silver
             End If
+            If e.Column.FieldName = "Status" Then
+                e.Editor.Value = "Yes"
+            End If
+        End If
+
+        If e.Column.FieldName = "Frequency" Or e.Column.FieldName = "Shift" Then
+            e.Editor.Width = "75"
+        ElseIf e.Column.FieldName = "Status" Then
+            e.Editor.Width = "55"
         End If
     End Sub
 

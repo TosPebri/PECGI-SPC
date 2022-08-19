@@ -4,13 +4,6 @@
 <%@ MasterType VirtualPath="~/Site.Master" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <style type="text/css">
-        .ButtonStyleNo * {
-            background-color: #003fbe;
-            color: #fff;
-        }
-    </style>
-
     <script type="text/javascript">
         function OnEndCallback(s, e) {
             if (s.cp_message != "" && s.cp_val == 1) {
@@ -69,7 +62,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
-    <div style="padding: 5px 5px 5px 5px; border-bottom-color: #a9a9a9; border-bottom-style: inset; border-bottom-width: 1px">
+    <div style="padding: 5px 5px 5px 5px;">
         <table>
             <tr>
                 <td style="padding-right: 1em">
@@ -89,14 +82,14 @@
                 </td>
 
                 <td style="padding-right: 1em">
-                    <dx:ASPxButton ID="btnBrowse" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse" Theme="Office2010Black" CssClass="ButtonStyleNo" Height="28px"
+                    <dx:ASPxButton ID="btnBrowse" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse" Theme="Default" Height="28px"
                         Text="Browse">
                         <ClientSideEvents Click="up_Browse" />
                     </dx:ASPxButton>
                 </td>
 
                 <td style="padding-right: 1em">
-                    <dx:ASPxButton ID="btnClear" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Theme="Office2010Black" CssClass="ButtonStyleNo" Height="28px"
+                    <dx:ASPxButton ID="btnClear" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Theme="Default" Height="28px"
                         Text="Clear">
                         <ClientSideEvents Click="function(s, e) {
                                     cboFreq.SetSelectedIndex(0);
@@ -129,7 +122,7 @@
                     </HeaderStyle>
                 </dx:GridViewCommandColumn>
 
-                <dx:GridViewDataTextColumn Caption="No" FieldName="No" VisibleIndex="1"
+                <dx:GridViewDataTextColumn Caption="Sample No" FieldName="No" VisibleIndex="1"
                     Width="75px" Settings-AutoFilterCondition="Contains">
                     <PropertiesTextEdit MaxLength="15" Width="55px">
                         <Style HorizontalAlign="Left"></Style>
@@ -146,7 +139,7 @@
 
                 <dx:GridViewDataComboBoxColumn Caption="Shift" FieldName="Shift" VisibleIndex="2"
                     Width="100px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesComboBox DropDownStyle="DropDownList" Width="95px" TextFormatString="{0}"
+                    <PropertiesComboBox DropDownStyle="DropDownList" Width="100%" TextFormatString="{0}"
                         IncrementalFilteringMode="StartsWith" DisplayFormatInEditMode="true">
                         <Items>
                             <dx:ListEditItem Text="Shift 1" Value="SH001" />
@@ -200,7 +193,7 @@
 
                 <dx:GridViewDataComboBoxColumn Caption="Active Status" FieldName="Status" VisibleIndex="5"
                     Width="100px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesComboBox DropDownStyle="DropDownList" Width="95px" TextFormatString="{0}"
+                    <PropertiesComboBox DropDownStyle="DropDownList" Width="100%" TextFormatString="{0}"
                         IncrementalFilteringMode="StartsWith" DisplayFormatInEditMode="true">
                         <Items>
                             <dx:ListEditItem Text="Yes" Value="Yes" />
@@ -253,7 +246,7 @@
                 <dx:GridViewDataComboBoxColumn Caption="Frequency" FieldName="Frequency" VisibleIndex="8"
                     Width="100px" Settings-AutoFilterCondition="Contains" Visible="false">
                     <PropertiesComboBox DataSourceID="dsMS_Frequency" DropDownStyle="DropDownList" TextFormatString="{0}"
-                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="95px"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="100%"
                         TextField="Description" ValueField="Code" ClientInstanceName="FrequencyCode">
                         <ItemStyle Height="10px" Paddings-Padding="4px">
                             <Paddings Padding="4px"></Paddings>
@@ -279,8 +272,7 @@
             <SettingsPager Mode="ShowPager" PageSize="20" AlwaysShowPager="true">
                 <PageSizeItemSettings Visible="True" />
             </SettingsPager>
-            <Settings ShowFilterRow="True" VerticalScrollBarMode="Auto"
-                VerticalScrollableHeight="300" HorizontalScrollBarMode="Auto" />
+            <Settings HorizontalScrollBarMode="Auto" VerticalScrollBarMode="Auto" VerticalScrollableHeight="300" />
             <SettingsText ConfirmDelete="Are you sure want to delete ?"></SettingsText>
             <SettingsPopup>
                 <EditForm Modal="false" HorizontalAlign="WindowCenter" VerticalAlign="WindowCenter" Width="200" />
@@ -309,11 +301,7 @@
                                         <dx:ASPxGridViewTemplateReplacement ID="editFrequency" ReplacementType="EditFormCellEditor"
                                             runat="server" ColumnID="Frequency"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
-                                </tr>
-                                <tr style="height: 30px">
-                                    <td>No
-                                    </td>
-                                    <td>
+                                    <td style="visibility:hidden">
                                         <dx:ASPxGridViewTemplateReplacement ID="editNo" ReplacementType="EditFormCellEditor"
                                             runat="server" ColumnID="No"></dx:ASPxGridViewTemplateReplacement>
                                     </td>

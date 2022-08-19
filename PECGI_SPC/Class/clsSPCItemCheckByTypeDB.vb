@@ -134,7 +134,7 @@ Public Class ClsSPCItemCheckByTypeDB
                 Dim cmd As New SqlCommand(sql, conn)
                 cmd.CommandType = CommandType.StoredProcedure
                 With cmd.Parameters
-                    .AddWithValue("FactoryName", FactoryCode)
+                    .AddWithValue("FactoryCode", FactoryCode)
                     .AddWithValue("ItemTypeDescription", ItemTypeDescription)
                     .AddWithValue("MachineProccess", MachineProccess)
                 End With
@@ -220,16 +220,16 @@ Public Class ClsSPCItemCheckByTypeDB
             Return Nothing
         End Try
     End Function
-    Public Shared Function GetMachineProccess(Type As String, Optional ByRef pErr As String = "") As DataTable
+    Public Shared Function GetMachineProccess(Optional ByRef pErr As String = "") As DataTable
         Try
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
                 Dim sql As String = ""
-                If Type = "1" Then
-                    sql = "SELECT LineCode, LineName FROM MS_Line"
-                ElseIf Type = "2" Then
-                    sql = "SELECT 'ALL' LineCode, 'ALL' LineName UNION SELECT LineCode, LineName FROM MS_Line"
-                End If
+                'If Type = "1" Then
+                '    sql = "SELECT LineCode, LineName FROM MS_Line"
+                'ElseIf Type = "2" Then
+                sql = "SELECT '0' LineCode, 'ALL' LineName UNION SELECT LineCode, LineName = LineCode +  ' - ' + LineName FROM MS_Line"
+                'End If
 
                 Dim cmd As New SqlCommand(sql, conn)
                 cmd.CommandType = CommandType.Text
@@ -289,7 +289,7 @@ Public Class ClsSPCItemCheckByTypeDB
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
                 Dim sql As String = ""
-                sql = "SELECT 'ALL' ItemTypeCode, 'ALL' ItemTypeName UNION SELECT ItemTypeCode, ItemTypeName = ItemTypeCode + ' - ' + Description from MS_ItemType"
+                sql = "SELECT ItemTypeCode, ItemTypeName = Description from MS_ItemType"
 
                 Dim cmd As New SqlCommand(sql, conn)
                 cmd.CommandType = CommandType.Text
@@ -309,7 +309,7 @@ Public Class ClsSPCItemCheckByTypeDB
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
                 Dim sql As String = ""
-                sql = "SELECT 'ALL' FactoryCode, 'ALL' FactoryName UNION SELECT FactoryCode, FactoryName from MS_Factory"
+                sql = "SELECT FactoryCode, FactoryName from MS_Factory"
 
                 Dim cmd As New SqlCommand(sql, conn)
                 cmd.CommandType = CommandType.Text

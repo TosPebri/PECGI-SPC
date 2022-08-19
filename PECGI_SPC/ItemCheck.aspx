@@ -105,7 +105,7 @@
 
                 <dx:GridViewDataTextColumn Caption="Item Check" FieldName="ItemCheck" VisibleIndex="2"
                     Width="150px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesTextEdit MaxLength="15" Width="150px">
+                    <PropertiesTextEdit MaxLength="50" Width="150px">
                         <Style HorizontalAlign="Left"></Style>
                     </PropertiesTextEdit>
                     <Settings AutoFilterCondition="Contains"></Settings>
@@ -120,7 +120,7 @@
 
                 <dx:GridViewDataTextColumn Caption="Measuring Unit" FieldName="UnitMeasurement"
                     VisibleIndex="3" Width="75px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesTextEdit MaxLength="50" Width="55px">
+                    <PropertiesTextEdit MaxLength="15" Width="55px">
                         <Style HorizontalAlign="Left"></Style>
                     </PropertiesTextEdit>
                     <Settings AutoFilterCondition="Contains"></Settings>
@@ -135,7 +135,7 @@
 
                 <dx:GridViewDataTextColumn Caption="Description" FieldName="Description" VisibleIndex="4"
                     Width="150px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesTextEdit MaxLength="15" Width="150px">
+                    <PropertiesTextEdit MaxLength="50" Width="150px">
                         <Style HorizontalAlign="Left"></Style>
                     </PropertiesTextEdit>
                     <Settings AutoFilterCondition="Contains"></Settings>

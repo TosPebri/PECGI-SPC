@@ -140,6 +140,159 @@ Partial Public Class ItemCheckByBattery
     Protected WithEvents Grid As Global.DevExpress.Web.ASPxGridView
 
     '''<summary>
+    '''ContentControl1 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ContentControl1 As Global.DevExpress.Web.ContentControl
+
+    '''<summary>
+    '''ASPxLabel4 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ASPxLabel4 As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
+    '''editFactoryCode control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents editFactoryCode As Global.DevExpress.Web.ASPxGridViewTemplateReplacement
+
+    '''<summary>
+    '''editItemTypeCode control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents editItemTypeCode As Global.DevExpress.Web.ASPxGridViewTemplateReplacement
+
+    '''<summary>
+    '''ASPxLabel5 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ASPxLabel5 As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
+    '''editItemTypeName control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents editItemTypeName As Global.DevExpress.Web.ASPxGridViewTemplateReplacement
+
+    '''<summary>
+    '''editLineCode control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents editLineCode As Global.DevExpress.Web.ASPxGridViewTemplateReplacement
+
+    '''<summary>
+    '''editItemCheck control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents editItemCheck As Global.DevExpress.Web.ASPxGridViewTemplateReplacement
+
+    '''<summary>
+    '''editFrequencyCode control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents editFrequencyCode As Global.DevExpress.Web.ASPxGridViewTemplateReplacement
+
+    '''<summary>
+    '''editRegistrationNo control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents editRegistrationNo As Global.DevExpress.Web.ASPxGridViewTemplateReplacement
+
+    '''<summary>
+    '''editSampleSize control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents editSampleSize As Global.DevExpress.Web.ASPxGridViewTemplateReplacement
+
+    '''<summary>
+    '''editRemark control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents editRemark As Global.DevExpress.Web.ASPxGridViewTemplateReplacement
+
+    '''<summary>
+    '''editEvaluation control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents editEvaluation As Global.DevExpress.Web.ASPxGridViewTemplateReplacement
+
+    '''<summary>
+    '''editCharacteristicStatus control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents editCharacteristicStatus As Global.DevExpress.Web.ASPxGridViewTemplateReplacement
+
+    '''<summary>
+    '''editActiveStatus control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents editActiveStatus As Global.DevExpress.Web.ASPxGridViewTemplateReplacement
+
+    '''<summary>
+    '''UpdateButton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents UpdateButton As Global.DevExpress.Web.ASPxGridViewTemplateReplacement
+
+    '''<summary>
+    '''CancelButton control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents CancelButton As Global.DevExpress.Web.ASPxGridViewTemplateReplacement
+
+    '''<summary>
     '''HF control.
     '''</summary>
     '''<remarks>

@@ -39,7 +39,7 @@ Public Class ItemCheckByBattery
 
     Protected Sub Grid_AfterPerformCallback(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles Grid.AfterPerformCallback
         If e.CallbackName <> "CANCELEDIT" Then
-            up_GridLoad(cboFactory.Text, cboTypeCode.Text, cboMachineProccess.Value)
+            up_GridLoad(cboFactory.Value, cboTypeCode.Text, cboMachineProccess.Text)
         End If
     End Sub
 
@@ -65,7 +65,7 @@ Public Class ItemCheckByBattery
         Try
             ClsSPCItemCheckByTypeDB.Insert(User)
             Grid.CancelEdit()
-            up_GridLoad(cboFactory.Text, cboTypeCode.Text, cboMachineProccess.Value)
+            up_GridLoad(cboFactory.Value, cboTypeCode.Text, cboMachineProccess.Text)
             show_error(MsgTypeEnum.Success, "Save data successfully!", 1)
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
@@ -97,7 +97,7 @@ Public Class ItemCheckByBattery
         Try
             ClsSPCItemCheckByTypeDB.Update(User)
             Grid.CancelEdit()
-            up_GridLoad(cboFactory.Text, cboTypeCode.Text, cboMachineProccess.Value)
+            up_GridLoad(cboFactory.Value, cboTypeCode.Text, cboMachineProccess.Text)
             show_error(MsgTypeEnum.Success, "Update data successfully!", 1)
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
@@ -117,7 +117,7 @@ Public Class ItemCheckByBattery
 
             ClsSPCItemCheckByTypeDB.Delete(FactoryCode, ItemTypeCode, LineCode, ItemCheck)
             Grid.CancelEdit()
-            up_GridLoad(cboFactory.Text, cboTypeCode.Text, cboMachineProccess.Value)
+            up_GridLoad(cboFactory.Value, cboTypeCode.Text, cboMachineProccess.Text)
             show_error(MsgTypeEnum.Success, "Delete data successfully!", 1)
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
@@ -141,7 +141,7 @@ Public Class ItemCheckByBattery
 
         If Grid.IsNewRowEditing Then
             If e.Column.FieldName = "FactoryCode" Then
-                e.Editor.Value = cboFactory.Text
+                e.Editor.Value = cboFactory.Value
             End If
             If e.Column.FieldName = "ItemTypeCode" Then
                 e.Editor.Visible = False
@@ -198,16 +198,10 @@ Public Class ItemCheckByBattery
             .DataBind()
             .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
         End With
-        If cboFactory.SelectedIndex < 0 Then
-            a = ""
-        Else
-            a = cboFactory.SelectedItem.GetFieldValue("FactoryCode")
-        End If
-        HF.Set("FactoryCode", a)
     End Sub
     Private Sub GetMachineProccess()
         Dim a As String = ""
-        dt = ClsSPCItemCheckByTypeDB.GetMachineProccess("2")
+        dt = ClsSPCItemCheckByTypeDB.GetMachineProccess()
         With cboMachineProccess
             .Items.Clear() : .Columns.Clear()
             .DataSource = dt
@@ -227,18 +221,6 @@ Public Class ItemCheckByBattery
         HF.Set("LineCode", a)
     End Sub
 
-    Protected Sub btnSearch_Click(sender As Object, e As EventArgs)
-        If cboFactory.Text Is "" Then
-            show_error(MsgTypeEnum.Warning, "Factory Must Be Select !", 1)
-        ElseIf cboMachineProccess.Text Is "" Then
-            show_error(MsgTypeEnum.Warning, "Machine Proccess Must Be Select !", 1)
-        ElseIf cboTypeCode.Text Is "" Then
-            show_error(MsgTypeEnum.Warning, "Machine Proccess Must Be Select !", 1)
-        Else
-            up_GridLoad(cboFactory.Text, cboTypeCode.Text, cboMachineProccess.Value)
-        End If
-    End Sub
-
 #End Region
 
 #Region "Functions"
@@ -249,19 +231,27 @@ Public Class ItemCheckByBattery
     End Sub
 
     Private Sub up_GridLoad(FactoryCode As String, ItemTypeDescription As String, MachineProccess As String)
-        'Dim Users As List(Of ClsSPCItemCheckByType)
         Dim dtItemCheckByType As DataTable
         Try
-            'Users = ClsSPCItemCheckByTypeDB.GetList(FactoryCode, ItemTypeDescription, MachineProccess)
             dtItemCheckByType = ClsSPCItemCheckByTypeDB.GetList(FactoryCode, ItemTypeDescription, MachineProccess)
             Grid.DataSource = dtItemCheckByType
             Grid.DataBind()
-            GetComboBoxData()
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
+    Private Sub Grid_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles Grid.CustomCallback
+        Try
+            Dim pAction As String = Split(e.Parameters, "|")(0)
 
+            If pAction = "Load" Then
+                up_GridLoad(cboFactory.Value, cboTypeCode.Text, cboMachineProccess.Text)
+            End If
+
+        Catch ex As Exception
+            show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
+        End Try
+    End Sub
 #End Region
 
 End Class

@@ -82,14 +82,14 @@
                 </td>
 
                 <td style="padding-right: 1em">
-                    <dx:ASPxButton ID="btnBrowse" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse" Theme="Default" Height="28px"
+                    <dx:ASPxButton ID="btnBrowse" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse" Theme="Office2010Silver" Height="28px"
                         Text="Browse">
                         <ClientSideEvents Click="up_Browse" />
                     </dx:ASPxButton>
                 </td>
 
                 <td style="padding-right: 1em">
-                    <dx:ASPxButton ID="btnClear" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Theme="Default" Height="28px"
+                    <dx:ASPxButton ID="btnClear" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Theme="Office2010Silver" Height="28px"
                         Text="Clear">
                         <ClientSideEvents Click="function(s, e) {
                                     cboFreq.SetSelectedIndex(0);

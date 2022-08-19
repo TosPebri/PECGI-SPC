@@ -4,13 +4,6 @@
 <%@ MasterType VirtualPath="~/Site.Master" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <style type="text/css">
-        .ButtonStyleNo * {
-            background-color: #003fbe;
-            color: #fff;
-        }
-    </style>
-
     <script type="text/javascript">
         function OnEndCallback(s, e) {
             if (s.cp_message != "" && s.cp_val == 1) {
@@ -73,7 +66,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
-    <div style="padding: 5px 5px 5px 5px; border-bottom-color: #a9a9a9; border-bottom-style: inset; border-bottom-width: 1px">
+    <div style="padding: 5px 5px 5px 5px;">
         <table>
             <tr>
                 <td style="padding-right: 1em">
@@ -156,14 +149,14 @@
                 </td>
 
                 <td style="padding-right: 1em; padding-top: 0.5em">
-                    <dx:ASPxButton ID="ASPxButton1" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse" Theme="Office2010Black" CssClass="ButtonStyleNo" Height="28px"
-                        Text="Browse" RenderMode="Outline" >
+                    <dx:ASPxButton ID="ASPxButton1" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse" Theme="Default" Height="28px"
+                        Text="Browse">
                         <ClientSideEvents Click="up_Browse" />
                     </dx:ASPxButton>
                 </td>
 
                 <td style="padding-right: 1em; padding-top: 0.5em">
-                    <dx:ASPxButton ID="ASPxButton2" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Theme="Office2010Black" CssClass="ButtonStyleNo" Height="28px"
+                    <dx:ASPxButton ID="ASPxButton2" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Theme="Default" Height="28px"
                         Text="Clear">
                         <ClientSideEvents Click="function(s, e) {
                                 cboFactory.SetSelectedIndex(0);
@@ -201,16 +194,16 @@
             <Columns>
                 <dx:GridViewCommandColumn FixedStyle="Left"
                     VisibleIndex="0" ShowEditButton="true" ShowDeleteButton="true"
-                    ShowNewButtonInHeader="true" ShowClearFilterButton="true" Width="80px">
+                    ShowNewButtonInHeader="true" ShowClearFilterButton="true" Width="70px">
                     <HeaderStyle Paddings-PaddingLeft="3px" HorizontalAlign="Center" VerticalAlign="Middle">
                         <Paddings PaddingLeft="3px"></Paddings>
                     </HeaderStyle>
                 </dx:GridViewCommandColumn>
 
                 <dx:GridViewDataComboBoxColumn Caption="Type" FieldName="Type" VisibleIndex="1"
-                    Width="100px" Settings-AutoFilterCondition="Contains">
+                    Width="85px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsType" DropDownStyle="DropDownList" TextFormatString="{0}" DisplayFormatString="{1}"
-                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="95px"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="100%"
                         TextField="Description" ValueField="Description" ClientInstanceName="Type">
                         <ItemStyle Height="10px" Paddings-Padding="4px">
                             <Paddings Padding="4px"></Paddings>
@@ -230,9 +223,9 @@
                 </dx:GridViewDataComboBoxColumn>
 
                 <dx:GridViewDataComboBoxColumn Caption="Machine Process" FieldName="Machine" VisibleIndex="2"
-                    Width="200px" Settings-AutoFilterCondition="Contains">
+                    Width="175px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsMachine" DropDownStyle="DropDownList" TextFormatString="{0}"
-                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="195px"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="100%"
                         TextField="Description" ValueField="Description" ClientInstanceName="Machine">
                         <ItemStyle Height="10px" Paddings-Padding="4px">
                             <Paddings Padding="4px"></Paddings>
@@ -254,7 +247,7 @@
                 <dx:GridViewDataComboBoxColumn Caption="Item Check" FieldName="ItemCheck" VisibleIndex="3"
                     Width="175px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsItemCheck" DropDownStyle="DropDownList" TextFormatString="{0}"
-                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="170px"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="100%"
                         TextField="Description" ValueField="Description" ClientInstanceName="ItemCheck">
                         <ItemStyle Height="10px" Paddings-Padding="4px">
                             <Paddings Padding="4px"></Paddings>
@@ -329,7 +322,7 @@
                     <HeaderStyle HorizontalAlign="Center" />
                     <Columns>
                         <dx:GridViewDataSpinEditColumn Caption="USL" FieldName="SpecUSL" VisibleIndex="7"
-                            width="75px" Settings-AutoFilterCondition="Contains">
+                            width="50px" Settings-AutoFilterCondition="Contains">
                             <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
@@ -340,7 +333,7 @@
                         </dx:GridViewDataSpinEditColumn>
 
                         <dx:GridViewDataSpinEditColumn Caption="LSL" FieldName="SpecLSL" VisibleIndex="8"
-                            width="75px" Settings-AutoFilterCondition="Contains">
+                            width="50px" Settings-AutoFilterCondition="Contains">
                             <PropertiesSpinEdit MaxValue="10000" MinValue="0.001" DecimalPlaces="3">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
@@ -356,7 +349,7 @@
                     <HeaderStyle HorizontalAlign="Center" />
                     <Columns>
                         <dx:GridViewDataSpinEditColumn Caption="CL" FieldName="XCL" VisibleIndex="9"
-                            width="75px" Settings-AutoFilterCondition="Contains">
+                            width="50px" Settings-AutoFilterCondition="Contains">
                             <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
@@ -367,7 +360,7 @@
                         </dx:GridViewDataSpinEditColumn>
 
                         <dx:GridViewDataSpinEditColumn Caption="UCL" FieldName="XUCL" VisibleIndex="10"
-                            width="75px" Settings-AutoFilterCondition="Contains">
+                            width="50px" Settings-AutoFilterCondition="Contains">
                             <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
@@ -378,7 +371,7 @@
                         </dx:GridViewDataSpinEditColumn>
 
                         <dx:GridViewDataSpinEditColumn Caption="LCL" FieldName="XLCL" VisibleIndex="11"
-                            width="75px" Settings-AutoFilterCondition="Contains">
+                            width="50px" Settings-AutoFilterCondition="Contains">
                             <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
@@ -394,7 +387,7 @@
                     <HeaderStyle HorizontalAlign="Center" />
                     <Columns>
                         <dx:GridViewDataSpinEditColumn Caption="CL" FieldName="RCL" VisibleIndex="12"
-                            width="75px" Settings-AutoFilterCondition="Contains">
+                            width="50px" Settings-AutoFilterCondition="Contains">
                             <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
@@ -405,7 +398,7 @@
                         </dx:GridViewDataSpinEditColumn>
 
                         <dx:GridViewDataSpinEditColumn Caption="UCL" FieldName="RUCL" VisibleIndex="13"
-                            width="75px" Settings-AutoFilterCondition="Contains">
+                            width="50px" Settings-AutoFilterCondition="Contains">
                             <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
@@ -416,7 +409,7 @@
                         </dx:GridViewDataSpinEditColumn>
 
                         <dx:GridViewDataSpinEditColumn Caption="LCL" FieldName="RLCL" VisibleIndex="14"
-                            width="75px" Settings-AutoFilterCondition="Contains">
+                            width="50px" Settings-AutoFilterCondition="Contains">
                             <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
@@ -429,7 +422,7 @@
                 </dx:GridViewBandColumn>
 
                 <dx:GridViewDataTextColumn Caption="Last User" FieldName="LastUser" VisibleIndex="15"
-                    Width="100px" Settings-AutoFilterCondition="Contains">
+                    Width="75px" Settings-AutoFilterCondition="Contains">
                     <PropertiesTextEdit MaxLength="15" Width="100px">
                         <Style HorizontalAlign="Left"></Style>
                     </PropertiesTextEdit>
@@ -444,7 +437,7 @@
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewDataTextColumn Caption="Last Update" FieldName="LastUpdate" VisibleIndex="16"
-                    Width="150px" Settings-AutoFilterCondition="Contains">
+                    Width="125px" Settings-AutoFilterCondition="Contains">
                     <PropertiesTextEdit MaxLength="15" Width="100px">
                         <Style HorizontalAlign="Left"></Style>
                     </PropertiesTextEdit>

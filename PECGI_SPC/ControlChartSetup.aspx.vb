@@ -46,7 +46,6 @@ Public Class ControlChartSetup
     End Sub
 
     Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles Grid.CellEditorInitialize
-
         If Not Grid.IsNewRowEditing Then
             If e.Column.FieldName = "Factory" Or e.Column.FieldName = "TypeEditGrid" Or e.Column.FieldName = "MachineEditGrid" Or e.Column.FieldName = "ItemCheckEditGrid" Or e.Column.FieldName = "Start" Then
                 e.Editor.ReadOnly = True

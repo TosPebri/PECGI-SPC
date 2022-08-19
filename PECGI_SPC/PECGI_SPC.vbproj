@@ -867,6 +867,7 @@
       <DependentUpon>ChangePassword.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Class\clsChartSetup.vb" />
     <Compile Include="Class\clsControlChartSetup.vb" />
     <Compile Include="Class\clsDESEncryption.vb" />
     <Compile Include="Class\clsFactory.vb" />
@@ -880,6 +881,8 @@
     <Compile Include="Class\clsSPCItemCheckByTypeDB.vb" />
     <Compile Include="Class\clsSPCItemCheckMaster.vb" />
     <Compile Include="Class\clsSPCItemCheckMasterDB.vb" />
+    <Compile Include="Class\clsSPCResult.vb" />
+    <Compile Include="Class\clsSPCResultDetail.vb" />
     <Compile Include="Class\clsTimeFrequencySetting.vb" />
     <Compile Include="Class\clsUserLine.vb" />
     <Compile Include="Class\clsUserLineDB.vb" />

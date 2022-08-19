@@ -1,4 +1,5 @@
 ﻿Imports DevExpress.Web
+Imports DevExpress.Web.Data
 
 Public Class ProdSampleInput
     Inherits System.Web.UI.Page
@@ -26,6 +27,12 @@ Public Class ProdSampleInput
             up_FillCombo()
             If GlobalPrm <> "" Then
                 dtDate.Value = CDate(Request.QueryString("Date"))
+                Dim FactoryCode As String = Request.QueryString("FactoryCode")
+                Dim ItemTypeCode As String = Request.QueryString("ItemTypeCode")
+                Dim Line As String = Request.QueryString("Line")
+                Dim ItemCheckCode As String = Request.QueryString("ItemCheckCode")
+                Dim ProdDate As String = Request.QueryString("ProdDaet")
+                GridLoad(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
             Else
                 dtDate.Value = Now.Date
             End If
@@ -41,18 +48,12 @@ Public Class ProdSampleInput
 
         cboItemCheck.DataSource = clsItemCheckDB.GetList
         cboItemCheck.DataBind()
-
-        cboLine.DataSource = ClsLineDB.GetList
-        cboLine.DataBind()
     End Sub
 
     Protected Sub grid_RowInserting(sender As Object, e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles grid.RowInserting
         e.Cancel = True
     End Sub
 
-    Private Sub grid_RowUpdating(sender As Object, e As DevExpress.Web.Data.ASPxDataUpdatingEventArgs) Handles grid.RowUpdating
-        e.Cancel = True
-    End Sub
 
     Protected Sub grid_RowDeleting(sender As Object, e As DevExpress.Web.Data.ASPxDataDeletingEventArgs) Handles grid.RowDeleting
         e.Cancel = True
@@ -65,9 +66,59 @@ Public Class ProdSampleInput
         End If
     End Sub
 
-    Private Sub GridLoad()
+    Private Sub GridLoad(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String)
         Dim ErrMsg As String = ""
+        Dim dt As DataTable = clsSPCResultDetailDB.GetTable(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+        grid.DataSource = dt
+        grid.DataBind()
+    End Sub
 
+    Private Sub grid_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles grid.CustomCallback
+        Dim pFunction As String = Split(e.Parameters, "|")(0)
+        Dim pFactory As String = Split(e.Parameters, "|")(1)
+        Dim pItemType As String = Split(e.Parameters, "|")(2)
+        Dim pLine As String = Split(e.Parameters, "|")(3)
+        Dim pItemCheck As String = Split(e.Parameters, "|")(4)
+        Dim pDate As String = Split(e.Parameters, "|")(5)
+        Select Case pFunction
+            Case "clear"
 
+            Case "load", "save", "approve"
+                GridLoad(pFactory, pItemType, pLine, pItemCheck, pDate)
+        End Select
+    End Sub
+
+    Private Sub grid_RowUpdating(sender As Object, e As ASPxDataUpdatingEventArgs) Handles grid.RowUpdating
+        e.Cancel = True
+    End Sub
+
+    Private Sub cbkRefresh_Callback(source As Object, e As CallbackEventArgs) Handles cbkRefresh.Callback
+        cbkRefresh.JSProperties("cpUSL") = 1
+        cbkRefresh.JSProperties("cpLSL") = 2
+        cbkRefresh.JSProperties("cpUCL") = 3
+        cbkRefresh.JSProperties("cpLCL") = 4
+        cbkRefresh.JSProperties("cpMin") = 5
+        cbkRefresh.JSProperties("cpMax") = 6
+        cbkRefresh.JSProperties("cpAve") = 7
+        cbkRefresh.JSProperties("cpR") = 8
+        cbkRefresh.JSProperties("cpNG") = 9
+    End Sub
+
+    Private Sub cboType_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboType.Callback
+
+    End Sub
+
+    Private Sub cboLine_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboLine.Callback
+        Dim FactoryCode As String = Split(e.Parameter, "|")(0)
+        cboLine.DataSource = ClsLineDB.GetList(FactoryCode)
+        cboLine.DataBind()
+    End Sub
+
+    Private Sub cboItemCheck_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboItemCheck.Callback
+        Dim FactoryCode As String = Split(e.Parameter, "|")(0)
+        Dim ItemTypeCode As String = Split(e.Parameter, "|")(1)
+        Dim LineCode As String = Split(e.Parameter, "|")(2)
+        cboItemCheck.DataSource = clsItemCheckDB.GetList(FactoryCode, ItemTypeCode, LineCode)
+        cboItemCheck.DataBind()
     End Sub
 End Class

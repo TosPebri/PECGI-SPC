@@ -13,13 +13,15 @@ Public Class ClsLineDB
     Public Shared Function GetList(Optional FactoryCode As String = "", Optional ProcessCode As String = "") As List(Of ClsLine)
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
-            Dim q As String = "select * from MS_Line where LineCode is not Null " & vbCrLf
+            Dim q As String = "select FactoryCode, ProcessCode, LineCode, LineCode + ' - ' + LineName as LineName " & vbCrLf &
+                "from MS_Line where LineCode is not Null " & vbCrLf
             If FactoryCode <> "" Then
                 q = q & "and FactoryCode = @FactoryCode "
             End If
             If ProcessCode <> "" Then
                 q = q & "and ProcessCode = @ProcessCode "
             End If
+            q = q & "order by LineCode"
             Dim cmd As New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
             cmd.Parameters.AddWithValue("ProcessCode", ProcessCode)

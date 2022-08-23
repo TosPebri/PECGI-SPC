@@ -203,13 +203,31 @@ Partial Public Class ProdSampleVerification
     Protected WithEvents btnExcel As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
-    '''GridMenu2 control.
+    '''Grid control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents GridMenu2 As Global.DevExpress.Web.ASPxGridView
+    Protected WithEvents Grid As Global.DevExpress.Web.ASPxGridView
+
+    '''<summary>
+    '''GridMenu control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents GridMenu As Global.DevExpress.Web.ASPxGridView
+
+    '''<summary>
+    '''HideValue control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents HideValue As Global.DevExpress.Web.ASPxHiddenField
 
     '''<summary>
     '''Master property.

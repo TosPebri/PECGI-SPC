@@ -52,6 +52,90 @@
                 }
             }
         }
+
+        function OnInitProdDate(s, e) {
+            var today = new Date();
+            dtProdDate.SetDate(today);
+        }
+
+        function Browse() {
+            Grid.PerformCallback('Load');
+            GridMenu.PerformCallback('Load');
+        }
+
+        function Clear() {
+            var today = new Date();
+            dtProdDate.SetDate(today);
+            GridMenu.PerformCallback('Clear');
+        }
+
+        function ChangeFactory() {
+            var FactoryCode = cboFactory.GetValue();
+            var ItemType_Code = cboItemType.GetValue();
+            var LineCode = cboLineID.GetValue();
+            HideValue.Set('FactoryCode', FactoryCode);
+            HideValue.Set('ItemType_Code', ItemType_Code);
+            HideValue.Set('LineCode', LineCode);
+            cboLineID.PerformCallback(FactoryCode);
+            cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode);
+            GridMenu.PerformCallback('Kosong');
+        }
+
+        function ChangeItemType() {
+            var FactoryCode = cboFactory.GetValue();
+            var ItemType_Code = cboItemType.GetValue();
+            var LineCode = cboLineID.GetValue();
+            HideValue.Set('FactoryCode', FactoryCode);
+            HideValue.Set('ItemType_Code', ItemType_Code);
+            HideValue.Set('LineCode', LineCode);
+            cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode);
+            GridMenu.PerformCallback('Kosong');
+        }
+
+        function ChangeLine() {
+            var FactoryCode = cboFactory.GetValue();
+            var LineCode = cboLineID.GetValue();
+            var ItemType_Code = cboItemType.GetValue();
+            HideValue.Set('FactoryCode', FactoryCode);
+            HideValue.Set('ItemType_Code', ItemType_Code);
+            HideValue.Set('LineCode', LineCode);
+            cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode);
+            GridMenu.PerformCallback('Kosong');
+        }
+
+        function ChangeItemCheck() {
+            var FactoryCode = cboFactory.GetValue();
+            var LineCode = cboLineID.GetValue();
+            var ItemType_Code = cboItemType.GetValue();
+            var ItemCheck_Code = cboItemCheck.GetValue();
+            HideValue.Set('FactoryCode', FactoryCode);
+            HideValue.Set('ItemType_Code', ItemType_Code);
+            HideValue.Set('LineCode', LineCode);
+            HideValue.Set('ItemCheck_Code', ItemCheck_Code);
+            cboShift.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode + '|' + ItemCheck_Code);
+            GridMenu.PerformCallback('Kosong');
+        }
+
+        function ChangeShift() {
+            var FactoryCode = cboFactory.GetValue();
+            var LineCode = cboLineID.GetValue();
+            var ItemType_Code = cboItemType.GetValue();
+            var ItemCheck_Code = cboItemCheck.GetValue();
+            var ShiftCode = cboShift.GetValue();
+            HideValue.Set('FactoryCode', FactoryCode);
+            HideValue.Set('ItemType_Code', ItemType_Code);
+            HideValue.Set('LineCode', LineCode);
+            HideValue.Set('ItemCheck_Code', ItemCheck_Code);
+            HideValue.Set('ShiftCode', ShiftCode);
+            cboSeq.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode + '|' + ItemCheck_Code + '|' + ShiftCode);
+            GridMenu.PerformCallback('Kosong');
+        }
+
+        function ChangeSeq() {
+            var Seq = cboSeq.GetValue();
+            HideValue.Set('Seq', Seq);
+            GridMenu.PerformCallback('Kosong');
+        }
     </script>
 </asp:Content>
 
@@ -66,14 +150,10 @@
                 <td style="width: 20px">&nbsp;</td>
                 <td>
                     <dx:ASPxComboBox ID="cboFactory" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
-                        Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" TextFormatString="{1}"
-                        TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboFactory" SelectedIndex="0">
-                        <%--<ClientSideEvents SelectedIndexChanged="ChangeFactory" />--%>
-                        <Columns>
-                            <dx:ListBoxColumn Caption="CODE" FieldName="CODE" Width="60px" />
-                            <dx:ListBoxColumn Caption="CODE NAME" FieldName="CODENAME" Width="120px" />
-                        </Columns>
-                        <ItemStyle Height="10px" Paddings-Padding="4px" Font-Size="11px" />
+                        Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" Width="120px"
+                        TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboFactory">
+                        <ClientSideEvents SelectedIndexChanged="ChangeFactory" />
+                        <ItemStyle Height="10px" Paddings-Padding="4px" />
                         <ButtonStyle Paddings-Padding="4px" Width="5px">
                         </ButtonStyle>
                     </dx:ASPxComboBox>
@@ -87,14 +167,10 @@
                 <td style="width: 20px">&nbsp;</td>
                 <td>
                     <dx:ASPxComboBox ID="cboLineID" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
-                        Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" TextFormatString="{1}"
-                        TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboLineID" SelectedIndex="0">
-                        <%--<ClientSideEvents SelectedIndexChanged="ChangeLine" />--%>
-                        <Columns>
-                            <dx:ListBoxColumn Caption="CODE" FieldName="CODE" Width="60px" />
-                            <dx:ListBoxColumn Caption="CODE NAME" FieldName="CODENAME" Width="120px" />
-                        </Columns>
-                        <ItemStyle Height="10px" Paddings-Padding="4px" Font-Size="11px" />
+                        Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True"
+                        TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboLineID">
+                        <ClientSideEvents SelectedIndexChanged="ChangeLine" />
+                        <ItemStyle Height="10px" Paddings-Padding="4px" />
                         <ButtonStyle Paddings-Padding="4px" Width="5px">
                         </ButtonStyle>
                     </dx:ASPxComboBox>
@@ -110,7 +186,7 @@
                     <dx:ASPxDateEdit ID="dtProdDate" runat="server" Theme="Office2010Black" AutoPostBack="false" Width="155px"
                         ClientInstanceName="dtProdDate" EditFormatString="dd MMM yyyy" DisplayFormatString="dd MMM yyyy"
                         Font-Names="Segoe UI" Font-Size="9pt" Height="25px" TabIndex="5">
-                        <%--<ClientSideEvents Init="OnInitProdDate" />--%>
+                        <ClientSideEvents Init="OnInitProdDate" />
                         <CalendarProperties>
                             <HeaderStyle Font-Size="12pt" Paddings-Padding="5px" />
                             <DayStyle Font-Size="9pt" Paddings-Padding="5px" />
@@ -130,14 +206,10 @@
                 <td style="width: 20px">&nbsp;</td>
                 <td>
                     <dx:ASPxComboBox ID="cboItemType" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
-                        Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" SelectedIndex="0" TextFormatString="{1}"
+                        Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" Width="120px"
                         TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboItemType">
-                        <%--<ClientSideEvents SelectedIndexChanged="ChangeItemType" />--%>
-                        <Columns>
-                            <dx:ListBoxColumn Caption="CODE" FieldName="CODE" Width="60px" />
-                            <dx:ListBoxColumn Caption="CODE NAME" FieldName="CODENAME" Width="120px" />
-                        </Columns>
-                        <ItemStyle Height="10px" Paddings-Padding="4px" Font-Size="11px" />
+                        <ClientSideEvents SelectedIndexChanged="ChangeItemType" />
+                        <ItemStyle Height="10px" Paddings-Padding="4px" />
                         <ButtonStyle Paddings-Padding="4px" Width="5px">
                         </ButtonStyle>
                     </dx:ASPxComboBox>
@@ -151,14 +223,10 @@
                 <td style="width: 20px">&nbsp;</td>
                 <td>
                     <dx:ASPxComboBox ID="cboItemCheck" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
-                        Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" SelectedIndex="0"
-                        TextFormatString="{1}" TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboItemCheck">
-                        <%--<ClientSideEvents SelectedIndexChanged="ChangeItemCheck" />--%>
-                        <Columns>
-                            <dx:ListBoxColumn Caption="CODE" FieldName="CODE" Width="60px" />
-                            <dx:ListBoxColumn Caption="CODE NAME" FieldName="CODENAME" Width="120px" />
-                        </Columns>
-                        <ItemStyle Height="10px" Paddings-Padding="4px" Font-Size="11px" />
+                        Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True"
+                        TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboItemCheck">
+                        <ClientSideEvents SelectedIndexChanged="ChangeItemCheck" />
+                        <ItemStyle Height="10px" Paddings-Padding="4px" />
                         <ButtonStyle Paddings-Padding="4px" Width="5px">
                         </ButtonStyle>
                     </dx:ASPxComboBox>
@@ -172,12 +240,9 @@
                 <td style="width: 20px">&nbsp;</td>
                 <td>
                     <dx:ASPxComboBox ID="cboShift" runat="server" Font-Names="Segoe UI" Height="25px" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
-                        ClientInstanceName="cboShift" Font-Size="9pt" Theme="Office2010Black" TextField="CODENAME" ValueField="CODE" EnableTheming="True" Width="60px"
-                        EnableIncrementalFiltering="True" TextFormatString="{0}" SelectedIndex="0">
-                        <Columns>
-                            <dx:ListBoxColumn Caption="CODE" FieldName="CODE" Width="60px" />
-                            <dx:ListBoxColumn Caption="CODE NAME" FieldName="CODENAME" Width="120px" />
-                        </Columns>
+                        ClientInstanceName="cboShift" Theme="Office2010Black" TextField="CODENAME" ValueField="CODE" EnableTheming="True" Width="60px"
+                        EnableIncrementalFiltering="True">
+                        <ClientSideEvents SelectedIndexChanged="ChangeShift" />
                         <ItemStyle Height="10px" Paddings-Padding="4px" Font-Size="11px" />
                         <ButtonStyle Paddings-Padding="4px" Width="5px">
                         </ButtonStyle>
@@ -193,13 +258,10 @@
                 <td style="width: 10px">&nbsp;</td>
                 <td>
                     <dx:ASPxComboBox ID="cboSeq" runat="server" Font-Names="Segoe UI" Height="25px" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
-                        ClientInstanceName="cboSeq" Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" Width="60px" EnableIncrementalFiltering="True"
-                        TextFormatString="{0}" SelectedIndex="0" TextField="CODENAME" ValueField="CODE">
-                        <Columns>
-                            <dx:ListBoxColumn Caption="CODE" FieldName="CODE" Width="60px" />
-                            <dx:ListBoxColumn Caption="CODE NAME" FieldName="CODENAME" Width="120px" />
-                        </Columns>
-                        <ItemStyle Height="10px" Paddings-Padding="4px" Font-Size="11px" />
+                        ClientInstanceName="cboSeq" Theme="Office2010Black" EnableTheming="True" Width="60px" EnableIncrementalFiltering="True"
+                        TextField="CODENAME" ValueField="CODE">
+                        <ClientSideEvents SelectedIndexChanged="ChangeSeq" />
+                        <ItemStyle Height="10px" Paddings-Padding="4px" />
                         <ButtonStyle Paddings-Padding="4px" Width="5px">
                         </ButtonStyle>
                     </dx:ASPxComboBox>
@@ -209,20 +271,20 @@
                 <td>
                     <dx:ASPxButton ID="btnBrowse" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse"
                         Font-Names="Segoe UI" Font-Size="10pt" Text="Browse" Theme="Office2010Silver" Width="80px">
-                        <%--<ClientSideEvents Click="Browse" />--%>
+                        <ClientSideEvents Click="Browse" />
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 10px">&nbsp;</td>
                 <td>
                     <dx:ASPxButton ID="btnClear" runat="server" AutoPostBack="False" ClientInstanceName="btnClear"
                         Font-Names="Segoe UI" Font-Size="10pt" Text="Clear" Theme="Office2010Silver" Width="80px">
-                      <%--  <ClientSideEvents Click="Clear" />--%>
+                        <ClientSideEvents Click="Clear" />
                     </dx:ASPxButton>
                 </td>
             </tr>
         </table>
     </div>
-    <div style="padding: 5px 5px 5px 5px; padding-top: 20px; padding-bottom: 20px">
+    <div style="padding: 5px 5px 5px 5px; padding-top: 20px; padding-bottom: 10px">
         <table>
             <tr>
                 <td>
@@ -235,28 +297,28 @@
                 <td>
                     <dx:ASPxButton ID="btnSPCSample" runat="server" AutoPostBack="False" ClientInstanceName="btnSPCSample"
                         Font-Names="Segoe UI" Font-Size="10pt" Text="SPC Sample" Theme="Office2010Silver" Width="100px">
-                      <%--  <ClientSideEvents Click="SPCSample" />--%>
+                        <%--<ClientSideEvents Click="SPCSample" />--%>
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 10px">&nbsp;</td>
                 <td>
                     <dx:ASPxButton ID="btnIOTProcess" runat="server" AutoPostBack="False" ClientInstanceName="btnIOTProcess"
                         Font-Names="Segoe UI" Font-Size="10pt" Text="View IOT Process Table" Theme="Office2010Silver" Width="100px">
-                      <%--  <ClientSideEvents Click="IOTProcess" />--%>
+                        <%--    <ClientSideEvents Click="IOTProcess" />--%>
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 10px">&nbsp;</td>
                 <td>
                     <dx:ASPxButton ID="btnIOTTraceability" runat="server" AutoPostBack="False" ClientInstanceName="btnIOTTraceability"
                         Font-Names="Segoe UI" Font-Size="10pt" Text="View IOT Traceability" Theme="Office2010Silver" Width="100px">
-                      <%--  <ClientSideEvents Click="IOTTraceability" />--%>
+                        <%--  <ClientSideEvents Click="IOTTraceability" />--%>
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 10px">&nbsp;</td>
                 <td>
                     <dx:ASPxButton ID="btnExcel" runat="server" AutoPostBack="False" ClientInstanceName="btnExcel"
                         Font-Names="Segoe UI" Font-Size="10pt" Text="Excel" Theme="Office2010Silver" Width="100px">
-                      <%--  <ClientSideEvents Click="Excel" />--%>
+                        <%--  <ClientSideEvents Click="Excel" />--%>
                     </dx:ASPxButton>
                 </td>
             </tr>
@@ -264,18 +326,57 @@
     </div>
     <div style="padding: 5px 5px 5px 5px;">
         <table>
-            <tr>
-                <td style="width: 50%">
-                    
-                </td>
-                <td style="width: 50%"></td>
-            </tr>
+            <dx:ASPxGridView ID="Grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="Grid"
+                EnableTheming="True" KeyFieldName ="nDesc" Theme="Office2010Black"
+                Width="100%" Font-Names="Segoe UI" Font-Size="9pt">
+                <ClientSideEvents EndCallback="OnEndCallback" />
+                <Columns>
+                    <dx:GridViewBandColumn Caption="Date" VisibleIndex="0">
+                        <Columns>
+                            <dx:GridViewBandColumn Caption="Shift" VisibleIndex="0">
+                                <Columns>
+                                    <dx:GridViewDataTextColumn Caption="Time" FieldName="nDesc" VisibleIndex="0">
+                                    </dx:GridViewDataTextColumn>
+                                </Columns>
+                            </dx:GridViewBandColumn>
+                        </Columns>
+                    </dx:GridViewBandColumn>
+                </Columns>
+                <SettingsBehavior ColumnResizeMode="Control" ConfirmDelete="True"
+                    AllowFocusedRow="True" AllowDragDrop="False" AllowSort="False" />
+                <SettingsEditing Mode="Batch">
+                    <BatchEditSettings ShowConfirmOnLosingChanges="False" />
+                </SettingsEditing>
+                <SettingsPager AlwaysShowPager="true" Mode="ShowAllRecords" PageSize="30">
+                </SettingsPager>
+                <Settings HorizontalScrollBarMode="Auto"
+                    VerticalScrollBarMode="Auto" ShowStatusBar="Hidden" />
+                <SettingsPopup>
+                    <EditForm HorizontalAlign="WindowCenter" Modal="false"
+                        VerticalAlign="TopSides" Width="320" VerticalOffset="0" Height="300" />
+                </SettingsPopup>
+                <SettingsDataSecurity AllowDelete="False"
+                    AllowInsert="False" />
+                <Styles EditFormColumnCaption-Paddings-PaddingLeft="10px"
+                    EditFormColumnCaption-Paddings-PaddingRight="10px"
+                    Header-Paddings-Padding="5px">
+                    <Header HorizontalAlign="Center" Wrap="True">
+                        <Paddings Padding="2px" />
+                    </Header>
+                    <EditFormColumnCaption Font-Names="Segoe UI" Font-Size="9pt">
+                        <Paddings PaddingBottom="5px" PaddingLeft="15px" PaddingRight="15px"
+                            PaddingTop="5px" />
+                    </EditFormColumnCaption>
+                    <CommandColumnItem ForeColor="SteelBlue">
+                    </CommandColumnItem>
+                </Styles>
+            </dx:ASPxGridView>
         </table>
     </div>
     <div style="padding: 5px 5px 5px 5px; padding-top: 20px; padding-bottom: 20px">
         <table>
-            <dx:ASPxGridView ID="GridMenu2" runat="server" AutoGenerateColumns="False" ClientInstanceName="GridMenu2"
-                EnableTheming="True" KeyFieldName="PartID;SubLineID;LineID" Theme="Office2010Black"
+            <dx:ASPxGridView ID="GridMenu" runat="server" AutoGenerateColumns="False" ClientInstanceName="GridMenu"
+                EnableTheming="True" KeyFieldName="ActivityID" Theme="Office2010Black"
                 Width="100%"
                 Font-Names="Segoe UI" Font-Size="9pt">
                 <ClientSideEvents EndCallback="OnEndCallback" />
@@ -289,7 +390,16 @@
                         </HeaderStyle>
                     </dx:GridViewCommandColumn>
 
-                    <dx:GridViewDataTextColumn Caption="Date" VisibleIndex="2" Width="100px"
+                    <dx:GridViewDataTextColumn Caption="" VisibleIndex="1" Width="120px"
+                        FieldName="ActivityID" Visible="false">
+                        <PropertiesTextEdit ClientInstanceName="ActivityID">
+                        </PropertiesTextEdit>
+                        <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                        <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
+                        </CellStyle>
+                    </dx:GridViewDataTextColumn>
+
+                    <dx:GridViewDataTextColumn Caption="Date" VisibleIndex="2" Width="120px"
                         FieldName="ProdDate">
                         <PropertiesTextEdit ClientInstanceName="ProdDate">
                         </PropertiesTextEdit>
@@ -298,7 +408,7 @@
                         </CellStyle>
                     </dx:GridViewDataTextColumn>
 
-                    <dx:GridViewDataTextColumn Caption="PIC" VisibleIndex="3" Width="55px"
+                    <dx:GridViewDataTextColumn Caption="PIC" VisibleIndex="3" Width="120px"
                         FieldName="PIC">
                         <PropertiesTextEdit ClientInstanceName="PIC">
                         </PropertiesTextEdit>
@@ -307,7 +417,7 @@
                         </CellStyle>
                     </dx:GridViewDataTextColumn>
 
-                    <dx:GridViewDataTextColumn Caption="Action" VisibleIndex="4" Width="55px"
+                    <dx:GridViewDataTextColumn Caption="Action" VisibleIndex="4" Width="200px"
                         FieldName="Action">
                         <PropertiesTextEdit ClientInstanceName="Action">
                         </PropertiesTextEdit>
@@ -316,7 +426,7 @@
                         </CellStyle>
                     </dx:GridViewDataTextColumn>
 
-                    <dx:GridViewDataTextColumn Caption="Result" VisibleIndex="5" Width="200px"
+                    <dx:GridViewDataTextColumn Caption="Result" VisibleIndex="5" Width="50px"
                         FieldName="Result">
                         <PropertiesTextEdit ClientInstanceName="Result">
                         </PropertiesTextEdit>
@@ -325,7 +435,7 @@
                         </CellStyle>
                     </dx:GridViewDataTextColumn>
 
-                    <dx:GridViewDataTextColumn Caption="Remark" VisibleIndex="6" Width="55px"
+                    <dx:GridViewDataTextColumn Caption="Remark" VisibleIndex="6" Width="200px"
                         FieldName="Remark">
                         <PropertiesTextEdit ClientInstanceName="Remark">
                         </PropertiesTextEdit>
@@ -334,7 +444,7 @@
                         </CellStyle>
                     </dx:GridViewDataTextColumn>
 
-                    <dx:GridViewDataTextColumn Caption="LastUser" VisibleIndex="7" Width="55px"
+                    <dx:GridViewDataTextColumn Caption="LastUser" VisibleIndex="7" Width="120px"
                         FieldName="LastUser">
                         <PropertiesTextEdit ClientInstanceName="LastUser">
                         </PropertiesTextEdit>
@@ -343,7 +453,7 @@
                         </CellStyle>
                     </dx:GridViewDataTextColumn>
 
-                    <dx:GridViewDataTextColumn Caption="LastUpdate" VisibleIndex="8" Width="55px"
+                    <dx:GridViewDataTextColumn Caption="LastUpdate" VisibleIndex="8" Width="120px"
                         FieldName="LastUpdate">
                         <PropertiesTextEdit ClientInstanceName="LastUpdate">
                         </PropertiesTextEdit>
@@ -352,12 +462,95 @@
                         </CellStyle>
                     </dx:GridViewDataTextColumn>
                 </Columns>
-                <SettingsBehavior ColumnResizeMode="control" />
-                <SettingsPager Mode="ShowPager" PageSize="20" AlwaysShowPager="true" PageSizeItemSettings-Visible="true">
-                    <PageSizeItemSettings Visible="True"></PageSizeItemSettings>
+
+                <SettingsBehavior ConfirmDelete="True" ColumnResizeMode="Control" />
+                <SettingsEditing EditFormColumnCount="1" Mode="PopupEditForm" />
+                <SettingsPager Mode="ShowPager" PageSize="20" AlwaysShowPager="true">
+                    <PageSizeItemSettings Visible="True">
+                    </PageSizeItemSettings>
                 </SettingsPager>
-                <Settings HorizontalScrollBarMode="Auto" VerticalScrollBarMode="Auto" VerticalScrollableHeight="300" />
+                <Settings ShowFilterRow="false" VerticalScrollBarMode="Auto"
+                    VerticalScrollableHeight="300" HorizontalScrollBarMode="Auto" />
+                <SettingsText ConfirmDelete="Are you sure want to delete ?"></SettingsText>
+                <SettingsPopup>
+                    <EditForm Modal="false" HorizontalAlign="WindowCenter" VerticalAlign="WindowCenter" Width="200" />
+                </SettingsPopup>
+                <Styles EditFormColumnCaption-Paddings-PaddingLeft="10px" EditFormColumnCaption-Paddings-PaddingRight="10px">
+                    <Header Wrap="True">
+                        <Paddings Padding="2px"></Paddings>
+                    </Header>
+
+                    <EditFormColumnCaption Font-Size="9pt" Font-Names="Segoe UI">
+                        <Paddings PaddingLeft="5px" PaddingTop="5px" PaddingBottom="5px"></Paddings>
+                    </EditFormColumnCaption>
+                </Styles>
+
+                <Templates>
+                    <EditForm>
+                        <div style="padding: 15px 15px 15px 15px; width: 300px">
+                            <dx:ContentControl ID="ContentControl1" runat="server">
+                                <table align="center">
+                                    <tr style="height: 30px">
+                                        <td>
+                                            <dx:ASPxLabel ID="lblActivityID" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text=" Activity ID" Width="90px"></dx:ASPxLabel>
+                                        </td>
+                                        <td>
+                                            <dx:ASPxGridViewTemplateReplacement ID="editActivityID" ReplacementType="EditFormCellEditor"
+                                                runat="server" ColumnID="ActivityID"></dx:ASPxGridViewTemplateReplacement>
+                                        </td>
+                                    </tr>
+                                    <tr style="height: 30px">
+                                        <td>Date</td>
+                                        <td>
+                                            <dx:ASPxGridViewTemplateReplacement ID="editProdDate" ReplacementType="EditFormCellEditor"
+                                                runat="server" ColumnID="ProdDate"></dx:ASPxGridViewTemplateReplacement>
+                                        </td>
+                                    </tr>
+                                    <tr style="height: 30px">
+                                        <td>PIC</td>
+                                        <td>
+                                            <dx:ASPxGridViewTemplateReplacement ID="editPIC" ReplacementType="EditFormCellEditor"
+                                                runat="server" ColumnID="PIC"></dx:ASPxGridViewTemplateReplacement>
+                                        </td>
+                                    </tr>
+                                    <tr style="height: 30px">
+                                        <td>Action</td>
+                                        <td>
+                                            <dx:ASPxGridViewTemplateReplacement ID="editAction" ReplacementType="EditFormCellEditor"
+                                                runat="server" ColumnID="Action"></dx:ASPxGridViewTemplateReplacement>
+                                        </td>
+                                    </tr>
+                                    <tr style="height: 30px">
+                                        <td>Result</td>
+                                        <td>
+                                            <dx:LayoutItemNestedControlContainer>
+                                                <dx:ASPxGridViewTemplateReplacement ID="editResult" ReplacementType="EditFormCellEditor"
+                                                    runat="server" ColumnID="Result"></dx:ASPxGridViewTemplateReplacement>
+                                                <dx:LayoutItemNestedControlContainer>
+                                        </td>
+                                    </tr>
+                                    <tr style="height: 30px">
+                                        <td>Remark</td>
+                                        <td>
+                                            <dx:LayoutItemNestedControlContainer>
+                                                <dx:ASPxGridViewTemplateReplacement ID="editRemark" ReplacementType="EditFormCellEditor"
+                                                    runat="server" ColumnID="Remark"></dx:ASPxGridViewTemplateReplacement>
+                                                <dx:LayoutItemNestedControlContainer>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </dx:ContentControl>
+                        </div>
+                        <div style="text-align: left; padding: 5px 5px 5px 15px">
+                            <dx:ASPxGridViewTemplateReplacement ID="UpdateButton" ReplacementType="EditFormUpdateButton"
+                                runat="server"></dx:ASPxGridViewTemplateReplacement>
+                            <dx:ASPxGridViewTemplateReplacement ID="CancelButton" ReplacementType="EditFormCancelButton"
+                                runat="server"></dx:ASPxGridViewTemplateReplacement>
+                        </div>
+                    </EditForm>
+                </Templates>
             </dx:ASPxGridView>
         </table>
     </div>
+    <dx:ASPxHiddenField ID="HideValue" runat="server" ClientInstanceName="HideValue"></dx:ASPxHiddenField>
 </asp:Content>

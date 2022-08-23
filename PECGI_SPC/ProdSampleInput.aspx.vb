@@ -97,15 +97,35 @@ Public Class ProdSampleInput
     End Sub
 
     Private Sub cbkRefresh_Callback(source As Object, e As CallbackEventArgs) Handles cbkRefresh.Callback
-        cbkRefresh.JSProperties("cpUSL") = 1
-        cbkRefresh.JSProperties("cpLSL") = 2
-        cbkRefresh.JSProperties("cpUCL") = 3
-        cbkRefresh.JSProperties("cpLCL") = 4
-        cbkRefresh.JSProperties("cpMin") = 5
-        cbkRefresh.JSProperties("cpMax") = 6
-        cbkRefresh.JSProperties("cpAve") = 7
-        cbkRefresh.JSProperties("cpR") = 8
-        cbkRefresh.JSProperties("cpNG") = 9
+        Dim FactoryCode As String = Split(e.Parameter, "|")(0)
+        Dim ItemTypeCode As String = Split(e.Parameter, "|")(1)
+        Dim LineCode As String = Split(e.Parameter, "|")(2)
+        Dim ItemCheckCode As String = Split(e.Parameter, "|")(3)
+        Dim ProdDate As String = Split(e.Parameter, "|")(4)
+
+        Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
+        If Setup Is Nothing Then
+            cbkRefresh.JSProperties("cpUSL") = ""
+            cbkRefresh.JSProperties("cpLSL") = ""
+            cbkRefresh.JSProperties("cpUCL") = ""
+            cbkRefresh.JSProperties("cpLCL") = ""
+            cbkRefresh.JSProperties("cpMin") = ""
+            cbkRefresh.JSProperties("cpMax") = ""
+            cbkRefresh.JSProperties("cpAve") = ""
+            cbkRefresh.JSProperties("cpR") = ""
+            cbkRefresh.JSProperties("cpNG") = ""
+        Else
+            cbkRefresh.JSProperties("cpUSL") = Setup.SpecUSL
+            cbkRefresh.JSProperties("cpLSL") = Setup.SpecLSL
+            cbkRefresh.JSProperties("cpUCL") = Setup.XBarUCL
+            cbkRefresh.JSProperties("cpLCL") = Setup.XBarLCL
+            cbkRefresh.JSProperties("cpMin") = 0
+            cbkRefresh.JSProperties("cpMax") = 0
+            cbkRefresh.JSProperties("cpAve") = 0
+            cbkRefresh.JSProperties("cpR") = 0
+            cbkRefresh.JSProperties("cpNG") = 0
+        End If
+
     End Sub
 
     Private Sub cboType_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboType.Callback
@@ -176,6 +196,12 @@ Public Class ProdSampleInput
     Private Sub grid_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles grid.HtmlDataCellPrepared
         If e.DataColumn.FieldName <> "Value" And e.DataColumn.FieldName <> "Remark" And e.DataColumn.FieldName <> "DeleteStatus" Then
             e.Cell.Attributes.Add("onclick", "event.cancelBubble = true")
+        End If
+    End Sub
+
+    Private Sub grid_HtmlRowPrepared(sender As Object, e As ASPxGridViewTableRowEventArgs) Handles grid.HtmlRowPrepared
+        If e.GetValue("Judgement") IsNot Nothing AndAlso e.GetValue("Judgement").ToString = "NG" Then
+            e.Row.BackColor = System.Drawing.Color.Red
         End If
     End Sub
 End Class

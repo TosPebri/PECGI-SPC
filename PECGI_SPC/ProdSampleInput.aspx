@@ -14,8 +14,31 @@
         }
     </style>
     <script type="text/javascript" >
+        var rowIndex, colIndex;
         function OnInit(s, e) {
-            
+            ASPxClientUtils.AttachEventToElement(s.GetMainElement(), "keydown", function (event) {
+                if (event.keyCode == 9 || event.keyCode == 13 || event.keyCode == 40) {
+                    if (ASPxClientUtils.IsExists(columnIndex) && ASPxClientUtils.IsExists(rowIndex)) {
+                        ASPxClientUtils.PreventEventAndBubble(event);
+                        if (rowIndex < grid.GetVisibleRowsOnPage() + grid.GetTopVisibleIndex() - 1) {
+                            rowIndex++;
+                            grid.batchEditApi.StartEdit(rowIndex, columnIndex);
+                        } else {
+                            btnSave.Focus();
+                        }
+                    }
+                }
+
+                if (event.keyCode == 38) {
+                    if (ASPxClientUtils.IsExists(columnIndex) && ASPxClientUtils.IsExists(rowIndex)) {
+                        ASPxClientUtils.PreventEventAndBubble(event);
+                        if (rowIndex > 0) {
+                            rowIndex--;
+                            grid.batchEditApi.StartEdit(rowIndex, columnIndex);
+                        }
+                    }
+                }
+            });             
         }
 
         function isNumeric(n) {
@@ -28,8 +51,19 @@
 
         function ValidateSave(s, e) {
             var rows = grid.GetVisibleRowsOnPage();
-            var errmsg = '';            
+            var startIndex = 0;
+            var i;
+            var errmsg = '';      
+            
+            for (i = startIndex; i < rows - 1; i++) {
+                if (isNumeric(grid.batchEditApi.GetCellValue(i, 'Value')) == false) {
+                    errmsg = 'Please input valid numeric!';
+                    grid.batchEditApi.StartEdit(i, 1);
+                    break;
+                }
+            }                  
             if (errmsg != '') {
+                e.cancel = true; 
                 toastr.warning(errmsg, 'Warning');
                 toastr.options.closeButton = false;
                 toastr.options.debug = false;
@@ -129,7 +163,7 @@
                 toastr.options.onclick = null;
             }
             
-            cbkRefresh.PerformCallback('load');
+            cbkRefresh.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
         }
     </script>
 </asp:Content>
@@ -210,6 +244,7 @@
                             <ButtonStyle Font-Size="9pt" Paddings-Padding="10px"><Paddings Padding="10px"></Paddings>
                             </ButtonStyle>
                         </CalendarProperties>                        
+                                    <ClientSideEvents DateChanged="ClearGrid" />
                         <ButtonStyle Width="5px" Paddings-Padding="4px" >
 <Paddings Padding="4px"></Paddings>
                         </ButtonStyle>
@@ -518,11 +553,11 @@
             <dx:GridViewDataTextColumn Caption="Value" VisibleIndex="2" FieldName="Value" Width="80px">
                 <PropertiesTextEdit SelectInputTextOnClick="True">
                     <ValidationSettings>
-                        <RegularExpression ErrorText="Please input numeric" ValidationExpression="\d+" />
+                        <RegularExpression ErrorText="Please input valid value" />
                     </ValidationSettings>
                 </PropertiesTextEdit>
             </dx:GridViewDataTextColumn>
-            <dx:GridViewDataTextColumn Caption="Judgement" VisibleIndex="3" Width="80px">
+            <dx:GridViewDataTextColumn Caption="Judgement" VisibleIndex="3" Width="80px" FieldName="Judgement">
             </dx:GridViewDataTextColumn>
             <dx:GridViewDataTextColumn Caption="Operator" VisibleIndex="4" FieldName="RegisterUser">
             </dx:GridViewDataTextColumn>
@@ -543,8 +578,7 @@
             </dx:GridViewDataCheckColumn>
 
         </Columns>        
-        <SettingsBehavior ColumnResizeMode="Control" ConfirmDelete="True" 
-                AllowFocusedRow="True" AllowDragDrop="False" AllowSort="False" />
+        <SettingsBehavior ColumnResizeMode="Control" ConfirmDelete="True" AllowDragDrop="False" AllowSort="False" />
         <SettingsEditing Mode="Batch" >
             <BatchEditSettings ShowConfirmOnLosingChanges="False" StartEditAction="Click" />
             </SettingsEditing>

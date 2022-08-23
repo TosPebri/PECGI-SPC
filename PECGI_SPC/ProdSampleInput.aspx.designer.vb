@@ -446,6 +446,15 @@ Partial Public Class ProdSampleInput
     Protected WithEvents lblR As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
+    '''ASPxLabel25 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ASPxLabel25 As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
     '''cbkRefresh control.
     '''</summary>
     '''<remarks>

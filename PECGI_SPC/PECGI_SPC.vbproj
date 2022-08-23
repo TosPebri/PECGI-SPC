@@ -871,6 +871,7 @@
     <Compile Include="Class\clsControlChartSetup.vb" />
     <Compile Include="Class\clsDESEncryption.vb" />
     <Compile Include="Class\clsFactory.vb" />
+    <Compile Include="Class\clsFrequency.vb" />
     <Compile Include="Class\clsItemCheck.vb" />
     <Compile Include="Class\clsItemType.vb" />
     <Compile Include="Class\ClsLine.vb" />

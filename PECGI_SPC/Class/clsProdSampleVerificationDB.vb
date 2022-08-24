@@ -55,4 +55,61 @@ Public Class clsProdSampleVerificationDB
             Return Nothing
         End Try
     End Function
+
+    Public Shared Function Activity_Insert(ActionStatus As String, data As clsProdSampleVerification) As Boolean
+        Try
+            Using conn As New SqlConnection(Sconn.Stringkoneksi)
+                conn.Open()
+                Dim Sql = "SP_SPC_ProdSampleVerification_Ins"
+                Dim cmd As New SqlCommand(Sql, conn)
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.Parameters.AddWithValue("ActivityID", If(data.ActivityID, ""))
+                cmd.Parameters.AddWithValue("FactoryCode", If(data.FactoryCode, ""))
+                cmd.Parameters.AddWithValue("LineCode", If(data.LineCode, ""))
+                cmd.Parameters.AddWithValue("ItemTypeCode", If(data.ItemType_Code, ""))
+                cmd.Parameters.AddWithValue("ItemCheckCode", If(data.ItemCheck_Code, ""))
+                cmd.Parameters.AddWithValue("ProdDate", If(data.ProdDate, ""))
+                cmd.Parameters.AddWithValue("ShiftCode", If(data.ShiftCode, ""))
+                cmd.Parameters.AddWithValue("Action", If(data.Action, ""))
+                cmd.Parameters.AddWithValue("Result", If(data.Result, ""))
+                cmd.Parameters.AddWithValue("Remark", If(data.Remark, ""))
+                cmd.Parameters.AddWithValue("User", If(data.User, ""))
+                cmd.Parameters.AddWithValue("ActionSts", If(ActionStatus, ""))
+
+                If cmd.ExecuteNonQuery Then
+                    Return True
+                Else
+                    Return False
+                End If
+
+            End Using
+        Catch ex As Exception
+            Throw ex
+            Return False
+        End Try
+    End Function
+
+    Public Shared Function Verify(data As clsProdSampleVerification) As Boolean
+        Try
+            Using conn As New SqlConnection(Sconn.Stringkoneksi)
+                conn.Open()
+                Dim Sql = "SP_SPC_ProdSampleVerification_Verify"
+                Dim cmd As New SqlCommand(Sql, conn)
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.Parameters.AddWithValue("SPCResultID", If(data.SPCResultID, ""))
+                cmd.Parameters.AddWithValue("User", If(data.User, ""))
+
+                If cmd.ExecuteNonQuery Then
+                    Return True
+                Else
+                    Return False
+                End If
+
+            End Using
+        Catch ex As Exception
+            Throw ex
+            Return False
+        End Try
+    End Function
+
 End Class

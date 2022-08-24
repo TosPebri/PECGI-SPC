@@ -356,22 +356,22 @@ Partial Public Class ProdSampleInput
     Protected WithEvents ASPxLabel19 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
-    '''ASPxLabel20 control.
+    '''lblC control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel20 As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents lblC As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
-    '''ASPxLabel21 control.
+    '''lblNG control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel21 As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents lblNG As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''lblUSL control.
@@ -453,6 +453,24 @@ Partial Public Class ProdSampleInput
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ASPxLabel25 As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
+    '''gridX control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents gridX As Global.DevExpress.Web.ASPxGridView
+
+    '''<summary>
+    '''chartX control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents chartX As Global.DevExpress.XtraCharts.Web.WebChartControl
 
     '''<summary>
     '''cbkRefresh control.

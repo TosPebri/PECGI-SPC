@@ -1,4 +1,7 @@
 ﻿<%@ Page Title="" Language="vb" AutoEventWireup="false" MasterPageFile="~/Site.Master" CodeBehind="ProdSampleInput.aspx.vb" Inherits="PECGI_SPC.ProdSampleInput" %>
+
+<%@ Register Assembly="DevExpress.XtraCharts.v20.2.Web, Version=20.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.XtraCharts.Web" TagPrefix="dx" %>
+<%@ Register assembly="DevExpress.XtraCharts.v20.2, Version=20.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.XtraCharts" tagprefix="cc1" %>
 <%@ MasterType VirtualPath="~/Site.Master" %>
 <%@ Register assembly="DevExpress.Web.v20.2, Version=20.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" namespace="DevExpress.Web" tagprefix="dx" %>
 
@@ -91,6 +94,11 @@
             grid.PerformCallback('clear');
         }
 
+        function cboShiftChanged(s, e) {
+            grid.PerformCallback('clear');
+            cboSeq.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + cboShift.GetValue());
+        }
+
         function cboLineChanged(s, e) {    
             cboItemCheck.SetEnabled(false);
             cboItemCheck.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue());
@@ -162,8 +170,17 @@
                 toastr.options.preventDuplicates = true;
                 toastr.options.onclick = null;
             }
-            
-            cbkRefresh.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
+
+            lblUSL.SetText(s.cpUSL);
+            lblLSL.SetText(s.cpLSL);
+            lblUCL.SetText(s.cpUCL);
+            lblLCL.SetText(s.cpLCL);
+            lblMin.SetText(s.cpMin);
+            lblMax.SetText(s.cpMax);
+            lblAve.SetText(s.cpAve);
+            lblR.SetText(s.cpR);
+            lblNG.SetText(s.cpNG);
+
         }
     </script>
 </asp:Content>
@@ -348,7 +365,7 @@
                     ClientInstanceName="cboShift" ValueField="ShiftCode" Font-Names="Segoe UI" 
                     Font-Size="9pt" Height="25px" 
                     Width="100px" TabIndex="3">
-                    <ClientSideEvents SelectedIndexChanged="ClearGrid" 
+                    <ClientSideEvents SelectedIndexChanged="cboShiftChanged" 
                         EndCallback="function(s, e) {cboShift.SetEnabled(true);}"
                         />
                     <Columns>
@@ -358,9 +375,8 @@
                     <ButtonStyle Paddings-Padding="4px" Width="5px">
 <Paddings Padding="4px"></Paddings>
                     </ButtonStyle>
-                </dx:ASPxComboBox>
-                
-            </td>            
+                </dx:ASPxComboBox>                
+            </td>
             <td style="width:30px; padding:3px 0px 0px 5px">
                 <dx:ASPxLabel ID="lblqeleader2" runat="server" Text="Seq" 
                     Font-Names="Segoe UI" Font-Size="9pt">
@@ -369,20 +385,15 @@
             <td style="width:60px; padding:3px 0px 0px 0px">
                 
                 <dx:ASPxComboBox ID="cboSeq" runat="server" Theme="Office2010Black" 
-                    ClientInstanceName="cboSeq" Font-Names="Segoe UI" 
+                    ClientInstanceName="cboSeq" ValueField="SequenceNo" Font-Names="Segoe UI" 
                     Font-Size="9pt" Height="25px" 
-                    Width="60px" TabIndex="3" SelectedIndex="0">
-                    <ClientSideEvents SelectedIndexChanged="ClearGrid" />
-                    <Items>
-                        <dx:ListEditItem Text="1" Value="1" />
-                        <dx:ListEditItem Text="2" Value="2" />
-                        <dx:ListEditItem Text="3" Value="3" />
-                        <dx:ListEditItem Text="4" Value="4" />
-                        <dx:ListEditItem Text="5" Value="5" />
-                    </Items>
-                    <ItemStyle Height="10px" Paddings-Padding="4px">
-<Paddings Padding="4px"></Paddings>
-                    </ItemStyle>
+                    Width="60px" TabIndex="3">
+                    <ClientSideEvents SelectedIndexChanged="ClearGrid" 
+                        EndCallback="function(s, e) {cboSeq.SetEnabled(true);}"/>
+                    <Columns>
+                        <dx:ListBoxColumn Caption="Seq" FieldName="SequenceNo">
+                        </dx:ListBoxColumn>
+                    </Columns>
                     <ButtonStyle Paddings-Padding="4px" Width="5px">
 <Paddings Padding="4px"></Paddings>
                     </ButtonStyle>
@@ -411,6 +422,12 @@
 	                    } else if(cboItemCheck.GetText() == '') {
                             cboItemCheck.Focus();
                             errmsg = 'Please select Item Check!';
+	                    } else if(cboShift.GetText() == '') {
+                            cboShift.Focus();
+                            errmsg = 'Please select Shift!';
+	                    } else if(cboSeq.GetText() == '') {
+                            cboSeq.Focus();
+                            errmsg = 'Please select Sequence!';
 	                    }
 
                         if(errmsg != '') {
@@ -556,6 +573,9 @@
                         <RegularExpression ErrorText="Please input valid value" />
                     </ValidationSettings>
                 </PropertiesTextEdit>
+                <CellStyle>
+                    <Border BorderStyle="Inset" />
+                </CellStyle>
             </dx:GridViewDataTextColumn>
             <dx:GridViewDataTextColumn Caption="Judgement" VisibleIndex="3" Width="80px" FieldName="Judgement">
             </dx:GridViewDataTextColumn>
@@ -564,6 +584,9 @@
             <dx:GridViewDataTextColumn Caption="Sample Time" VisibleIndex="5" Width="70px">
             </dx:GridViewDataTextColumn>
             <dx:GridViewDataTextColumn Caption="Remarks" VisibleIndex="6" FieldName="Remark">
+                <CellStyle>
+                    <Border BorderStyle="Inset" />
+                </CellStyle>
             </dx:GridViewDataTextColumn>
             <dx:GridViewDataTextColumn Caption="Last User" VisibleIndex="8" FieldName="RegisterUser">
             </dx:GridViewDataTextColumn>
@@ -615,10 +638,10 @@
 <div>
 <table style="width:100%">
     <tr>
-        <td style="width:50%">
+        <td>
 
         </td>
-        <td>
+        <td style="width:500px">
             <table style="width:100%">
                 <tr>
                     <td colspan="2" class="header"><dx:ASPxLabel ID="ASPxLabel22" runat="server" Text="Specification" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
@@ -626,16 +649,16 @@
                     <td colspan="6" class="header"><dx:ASPxLabel ID="ASPxLabel24" runat="server" Text="X Bar Control" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
                 </tr>
                 <tr>
-                    <td class="header"><dx:ASPxLabel ID="ASPxLabel13" runat="server" Text="USL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
-                    <td class="header"><dx:ASPxLabel ID="ASPxLabel7" runat="server" Text="LSL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
-                    <td class="header"><dx:ASPxLabel ID="ASPxLabel14" runat="server" Text="UCL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
-                    <td class="header"><dx:ASPxLabel ID="ASPxLabel15" runat="server" Text="LCL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
-                    <td class="header"><dx:ASPxLabel ID="ASPxLabel16" runat="server" Text="Min" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
-                    <td class="header"><dx:ASPxLabel ID="ASPxLabel17" runat="server" Text="Max" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
-                    <td class="header"><dx:ASPxLabel ID="ASPxLabel18" runat="server" Text="Ave" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
-                    <td class="header" style="width:30px"><dx:ASPxLabel ID="ASPxLabel19" runat="server" Text="R" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
-                    <td class="body" align="center" rowspan="2" style="width:30px"><dx:ASPxLabel ID="ASPxLabel20" runat="server" Text="C" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
-                    <td class="body" align="center" rowspan="2" style="width:30px"><dx:ASPxLabel ID="ASPxLabel21" runat="server" Text="NG" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
+                    <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel13" runat="server" Text="USL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
+                    <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel7" runat="server" Text="LSL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
+                    <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel14" runat="server" Text="UCL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
+                    <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel15" runat="server" Text="LCL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
+                    <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel16" runat="server" Text="Min" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
+                    <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel17" runat="server" Text="Max" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
+                    <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel18" runat="server" Text="Ave" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
+                    <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel19" runat="server" Text="R" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
+                    <td class="body" align="center" rowspan="2" style="width:50px"><dx:ASPxLabel ID="lblC" runat="server" Text="C" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
+                    <td class="body" align="center" rowspan="2" style="width:50px"><dx:ASPxLabel ID="lblNG" runat="server" Text="NG" Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblNG"></dx:ASPxLabel></td>
                 </tr>
                 <tr>
                     <td class="body" align="right"><dx:ASPxLabel ID="lblUSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUSL"></dx:ASPxLabel></td>
@@ -650,19 +673,65 @@
             </table>
         </td>
     </tr>
-</table>
-
+</table>    
     <div style="height:10px"></div>
-
+    <div style="vertical-align:middle; text-align:center; height:30px">
+        <dx:ASPxLabel ID="ASPxLabel25" runat="server" Text="X Bar Chart / X Bar Monitoring" Font-Names="Segoe UI" Font-Size="10pt" Font-Bold="true" Font-Underline="true"></dx:ASPxLabel>
+    </div>
 <div>
+    
     <table style="width:100%;">
         <tr>
-            <td align="center">
-                <dx:ASPxLabel ID="ASPxLabel25" runat="server" Text="X Bar Chart / X Bar Monitoring" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
+            <td>
+                <dx:ASPxGridView ID="gridX" runat="server" AutoGenerateColumns="False" ClientInstanceName="gridX"
+                                EnableTheming="True" KeyFieldName="SeqNo" Theme="Office2010Black"            
+                                Width="100%" 
+                                Font-Names="Segoe UI" Font-Size="9pt">
+
+
+                            </dx:ASPxGridView>
             </td>
         </tr>
         <tr>
             <td>
+                
+    <dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
+        Height="200px" Width="1080px" AutoBindingSettingsEnabled="False"
+        AutoLayoutSettingsEnabled="False" CrosshairEnabled="True">
+        <DiagramSerializable>
+            <cc1:XYDiagram>
+            <AxisX VisibleInPanesSerializable="-1"></AxisX>
+            <AxisY VisibleInPanesSerializable="-1"></AxisY>
+            </cc1:XYDiagram>
+            </DiagramSerializable>
+        <seriesserializable>
+
+            <cc1:Series ArgumentDataMember="Seq" Name="Warning" 
+                        ValueDataMembersSerializable="Warning">
+                <viewserializable>
+                    <cc1:PointSeriesView>
+                        <PointMarkerOptions size="4" kind="6"></PointMarkerOptions>
+                    </cc1:PointSeriesView>
+                </viewserializable>
+            </cc1:Series>
+        </seriesserializable>
+
+        <seriestemplate>
+            <viewserializable>
+                <cc1:LineSeriesView>
+                    <linemarkeroptions size="2"></linemarkeroptions>
+                    <linestyle thickness="1" />
+                </cc1:LineSeriesView>
+            </viewserializable>
+        </seriestemplate>  
+        <legend alignmenthorizontal="Left" alignmentvertical="BottomOutside" 
+            direction="LeftToRight"></legend> 
+        <titles>
+            <cc1:ChartTitle Font="Segoe UI, 12pt, style=Bold" Text="CONTROL X" />
+        </titles>
+
+    </dx:WebChartControl>
+
 
             </td>
         </tr>
@@ -679,6 +748,7 @@
                 lblMax.SetText(s.cpMax);
                 lblAve.SetText(s.cpAve);
                 lblR.SetText(s.cpR);
+                lblNG.SetText(s.cpNG);
             }" 
             />
 
@@ -686,4 +756,5 @@
 
     </div>
 </div>
+
 </asp:Content>

@@ -73,6 +73,30 @@ Public Class ProdSampleInput
         Dim dt As DataTable = clsSPCResultDetailDB.GetTable(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence)
         grid.DataSource = dt
         grid.DataBind()
+        If dt.Rows.Count = 0 Then
+            cbkRefresh.JSProperties("cpUSL") = ""
+            cbkRefresh.JSProperties("cpLSL") = ""
+            cbkRefresh.JSProperties("cpUCL") = ""
+            cbkRefresh.JSProperties("cpLCL") = ""
+            cbkRefresh.JSProperties("cpMin") = ""
+            cbkRefresh.JSProperties("cpMax") = ""
+            cbkRefresh.JSProperties("cpAve") = ""
+            cbkRefresh.JSProperties("cpR") = ""
+            cbkRefresh.JSProperties("cpNG") = ""
+        Else
+            With dt.Rows(0)
+                grid.JSProperties("cpUSL") = .Item("SpecUSL")
+                grid.JSProperties("cpLSL") = .Item("SpecLSL")
+                grid.JSProperties("cpUCL") = .Item("XBarUCL")
+                grid.JSProperties("cpLCL") = .Item("XBarLCL")
+                grid.JSProperties("cpMin") = .Item("MinValue")
+                grid.JSProperties("cpMax") = .Item("MaxValue")
+                grid.JSProperties("cpAve") = .Item("AvgValue")
+                grid.JSProperties("cpR") = .Item("RValue")
+                grid.JSProperties("cpNG") = .Item("NGValue")
+            End With
+        End If
+
     End Sub
 
     Private Sub grid_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles grid.CustomCallback
@@ -88,6 +112,7 @@ Public Class ProdSampleInput
                 Dim pDate As String = Split(e.Parameters, "|")(5)
                 Dim pShift As String = Split(e.Parameters, "|")(6)
                 Dim pSeq As String = Split(e.Parameters, "|")(7)
+                pSeq = Val(pSeq)
                 GridLoad(pFactory, pItemType, pLine, pItemCheck, pDate, pShift, pSeq)
         End Select
     End Sub
@@ -119,11 +144,11 @@ Public Class ProdSampleInput
             cbkRefresh.JSProperties("cpLSL") = Setup.SpecLSL
             cbkRefresh.JSProperties("cpUCL") = Setup.XBarUCL
             cbkRefresh.JSProperties("cpLCL") = Setup.XBarLCL
-            cbkRefresh.JSProperties("cpMin") = 0
-            cbkRefresh.JSProperties("cpMax") = 0
-            cbkRefresh.JSProperties("cpAve") = 0
-            cbkRefresh.JSProperties("cpR") = 0
-            cbkRefresh.JSProperties("cpNG") = 0
+            cbkRefresh.JSProperties("cpMin") = Setup.Min
+            cbkRefresh.JSProperties("cpMax") = Setup.Max
+            cbkRefresh.JSProperties("cpAve") = Setup.Avg
+            cbkRefresh.JSProperties("cpR") = Setup.R
+            cbkRefresh.JSProperties("cpNG") = Setup.NG
         End If
 
     End Sub
@@ -203,5 +228,15 @@ Public Class ProdSampleInput
         If e.GetValue("Judgement") IsNot Nothing AndAlso e.GetValue("Judgement").ToString = "NG" Then
             e.Row.BackColor = System.Drawing.Color.Red
         End If
+    End Sub
+
+    Private Sub cboSeq_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboSeq.Callback
+        Dim FactoryCode As String = Split(e.Parameter, "|")(0)
+        Dim ItemTypeCode As String = Split(e.Parameter, "|")(1)
+        Dim LineCode As String = Split(e.Parameter, "|")(2)
+        Dim ItemCheckCode As String = Split(e.Parameter, "|")(3)
+        Dim ShiftCode As String = Split(e.Parameter, "|")(4)
+        cboSeq.DataSource = clsFrequencyDB.GetSequence(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ShiftCode)
+        cboSeq.DataBind()
     End Sub
 End Class

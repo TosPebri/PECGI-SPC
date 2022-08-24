@@ -155,6 +155,7 @@
     <Content Include="img\musashi\ImagePreview1.gif" />
     <Content Include="img\panasonic-login.png" />
     <Content Include="ItemCheck.aspx" />
+    <Content Include="AlertDashboard.aspx" />
     <Content Include="ItemCheckByBattery.aspx" />
     <Content Include="ProdSampleInput.aspx" />
     <Content Include="ProdSampleVerification.aspx" />
@@ -907,6 +908,13 @@
     </Compile>
     <Compile Include="ItemCheck.aspx.vb">
       <DependentUpon>ItemCheck.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AlertDashboard.aspx.designer.vb">
+      <DependentUpon>AlertDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AlertDashboard.aspx.vb">
+      <DependentUpon>AlertDashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ItemCheckByBattery.aspx.designer.vb">

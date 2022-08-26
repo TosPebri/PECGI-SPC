@@ -32,42 +32,6 @@ Partial Public Class AlertDashboard
     Protected WithEvents cboFactory As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
-    '''ASPxLabel3 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ASPxLabel3 As Global.DevExpress.Web.ASPxLabel
-
-    '''<summary>
-    '''cboMachineProccess control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents cboMachineProccess As Global.DevExpress.Web.ASPxComboBox
-
-    '''<summary>
-    '''ASPxLabel2 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ASPxLabel2 As Global.DevExpress.Web.ASPxLabel
-
-    '''<summary>
-    '''cboTypeCode control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents cboTypeCode As Global.DevExpress.Web.ASPxComboBox
-
-    '''<summary>
     '''btnSearch control.
     '''</summary>
     '''<remarks>
@@ -75,15 +39,6 @@ Partial Public Class AlertDashboard
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents btnSearch As Global.DevExpress.Web.ASPxButton
-
-    '''<summary>
-    '''btnReset control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnReset As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''dsFactory control.
@@ -113,15 +68,6 @@ Partial Public Class AlertDashboard
     Protected WithEvents dsMachine As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
-    '''dsFrequency control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents dsFrequency As Global.System.Web.UI.WebControls.SqlDataSource
-
-    '''<summary>
     '''dsItemCheck control.
     '''</summary>
     '''<remarks>
@@ -129,6 +75,24 @@ Partial Public Class AlertDashboard
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents dsItemCheck As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
+    '''dsShiftCode control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents dsShiftCode As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
+    '''dsSequence control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents dsSequence As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''Grid control.
@@ -140,13 +104,22 @@ Partial Public Class AlertDashboard
     Protected WithEvents Grid As Global.DevExpress.Web.ASPxGridView
 
     '''<summary>
-    '''HF control.
+    '''GridNG control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents HF As Global.DevExpress.Web.ASPxHiddenField
+    Protected WithEvents GridNG As Global.DevExpress.Web.ASPxGridView
+
+    '''<summary>
+    '''hdInterval control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdInterval As Global.System.Web.UI.HtmlControls.HtmlInputHidden
 
     '''<summary>
     '''Master property.

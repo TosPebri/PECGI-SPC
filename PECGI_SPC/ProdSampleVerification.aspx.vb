@@ -22,7 +22,6 @@ Public Class ProdSampleVerification
     Dim ItemCheck_Sel As String = "4"
     Dim Shift_Sel As String = "5"
     Dim Seq_Sel As String = "6"
-    Dim irow As Integer = 0
 
     Dim GetHeader_ProdDate As String = "1"
     Dim GetHeader_ShifCode As String = "2"
@@ -35,9 +34,19 @@ Public Class ProdSampleVerification
     Dim LCL As Decimal = 0
     Dim ColumnBrowse As String = ""
     Dim TotRow As Integer = 0
-    Dim RowNonSeq As Integer = 9
+    Dim nRow As Integer = 0
+    Dim VerifyStatus As String = "1"
 
     Dim dt As DataTable
+    Dim ds As DataSet
+
+    Dim prmFactoryCode = ""
+    Dim prmItemType = ""
+    Dim prmLineCode = ""
+    Dim prmItemCheck = ""
+    Dim prmProdDate = ""
+    Dim prmShifCode = ""
+    Dim prmSeqNo = ""
 
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
@@ -54,12 +63,42 @@ Public Class ProdSampleVerification
         End If
         sGlobal.getMenu("B040")
         Master.SiteTitle = sGlobal.menuName
-        show_error(MsgTypeEnum.Info, "", 0)
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
-            UpFillCombo()
+            If Request.QueryString("prm") IsNot Nothing Then
+                Dim data = Request.QueryString("prm").ToString()
+                prmFactoryCode = Split(data, "|")(1)
+                prmItemType = Split(data, "|")(2)
+                prmLineCode = Split(data, "|")(3)
+                prmItemCheck = Split(data, "|")(4)
+                prmProdDate = Split(data, "|")(5)
+                prmShifCode = Split(data, "|")(6)
+                prmSeqNo = Split(data, "|")(7)
+
+                dtProdDate.Value = Convert.ToDateTime(prmProdDate)
+                dtProdDate.Enabled = False
+
+                btnBrowse.Enabled = False
+                btnClear.Enabled = False
+
+                UpFillCombo()
+
+                Up_GridLoad(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd"), prmShifCode, prmSeqNo)
+                Up_GridLoadActivities(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd"), prmShifCode, prmSeqNo)
+                nRow = 0
+                If VerifyStatus = 0 Then
+                    btnVerification.Enabled = True
+                End If
+                Grid.JSProperties("cp_Verify") = VerifyStatus
+            Else
+                dtProdDate.Value = DateTime.Now
+                UpFillCombo()
+                Up_GridLoadActivities("", "", "", "", "", "", "")
+                Grid.JSProperties("cp_Verify") = VerifyStatus
+            End If
+
         End If
     End Sub
 #End Region
@@ -72,16 +111,45 @@ Public Class ProdSampleVerification
             Dim pAction As String = Split(e.Parameters, "|")(0)
 
             If pAction = "Load" Then
-                Up_GridLoad()
-                irow = 0
-            ElseIf pAction = "Clear" Then
-                'dt = clsProdSampleVerificationDB.LoadGrid(cls, msgErr)
-                'GridMenu.DataSource = dt
-                'GridMenu.DataBind()
+                Dim Factory As String = HideValue.Get("FactoryCode")
+                Dim Itemtype As String = HideValue.Get("ItemType_Code")
+                Dim Line As String = HideValue.Get("LineCode")
+                Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
+                Dim ProdDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
+                Dim Shift As String = HideValue.Get("ShiftCode")
+                Dim Seq As String = HideValue.Get("Seq")
+
+                Up_GridLoad(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+                nRow = 0
+                Grid.JSProperties("cp_Verify") = VerifyStatus
+            ElseIf pAction = "Verify" Then
+                Dim SpcResultID As String
+                Dim Factory As String = HideValue.Get("FactoryCode")
+                Dim Itemtype As String = HideValue.Get("ItemType_Code")
+                Dim Line As String = HideValue.Get("LineCode")
+                Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
+                Dim ProdDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
+                Dim Shift As String = HideValue.Get("ShiftCode")
+                Dim Seq As String = HideValue.Get("Seq")
+
+                cls.FactoryCode = Factory
+                cls.ItemType_Code = Itemtype
+                cls.LineCode = Line
+                cls.ItemCheck_Code = ItemCheck
+                cls.ProdDate = ProdDate
+                cls.ShiftCode = Shift
+                cls.Seq = Seq
+
+                ds = clsProdSampleVerificationDB.GridLoad(GetColumnBrowse, cls, "")
+                Dim dtColBrowse As DataTable = ds.Tables(0)
+                If dtColBrowse.Rows.Count > 0 Then
+                    SpcResultID = dtColBrowse.Rows(0)("SPCResultID")
+                End If
+                Verify(SpcResultID)
             End If
 
         Catch ex As Exception
-            show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
+            show_errorGrid(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
 
@@ -92,46 +160,146 @@ Public Class ProdSampleVerification
             Dim pAction As String = Split(e.Parameters, "|")(0)
 
             If pAction = "Load" Then
-                Up_GridLoadActivities()
+                Dim Factory As String = HideValue.Get("FactoryCode")
+                Dim Itemtype As String = HideValue.Get("ItemType_Code")
+                Dim Line As String = HideValue.Get("LineCode")
+                Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
+                Dim ProdDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
+                Dim Shift As String = HideValue.Get("ShiftCode")
+                Dim Seq As String = HideValue.Get("Seq")
+
+                Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
             ElseIf pAction = "Clear" Then
                 'dt = clsProdSampleVerificationDB.LoadGrid(cls, msgErr)
                 'GridMenu.DataSource = dt
-                'GridMenu.DataBind()
+                'GridMenu.DataBind()          
             End If
 
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
+    Private Sub GridMenu_BeforeGetCallbackResult(ByVal sender As Object, ByVal e As System.EventArgs) Handles GridMenu.BeforeGetCallbackResult
+        If GridMenu.IsNewRowEditing Then
+            GridMenu.SettingsCommandButton.UpdateButton.Text = "Save"
+        End If
+    End Sub
 
     Private Sub Grid_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles Grid.HtmlDataCellPrepared
 
         If (e.DataColumn.FieldName = ColumnBrowse) Then
+            Dim RowNonSeq = 9
             Dim RowSeq = TotRow - RowNonSeq
 
-            If irow < RowSeq Then
-                If e.CellValue < LCL Then
-                    e.Cell.BackColor = Color.Red
-                ElseIf e.CellValue > UCL Then
-                    e.Cell.BackColor = Color.Red
-                End If
-            ElseIf (irow = totRow - 2) Or (irow = totRow - 3) Or (irow = totRow - 4) Then
-                If IsDBNull(e.CellValue) Then
+            If nRow < RowSeq Then
+                Try
+                    If e.CellValue < LCL Then
+                        e.Cell.BackColor = Color.Red
+                    ElseIf e.CellValue > UCL Then
+                        e.Cell.BackColor = Color.Red
+                    End If
+                Catch ex As Exception
+                    Exit Try
+                End Try
+
+            ElseIf nRow >= TotRow - 1 And nRow <= TotRow - 4 Then
+                If IsDBNull(e.CellValue) Or e.CellValue = "" Then
                     e.Cell.BackColor = Color.Yellow
                 ElseIf e.CellValue = "NG" Then
                     e.Cell.BackColor = Color.Red
-                End If
-            ElseIf irow = totRow - 1 Then
-                If e.CellValue = "C" Then
+                ElseIf e.CellValue = "C" Then
                     e.Cell.BackColor = Color.Orange
                 End If
-            ElseIf irow = TotRow Then
 
             End If
 
-            irow = irow + 1
+            nRow = nRow + 1
         End If
 
+    End Sub
+
+    Protected Sub GridMenu_RowInserting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles GridMenu.RowInserting
+        e.Cancel = True
+        Dim Factory As String = HideValue.Get("FactoryCode")
+        Dim Itemtype As String = HideValue.Get("ItemType_Code")
+        Dim Line As String = HideValue.Get("LineCode")
+        Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
+        Dim ProdDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
+        Dim Shift As String = HideValue.Get("ShiftCode")
+        Dim Seq As String = HideValue.Get("Seq")
+
+        Dim data As New clsProdSampleVerification With {
+            .FactoryCode = Factory,
+            .ItemType_Code = Itemtype,
+            .LineCode = Line,
+            .ItemCheck_Code = ItemCheck,
+            .ProdDate = ProdDate,
+            .ShiftCode = Shift,
+            .Action = e.NewValues("Action") & "",
+            .Result = e.NewValues("Result") & "",
+            .Remark = e.NewValues("Remark") & "",
+            .User = pUser}
+        Try
+            Dim Insert = clsProdSampleVerificationDB.Activity_Insert("CREATE", data)
+            If Insert = True Then
+                show_error(MsgTypeEnum.Success, "Save data successfully!", 1)
+                GridMenu.CancelEdit()
+                Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+                Return
+            End If
+        Catch ex As Exception
+            show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
+        End Try
+    End Sub
+    Protected Sub GridMenu_RowUpdating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataUpdatingEventArgs) Handles GridMenu.RowUpdating
+        e.Cancel = True
+        Dim Factory As String = HideValue.Get("FactoryCode")
+        Dim Itemtype As String = HideValue.Get("ItemType_Code")
+        Dim Line As String = HideValue.Get("LineCode")
+        Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
+        Dim ProdDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
+        Dim Shift As String = HideValue.Get("ShiftCode")
+        Dim Seq As String = HideValue.Get("Seq")
+
+        Dim data As New clsProdSampleVerification With {
+            .ActivityID = e.NewValues("ActivityID") & "",
+            .Action = e.NewValues("Action") & "",
+            .Result = e.NewValues("Result") & "",
+            .Remark = e.NewValues("Remark") & "",
+            .User = pUser}
+        Try
+            Dim Update = clsProdSampleVerificationDB.Activity_Insert("UPDATE", data)
+            If Update = True Then
+                show_error(MsgTypeEnum.Success, "Update data successfully!", 1)
+                GridMenu.CancelEdit()
+                Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+                Return
+            End If
+        Catch ex As Exception
+            show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
+        End Try
+    End Sub
+
+    Protected Sub GridMenu_RowDeleting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataDeletingEventArgs) Handles GridMenu.RowDeleting
+        e.Cancel = True
+        Dim Factory As String = HideValue.Get("FactoryCode")
+        Dim Itemtype As String = HideValue.Get("ItemType_Code")
+        Dim Line As String = HideValue.Get("LineCode")
+        Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
+        Dim ProdDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
+        Dim Shift As String = HideValue.Get("ShiftCode")
+        Dim Seq As String = HideValue.Get("Seq")
+
+        Dim data As New clsProdSampleVerification With {
+            .ActivityID = e.Values("ActivityID")}
+        Try
+            Dim Delete = clsProdSampleVerificationDB.Activity_Insert("DELETE", data)
+            show_error(MsgTypeEnum.Success, "Delete data successfully!", 1)
+            GridMenu.CancelEdit()
+            Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+        Catch ex As Exception
+            show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
+        End Try
     End Sub
 
     Private Sub cboLineID_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboLineID.Callback
@@ -145,6 +313,7 @@ Public Class ProdSampleVerification
             With cboLineID
                 .DataSource = dt
                 .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With
         Catch ex As Exception
             show_error(MsgTypeEnum.Info, ex.Message, 0)
@@ -163,6 +332,7 @@ Public Class ProdSampleVerification
             With cboItemCheck
                 .DataSource = dt
                 .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With
         Catch ex As Exception
             show_error(MsgTypeEnum.Info, ex.Message, 0)
@@ -182,6 +352,7 @@ Public Class ProdSampleVerification
             With cboShift
                 .DataSource = dt
                 .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With
 
         Catch ex As Exception
@@ -203,6 +374,7 @@ Public Class ProdSampleVerification
             With cboSeq
                 .DataSource = dt
                 .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With
 
         Catch ex As Exception
@@ -217,10 +389,18 @@ Public Class ProdSampleVerification
         GridMenu.JSProperties("cp_type") = msgType
         GridMenu.JSProperties("cp_val") = pVal
     End Sub
+
+    Private Sub show_errorGrid(ByVal msgType As MsgTypeEnum, ByVal ErrMsg As String, ByVal pVal As Integer)
+        Grid.JSProperties("cp_message") = ErrMsg
+        Grid.JSProperties("cp_type") = msgType
+        Grid.JSProperties("cp_val") = pVal
+    End Sub
     Private Sub UpFillCombo()
         Try
             Dim data As New clsProdSampleVerification()
             Dim ErrMsg As String = ""
+            Dim a As String
+            data.User = pUser
 
             '============ FILL COMBO FACTORY CODE ================'
             dt = clsProdSampleVerificationDB.FillCombo(Factory_Sel, data, ErrMsg)
@@ -228,6 +408,24 @@ Public Class ProdSampleVerification
                 .DataSource = dt
                 .DataBind()
             End With
+            If prmFactoryCode <> "" Then
+                For i = 0 To dt.Rows.Count - 1
+                    If dt.Rows(i)("CODE") = prmFactoryCode Then
+                        cboFactory.SelectedIndex = i
+                        Exit For
+                    End If
+                Next
+                cboFactory.Enabled = False
+            Else
+                cboFactory.SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+            End If
+            If cboFactory.SelectedIndex < 0 Then
+                a = ""
+            Else
+                a = cboFactory.SelectedItem.GetFieldValue("CODE")
+            End If
+            HideValue.Set("FactoryCode", a)
+            data.FactoryCode = HideValue.Get("FactoryCode")
             '======================================================'
 
             '============== FILL COMBO ITEM TYPE =================='
@@ -236,6 +434,131 @@ Public Class ProdSampleVerification
                 .DataSource = dt
                 .DataBind()
             End With
+            If prmItemType <> "" Then
+                For i = 0 To dt.Rows.Count - 1
+                    If dt.Rows(i)("CODE") = prmItemType Then
+                        cboItemType.SelectedIndex = i
+                        Exit For
+                    End If
+                Next
+                cboItemType.Enabled = False
+            Else
+                cboItemType.SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+            End If
+            If cboItemType.SelectedIndex < 0 Then
+                a = ""
+            Else
+                a = cboItemType.SelectedItem.GetFieldValue("CODE")
+            End If
+            HideValue.Set("ItemType_Code", a)
+            data.ItemType_Code = HideValue.Get("ItemType_Code")
+            '======================================================'
+
+            '============== FILL COMBO LINE CODE =================='
+            dt = clsProdSampleVerificationDB.FillCombo(Line_Sel, data, ErrMsg)
+            With cboLineID
+                .DataSource = dt
+                .DataBind()
+            End With
+            If prmLineCode <> "" Then
+                For i = 0 To dt.Rows.Count - 1
+                    If dt.Rows(i)("CODE") = prmLineCode Then
+                        cboLineID.SelectedIndex = i
+                        Exit For
+                    End If
+                Next
+                cboLineID.Enabled = False
+            Else
+                cboLineID.SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+            End If
+            If cboLineID.SelectedIndex < 0 Then
+                a = ""
+            Else
+                a = cboLineID.SelectedItem.GetFieldValue("CODE")
+            End If
+            HideValue.Set("LineCode", a)
+            data.LineCode = HideValue.Get("LineCode")
+            '======================================================'
+
+
+            '============== FILL COMBO ITEM CHECK =================='
+            dt = clsProdSampleVerificationDB.FillCombo(ItemCheck_Sel, data, ErrMsg)
+            With cboItemCheck
+                .DataSource = dt
+                .DataBind()
+            End With
+            If prmItemCheck <> "" Then
+                For i = 0 To dt.Rows.Count - 1
+                    If dt.Rows(i)("CODE") = prmItemCheck Then
+                        cboItemCheck.SelectedIndex = i
+                        Exit For
+                    End If
+                Next
+                cboItemCheck.Enabled = False
+            Else
+                cboItemCheck.SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+            End If
+            If cboItemCheck.SelectedIndex < 0 Then
+                a = ""
+            Else
+                a = cboItemCheck.SelectedItem.GetFieldValue("CODE")
+            End If
+            HideValue.Set("ItemCheck_Code", a)
+            data.ItemCheck_Code = HideValue.Get("ItemCheck_Code")
+            '======================================================'
+
+            '============== FILL COMBO SHIFY =================='
+            dt = clsProdSampleVerificationDB.FillCombo(Shift_Sel, data, ErrMsg)
+            With cboShift
+                .DataSource = dt
+                .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+            End With
+            If prmShifCode <> "" Then
+                For i = 0 To dt.Rows.Count - 1
+                    If dt.Rows(i)("CODE") = prmShifCode Then
+                        cboShift.SelectedIndex = i
+                        Exit For
+                    End If
+                Next
+                cboShift.Enabled = False
+            Else
+                cboShift.SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+            End If
+            If cboShift.SelectedIndex < 0 Then
+                a = ""
+            Else
+                a = cboShift.SelectedItem.GetFieldValue("CODE")
+            End If
+            HideValue.Set("ShiftCode", a)
+            data.ShiftCode = HideValue.Get("ShiftCode")
+            '======================================================'
+
+            '============== FILL COMBO SEQ =================='
+            dt = clsProdSampleVerificationDB.FillCombo(Seq_Sel, data, ErrMsg)
+            With cboSeq
+                .DataSource = dt
+                .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+            End With
+            If prmSeqNo <> "" Then
+                For i = 0 To dt.Rows.Count - 1
+                    If dt.Rows(i)("CODE") = prmSeqNo Then
+                        cboSeq.SelectedIndex = i
+                        Exit For
+                    End If
+                Next
+                cboSeq.Enabled = False
+            Else
+                cboSeq.SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+            End If
+            If cboSeq.SelectedIndex < 0 Then
+                a = ""
+            Else
+                a = cboSeq.SelectedItem.GetFieldValue("CODE")
+            End If
+            HideValue.Set("Seq", a)
+            data.Seq = HideValue.Get("Seq")
             '======================================================'
 
         Catch ex As Exception
@@ -243,22 +566,12 @@ Public Class ProdSampleVerification
         End Try
     End Sub
 
-    Private Sub Up_GridLoad()
-
-
-        Dim Factory As String = HideValue.Get("FactoryCode")
-        Dim Itemtype As String = HideValue.Get("ItemType_Code")
-        Dim Line As String = HideValue.Get("LineCode")
-        Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
-        Dim ProdDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
-        Dim Shift As String = HideValue.Get("ShiftCode")
-        Dim Seq As String = HideValue.Get("Seq")
+    Private Sub Up_GridLoad(Factory As String, ItemType As String, Line As String, ItemCheck As String, ProdDate As String, Shift As String, Seq As String)
         Dim msgErr As String = ""
-        Dim ds As DataSet
 
         Dim cls As New clsProdSampleVerification
         cls.FactoryCode = Factory
-        cls.ItemType_Code = Itemtype
+        cls.ItemType_Code = ItemType
         cls.LineCode = Line
         cls.ItemCheck_Code = ItemCheck
         cls.ProdDate = ProdDate
@@ -318,9 +631,10 @@ Public Class ProdSampleVerification
             Dim dtGrid As DataTable = ds.Tables(0)
             TotRow = dtGrid.Rows.Count
             .KeyFieldName = "nDesc"
-            .Enabled = False
             .DataSource = dtGrid
             .DataBind()
+            .Styles.CommandColumn.BackColor = Color.White
+            .Styles.CommandColumn.ForeColor = Color.Black
         End With
 
         ds = clsProdSampleVerificationDB.GridLoad(GetColumnBrowse, cls, "")
@@ -329,25 +643,16 @@ Public Class ProdSampleVerification
             ColumnBrowse = dtColBrowse.Rows(0)("nTime")
             UCL = dtColBrowse.Rows(0)("UCL")
             LCL = dtColBrowse.Rows(0)("LCL")
+            VerifyStatus = dtColBrowse.Rows(0)("VerifyStatus")
         End If
 
     End Sub
 
-    Private Sub Up_GridLoadActivities()
-
-        Dim Factory As String = HideValue.Get("FactoryCode")
-        Dim Itemtype As String = HideValue.Get("ItemType_Code")
-        Dim Line As String = HideValue.Get("LineCode")
-        Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
-        Dim ProdDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
-        Dim Shift As String = HideValue.Get("ShiftCode")
-        Dim Seq As String = HideValue.Get("Seq")
-        Dim msgErr As String = ""
-        Dim ds As DataSet
+    Private Sub Up_GridLoadActivities(Factory As String, ItemType As String, Line As String, ItemCheck As String, ProdDate As String, Shift As String, Seq As String)
 
         Dim cls As New clsProdSampleVerification
         cls.FactoryCode = Factory
-        cls.ItemType_Code = Itemtype
+        cls.ItemType_Code = ItemType
         cls.LineCode = Line
         cls.ItemCheck_Code = ItemCheck
         cls.ProdDate = ProdDate
@@ -360,6 +665,31 @@ Public Class ProdSampleVerification
             .DataSource = dtGridMenu
             .DataBind()
         End With
+    End Sub
+
+    Private Sub Verify(SpcResultId As String)
+        Dim cls As New clsProdSampleVerification
+        cls.SPCResultID = SpcResultId
+        cls.User = pUser
+
+        Dim Factory As String = HideValue.Get("FactoryCode")
+        Dim Itemtype As String = HideValue.Get("ItemType_Code")
+        Dim Line As String = HideValue.Get("LineCode")
+        Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
+        Dim ProdDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
+        Dim Shift As String = HideValue.Get("ShiftCode")
+        Dim Seq As String = HideValue.Get("Seq")
+
+        Try
+            Dim Verify = clsProdSampleVerificationDB.Verify(cls)
+            If Verify = True Then
+                show_errorGrid(MsgTypeEnum.Success, "Verify data successfully!", 1)
+                Up_GridLoad(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+                Return
+            End If
+        Catch ex As Exception
+            show_errorGrid(MsgTypeEnum.ErrorMsg, ex.Message, 1)
+        End Try
     End Sub
 
 #End Region

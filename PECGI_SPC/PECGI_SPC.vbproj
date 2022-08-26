@@ -881,7 +881,9 @@
     <Compile Include="Class\clsProdSampleVerificationDB.vb" />
     <Compile Include="Class\clsProductionSampleVerificationList.vb" />
     <Compile Include="Class\clsProductionSampleVerificationListDB.vb" />
+    <Compile Include="Class\clsSPCAlertDashboard.vb" />
     <Compile Include="Class\clsSPCItemCheckByType.vb" />
+    <Compile Include="Class\clsSPCAlertDashboardDB.vb" />
     <Compile Include="Class\clsSPCItemCheckByTypeDB.vb" />
     <Compile Include="Class\clsSPCItemCheckMaster.vb" />
     <Compile Include="Class\clsSPCItemCheckMasterDB.vb" />
@@ -936,6 +938,7 @@
     </Compile>
     <Compile Include="ProdSampleVerification.aspx.vb">
       <DependentUpon>ProdSampleVerification.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ProductionSampleVerificationList.aspx.designer.vb">
       <DependentUpon>ProductionSampleVerificationList.aspx</DependentUpon>

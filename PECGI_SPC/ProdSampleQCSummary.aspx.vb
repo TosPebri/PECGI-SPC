@@ -16,6 +16,7 @@ Public Class ProdSampleQCSummary
     Public AuthInsert As Boolean = False
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
+    Dim dataCount As String = ""
     Private dt As DataTable
 #End Region
 
@@ -110,12 +111,20 @@ Public Class ProdSampleQCSummary
 
     Private Sub Grid_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles Grid.HtmlDataCellPrepared
         If (e.DataColumn.FieldName <> "Type") Then
-            If e.CellValue = "NG" Then
-                e.Cell.BackColor = Color.Red
-                e.Cell.ForeColor = Color.White
-            ElseIf e.CellValue = "" Then
-                e.Cell.BackColor = Color.Gray
-                e.Cell.BorderColor = Color.Gray
+            If e.DataColumn.FieldName = "DataCount" Then
+                dataCount = e.CellValue
+            Else
+                If e.CellValue = "NG" Then
+                    e.Cell.BackColor = Color.Red
+                    e.Cell.ForeColor = Color.White
+                ElseIf e.CellValue = "" Then
+                    If dataCount = "1" Then
+                        e.Cell.BackColor = Color.Yellow
+                    Else
+                        e.Cell.BackColor = Color.Gray
+                        e.Cell.BorderColor = Color.Gray
+                    End If
+                End If
             End If
         End If
     End Sub
@@ -249,7 +258,7 @@ Public Class ProdSampleQCSummary
     End Sub
 
     Private Sub up_GridLoad(cls As clsProdSampleQCSummary)
-        Dim OK As Integer = 0, NG As Integer = 0, no As Integer = 0
+        Dim OK As Integer = 0, NG As Integer = 0, no As Integer = 0, sampletime As String = "", ds As New DataSet
         With Grid
             .Columns.Clear()
 
@@ -266,7 +275,21 @@ Public Class ProdSampleQCSummary
             Col0.CellStyle.HorizontalAlign = HorizontalAlign.Center
             .Columns.Add(Col0)
 
-            dt = clsProdSampleQCSummaryDB.GetList(cls)
+            Dim Col1 As New GridViewDataTextColumn
+            Col1.FieldName = "DataCount"
+            Col1.Caption = "DataCount"
+            Col1.Width = 0
+
+            Col1.FixedStyle = GridViewColumnFixedStyle.Left
+            Col1.HeaderStyle.Wrap = DefaultBoolean.True
+            Col1.HeaderStyle.VerticalAlign = VerticalAlign.Middle
+            Col1.HeaderStyle.HorizontalAlign = HorizontalAlign.Center
+            Col1.CellStyle.VerticalAlign = VerticalAlign.Middle
+            Col1.CellStyle.HorizontalAlign = HorizontalAlign.Center
+            .Columns.Add(Col1)
+
+            ds = clsProdSampleQCSummaryDB.GetList(cls)
+            dt = ds.Tables(0)
 
             If dt.Rows.Count > 0 Then
                 For i = 1 To dt.Columns.Count - 1
@@ -287,13 +310,33 @@ Public Class ProdSampleQCSummary
 
                     .Columns.Add(Col)
                 Next
+                dt.Columns.Add("DataCount")
+
+                For i = 0 To dt.Rows.Count - 1
+                    For kol = 1 To dt.Columns.Count - 1
+                        If dt.Columns(kol).ColumnName <> "DataCount" Then
+                            If dt.Rows(i)(kol).ToString() = "" And dt.Rows(i)("DataCount").ToString() = "" Then
+                                dt.Rows(i)("DataCount") = ""
+                            Else
+                                dt.Rows(i)("DataCount") = "1"
+                            End If
+                        End If
+                    Next
+                Next
+
+
+                If ds.Tables(1).Rows.Count = 0 Then
+                    sampletime = ""
+                Else
+                    sampletime = ds.Tables(1).Rows(0)(0)
+                End If
 
                 .JSProperties("cp_header") = "Yes"
-                .JSProperties("cp_sampletime") = "19:00 - 21:00"
+                .JSProperties("cp_sampletime") = sampletime
                 .JSProperties("cp_ok") = OK
                 .JSProperties("cp_ng") = NG
                 .JSProperties("cp_no") = no
-                .JSProperties("cp_total") = dt.Rows.Count * (dt.Columns.Count - 1)
+                .JSProperties("cp_total") = dt.Rows.Count * (dt.Columns.Count - 2)
             Else
                 .JSProperties("cp_header") = "No"
             End If
@@ -318,7 +361,7 @@ Public Class ProdSampleQCSummary
                 .Sequence = cboSequence.Value
                 .Period = dTime.ToString("yyyy-MM-dd")
             End With
-            dt = clsProdSampleQCSummaryDB.GetList(cls)
+            dt = clsProdSampleQCSummaryDB.GetList(cls).Tables(0)
 
             If dt.Rows.Count = 0 Then
                 show_error(MsgTypeEnum.Warning, "Data is Not Found", 1)
@@ -336,191 +379,118 @@ Public Class ProdSampleQCSummary
                     .Cells(1, 1).Style.Font.Size = 12
                     .Cells(1, 1).Style.Font.Bold = True
 
-                    .Cells(1, 3).Value = ":"
-                    .Cells(1, 3).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(1, 3).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
+                    .Cells(1, 2).Value = ": " + cboFactory.Text
+                    .Cells(1, 2).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
+                    .Cells(1, 2).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Left
+                    .Cells(1, 2).Style.Font.Size = 12
+                    .Cells(1, 2).Style.Font.Bold = True
+
+                    .Cells(1, 3).Value = "Machine Process"
                     .Cells(1, 3).Style.Font.Size = 12
                     .Cells(1, 3).Style.Font.Bold = True
-                    .Column(3).Width = 2.57
 
-                    .Cells(1, 4).Value = cboFactory.Text
-                    .Cells(1, 4, 1, 6).Merge = True
+                    .Cells(1, 4).Value = ": " + cboMachine.Text
+                    .Cells(1, 4).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
+                    .Cells(1, 4).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Left
                     .Cells(1, 4).Style.Font.Size = 12
                     .Cells(1, 4).Style.Font.Bold = True
 
-                    .Cells(1, 8).Value = "Machine Process"
-                    .Cells(1, 8, 1, 10).Merge = True
-                    .Cells(1, 8).Style.Font.Size = 12
-                    .Cells(1, 8).Style.Font.Bold = True
+                    .Cells(1, 5).Value = "Frequency"
+                    .Cells(1, 5).Style.Font.Size = 12
+                    .Cells(1, 5).Style.Font.Bold = True
 
-                    .Cells(1, 11).Value = ":"
-                    .Cells(1, 11).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(1, 11).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
-                    .Cells(1, 11).Style.Font.Size = 12
-                    .Cells(1, 11).Style.Font.Bold = True
-                    .Column(11).Width = 2.57
-
-                    .Cells(1, 12).Value = cboMachine.Text
-                    .Cells(1, 12, 1, 15).Merge = True
-                    .Cells(1, 12).Style.Font.Size = 12
-                    .Cells(1, 12).Style.Font.Bold = True
-
-                    .Cells(1, 17).Value = "Frequency"
-                    .Cells(1, 17, 1, 19).Merge = True
-                    .Cells(1, 17).Style.Font.Size = 12
-                    .Cells(1, 17).Style.Font.Bold = True
-
-                    .Cells(1, 20).Value = ":"
-                    .Cells(1, 20).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(1, 20).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
-                    .Cells(1, 20).Style.Font.Size = 12
-                    .Cells(1, 20).Style.Font.Bold = True
-                    .Column(20).Width = 2.57
-
-                    .Cells(1, 21).Value = cboFrequency.Text
-                    .Cells(1, 21, 1, 22).Merge = True
-                    .Cells(1, 21).Style.Font.Size = 12
-                    .Cells(1, 21).Style.Font.Bold = True
+                    .Cells(1, 6).Value = ": " + cboFrequency.Text
+                    .Cells(1, 6).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
+                    .Cells(1, 6).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Left
+                    .Cells(1, 6).Style.Font.Size = 12
+                    .Cells(1, 6).Style.Font.Bold = True
 
                     '----------------Moving Rows--------------------'
 
                     .Cells(2, 1).Value = "Type"
-                    .Cells(2, 1, 2, 2).Merge = True
                     .Cells(2, 1).Style.Font.Size = 12
                     .Cells(2, 1).Style.Font.Bold = True
 
-                    .Cells(2, 3).Value = ":"
-                    .Cells(2, 3).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(2, 3).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
+                    .Cells(2, 2).Value = ": " + cboType.Text
+                    .Cells(2, 2).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
+                    .Cells(2, 2).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Left
+                    .Cells(2, 2).Style.Font.Size = 12
+                    .Cells(2, 2).Style.Font.Bold = True
+
+                    .Cells(2, 3).Value = "Period"
                     .Cells(2, 3).Style.Font.Size = 12
                     .Cells(2, 3).Style.Font.Bold = True
 
-                    .Cells(2, 4).Value = cboType.Text
-                    .Cells(2, 4, 2, 6).Merge = True
+                    .Cells(2, 4).Value = ": " + dTime.ToString("dd MMMM yyyy")
+                    .Cells(2, 4).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
+                    .Cells(2, 4).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Left
                     .Cells(2, 4).Style.Font.Size = 12
                     .Cells(2, 4).Style.Font.Bold = True
 
-                    .Cells(2, 8).Value = "Period"
-                    .Cells(2, 8, 2, 10).Merge = True
-                    .Cells(2, 8).Style.Font.Size = 12
-                    .Cells(2, 8).Style.Font.Bold = True
+                    .Cells(2, 5).Value = "Sequence"
+                    .Cells(2, 5).Style.Font.Size = 12
+                    .Cells(2, 5).Style.Font.Bold = True
 
-                    .Cells(2, 11).Value = ":"
-                    .Cells(2, 11).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(2, 11).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
-                    .Cells(2, 11).Style.Font.Size = 12
-                    .Cells(2, 11).Style.Font.Bold = True
-
-                    .Cells(2, 12).Value = dTime.ToString("dd MMMM yyyy")
-                    .Cells(2, 12, 2, 13).Merge = True
-                    .Cells(2, 12).Style.Font.Size = 12
-                    .Cells(2, 12).Style.Font.Bold = True
-
-                    .Cells(2, 17).Value = "Sequence"
-                    .Cells(2, 17, 2, 19).Merge = True
-                    .Cells(2, 17).Style.Font.Size = 12
-                    .Cells(2, 17).Style.Font.Bold = True
-
-                    .Cells(2, 20).Value = ":"
-                    .Cells(2, 20).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(2, 20).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
-                    .Cells(2, 20).Style.Font.Size = 12
-                    .Cells(2, 20).Style.Font.Bold = True
-
-                    .Cells(2, 21).Value = cboSequence.Text
-                    '.Cells(2, 21, 2, 22).Merge = True
-                    .Cells(2, 21).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(2, 21).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
-                    .Cells(2, 21).Style.Font.Size = 12
-                    .Cells(2, 21).Style.Font.Bold = True
-                    .Cells(2, 21).Style.Numberformat.Format = "@"
+                    .Cells(2, 6).Value = ": " + cboSequence.Text
+                    .Cells(2, 6).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
+                    .Cells(2, 6).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Left
+                    .Cells(2, 6).Style.Font.Size = 12
+                    .Cells(2, 6).Style.Font.Bold = True
+                    .Cells(2, 6).Style.Numberformat.Format = "@"
 
                     'End Filter Title
 
                     'Start Info Title
 
                     .Cells(4, 1).Value = "Sample Time"
-                    .Cells(4, 1, 4, 2).Merge = True
                     .Cells(4, 1).Style.Font.Size = 12
 
-                    .Cells(4, 3).Value = ":"
-                    .Cells(4, 3).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(4, 3).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
+                    .Cells(4, 2).Value = ": " & HF.Get("sampletime")
+                    .Cells(4, 2).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
+                    .Cells(4, 2).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Left
+                    .Cells(4, 2).Style.Font.Size = 12
+
+                    .Cells(4, 3).Value = "OK Result"
                     .Cells(4, 3).Style.Font.Size = 12
 
-                    .Cells(4, 4).Value = HF.Get("sampletime")
-                    .Cells(4, 4, 4, 5).Merge = True
+                    .Cells(4, 4).Value = ": " + HF.Get("ok").ToString()
+                    .Cells(4, 4).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
+                    .Cells(4, 4).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Left
                     .Cells(4, 4).Style.Font.Size = 12
-
-                    .Cells(4, 8).Value = "OK Result"
-                    .Cells(4, 8, 4, 10).Merge = True
-                    .Cells(4, 8).Style.Font.Size = 12
-
-                    .Cells(4, 11).Value = ":"
-                    .Cells(4, 11).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(4, 11).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
-                    .Cells(4, 11).Style.Font.Size = 12
-
-                    .Cells(4, 12).Value = HF.Get("ok")
-                    '.Cells(4, 12, 4, 14).Merge = True
-                    .Cells(4, 12).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(4, 12).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
-                    .Cells(4, 12).Style.Font.Size = 12
 
                     '----------------Moving Rows--------------------'
 
                     .Cells(5, 1).Value = "Total Sample"
-                    .Cells(5, 1, 5, 2).Merge = True
                     .Cells(5, 1).Style.Font.Size = 12
 
-                    .Cells(5, 3).Value = ":"
-                    .Cells(5, 3).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(5, 3).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
+                    .Cells(5, 2).Value = ": " + HF.Get("total").ToString()
+                    .Cells(5, 2).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
+                    .Cells(5, 2).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Left
+                    .Cells(5, 2).Style.Font.Size = 12
+
+                    .Cells(5, 3).Value = "NG Result"
                     .Cells(5, 3).Style.Font.Size = 12
 
-                    .Cells(5, 4).Value = HF.Get("total")
-                    '.Cells(5, 4, 5, 6).Merge = True
+                    .Cells(5, 4).Value = ": " + HF.Get("ng").ToString()
                     .Cells(5, 4).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(5, 4).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
+                    .Cells(5, 4).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Left
                     .Cells(5, 4).Style.Font.Size = 12
-
-                    .Cells(5, 8).Value = "NG Result"
-                    .Cells(5, 8, 5, 10).Merge = True
-                    .Cells(5, 8).Style.Font.Size = 12
-
-                    .Cells(5, 11).Value = ":"
-                    .Cells(5, 11).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(5, 11).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
-                    .Cells(5, 11).Style.Font.Size = 12
-
-                    .Cells(5, 12).Value = HF.Get("ng")
-                    '.Cells(5, 12, 5, 14).Merge = True
-                    .Cells(5, 12).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(5, 12).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
-                    .Cells(5, 12).Style.Font.Size = 12
-                    .Cells(5, 12).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
-                    .Cells(5, 12).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Red)
-                    .Cells(5, 12).Style.Font.Color.SetColor(System.Drawing.Color.White)
+                    .Cells(5, 4).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
+                    .Cells(5, 4).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Red)
+                    .Cells(5, 4).Style.Font.Color.SetColor(System.Drawing.Color.White)
 
                     '----------------Moving Rows--------------------'
 
-                    .Cells(6, 8).Value = "Incomplete"
-                    .Cells(6, 8, 6, 10).Merge = True
-                    .Cells(6, 8).Style.Font.Size = 12
+                    .Cells(6, 3).Value = "Incomplete"
+                    .Cells(6, 3).Style.Font.Size = 12
 
-                    .Cells(6, 11).Value = ":"
-                    .Cells(6, 11).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(6, 11).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
-                    .Cells(6, 11).Style.Font.Size = 12
-
-                    .Cells(6, 12).Value = HF.Get("NOK")
-                    '.Cells(6, 12, 6, 14).Merge = True
-                    .Cells(6, 12).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                    .Cells(6, 12).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
-                    .Cells(6, 12).Style.Font.Size = 12
-                    .Cells(6, 12).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
-                    .Cells(6, 12).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Gray)
-                    .Cells(6, 12).Style.Font.Color.SetColor(System.Drawing.Color.White)
+                    .Cells(6, 4).Value = ": " + HF.Get("NOK").ToString()
+                    .Cells(6, 4).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
+                    .Cells(6, 4).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Left
+                    .Cells(6, 4).Style.Font.Size = 12
+                    .Cells(6, 4).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
+                    .Cells(6, 4).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Gray)
+                    .Cells(6, 4).Style.Font.Color.SetColor(System.Drawing.Color.White)
 
                     'End Info Title
                     rowsExcel = 9
@@ -536,6 +506,7 @@ Public Class ProdSampleQCSummary
 
                     rowsExcel += 1
                     For i = 0 To dt.Rows.Count - 1
+                        dataCount = ""
                         For j = 0 To lastCol
                             .Cells(rowsExcel, j + 1).Value = dt.Rows(i)(j).ToString()
                             .Cells(rowsExcel, j + 1).Style.Font.Size = 10
@@ -546,16 +517,21 @@ Public Class ProdSampleQCSummary
                             ElseIf j <> 0 Then
                                 .Column(j + 1).Width = 17
                                 '.Cells(1, 1, 3, lastCol).Style.WrapText = True
+                                If dt.Rows(i)(j).ToString() = "NG" Or dt.Rows(i)(j).ToString() = "OK" Then dataCount = "1"
                                 If dt.Rows(i)(j).ToString() = "NG" Then
                                     .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
                                     .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Red)
                                     .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Font.Color.SetColor(System.Drawing.Color.White)
                                 ElseIf dt.Rows(i)(j).ToString() = "" Then
                                     .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
-                                    .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Gray)
+                                    .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow)
                                 End If
                             End If
                         Next
+                        If dataCount = "" Then
+                            .Cells(rowsExcel, 2, rowsExcel, lastCol + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
+                            .Cells(rowsExcel, 2, rowsExcel, lastCol + 1).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Gray)
+                        End If
                         rowsExcel += 1
                     Next
 

@@ -31,7 +31,7 @@ Public Class clsProdSampleQCSummaryDB
         End Using
     End Function
 
-    Public Shared Function GetList(cls As clsProdSampleQCSummary) As DataTable
+    Public Shared Function GetList(cls As clsProdSampleQCSummary) As DataSet
         Using cn As New SqlConnection(Sconn.Stringkoneksi)
             cn.Open()
             Dim sql As String
@@ -46,10 +46,10 @@ Public Class clsProdSampleQCSummaryDB
             cmd.Parameters.AddWithValue("Period", cls.Period)
 
             Dim da As New SqlDataAdapter(cmd)
-            Dim dt As New DataTable
+            Dim ds As New DataSet
 
-            da.Fill(dt)
-            Return dt
+            da.Fill(ds)
+            Return ds
         End Using
     End Function
 End Class

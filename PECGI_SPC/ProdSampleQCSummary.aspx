@@ -110,6 +110,7 @@
                         <ItemStyle Height="10px" Paddings-Padding="4px" />
                         <ButtonStyle Width="5px" Paddings-Padding="4px" />
                         <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                            debugger
                                 var FactoryCode = cboFactory.GetValue();
                                 HF.Set('FactoryCode', FactoryCode);
 
@@ -121,7 +122,7 @@
                                 cboMachine.PerformCallback();
 
                                 cboFrequency.SetEnabled(false);
-                                cboFrequency.PerformCallback();                                
+                                cboFrequency.PerformCallback();
 
                                 cboSequence.SetEnabled(false);
                                 cboSequence.PerformCallback();
@@ -141,15 +142,13 @@
                         <ButtonStyle Width="5px" Paddings-Padding="4px" />
                         <ClientSideEvents EndCallback="function(s, e) {cboMachine.SetEnabled(true);}" />
                         <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                            debugger
                                 var MachineCode = cboMachine.GetValue();
                                 HF.Set('MachineCode', MachineCode);
                                 
                                 btnBrowse.SetEnabled(false);
                                 btnClear.SetEnabled(false);
                                 btnExcel.SetEnabled(false);
-
-                                cboFrequency.SetEnabled(false);
-                                cboFrequency.PerformCallback();
 
                                 cboSequence.SetEnabled(false);
                                 cboSequence.PerformCallback();

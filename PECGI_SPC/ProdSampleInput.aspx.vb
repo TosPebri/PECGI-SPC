@@ -10,6 +10,48 @@ Public Class ProdSampleInput
     Public ValueType As String
     Dim GlobalPrm As String = ""
 
+    Private Sub GridXLoad()
+        With gridX
+            .Columns.Clear()
+            Dim Band1 As New GridViewBandColumn
+            Band1.Caption = "DATE"
+            .Columns.Add(Band1)
+
+            Dim Band2 As New GridViewBandColumn
+            Band2.Caption = "SHIFT"
+            Band1.Columns.Add(Band2)
+
+            Dim Col1 As New GridViewDataTextColumn
+            Col1.FieldName = "Des"
+            Col1.Caption = "TIME"
+            Col1.Width = 90
+            Col1.FixedStyle = GridViewColumnFixedStyle.Left
+            Band2.Columns.Add(Col1)
+
+            Dim SelDay As Date = Now.Date.AddDays(-1)
+            For iDay = 1 To 2
+                Dim BandDay As New GridViewBandColumn
+                BandDay.Caption = Format(SelDay, "dd MMM yyyy")
+                .Columns.Add(BandDay)
+
+                For iShift = 1 To 2
+                    Dim BandShift As New GridViewBandColumn
+                    BandShift.Caption = "Shift " & iShift
+                    BandDay.Columns.Add(BandShift)
+
+                    For iTime = 1 To 5
+                        Dim colTime As New GridViewDataTextColumn
+                        colTime.Caption = iTime
+                        BandShift.Columns.Add(colTime)
+                    Next
+
+                Next
+
+                SelDay = SelDay.AddDays(1)
+            Next
+        End With
+    End Sub
+
     Private Sub show_error(ByVal msgType As MsgTypeEnum, ByVal ErrMsg As String, ByVal pVal As Integer)
         grid.JSProperties("cp_message") = ErrMsg
         grid.JSProperties("cp_type") = msgType
@@ -40,6 +82,7 @@ Public Class ProdSampleInput
                 dtDate.Value = Now.Date
             End If
         End If
+        GridXLoad()
     End Sub
 
     Private Sub up_FillCombo()

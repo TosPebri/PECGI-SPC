@@ -6,11 +6,14 @@ Public Class clsItemType
 End Class
 
 Public Class clsItemTypeDB
-    Public Shared Function GetList() As List(Of clsItemType)
+    Public Shared Function GetList(FactoryCode As String) As List(Of clsItemType)
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
-            Dim q As String = "select * from MS_ItemType"
+            Dim q As String = "select distinct I.ItemTypeCode, M.Description " & vbCrLf &
+                "From spc_ItemCheckByType I inner Join MS_ItemType M on I.ItemTypeCode = M.ItemTypeCode  " & vbCrLf &
+                "Where I.FactoryCode = @FactoryCode "
             Dim cmd As New SqlCommand(q, Cn)
+            cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
             Dim rd As SqlDataReader = cmd.ExecuteReader
             Dim ItemTypeList As New List(Of clsItemType)
             Do While rd.Read

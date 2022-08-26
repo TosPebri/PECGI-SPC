@@ -45,13 +45,35 @@ Public Class ProdSampleInput
     Private Sub up_FillCombo()
         cboFactory.DataSource = clsFactoryDB.GetList
         cboFactory.DataBind()
-
-        cboType.DataSource = clsItemTypeDB.GetList
-        cboType.DataBind()
     End Sub
 
     Protected Sub grid_RowInserting(sender As Object, e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles grid.RowInserting
         e.Cancel = True
+        Dim Result As New clsSPCResult
+        Result.FactoryCode = cboFactory.Value
+        Result.ItemCheckCode = cboItemCheck.Value
+        Result.ItemTypeCode = cboType.Value
+        Result.LineCode = cboLine.Value
+        Result.ProdDate = dtDate.Value
+        Result.ShiftCode = cboShift.Value
+        Result.SequenceNo = cboSeq.Value
+        Result.SubLotNo = 0
+        Result.Remark = ""
+        Result.RegisterUser = Session("user") & ""
+        clsSPCResultDB.Insert(Result)
+
+        Dim SeqNo As Integer
+        Dim Detail As New clsSPCResultDetail
+        Detail.SPCResultID = Result.SPCResultID
+        Detail.SequenceNo = SeqNo
+        Detail.DeleteStatus = e.NewValues("DeleteStatus")
+        Detail.Value = e.NewValues("Value")
+        Detail.Remark = e.NewValues("Remark")
+        Detail.RegisterUser = Result.RegisterUser
+        clsSPCResultDetailDB.Insert(Detail)
+        grid.CancelEdit()
+
+        show_error(MsgTypeEnum.Success, "Update data successfully!", 1)
     End Sub
 
     Protected Sub grid_RowDeleting(sender As Object, e As DevExpress.Web.Data.ASPxDataDeletingEventArgs) Handles grid.RowDeleting
@@ -61,6 +83,16 @@ Public Class ProdSampleInput
     Private Sub up_ClearGrid()
         grid.DataSource = Nothing
         grid.DataBind()
+        grid.JSProperties("cpUSL") = " "
+        grid.JSProperties("cpLSL") = " "
+        grid.JSProperties("cpUCL") = " "
+        grid.JSProperties("cpLCL") = " "
+        grid.JSProperties("cpMin") = " "
+        grid.JSProperties("cpMax") = " "
+        grid.JSProperties("cpAve") = " "
+        grid.JSProperties("cpR") = " "
+        grid.JSProperties("cpC") = " "
+        grid.JSProperties("cpNG") = " "
     End Sub
     Protected Sub grid_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles grid.AfterPerformCallback
         If e.CallbackName <> "CANCELEDIT" And e.CallbackName <> "CUSTOMCALLBACK" Then
@@ -74,15 +106,16 @@ Public Class ProdSampleInput
         grid.DataSource = dt
         grid.DataBind()
         If dt.Rows.Count = 0 Then
-            cbkRefresh.JSProperties("cpUSL") = ""
-            cbkRefresh.JSProperties("cpLSL") = ""
-            cbkRefresh.JSProperties("cpUCL") = ""
-            cbkRefresh.JSProperties("cpLCL") = ""
-            cbkRefresh.JSProperties("cpMin") = ""
-            cbkRefresh.JSProperties("cpMax") = ""
-            cbkRefresh.JSProperties("cpAve") = ""
-            cbkRefresh.JSProperties("cpR") = ""
-            cbkRefresh.JSProperties("cpNG") = ""
+            grid.JSProperties("cpUSL") = " "
+            grid.JSProperties("cpLSL") = " "
+            grid.JSProperties("cpUCL") = " "
+            grid.JSProperties("cpLCL") = " "
+            grid.JSProperties("cpMin") = " "
+            grid.JSProperties("cpMax") = " "
+            grid.JSProperties("cpAve") = " "
+            grid.JSProperties("cpR") = " "
+            grid.JSProperties("cpC") = " "
+            grid.JSProperties("cpNG") = " "
         Else
             With dt.Rows(0)
                 grid.JSProperties("cpUSL") = .Item("SpecUSL")
@@ -93,6 +126,7 @@ Public Class ProdSampleInput
                 grid.JSProperties("cpMax") = .Item("MaxValue")
                 grid.JSProperties("cpAve") = .Item("AvgValue")
                 grid.JSProperties("cpR") = .Item("RValue")
+                grid.JSProperties("cpC") = .Item("CValue")
                 grid.JSProperties("cpNG") = .Item("NGValue")
             End With
         End If
@@ -119,6 +153,31 @@ Public Class ProdSampleInput
 
     Private Sub grid_RowUpdating(sender As Object, e As ASPxDataUpdatingEventArgs) Handles grid.RowUpdating
         e.Cancel = True
+        Dim Result As New clsSPCResult
+        Result.FactoryCode = cboFactory.Value
+        Result.ItemCheckCode = cboItemCheck.Value
+        Result.ItemTypeCode = cboType.Value
+        Result.LineCode = cboLine.Value
+        Result.ProdDate = dtDate.Value
+        Result.ShiftCode = cboShift.Value
+        Result.SequenceNo = cboSeq.Value
+        Result.SubLotNo = 0
+        Result.Remark = ""
+        Result.RegisterUser = Session("user") & ""
+        clsSPCResultDB.Insert(Result)
+
+        Dim SeqNo As Integer = e.Keys("SeqNo")
+        Dim Detail As New clsSPCResultDetail
+        Detail.SPCResultID = Result.SPCResultID
+        Detail.SequenceNo = SeqNo
+        Detail.DeleteStatus = e.NewValues("DeleteStatus")
+        Detail.Value = e.NewValues("Value")
+        Detail.Remark = e.NewValues("Remark")
+        Detail.RegisterUser = Result.RegisterUser
+        clsSPCResultDetailDB.Insert(Detail)
+        grid.CancelEdit()
+
+        show_error(MsgTypeEnum.Success, "Update data successfully!", 1)
     End Sub
 
     Private Sub cbkRefresh_Callback(source As Object, e As CallbackEventArgs) Handles cbkRefresh.Callback
@@ -154,12 +213,15 @@ Public Class ProdSampleInput
     End Sub
 
     Private Sub cboType_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboType.Callback
-
+        Dim FactoryCode As String = Split(e.Parameter, "|")(0)
+        cboType.DataSource = clsItemTypeDB.GetList(FactoryCode)
+        cboType.DataBind()
     End Sub
 
     Private Sub cboLine_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboLine.Callback
         Dim FactoryCode As String = Split(e.Parameter, "|")(0)
-        cboLine.DataSource = ClsLineDB.GetList(FactoryCode)
+        Dim ItemTypeCode As String = Split(e.Parameter, "|")(1)
+        cboLine.DataSource = ClsLineDB.GetList(FactoryCode, ItemTypeCode)
         cboLine.DataBind()
     End Sub
 
@@ -198,7 +260,6 @@ Public Class ProdSampleInput
                 clsSPCResultDetailDB.Insert(Detail)
             Next
         End If
-
     End Sub
 
     Private Sub cboShift_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboShift.Callback
@@ -211,10 +272,18 @@ Public Class ProdSampleInput
     End Sub
 
     Private Sub grid_CellEditorInitialize(sender As Object, e As ASPxGridViewEditorEventArgs) Handles grid.CellEditorInitialize
-        If (e.Column.FieldName = "Value" Or e.Column.FieldName = "Remark" Or e.Column.FieldName = "DeleteStatus") Then
+        If e.Column.FieldName = "Value" Then
+            If IsDBNull(e.Value) Then
+                e.Editor.ReadOnly = False
+            Else
+                e.Editor.ReadOnly = True
+                e.Editor.ForeColor = System.Drawing.Color.Silver
+            End If
+        ElseIf (e.Column.FieldName = "Remark" Or e.Column.FieldName = "DeleteStatus") Then
             e.Editor.ReadOnly = False
         Else
             e.Editor.ReadOnly = True
+            e.Editor.ForeColor = System.Drawing.Color.Silver
         End If
     End Sub
 
@@ -225,7 +294,9 @@ Public Class ProdSampleInput
     End Sub
 
     Private Sub grid_HtmlRowPrepared(sender As Object, e As ASPxGridViewTableRowEventArgs) Handles grid.HtmlRowPrepared
-        If e.GetValue("Judgement") IsNot Nothing AndAlso e.GetValue("Judgement").ToString = "NG" Then
+        If e.GetValue("DeleteStatus") IsNot Nothing AndAlso e.GetValue("DeleteStatus").ToString = "1" Then
+            e.Row.BackColor = System.Drawing.Color.Silver
+        ElseIf e.GetValue("Judgement") IsNot Nothing AndAlso e.GetValue("Judgement").ToString = "NG" Then
             e.Row.BackColor = System.Drawing.Color.Red
         End If
     End Sub

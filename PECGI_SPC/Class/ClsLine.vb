@@ -10,21 +10,23 @@ End Class
 
 
 Public Class ClsLineDB
-    Public Shared Function GetList(Optional FactoryCode As String = "", Optional ProcessCode As String = "") As List(Of ClsLine)
+    Public Shared Function GetList(FactoryCode As String, ItemTypeCode As String) As List(Of ClsLine)
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
-            Dim q As String = "select FactoryCode, ProcessCode, LineCode, LineCode + ' - ' + LineName as LineName " & vbCrLf &
-                "from MS_Line where LineCode is not Null " & vbCrLf
+            Dim q As String = "select distinct L.FactoryCode, L.ProcessCode, L.LineCode, L.LineCode + ' - ' + L.LineName as LineName " & vbCrLf &
+                "from MS_Line L inner join spc_ItemCheckByType I " & vbCrLf &
+                "on L.FactoryCode = I.FactoryCode and L.LineCode = I.LineCode " & vbCrLf &
+                "where L.LineCode is not Null " & vbCrLf
             If FactoryCode <> "" Then
-                q = q & "and FactoryCode = @FactoryCode "
+                q = q & "and L.FactoryCode = @FactoryCode "
             End If
-            If ProcessCode <> "" Then
-                q = q & "and ProcessCode = @ProcessCode "
+            If ItemTypeCode <> "" Then
+                q = q & "and I.ItemTypeCode = @ItemTypeCode "
             End If
             q = q & "order by LineCode"
             Dim cmd As New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
-            cmd.Parameters.AddWithValue("ProcessCode", ProcessCode)
+            cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
             Dim rd As SqlDataReader = cmd.ExecuteReader
             Dim FactoryList As New List(Of ClsLine)
             Do While rd.Read

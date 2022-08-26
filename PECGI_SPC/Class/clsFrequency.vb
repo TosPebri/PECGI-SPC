@@ -6,6 +6,7 @@ End Class
 
 Public Class clsShift
     Public Property ShiftCode As String
+    Public Property ShiftName As String
 End Class
 
 Public Class clsSequenceNo
@@ -16,7 +17,7 @@ Public Class clsFrequencyDB
     Public Shared Function GetShift(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String) As List(Of clsShift)
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
-            Dim q As String = "select distinct F.ShiftCode " & vbCrLf &
+            Dim q As String = "select distinct F.ShiftCode, case when F.ShiftCode = 'SH001' then 'Shift 1' else 'Shift 2' end ShiftName " & vbCrLf &
                 "From spc_ItemCheckByType T inner Join spc_MS_Frequency F on T.FrequencyCode = F.FrequencyCode " & vbCrLf &
                 "where FactoryCode = @FactoryCode and ItemTypeCode = @ItemTypeCode and LineCode = @LineCode and ItemCheckCode = @ItemCheckCode  " & vbCrLf &
                 "and T.ActiveStatus = 1 and F.ActiveStatus = 1  " & vbCrLf
@@ -30,6 +31,7 @@ Public Class clsFrequencyDB
             Do While rd.Read
                 Dim Shift As New clsShift
                 Shift.ShiftCode = rd("ShiftCode")
+                Shift.ShiftName = rd("ShiftName")
                 ShiftList.Add(Shift)
             Loop
             rd.Close()

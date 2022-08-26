@@ -17,28 +17,12 @@
         }
     </style>
     <script type="text/javascript" >
-        var rowIndex, colIndex;
+        var rowIndex, columnIndex;
         function OnInit(s, e) {
             ASPxClientUtils.AttachEventToElement(s.GetMainElement(), "keydown", function (event) {
-                if (event.keyCode == 9 || event.keyCode == 13 || event.keyCode == 40) {
+                if (event.keyCode == 13) {
                     if (ASPxClientUtils.IsExists(columnIndex) && ASPxClientUtils.IsExists(rowIndex)) {
-                        ASPxClientUtils.PreventEventAndBubble(event);
-                        if (rowIndex < grid.GetVisibleRowsOnPage() + grid.GetTopVisibleIndex() - 1) {
-                            rowIndex++;
-                            grid.batchEditApi.StartEdit(rowIndex, columnIndex);
-                        } else {
-                            btnSave.Focus();
-                        }
-                    }
-                }
-
-                if (event.keyCode == 38) {
-                    if (ASPxClientUtils.IsExists(columnIndex) && ASPxClientUtils.IsExists(rowIndex)) {
-                        ASPxClientUtils.PreventEventAndBubble(event);
-                        if (rowIndex > 0) {
-                            rowIndex--;
-                            grid.batchEditApi.StartEdit(rowIndex, columnIndex);
-                        }
+                        ASPxClientUtils.PreventEventAndBubble(event);                        
                     }
                 }
             });             
@@ -81,21 +65,31 @@
         }
 
         function ClearGrid(s, e) {
+            grid.CancelEdit();
 	        grid.PerformCallback('clear');
         }
 
         function cboFactoryChanged(s, e) { 
+            cboType.SetEnabled(false);
+            cboType.PerformCallback(cboFactory.GetValue());
             cboLine.SetEnabled(false);   
-            cboLine.PerformCallback(cboFactory.GetValue());
+            cboLine.PerformCallback(cboFactory.GetValue()  + '|' + cboType.GetValue() );
             cboItemCheck.SetEnabled(false);
             cboItemCheck.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue());
             cboShift.SetEnabled(false);
-            cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());
-            grid.PerformCallback('clear');
+            cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());            
         }
 
-        function cboShiftChanged(s, e) {
-            grid.PerformCallback('clear');
+        function cboTypeChanged(s, e) {
+            cboLine.SetEnabled(false);   
+            cboLine.PerformCallback(cboFactory.GetValue()  + '|' + cboType.GetValue());
+            cboItemCheck.SetEnabled(false);
+            cboItemCheck.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue());
+            cboShift.SetEnabled(false);
+            cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());            
+        }
+
+        function cboShiftChanged(s, e) {            
             cboSeq.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + cboShift.GetValue());
         }
 
@@ -103,26 +97,27 @@
             cboItemCheck.SetEnabled(false);
             cboItemCheck.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue());
 
-            cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());
-            grid.PerformCallback('clear');
+            cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());            
         }
 
         function cboItemCheckChanged(s, e) {
-            cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());
-            grid.PerformCallback('clear');
+            cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());            
         }
 
         function OnBatchEditStartEditing(s, e) {
             currentColumnName = e.focusedColumn.fieldName;            
             if (currentColumnName != "Value" & currentColumnName != "Remark" & currentColumnName != "DeleteStatus") {
                 e.cancel = true;
+            } else {
+                rowIndex = e.visibleIndex;
+                columnIndex = e.focusedColumn.index;
             }
-            currentEditableVisibleIndex = e.visibleIndex;
+            currentEditableVisibleIndex = e.visibleIndex;          
         }      
 
-        function OnBatchEditEndEditing(s, e) {
+        function OnBatchEditEndEditing(s, e) {            
             rowIndex = null;
-            columnIndex = null;
+            columnIndex = null;            
         }
 
         function OnEndCallback(s, e) {
@@ -179,8 +174,18 @@
             lblMax.SetText(s.cpMax);
             lblAve.SetText(s.cpAve);
             lblR.SetText(s.cpR);
+            lblC.SetText(s.cpC);
             lblNG.SetText(s.cpNG);
-
+            if (s.cpNG == 'NG') {
+                document.getElementById('NG').style.backgroundColor = 'Red';
+            } else {
+                document.getElementById('NG').style.backgroundColor = 'White';
+            }
+            if (s.cpC == 'C') {
+                document.getElementById('C').style.backgroundColor = 'Orange';
+            } else {
+                document.getElementById('C').style.backgroundColor = 'White';
+            }
         }
     </script>
 </asp:Content>
@@ -308,7 +313,7 @@
                     ClientInstanceName="cboType" ValueField="ItemTypeCode" Font-Names="Segoe UI" 
                     Font-Size="9pt" Height="25px" 
                     Width="100px" TabIndex="6" EnableCallbackMode="True">                    
-                    <ClientSideEvents SelectedIndexChanged="cboLineChanged"/>
+                    <ClientSideEvents SelectedIndexChanged="cboTypeChanged" EndCallback="function(s, e) {cboType.SetEnabled(true);}"/>
                     <Columns>
                         <dx:ListBoxColumn Caption="Item Type" FieldName="ItemTypeCode" Width="90px" Visible="false" />
                         <dx:ListBoxColumn Caption="Description" FieldName="Description" Width="200px" />
@@ -362,14 +367,16 @@
             <td style="width:100px; padding:3px 0px 0px 0px">
                 
                 <dx:ASPxComboBox ID="cboShift" runat="server" Theme="Office2010Black" 
-                    ClientInstanceName="cboShift" ValueField="ShiftCode" Font-Names="Segoe UI" 
+                    ClientInstanceName="cboShift" ValueField="ShiftCode" TextField="ShiftName" Font-Names="Segoe UI" 
                     Font-Size="9pt" Height="25px" 
                     Width="100px" TabIndex="3">
                     <ClientSideEvents SelectedIndexChanged="cboShiftChanged" 
                         EndCallback="function(s, e) {cboShift.SetEnabled(true);}"
                         />
                     <Columns>
-                        <dx:ListBoxColumn Caption="Shift" FieldName="ShiftCode">
+                        <dx:ListBoxColumn Caption="ShiftCode" FieldName="ShiftCode" Visible="False">
+                        </dx:ListBoxColumn>
+                        <dx:ListBoxColumn Caption="Shift" FieldName="ShiftName">
                         </dx:ListBoxColumn>
                     </Columns>
                     <ButtonStyle Paddings-Padding="4px" Width="5px">
@@ -388,8 +395,7 @@
                     ClientInstanceName="cboSeq" ValueField="SequenceNo" Font-Names="Segoe UI" 
                     Font-Size="9pt" Height="25px" 
                     Width="60px" TabIndex="3">
-                    <ClientSideEvents SelectedIndexChanged="ClearGrid" 
-                        EndCallback="function(s, e) {cboSeq.SetEnabled(true);}"/>
+                    <ClientSideEvents EndCallback="function(s, e) {cboSeq.SetEnabled(true);}"/>
                     <Columns>
                         <dx:ListBoxColumn Caption="Seq" FieldName="SequenceNo">
                         </dx:ListBoxColumn>
@@ -441,6 +447,7 @@
 		                    e.processOnServer = false;
 		                    return;
                         }
+                        grid.CancelEdit();
  	                    grid.PerformCallback('load' + '|' + cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + cboShift.GetValue() + '|' + cboSeq.GetValue());
                         
 
@@ -554,56 +561,68 @@
             Font-Names="Segoe UI" Font-Size="9pt">
             <ClientSideEvents 
                 EndCallback="OnEndCallback" 
-                BatchEditStartEditing="OnBatchEditStartEditing" 
-                BatchEditEndEditing="OnBatchEditEndEditing" 
-                Init="OnInit" 
              />
             <SettingsDataSecurity AllowDelete="False" AllowInsert="False" />
 
 <SettingsPopup>
-<FilterControl AutoUpdatePosition="False"></FilterControl>
+    <EditForm Modal="false" HorizontalAlign="WindowCenter" VerticalAlign="WindowCenter" Width="200" />
+    <FilterControl AutoUpdatePosition="False"></FilterControl>
 </SettingsPopup>
         <Columns>
 
+            <dx:GridViewCommandColumn ShowEditButton="True" VisibleIndex="0" Width="50px">
+            </dx:GridViewCommandColumn>
+
             <dx:GridViewDataTextColumn Caption="Data#" VisibleIndex="1" FieldName="SeqNo" Width="50px">
+                <EditFormSettings Visible="False" />
             </dx:GridViewDataTextColumn>
             <dx:GridViewDataTextColumn Caption="Value" VisibleIndex="2" FieldName="Value" Width="80px">
-                <PropertiesTextEdit SelectInputTextOnClick="True">
+                <PropertiesTextEdit SelectInputTextOnClick="True" DisplayFormatString="0.000" Width="90px">
+                    <MaskSettings UseInvariantCultureDecimalSymbolOnClient="True" />
                     <ValidationSettings>
                         <RegularExpression ErrorText="Please input valid value" />
                     </ValidationSettings>
                 </PropertiesTextEdit>
-                <CellStyle>
-                    <Border BorderStyle="Inset" />
-                </CellStyle>
+                <EditFormSettings Visible="True" />
             </dx:GridViewDataTextColumn>
             <dx:GridViewDataTextColumn Caption="Judgement" VisibleIndex="3" Width="80px" FieldName="Judgement">
+                <EditFormSettings Visible="False" />
             </dx:GridViewDataTextColumn>
             <dx:GridViewDataTextColumn Caption="Operator" VisibleIndex="4" FieldName="RegisterUser">
+                <EditFormSettings Visible="False" />
             </dx:GridViewDataTextColumn>
-            <dx:GridViewDataTextColumn Caption="Sample Time" VisibleIndex="5" Width="70px">
+            <dx:GridViewDataTextColumn Caption="Sample Time" VisibleIndex="5" Width="70px" FieldName="RegisterDate">
+                <PropertiesTextEdit DisplayFormatString="HH:mm">
+                </PropertiesTextEdit>
+                <EditFormSettings Visible="False" />
             </dx:GridViewDataTextColumn>
-            <dx:GridViewDataTextColumn Caption="Remarks" VisibleIndex="6" FieldName="Remark">
-                <CellStyle>
-                    <Border BorderStyle="Inset" />
-                </CellStyle>
+            <dx:GridViewDataTextColumn Caption="Remarks" VisibleIndex="8" FieldName="Remark">
+                <PropertiesTextEdit Width="90px">
+                </PropertiesTextEdit>
+                <EditFormSettings Visible="True" />
             </dx:GridViewDataTextColumn>
-            <dx:GridViewDataTextColumn Caption="Last User" VisibleIndex="8" FieldName="RegisterUser">
+            <dx:GridViewDataTextColumn Caption="Last User" VisibleIndex="9" FieldName="RegisterUser">
+                <EditFormSettings Visible="False" />
             </dx:GridViewDataTextColumn>
-            <dx:GridViewDataTextColumn Caption="Last Update" VisibleIndex="9" FieldName="RegisterDate" Width="160px">
+            <dx:GridViewDataTextColumn Caption="Last Update" VisibleIndex="10" FieldName="RegisterDate" Width="160px">
                 <PropertiesTextEdit DisplayFormatString="d MMM yyyy HH:mm:ss">
                 </PropertiesTextEdit>
+                <EditFormSettings Visible="False" />
             </dx:GridViewDataTextColumn>
 
-            <dx:GridViewDataCheckColumn Caption="Delete Status" FieldName="DeleteStatus" VisibleIndex="7" Width="70px">
+            <dx:GridViewDataCheckColumn Caption="Delete Status" FieldName="DeleteStatus" VisibleIndex="6" Width="70px" Visible="False">
                 <PropertiesCheckEdit ValueChecked="1" ValueType="System.Int32" ValueUnchecked="0">
                 </PropertiesCheckEdit>
+                <EditFormSettings Visible="True" />
             </dx:GridViewDataCheckColumn>
+
+            <dx:GridViewDataTextColumn Caption="Delete Status" FieldName="DelStatus" VisibleIndex="7" Width="70px">
+            </dx:GridViewDataTextColumn>
 
         </Columns>        
         <SettingsBehavior ColumnResizeMode="Control" ConfirmDelete="True" AllowDragDrop="False" AllowSort="False" />
-        <SettingsEditing Mode="Batch" >
-            <BatchEditSettings ShowConfirmOnLosingChanges="False" StartEditAction="Click" />
+        <SettingsEditing Mode="PopupEditForm" EditFormColumnCount="1" >
+            <BatchEditSettings ShowConfirmOnLosingChanges="False" />
             </SettingsEditing>
         <SettingsPager AlwaysShowPager="true" Mode="ShowAllRecords" PageSize="30">
         </SettingsPager>
@@ -620,14 +639,53 @@
                             <SelectedRow BackColor="White" ForeColor="Black">
                             </SelectedRow>
             <EditFormColumnCaption Font-Names="Segoe UI" Font-Size="9pt">
-                <Paddings PaddingBottom="5px" PaddingLeft="15px" PaddingRight="15px" 
-                    PaddingTop="5px" />
+                <Paddings PaddingBottom="5px" PaddingLeft="15px" PaddingRight="15px" PaddingTop="5px" />
             </EditFormColumnCaption>
             <CommandColumnItem ForeColor="SteelBlue">
             </CommandColumnItem>
             <BatchEditModifiedCell BackColor="#FFFF99" ForeColor="Black">
             </BatchEditModifiedCell>
         </Styles>
+        <Templates>
+                <EditForm>
+                    <div style="padding: 5px 15px 5px 15px; width: 300px">
+                        <dx:ContentControl ID="ContentControl1" runat="server">
+                            <table align="center">
+                                <tr style="height: 26px">
+                                    <td>
+                                        <dx:ASPxLabel ID="ASPxLabel1" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Value" Width="90px"></dx:ASPxLabel>
+                                    </td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editValue" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="Value"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 26px">
+                                    <td>Delete Status</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editDeleteStatus" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="DeleteStatus"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 26px">
+                                    <td>Remarks</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editRemark" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="Remark"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </dx:ContentControl>
+                    </div>
+                    <div style="text-align: left; padding: 5px 5px 5px 15px">
+                        <dx:ASPxGridViewTemplateReplacement ID="UpdateButton" ReplacementType="EditFormUpdateButton"
+                            runat="server"></dx:ASPxGridViewTemplateReplacement>
+                        <dx:ASPxGridViewTemplateReplacement ID="CancelButton" ReplacementType="EditFormCancelButton"
+                            runat="server"></dx:ASPxGridViewTemplateReplacement>
+                    </div>
+                </EditForm>
+            </Templates>
     </dx:ASPxGridView>    
 </div>
 
@@ -639,14 +697,34 @@
 <table style="width:100%">
     <tr>
         <td>
+            <table style="width:100%">
+                <tr style="height:26px">
+                    <td style="width:100px">
+                        <dx:ASPxLabel ID="ASPxLabel20" runat="server" Text="Sub Lot No" Font-Names="Segoe UI" Font-Size="9pt" Width="80px"></dx:ASPxLabel>
+                    </td>
+                    <td>
 
+                        <dx:ASPxTextBox ID="ASPxTextBox1" runat="server" Width="60px">
+                        </dx:ASPxTextBox>
+                    </td>
+                </tr>
+                <tr style="height:26px">
+                    <td>
+                        <dx:ASPxLabel ID="ASPxLabel21" runat="server" Text="Remarks" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
+                    </td>
+                    <td>
+                        <dx:ASPxTextBox ID="ASPxTextBox2" runat="server" Width="160px">
+                        </dx:ASPxTextBox>
+                    </td>
+                </tr>
+            </table>
         </td>
         <td style="width:500px">
             <table style="width:100%">
                 <tr>
                     <td colspan="2" class="header"><dx:ASPxLabel ID="ASPxLabel22" runat="server" Text="Specification" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
                     <td colspan="2" class="header"><dx:ASPxLabel ID="ASPxLabel23" runat="server" Text="X Bar Control" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
-                    <td colspan="6" class="header"><dx:ASPxLabel ID="ASPxLabel24" runat="server" Text="X Bar Control" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
+                    <td colspan="6" class="header"><dx:ASPxLabel ID="ASPxLabel24" runat="server" Text="Result" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
                 </tr>
                 <tr>
                     <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel13" runat="server" Text="USL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
@@ -657,8 +735,8 @@
                     <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel17" runat="server" Text="Max" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
                     <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel18" runat="server" Text="Ave" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
                     <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel19" runat="server" Text="R" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
-                    <td class="body" align="center" rowspan="2" style="width:50px"><dx:ASPxLabel ID="lblC" runat="server" Text="C" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
-                    <td class="body" align="center" rowspan="2" style="width:50px"><dx:ASPxLabel ID="lblNG" runat="server" Text="NG" Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblNG"></dx:ASPxLabel></td>
+                    <td class="body" align="center" rowspan="2" style="width:50px" id="C"><dx:ASPxLabel ID="lblC" runat="server" Text="C" Font-Names="Segoe UI" Font-Size="Medium" Font-Bold="True" ForeColor="Black" ClientInstanceName="lblC"></dx:ASPxLabel></td>
+                    <td class="body" align="center" rowspan="2" style="width:50px" id="NG"><dx:ASPxLabel ID="lblNG" runat="server" Text="NG" Font-Names="Segoe UI" Font-Size="Medium" ClientInstanceName="lblNG" Font-Bold="True" ForeColor="Black"></dx:ASPxLabel></td>
                 </tr>
                 <tr>
                     <td class="body" align="right"><dx:ASPxLabel ID="lblUSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUSL"></dx:ASPxLabel></td>
@@ -674,7 +752,10 @@
         </td>
     </tr>
 </table>    
-    <div style="height:10px"></div>
+    <div style="height:10px; vertical-align:middle">
+        <hr style="border-color:darkgray; height:6px"/>
+
+    </div>
     <div style="vertical-align:middle; text-align:center; height:30px">
         <dx:ASPxLabel ID="ASPxLabel25" runat="server" Text="X Bar Chart / X Bar Monitoring" Font-Names="Segoe UI" Font-Size="10pt" Font-Bold="true" Font-Underline="true"></dx:ASPxLabel>
     </div>
@@ -687,6 +768,15 @@
                                 EnableTheming="True" KeyFieldName="SeqNo" Theme="Office2010Black"            
                                 Width="100%" 
                                 Font-Names="Segoe UI" Font-Size="9pt">
+
+
+<SettingsPopup>
+<FilterControl AutoUpdatePosition="False"></FilterControl>
+</SettingsPopup>
+                            <Styles>
+                                <Header HorizontalAlign="Center">
+                                </Header>
+                            </Styles>
 
 
                             </dx:ASPxGridView>

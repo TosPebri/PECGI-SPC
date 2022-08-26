@@ -1,6 +1,6 @@
 ﻿Imports System.Data.SqlClient
 Public Class clsProductionSampleVerificationListDB
-    Public Shared Function FillCombo(ByVal Status As String, data As clsProductionSampleVerificationList, Optional ByRef pErr As String = "") As DataTable
+    Public Shared Function FillCombo(ByVal Status As String, data As clsProductionSampleVerificationList) As DataTable
         Try
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
@@ -18,12 +18,11 @@ Public Class clsProductionSampleVerificationListDB
                 Return dt
             End Using
         Catch ex As Exception
-            pErr = ex.Message
-            Return Nothing
+            Throw New Exception("Query Error! " & ex.Message)
         End Try
     End Function
 
-    Public Shared Function LoadGrid(data As clsProductionSampleVerificationList, Optional ByRef pErr As String = "") As DataTable
+    Public Shared Function LoadGrid(data As clsProductionSampleVerificationList) As DataTable
         Try
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
@@ -45,8 +44,7 @@ Public Class clsProductionSampleVerificationListDB
                 Return dt
             End Using
         Catch ex As Exception
-            pErr = ex.Message
-            Return Nothing
+            Throw New Exception("Query Error! " & ex.Message)
         End Try
     End Function
 End Class

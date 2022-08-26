@@ -32,6 +32,8 @@ Public Class ProdSampleVerification
 
     Dim UCL As Decimal = 0
     Dim LCL As Decimal = 0
+    Dim USL As Decimal = 0
+    Dim LSL As Decimal = 0
     Dim ColumnBrowse As String = ""
     Dim TotRow As Integer = 0
     Dim nRow As Integer = 0
@@ -84,10 +86,10 @@ Public Class ProdSampleVerification
                 btnClear.Enabled = False
 
                 UpFillCombo()
-
+                nRow = 0
                 Up_GridLoad(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd"), prmShifCode, prmSeqNo)
                 Up_GridLoadActivities(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd"), prmShifCode, prmSeqNo)
-                nRow = 0
+
                 If VerifyStatus = 0 Then
                     btnVerification.Enabled = True
                 End If
@@ -119,8 +121,8 @@ Public Class ProdSampleVerification
                 Dim Shift As String = HideValue.Get("ShiftCode")
                 Dim Seq As String = HideValue.Get("Seq")
 
-                Up_GridLoad(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
                 nRow = 0
+                Up_GridLoad(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
                 Grid.JSProperties("cp_Verify") = VerifyStatus
             ElseIf pAction = "Verify" Then
                 Dim SpcResultID As String
@@ -186,36 +188,47 @@ Public Class ProdSampleVerification
     End Sub
 
     Private Sub Grid_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles Grid.HtmlDataCellPrepared
+        Try
+            If (e.DataColumn.FieldName = ColumnBrowse) Then
+                Dim RowNonSeq = 10
+                Dim RowSeq = TotRow - RowNonSeq
 
-        If (e.DataColumn.FieldName = ColumnBrowse) Then
-            Dim RowNonSeq = 9
-            Dim RowSeq = TotRow - RowNonSeq
-
-            If nRow < RowSeq Then
-                Try
-                    If e.CellValue < LCL Then
+                If nRow <= RowSeq Then
+                    Try
+                        If e.CellValue < LSL Or e.CellValue > USL Then
+                            e.Cell.BackColor = Color.Red
+                        ElseIf e.CellValue < LSL Or e.CellValue > UCL Then
+                            e.Cell.BackColor = Color.Pink
+                        End If
+                    Catch ex As Exception
+                        Exit Try
+                    End Try
+                ElseIf nRow >= TotRow - 11 And nRow <= TotRow - 8 Then
+                    Try
+                        If e.CellValue < LSL Or e.CellValue > USL Then
+                            e.Cell.BackColor = Color.Red
+                        ElseIf e.CellValue < LSL Or e.CellValue > UCL Then
+                            e.Cell.BackColor = Color.Yellow
+                        End If
+                    Catch ex As Exception
+                        Exit Try
+                    End Try
+                ElseIf nRow >= TotRow - 5 And nRow <= TotRow - 1 Then
+                    If IsDBNull(e.CellValue) Then
+                        e.Cell.BackColor = Color.Yellow
+                    ElseIf e.CellValue = "NG" Then
                         e.Cell.BackColor = Color.Red
-                    ElseIf e.CellValue > UCL Then
-                        e.Cell.BackColor = Color.Red
+                    ElseIf e.CellValue = "C" Then
+                        e.Cell.BackColor = Color.Orange
                     End If
-                Catch ex As Exception
-                    Exit Try
-                End Try
 
-            ElseIf nRow >= TotRow - 1 And nRow <= TotRow - 4 Then
-                If IsDBNull(e.CellValue) Or e.CellValue = "" Then
-                    e.Cell.BackColor = Color.Yellow
-                ElseIf e.CellValue = "NG" Then
-                    e.Cell.BackColor = Color.Red
-                ElseIf e.CellValue = "C" Then
-                    e.Cell.BackColor = Color.Orange
                 End If
 
+                nRow = nRow + 1
             End If
-
-            nRow = nRow + 1
-        End If
-
+        Catch ex As Exception
+            Throw New Exception("Error_EditingGrid !" & ex.Message)
+        End Try
     End Sub
 
     Protected Sub GridMenu_RowInserting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles GridMenu.RowInserting
@@ -643,6 +656,8 @@ Public Class ProdSampleVerification
             ColumnBrowse = dtColBrowse.Rows(0)("nTime")
             UCL = dtColBrowse.Rows(0)("UCL")
             LCL = dtColBrowse.Rows(0)("LCL")
+            USL = dtColBrowse.Rows(0)("USL")
+            LSL = dtColBrowse.Rows(0)("LSL")
             VerifyStatus = dtColBrowse.Rows(0)("VerifyStatus")
         End If
 

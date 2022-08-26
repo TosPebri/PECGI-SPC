@@ -15,6 +15,11 @@ Public Class clsChartSetup
     Public Property RCL As Double
     Public Property RLCL As Double
     Public Property RUCL As Double
+    Public Property Min As Double
+    Public Property Max As Double
+    Public Property R As Double
+    Public Property Avg As Double
+    Public Property NG As String
 End Class
 
 Public Class clsChartSetupDB
@@ -30,8 +35,9 @@ Public Class clsChartSetupDB
             cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
             cmd.Parameters.AddWithValue("ProdDate", ProdDate)
             Dim da As New SqlDataAdapter(cmd)
-            Dim dt As New DataTable
-            da.Fill(dt)
+            Dim ds As New DataSet
+            da.Fill(ds)
+            Dim dt As DataTable = ds.Tables(0)
             If dt.Rows.Count = 0 Then
                 Return Nothing
             Else

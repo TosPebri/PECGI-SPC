@@ -11,4 +11,10 @@
     Public Property CODENAME As String
     Public Property ProdDate_Grid As String
     Public Property Shiftcode_Grid As String
+
+    Public Property SPCResultID As String
+    Public Property ActivityID As String
+    Public Property Action As String
+    Public Property Result As String
+    Public Property Remark As String
 End Class

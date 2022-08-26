@@ -7,7 +7,66 @@
     <script type="text/javascript">
         function OnEndCallback(s, e) {
             if (s.cp_message != "" && s.cp_val == 1) {
+                if (s.cp_type == "Success" && s.cp_val == 1) {
+                    toastr.success(s.cp_message, 'Success');
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                    s.cp_val = 0;
+                    s.cp_message = "";
+                }
+                else if (s.cp_type == "ErrorMsg" && s.cp_val == 1) {
+                    toastr.error(s.cp_message, 'Error');
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                    s.cp_val = 0;
+                    s.cp_message = "";
 
+                }
+                else if (s.cp_type == "Warning" && s.cp_val == 1) {
+                    toastr.warning(s.cp_message, 'Warning');
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                    s.cp_val = 0;
+                    s.cp_message = "";
+                }
+                else if (s.cp_message == "" && s.cp_val == 0) {
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                }
+
+            }
+        }
+
+        function OnInit(s, e) {
+            if (s.cp_Verify == "0") {
+                btnVerification.SetEnabled(true);
+            }
+            else {
+                btnVerification.SetEnabled(false);
+            }
+            //var today = new Date();
+            //dtProdDate.SetDate(today);
+        }
+
+        function GridOnEndCallback(s, e) {
+            console.log(s.cp_message);
+            if (s.cp_message != "" && s.cp_val == 1) {
                 if (s.cp_type == "Success" && s.cp_val == 1) {
                     toastr.success(s.cp_message, 'Success');
                     toastr.options.closeButton = false;
@@ -51,11 +110,9 @@
                     toastr.options.onclick = null;
                 }
             }
-        }
-
-        function OnInitProdDate(s, e) {
-            var today = new Date();
-            dtProdDate.SetDate(today);
+            if (s.cp_Verify == "0") {
+                btnVerification.SetEnabled(true);
+            }
         }
 
         function Browse() {
@@ -67,6 +124,10 @@
             var today = new Date();
             dtProdDate.SetDate(today);
             GridMenu.PerformCallback('Clear');
+        }
+
+        function Verify() {
+            Grid.PerformCallback('Verify');
         }
 
         function ChangeFactory() {
@@ -186,7 +247,6 @@
                     <dx:ASPxDateEdit ID="dtProdDate" runat="server" Theme="Office2010Black" AutoPostBack="false" Width="155px"
                         ClientInstanceName="dtProdDate" EditFormatString="dd MMM yyyy" DisplayFormatString="dd MMM yyyy"
                         Font-Names="Segoe UI" Font-Size="9pt" Height="25px" TabIndex="5">
-                        <ClientSideEvents Init="OnInitProdDate" />
                         <CalendarProperties>
                             <HeaderStyle Font-Size="12pt" Paddings-Padding="5px" />
                             <DayStyle Font-Size="9pt" Paddings-Padding="5px" />
@@ -290,7 +350,7 @@
                 <td>
                     <dx:ASPxButton ID="btnVerification" runat="server" AutoPostBack="False" ClientInstanceName="btnVerification"
                         Font-Names="Segoe UI" Font-Size="10pt" Text="Verify" Theme="Office2010Silver" Width="100px">
-                        <%--<ClientSideEvents Click="Verification" />--%>
+                        <ClientSideEvents Click="Verify" Init="OnInit" />
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 10px">&nbsp;</td>
@@ -327,9 +387,9 @@
     <div style="padding: 5px 5px 5px 5px;">
         <table>
             <dx:ASPxGridView ID="Grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="Grid"
-                EnableTheming="True" KeyFieldName ="nDesc" Theme="Office2010Black"
+                EnableTheming="True" KeyFieldName="nDesc" Theme="Office2010Black"
                 Width="100%" Font-Names="Segoe UI" Font-Size="9pt">
-                <ClientSideEvents EndCallback="OnEndCallback" />
+                <ClientSideEvents EndCallback="GridOnEndCallback" Init="OnInit" />
                 <Columns>
                     <dx:GridViewBandColumn Caption="Date" VisibleIndex="0">
                         <Columns>
@@ -342,33 +402,15 @@
                         </Columns>
                     </dx:GridViewBandColumn>
                 </Columns>
-                <SettingsBehavior ColumnResizeMode="Control" ConfirmDelete="True"
-                    AllowFocusedRow="True" AllowDragDrop="False" AllowSort="False" />
-                <SettingsEditing Mode="Batch">
-                    <BatchEditSettings ShowConfirmOnLosingChanges="False" />
-                </SettingsEditing>
+                <SettingsBehavior ColumnResizeMode="Control" />
                 <SettingsPager AlwaysShowPager="true" Mode="ShowAllRecords" PageSize="30">
                 </SettingsPager>
                 <Settings HorizontalScrollBarMode="Auto"
                     VerticalScrollBarMode="Auto" ShowStatusBar="Hidden" />
-                <SettingsPopup>
-                    <EditForm HorizontalAlign="WindowCenter" Modal="false"
-                        VerticalAlign="TopSides" Width="320" VerticalOffset="0" Height="300" />
-                </SettingsPopup>
-                <SettingsDataSecurity AllowDelete="False"
-                    AllowInsert="False" />
-                <Styles EditFormColumnCaption-Paddings-PaddingLeft="10px"
-                    EditFormColumnCaption-Paddings-PaddingRight="10px"
-                    Header-Paddings-Padding="5px">
+                <Styles Header-Paddings-Padding="5px">
                     <Header HorizontalAlign="Center" Wrap="True">
                         <Paddings Padding="2px" />
                     </Header>
-                    <EditFormColumnCaption Font-Names="Segoe UI" Font-Size="9pt">
-                        <Paddings PaddingBottom="5px" PaddingLeft="15px" PaddingRight="15px"
-                            PaddingTop="5px" />
-                    </EditFormColumnCaption>
-                    <CommandColumnItem ForeColor="SteelBlue">
-                    </CommandColumnItem>
                 </Styles>
             </dx:ASPxGridView>
         </table>
@@ -390,16 +432,16 @@
                         </HeaderStyle>
                     </dx:GridViewCommandColumn>
 
-                    <dx:GridViewDataTextColumn Caption="" VisibleIndex="1" Width="120px"
+                    <dx:GridViewDataTextColumn Caption="Acitivity ID" VisibleIndex="1" Width="10px"
                         FieldName="ActivityID" Visible="false">
-                        <PropertiesTextEdit ClientInstanceName="ActivityID">
+                        <PropertiesTextEdit ClientInstanceName="ActivityID" Width="60px">
                         </PropertiesTextEdit>
                         <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                         <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
                         </CellStyle>
                     </dx:GridViewDataTextColumn>
 
-                    <dx:GridViewDataTextColumn Caption="Date" VisibleIndex="2" Width="120px"
+                    <dx:GridViewDataTextColumn Caption="Date" VisibleIndex="2" Width="100px"
                         FieldName="ProdDate">
                         <PropertiesTextEdit ClientInstanceName="ProdDate">
                         </PropertiesTextEdit>
@@ -413,54 +455,68 @@
                         <PropertiesTextEdit ClientInstanceName="PIC">
                         </PropertiesTextEdit>
                         <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                        <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
+                        <CellStyle HorizontalAlign="Left" VerticalAlign="Middle">
                         </CellStyle>
                     </dx:GridViewDataTextColumn>
 
                     <dx:GridViewDataTextColumn Caption="Action" VisibleIndex="4" Width="200px"
                         FieldName="Action">
-                        <PropertiesTextEdit ClientInstanceName="Action">
+                        <PropertiesTextEdit ClientInstanceName="Action" Width="300px">
                         </PropertiesTextEdit>
                         <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                        <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
+                        <CellStyle HorizontalAlign="Left" VerticalAlign="Middle">
                         </CellStyle>
                     </dx:GridViewDataTextColumn>
 
-                    <dx:GridViewDataTextColumn Caption="Result" VisibleIndex="5" Width="50px"
-                        FieldName="Result">
-                        <PropertiesTextEdit ClientInstanceName="Result">
-                        </PropertiesTextEdit>
-                        <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                        <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
-                        </CellStyle>
-                    </dx:GridViewDataTextColumn>
+                    <dx:GridViewDataComboBoxColumn Caption="Result" FieldName="Result"
+                        VisibleIndex="4" Width="50px" Settings-AutoFilterCondition="Contains">
+                        <PropertiesComboBox DropDownStyle="DropDownList" Width="80px" TextFormatString="{0}"
+                            IncrementalFilteringMode="StartsWith" DisplayFormatInEditMode="true">
+                            <Items>
+                                <dx:ListEditItem Text="OK" Value="0" />
+                                <dx:ListEditItem Text="NG" Value="1" />
+                            </Items>
+                            <ItemStyle Height="10px" Paddings-Padding="4px">
+                                <Paddings Padding="4px"></Paddings>
+                            </ItemStyle>
+                            <ButtonStyle Width="5px" Paddings-Padding="2px">
+                                <Paddings Padding="2px"></Paddings>
+                            </ButtonStyle>
+                        </PropertiesComboBox>
+                        <Settings AutoFilterCondition="Contains"></Settings>
+                        <HeaderStyle Paddings-PaddingLeft="2px" HorizontalAlign="Center" VerticalAlign="Middle" Wrap="True">
+                            <Paddings PaddingLeft="2px"></Paddings>
+                        </HeaderStyle>
+                        <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"></CellStyle>
+                    </dx:GridViewDataComboBoxColumn>
 
                     <dx:GridViewDataTextColumn Caption="Remark" VisibleIndex="6" Width="200px"
                         FieldName="Remark">
-                        <PropertiesTextEdit ClientInstanceName="Remark">
+                        <PropertiesTextEdit ClientInstanceName="Remark" Width="300px">
                         </PropertiesTextEdit>
                         <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                        <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
+                        <CellStyle HorizontalAlign="Left" VerticalAlign="Middle">
                         </CellStyle>
                     </dx:GridViewDataTextColumn>
 
-                    <dx:GridViewDataTextColumn Caption="LastUser" VisibleIndex="7" Width="120px"
+                    <dx:GridViewDataTextColumn Caption="Last User" VisibleIndex="7" Width="120px"
                         FieldName="LastUser">
                         <PropertiesTextEdit ClientInstanceName="LastUser">
                         </PropertiesTextEdit>
                         <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                        <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
+                        <CellStyle HorizontalAlign="Left" VerticalAlign="Middle">
                         </CellStyle>
                     </dx:GridViewDataTextColumn>
 
-                    <dx:GridViewDataTextColumn Caption="LastUpdate" VisibleIndex="8" Width="120px"
-                        FieldName="LastUpdate">
+                    <dx:GridViewDataTextColumn Caption="Last Update" VisibleIndex="8" Width="100px"
+                        FieldName="LastDate">
                         <PropertiesTextEdit ClientInstanceName="LastUpdate">
                         </PropertiesTextEdit>
                         <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                         <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
                         </CellStyle>
                     </dx:GridViewDataTextColumn>
+
                 </Columns>
 
                 <SettingsBehavior ConfirmDelete="True" ColumnResizeMode="Control" />
@@ -487,54 +543,39 @@
 
                 <Templates>
                     <EditForm>
-                        <div style="padding: 15px 15px 15px 15px; width: 300px">
+                        <div style="padding: 15px 15px 15px 15px; width: 380px">
                             <dx:ContentControl ID="ContentControl1" runat="server">
                                 <table align="center">
                                     <tr style="height: 30px">
                                         <td>
-                                            <dx:ASPxLabel ID="lblActivityID" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text=" Activity ID" Width="90px"></dx:ASPxLabel>
+                                            <dx:ASPxLabel ID="lblAction" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text=" Action" Width="60px"></dx:ASPxLabel>
                                         </td>
-                                        <td>
-                                            <dx:ASPxGridViewTemplateReplacement ID="editActivityID" ReplacementType="EditFormCellEditor"
-                                                runat="server" ColumnID="ActivityID"></dx:ASPxGridViewTemplateReplacement>
-                                        </td>
-                                    </tr>
-                                    <tr style="height: 30px">
-                                        <td>Date</td>
-                                        <td>
-                                            <dx:ASPxGridViewTemplateReplacement ID="editProdDate" ReplacementType="EditFormCellEditor"
-                                                runat="server" ColumnID="ProdDate"></dx:ASPxGridViewTemplateReplacement>
-                                        </td>
-                                    </tr>
-                                    <tr style="height: 30px">
-                                        <td>PIC</td>
-                                        <td>
-                                            <dx:ASPxGridViewTemplateReplacement ID="editPIC" ReplacementType="EditFormCellEditor"
-                                                runat="server" ColumnID="PIC"></dx:ASPxGridViewTemplateReplacement>
-                                        </td>
-                                    </tr>
-                                    <tr style="height: 30px">
-                                        <td>Action</td>
                                         <td>
                                             <dx:ASPxGridViewTemplateReplacement ID="editAction" ReplacementType="EditFormCellEditor"
                                                 runat="server" ColumnID="Action"></dx:ASPxGridViewTemplateReplacement>
                                         </td>
-                                    </tr>
-                                    <tr style="height: 30px">
-                                        <td>Result</td>
-                                        <td>
-                                            <dx:LayoutItemNestedControlContainer>
-                                                <dx:ASPxGridViewTemplateReplacement ID="editResult" ReplacementType="EditFormCellEditor"
-                                                    runat="server" ColumnID="Result"></dx:ASPxGridViewTemplateReplacement>
-                                                <dx:LayoutItemNestedControlContainer>
+                                        <td style="visibility: hidden">
+                                            <dx:ASPxGridViewTemplateReplacement ID="editActivityID" ReplacementType="EditFormCellEditor"
+                                                runat="server" ColumnID="ActivityID"></dx:ASPxGridViewTemplateReplacement>
                                         </td>
                                     </tr>
+
                                     <tr style="height: 30px">
                                         <td>Remark</td>
                                         <td>
                                             <dx:LayoutItemNestedControlContainer>
                                                 <dx:ASPxGridViewTemplateReplacement ID="editRemark" ReplacementType="EditFormCellEditor"
                                                     runat="server" ColumnID="Remark"></dx:ASPxGridViewTemplateReplacement>
+                                                <dx:LayoutItemNestedControlContainer>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="height: 30px">
+                                        <td>Result</td>
+                                        <td>
+                                            <dx:LayoutItemNestedControlContainer>
+                                                <dx:ASPxGridViewTemplateReplacement ID="editResult" ReplacementType="EditFormCellEditor"
+                                                    runat="server" ColumnID="Result"></dx:ASPxGridViewTemplateReplacement>
                                                 <dx:LayoutItemNestedControlContainer>
                                         </td>
                                     </tr>

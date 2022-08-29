@@ -9,7 +9,7 @@ Public Class clsItemCheckDB
     Public Shared Function GetList(Optional FactoryCode As String = "", Optional ItemTypeCode As String = "", Optional LineCode As String = "") As List(Of clsItemCheck)
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
-            Dim q As String = "select I.ItemCheckCode, I.ItemCheck from spc_ItemCheckMaster I inner join spc_ItemCheckByType T on I.ItemCheckCode = T.ItemCheckCode "
+            Dim q As String = "select I.ItemCheckCode, I.ItemCheckCode + ' - ' + I.ItemCheck ItemCheck from spc_ItemCheckMaster I inner join spc_ItemCheckByType T on I.ItemCheckCode = T.ItemCheckCode "
             q = q & "where T.ItemCheckCode is not Null "
             If FactoryCode <> "" Then
                 q = q & "and T.FactoryCode = @FactoryCode " & vbCrLf

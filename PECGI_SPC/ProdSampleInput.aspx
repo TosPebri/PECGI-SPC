@@ -90,7 +90,8 @@
         }
 
         function cboShiftChanged(s, e) {            
-            cboSeq.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + cboShift.GetValue());
+            ClearGrid();
+            cboSeq.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + cboShift.GetValue());            
         }
 
         function cboLineChanged(s, e) {    
@@ -166,6 +167,11 @@
                 toastr.options.onclick = null;
             }
 
+            lblMKUser.SetText(s.cpMKUser);
+            lblMKDate.SetText(s.cpMKDate);
+            lblQCUser.SetText(s.cpQCUser);
+            lblQCDate.SetText(s.cpQCDate);
+
             lblUSL.SetText(s.cpUSL);
             lblLSL.SetText(s.cpLSL);
             lblUCL.SetText(s.cpUCL);
@@ -178,6 +184,8 @@
             lblNG.SetText(s.cpNG);
             if (s.cpNG == 'NG') {
                 document.getElementById('NG').style.backgroundColor = 'Red';
+            } else if (s.cpNG == 'OK') {
+                document.getElementById('NG').style.backgroundColor = 'Green';
             } else {
                 document.getElementById('NG').style.backgroundColor = 'White';
             }
@@ -186,6 +194,7 @@
             } else {
                 document.getElementById('C').style.backgroundColor = 'White';
             }
+            gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
         }
     </script>
 </asp:Content>
@@ -285,7 +294,7 @@
                 <dx:ASPxComboBox ID="cboShow" runat="server" Theme="Office2010Black" 
                     ClientInstanceName="cboShow" Font-Names="Segoe UI" 
                     Font-Size="9pt" Height="25px" 
-                    Width="58px" TabIndex="9">
+                    Width="58px" TabIndex="9" SelectedIndex="0">
                     <Items>                        
                         <dx:ListEditItem Text="No" Value="0" Selected="true"/>
                         <dx:ListEditItem Text="Yes" Value="1" />
@@ -395,9 +404,9 @@
                     ClientInstanceName="cboSeq" ValueField="SequenceNo" Font-Names="Segoe UI" 
                     Font-Size="9pt" Height="25px" 
                     Width="60px" TabIndex="3">
-                    <ClientSideEvents EndCallback="function(s, e) {cboSeq.SetEnabled(true);}"/>
+                    <ClientSideEvents SelectedIndexChanged="ClearGrid" EndCallback="function(s, e) {cboSeq.SetEnabled(true);}"/>
                     <Columns>
-                        <dx:ListBoxColumn Caption="Seq" FieldName="SequenceNo">
+                        <dx:ListBoxColumn Caption="Seq" FieldName="SequenceNo" Width="60px">
                         </dx:ListBoxColumn>
                     </Columns>
                     <ButtonStyle Paddings-Padding="4px" Width="5px">
@@ -448,7 +457,8 @@
 		                    return;
                         }
                         grid.CancelEdit();
- 	                    grid.PerformCallback('load' + '|' + cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + cboShift.GetValue() + '|' + cboSeq.GetValue());
+ 	                    grid.PerformCallback('load' + '|' + cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + cboShift.GetValue() + '|' + cboSeq.GetValue() + '|' + cboShow.GetValue());
+                        gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
                         
 
                     }" />
@@ -466,7 +476,7 @@
     <dx:ASPxHiddenField ID="hfRevNo" runat="server" ClientInstanceName="hfRevNo">
     </dx:ASPxHiddenField>
 </div>
-<hr style="border-color:darkgray; height:6px"/>
+<hr style="border-color:darkgray; height:12px"/>
 <div>
     <table style="width: 100%;">
         <tr>
@@ -527,11 +537,15 @@
                     Font-Names="Segoe UI" Font-Size="9pt">
                 </dx:ASPxLabel>
             </td>
-            <td style="border: 1px solid silver; width: 100px" align="center">
-                &nbsp;
+            <td style="border: 1px solid silver; width: 100px" align="center">                
+                <dx:ASPxLabel ID="lblMKUser" runat="server" Text="" 
+                    Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblMKUser">
+                </dx:ASPxLabel>
             </td>
-            <td style="border: 1px solid silver; width: 100px" align="center">
-                &nbsp;
+            <td style="border: 1px solid silver; width: 100px" align="center">                
+                <dx:ASPxLabel ID="lblMKDate" runat="server" Text="" 
+                    Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblMKDate">
+                </dx:ASPxLabel>
             </td>
         </tr>
         <tr>
@@ -541,11 +555,15 @@
                 </dx:ASPxLabel>
             </td>
             <td style="border: 1px solid silver; width: 100px" align="center">
-                &nbsp;
+                <dx:ASPxLabel ID="lblQCUser" runat="server" Text="" 
+                    Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblQCUser">
+                </dx:ASPxLabel>
             </td>
             <td style="border: 1px solid silver; width: 100px" align="center">
-                &nbsp;
-            </td>
+                &nbsp;<dx:ASPxLabel ID="lblQCDate" runat="server" Text="" 
+                    Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblQCDate">
+                </dx:ASPxLabel>
+            &nbsp;</td>
         </tr>
     </table>
             </td>
@@ -562,7 +580,7 @@
             <ClientSideEvents 
                 EndCallback="OnEndCallback" 
              />
-            <SettingsDataSecurity AllowDelete="False" AllowInsert="False" />
+            <SettingsDataSecurity AllowDelete="False" />
 
 <SettingsPopup>
     <EditForm Modal="false" HorizontalAlign="WindowCenter" VerticalAlign="WindowCenter" Width="200" />
@@ -570,18 +588,20 @@
 </SettingsPopup>
         <Columns>
 
-            <dx:GridViewCommandColumn ShowEditButton="True" VisibleIndex="0" Width="50px">
+            <dx:GridViewCommandColumn ShowEditButton="True" VisibleIndex="0" Width="50px" ShowNewButtonInHeader="True">
             </dx:GridViewCommandColumn>
 
             <dx:GridViewDataTextColumn Caption="Data#" VisibleIndex="1" FieldName="SeqNo" Width="50px">
                 <EditFormSettings Visible="False" />
             </dx:GridViewDataTextColumn>
             <dx:GridViewDataTextColumn Caption="Value" VisibleIndex="2" FieldName="Value" Width="80px">
-                <PropertiesTextEdit SelectInputTextOnClick="True" DisplayFormatString="0.000" Width="90px">
-                    <MaskSettings UseInvariantCultureDecimalSymbolOnClient="True" />
+                <PropertiesTextEdit SelectInputTextOnClick="True" DisplayFormatString="0.000" Width="70px">
+                    <MaskSettings UseInvariantCultureDecimalSymbolOnClient="True" Mask="&lt;0..999g&gt;.&lt;000..999&gt;" />
                     <ValidationSettings>
                         <RegularExpression ErrorText="Please input valid value" />
                     </ValidationSettings>
+                    <Style HorizontalAlign="Right">
+                    </Style>
                 </PropertiesTextEdit>
                 <EditFormSettings Visible="True" />
             </dx:GridViewDataTextColumn>
@@ -597,7 +617,7 @@
                 <EditFormSettings Visible="False" />
             </dx:GridViewDataTextColumn>
             <dx:GridViewDataTextColumn Caption="Remarks" VisibleIndex="8" FieldName="Remark">
-                <PropertiesTextEdit Width="90px">
+                <PropertiesTextEdit Width="120px">
                 </PropertiesTextEdit>
                 <EditFormSettings Visible="True" />
             </dx:GridViewDataTextColumn>
@@ -704,7 +724,7 @@
                     </td>
                     <td>
 
-                        <dx:ASPxTextBox ID="ASPxTextBox1" runat="server" Width="60px">
+                        <dx:ASPxTextBox ID="txtSubLotNo" runat="server" Width="60px" ClientInstanceName="txtSubLotNo">
                         </dx:ASPxTextBox>
                     </td>
                 </tr>
@@ -713,7 +733,7 @@
                         <dx:ASPxLabel ID="ASPxLabel21" runat="server" Text="Remarks" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
                     </td>
                     <td>
-                        <dx:ASPxTextBox ID="ASPxTextBox2" runat="server" Width="160px">
+                        <dx:ASPxTextBox ID="txtRemarks" runat="server" Width="160px" ClientInstanceName="txtRemarks">
                         </dx:ASPxTextBox>
                     </td>
                 </tr>
@@ -735,8 +755,8 @@
                     <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel17" runat="server" Text="Max" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
                     <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel18" runat="server" Text="Ave" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
                     <td class="header" style="width:50px"><dx:ASPxLabel ID="ASPxLabel19" runat="server" Text="R" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel></td>
-                    <td class="body" align="center" rowspan="2" style="width:50px" id="C"><dx:ASPxLabel ID="lblC" runat="server" Text="C" Font-Names="Segoe UI" Font-Size="Medium" Font-Bold="True" ForeColor="Black" ClientInstanceName="lblC"></dx:ASPxLabel></td>
-                    <td class="body" align="center" rowspan="2" style="width:50px" id="NG"><dx:ASPxLabel ID="lblNG" runat="server" Text="NG" Font-Names="Segoe UI" Font-Size="Medium" ClientInstanceName="lblNG" Font-Bold="True" ForeColor="Black"></dx:ASPxLabel></td>
+                    <td class="body" align="center" rowspan="2" style="width:50px" id="C"><dx:ASPxLabel ID="lblC" runat="server" Text="" Font-Names="Segoe UI" Font-Size="Medium" Font-Bold="True" ForeColor="Black" ClientInstanceName="lblC"></dx:ASPxLabel></td>
+                    <td class="body" align="center" rowspan="2" style="width:50px" id="NG"><dx:ASPxLabel ID="lblNG" runat="server" Text="" Font-Names="Segoe UI" Font-Size="Medium" ClientInstanceName="lblNG" Font-Bold="True" ForeColor="Black"></dx:ASPxLabel></td>
                 </tr>
                 <tr>
                     <td class="body" align="right"><dx:ASPxLabel ID="lblUSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUSL"></dx:ASPxLabel></td>
@@ -756,23 +776,37 @@
         <hr style="border-color:darkgray; height:6px"/>
 
     </div>
-    <div style="vertical-align:middle; text-align:center; height:30px">
-        <dx:ASPxLabel ID="ASPxLabel25" runat="server" Text="X Bar Chart / X Bar Monitoring" Font-Names="Segoe UI" Font-Size="10pt" Font-Bold="true" Font-Underline="true"></dx:ASPxLabel>
-    </div>
+
 <div>
     
     <table style="width:100%;">
         <tr>
             <td>
                 <dx:ASPxGridView ID="gridX" runat="server" AutoGenerateColumns="False" ClientInstanceName="gridX"
-                                EnableTheming="True" KeyFieldName="SeqNo" Theme="Office2010Black"            
+                                EnableTheming="True" KeyFieldName="Des" Theme="Office2010Black"            
                                 Width="100%" 
                                 Font-Names="Segoe UI" Font-Size="9pt">
+
+
+                    <Settings HorizontalScrollBarMode="Auto" />
+                    <SettingsDataSecurity AllowDelete="False" AllowEdit="False" AllowInsert="False" />
 
 
 <SettingsPopup>
 <FilterControl AutoUpdatePosition="False"></FilterControl>
 </SettingsPopup>
+                            <Columns>
+                                <dx:GridViewBandColumn Caption="DATE" VisibleIndex="0">
+                                    <Columns>
+                                        <dx:GridViewBandColumn Caption="SHIFT" VisibleIndex="0">
+                                            <Columns>
+                                                <dx:GridViewBandColumn Caption="TIME" VisibleIndex="0">
+                                                </dx:GridViewBandColumn>
+                                            </Columns>
+                                        </dx:GridViewBandColumn>
+                                    </Columns>
+                                </dx:GridViewBandColumn>
+                    </Columns>
                             <Styles>
                                 <Header HorizontalAlign="Center">
                                 </Header>

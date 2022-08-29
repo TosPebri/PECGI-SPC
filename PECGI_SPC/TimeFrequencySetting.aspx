@@ -71,7 +71,17 @@
                 </td>
 
                 <td style="padding-right: 1em">
-                    <dx:ASPxComboBox ID="cboFreq" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFreq">
+                    <dx:ASPxComboBox ID="cboItemType" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                        Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True"
+                        TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboItemType" Width="120px">
+                        <ClientSideEvents SelectedIndexChanged="ChangeItemType" />
+                        <ItemStyle Height="10px" Paddings-Padding="4px" />
+                        <ButtonStyle Paddings-Padding="4px" Width="5px">
+                        </ButtonStyle>
+                    </dx:ASPxComboBox>
+
+                    <dx:ASPxComboBox ID="cboFreq" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFreq"
+                        EnableIncrementalFiltering="True" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains">
                         <ItemStyle Height="10px" Paddings-Padding="4px" />
                         <ButtonStyle Width="5px" Paddings-Padding="4px" />
                         <ClientSideEvents SelectedIndexChanged="function(s, e) {
@@ -122,28 +132,22 @@
                     </HeaderStyle>
                 </dx:GridViewCommandColumn>
 
-                <dx:GridViewDataTextColumn Caption="Sample No" FieldName="No" VisibleIndex="1"
+                <dx:GridViewDataSpinEditColumn Caption="Sequence No" FieldName="No" VisibleIndex="1"
                     Width="75px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesTextEdit MaxLength="15" Width="55px">
-                        <Style HorizontalAlign="Left"></Style>
-                    </PropertiesTextEdit>
-                    <Settings AutoFilterCondition="Contains"></Settings>
-                    <FilterCellStyle Paddings-PaddingRight="4px">
-                        <Paddings PaddingRight="4px"></Paddings>
-                    </FilterCellStyle>
-                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
-                        <Paddings PaddingLeft="5px"></Paddings>
-                    </HeaderStyle>
-                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
-                </dx:GridViewDataTextColumn>
+                    <PropertiesSpinEdit MaxValue="50" MinValue="1" Width="75px">
+                        <ButtonStyle Width="5px" Paddings-Padding="4px"/>
+                    </PropertiesSpinEdit>
+                    <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                </dx:GridViewDataSpinEditColumn>
 
                 <dx:GridViewDataComboBoxColumn Caption="Shift" FieldName="Shift" VisibleIndex="2"
                     Width="100px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DropDownStyle="DropDownList" Width="100%" TextFormatString="{0}"
                         IncrementalFilteringMode="StartsWith" DisplayFormatInEditMode="true">
                         <Items>
-                            <dx:ListEditItem Text="Shift 1" Value="SH001" />
-                            <dx:ListEditItem Text="Shift 2" Value="SH002" />
+                            <dx:ListEditItem Text="1" Value="SH001" />
+                            <dx:ListEditItem Text="2" Value="SH002" />
                         </Items>
                         <ItemStyle Height="10px" Paddings-Padding="4px">
                             <Paddings Padding="4px"></Paddings>
@@ -156,7 +160,7 @@
                     <HeaderStyle Paddings-PaddingLeft="2px" HorizontalAlign="Center" VerticalAlign="Middle" Wrap="True">
                         <Paddings PaddingLeft="2px"></Paddings>
                     </HeaderStyle>
-                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
                 </dx:GridViewDataComboBoxColumn>
 
                 <dx:GridViewDataTimeEditColumn Caption="Start" FieldName="Start" VisibleIndex="3"
@@ -191,27 +195,13 @@
                     <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
                 </dx:GridViewDataTimeEditColumn>
 
-                <dx:GridViewDataComboBoxColumn Caption="Active Status" FieldName="Status" VisibleIndex="5"
-                    Width="100px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesComboBox DropDownStyle="DropDownList" Width="100%" TextFormatString="{0}"
-                        IncrementalFilteringMode="StartsWith" DisplayFormatInEditMode="true">
-                        <Items>
-                            <dx:ListEditItem Text="Yes" Value="Yes" />
-                            <dx:ListEditItem Text="No" Value="No" />
-                        </Items>
-                        <ItemStyle Height="10px" Paddings-Padding="4px">
-                            <Paddings Padding="4px"></Paddings>
-                        </ItemStyle>
-                        <ButtonStyle Width="5px" Paddings-Padding="2px">
-                            <Paddings Padding="2px"></Paddings>
-                        </ButtonStyle>
-                    </PropertiesComboBox>
-                    <Settings AutoFilterCondition="Contains"></Settings>
-                    <HeaderStyle Paddings-PaddingLeft="2px" HorizontalAlign="Center" VerticalAlign="Middle" Wrap="True">
-                        <Paddings PaddingLeft="2px"></Paddings>
-                    </HeaderStyle>
-                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
-                </dx:GridViewDataComboBoxColumn>
+                <dx:GridViewDataCheckColumn Caption="Active Status" FieldName="Status" VisibleIndex="5" Width="100px">
+                    <PropertiesCheckEdit 
+                        ValueChecked="1" ValueType="System.Char"  ValueUnchecked="0">
+                    </PropertiesCheckEdit>
+                    <Settings AllowSort="False" />
+                    <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                </dx:GridViewDataCheckColumn>
 
                 <dx:GridViewDataTextColumn Caption="Last User" FieldName="LastUser" VisibleIndex="6"
                     Width="100px" Settings-AutoFilterCondition="Contains">
@@ -301,7 +291,12 @@
                                         <dx:ASPxGridViewTemplateReplacement ID="editFrequency" ReplacementType="EditFormCellEditor"
                                             runat="server" ColumnID="Frequency"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
-                                    <td style="visibility:hidden">
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <dx:ASPxLabel ID="ASPxLabel2" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Sequence No" Width="90px"></dx:ASPxLabel>
+                                    </td>
+                                    <td>
                                         <dx:ASPxGridViewTemplateReplacement ID="editNo" ReplacementType="EditFormCellEditor"
                                             runat="server" ColumnID="No"></dx:ASPxGridViewTemplateReplacement>
                                     </td>

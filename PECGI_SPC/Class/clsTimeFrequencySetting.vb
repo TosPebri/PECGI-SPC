@@ -42,7 +42,7 @@ Public Class clsTimeFrequencySettingDB
         End Using
     End Function
 
-    Public Shared Function InsertUpdate(cls As clsTimeFrequencySetting) As Boolean
+    Public Shared Function InsertUpdate(cls As clsTimeFrequencySetting, Type As String) As Boolean
         Try
             Using cn As New SqlConnection(Sconn.Stringkoneksi)
                 cn.Open()
@@ -57,6 +57,7 @@ Public Class clsTimeFrequencySettingDB
                 cmd.Parameters.AddWithValue("End", cls.EndTime)
                 cmd.Parameters.AddWithValue("Status", cls.Status)
                 cmd.Parameters.AddWithValue("User", cls.User)
+                cmd.Parameters.AddWithValue("Type", Type)
 
                 cmd.ExecuteNonQuery()
             End Using

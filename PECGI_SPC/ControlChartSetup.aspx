@@ -192,15 +192,14 @@
             OnAfterPerformCallback="Grid_AfterPerformCallback">
             <ClientSideEvents EndCallback="OnEndCallback" />
             <Columns>
-                <dx:GridViewCommandColumn FixedStyle="Left"
-                    VisibleIndex="0" ShowEditButton="true" ShowDeleteButton="true"
+                <dx:GridViewCommandColumn VisibleIndex="0" ShowEditButton="true" ShowDeleteButton="true" FixedStyle="Left"
                     ShowNewButtonInHeader="true" ShowClearFilterButton="true" Width="70px">
                     <HeaderStyle Paddings-PaddingLeft="3px" HorizontalAlign="Center" VerticalAlign="Middle">
                         <Paddings PaddingLeft="3px"></Paddings>
                     </HeaderStyle>
                 </dx:GridViewCommandColumn>
 
-                <dx:GridViewDataComboBoxColumn Caption="Type" FieldName="Type" VisibleIndex="1"
+                <dx:GridViewDataComboBoxColumn Caption="Type" FieldName="Type" VisibleIndex="1" FixedStyle="Left"
                     Width="85px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsType" DropDownStyle="DropDownList" TextFormatString="{0}" DisplayFormatString="{1}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="100%"
@@ -222,7 +221,7 @@
                     <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
                 </dx:GridViewDataComboBoxColumn>
 
-                <dx:GridViewDataComboBoxColumn Caption="Machine Process" FieldName="Machine" VisibleIndex="2"
+                <dx:GridViewDataComboBoxColumn Caption="Machine Process" FieldName="Machine" VisibleIndex="2" FixedStyle="Left"
                     Width="175px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsMachine" DropDownStyle="DropDownList" TextFormatString="{0}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="100%"
@@ -244,7 +243,7 @@
                     <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
                 </dx:GridViewDataComboBoxColumn>
 
-                <dx:GridViewDataComboBoxColumn Caption="Item Check" FieldName="ItemCheck" VisibleIndex="3"
+                <dx:GridViewDataComboBoxColumn Caption="Item Check" FieldName="ItemCheck" VisibleIndex="3" FixedStyle="Left"
                     Width="175px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsItemCheck" DropDownStyle="DropDownList" TextFormatString="{0}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="100%"
@@ -266,11 +265,11 @@
                     <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
                 </dx:GridViewDataComboBoxColumn>
 
-                <dx:GridViewBandColumn Caption="Period">
+                <dx:GridViewBandColumn Caption="Period" VisibleIndex="4" FixedStyle="Left">
                     <HeaderStyle HorizontalAlign="Center" />
                     <Columns>
-                        <dx:GridViewDataDateColumn Caption="Start" FieldName="Start" VisibleIndex="4"
-                            Width="100px" Settings-AutoFilterCondition="Contains">
+                        <dx:GridViewDataDateColumn Caption="Start" FieldName="Start"
+                            Width="85px" Settings-AutoFilterCondition="Contains">
                             <PropertiesDateEdit DisplayFormatString="dd MMM yyyy" EditFormat="Custom" EditFormatString="dd MMM yyyy" MaxDate="9999-12-31" MinDate="2000-12-01">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px"/>
                                 <CalendarProperties>
@@ -285,8 +284,8 @@
                             <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
                         </dx:GridViewDataDateColumn>
 
-                        <dx:GridViewDataDateColumn Caption="End" FieldName="End" VisibleIndex="5"
-                            Width="100px" Settings-AutoFilterCondition="Contains">
+                        <dx:GridViewDataDateColumn Caption="End" FieldName="End"
+                            Width="85px" Settings-AutoFilterCondition="Contains">
                             <PropertiesDateEdit DisplayFormatString="dd MMM yyyy" EditFormat="Custom" EditFormatString="dd MMM yyyy" MaxDate="9999-12-31" MinDate="2000-12-01">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px"/>
                                 <CalendarProperties>
@@ -303,7 +302,7 @@
                     </Columns>
                 </dx:GridViewBandColumn>
 
-                <dx:GridViewDataTextColumn Caption="Measuring Unit" FieldName="MeasuringUnit" VisibleIndex="6"
+                <dx:GridViewDataTextColumn Caption="Measuring Unit" FieldName="MeasuringUnit" VisibleIndex="5"
                     Width="75px" Settings-AutoFilterCondition="Contains">
                     <PropertiesTextEdit MaxLength="15" Width="55px">
                         <Style HorizontalAlign="Left"></Style>
@@ -318,12 +317,12 @@
                     <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewBandColumn Caption="Specification">
-                    <HeaderStyle HorizontalAlign="Center" />
+                <dx:GridViewBandColumn Caption="Specification" VisibleIndex="6">
+                    <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
                     <Columns>
-                        <dx:GridViewDataSpinEditColumn Caption="USL" FieldName="SpecUSL" VisibleIndex="7"
-                            width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                        <dx:GridViewDataSpinEditColumn Caption="USL" FieldName="SpecUSL"
+                            width="50px" Settings-AutoFilterCondition="Contains" >
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -332,9 +331,9 @@
                             <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                         </dx:GridViewDataSpinEditColumn>
 
-                        <dx:GridViewDataSpinEditColumn Caption="LSL" FieldName="SpecLSL" VisibleIndex="8"
+                        <dx:GridViewDataSpinEditColumn Caption="LSL" FieldName="SpecLSL"
                             width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0.001" DecimalPlaces="3">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0.001" DecimalPlaces="3" Increment="0.001">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -345,12 +344,12 @@
                     </Columns>
                 </dx:GridViewBandColumn>
 
-                <dx:GridViewBandColumn Caption="X Bar Control">
+                <dx:GridViewBandColumn Caption="X Bar Control" VisibleIndex="7">
                     <HeaderStyle HorizontalAlign="Center" />
                     <Columns>
-                        <dx:GridViewDataSpinEditColumn Caption="CL" FieldName="XCL" VisibleIndex="9"
+                        <dx:GridViewDataSpinEditColumn Caption="CL" FieldName="XCL"
                             width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -359,9 +358,9 @@
                             <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                         </dx:GridViewDataSpinEditColumn>
 
-                        <dx:GridViewDataSpinEditColumn Caption="UCL" FieldName="XUCL" VisibleIndex="10"
+                        <dx:GridViewDataSpinEditColumn Caption="UCL" FieldName="XUCL"
                             width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -370,9 +369,9 @@
                             <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                         </dx:GridViewDataSpinEditColumn>
 
-                        <dx:GridViewDataSpinEditColumn Caption="LCL" FieldName="XLCL" VisibleIndex="11"
+                        <dx:GridViewDataSpinEditColumn Caption="LCL" FieldName="XLCL"
                             width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -383,12 +382,12 @@
                     </Columns>
                 </dx:GridViewBandColumn>
 
-                <dx:GridViewBandColumn Caption="R Control">
+                <dx:GridViewBandColumn Caption="R Control" VisibleIndex="8">
                     <HeaderStyle HorizontalAlign="Center" />
                     <Columns>
-                        <dx:GridViewDataSpinEditColumn Caption="CL" FieldName="RCL" VisibleIndex="12"
+                        <dx:GridViewDataSpinEditColumn Caption="CL" FieldName="RCL"
                             width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -397,9 +396,9 @@
                             <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                         </dx:GridViewDataSpinEditColumn>
 
-                        <dx:GridViewDataSpinEditColumn Caption="UCL" FieldName="RUCL" VisibleIndex="13"
+                        <dx:GridViewDataSpinEditColumn Caption="UCL" FieldName="RUCL"
                             width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -408,9 +407,9 @@
                             <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                         </dx:GridViewDataSpinEditColumn>
 
-                        <dx:GridViewDataSpinEditColumn Caption="LCL" FieldName="RLCL" VisibleIndex="14"
+                        <dx:GridViewDataSpinEditColumn Caption="LCL" FieldName="RLCL"
                             width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -421,7 +420,7 @@
                     </Columns>
                 </dx:GridViewBandColumn>
 
-                <dx:GridViewDataTextColumn Caption="Last User" FieldName="LastUser" VisibleIndex="15"
+                <dx:GridViewDataTextColumn Caption="Last User" FieldName="LastUser" VisibleIndex="9"
                     Width="75px" Settings-AutoFilterCondition="Contains">
                     <PropertiesTextEdit MaxLength="15" Width="100px">
                         <Style HorizontalAlign="Left"></Style>
@@ -436,8 +435,8 @@
                     <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="Last Update" FieldName="LastUpdate" VisibleIndex="16"
-                    Width="125px" Settings-AutoFilterCondition="Contains">
+                <dx:GridViewDataTextColumn Caption="Last Update" FieldName="LastUpdate" VisibleIndex="10"
+                    Width="135px" Settings-AutoFilterCondition="Contains">
                     <PropertiesTextEdit MaxLength="15" Width="100px">
                         <Style HorizontalAlign="Left"></Style>
                     </PropertiesTextEdit>

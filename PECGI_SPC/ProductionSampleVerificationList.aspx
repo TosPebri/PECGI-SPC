@@ -51,6 +51,10 @@
                     toastr.options.onclick = null;
                 }
             }
+            if (s.cp_GridTot > 0) {
+                console.log(s.cp_GridTot);
+                btnExcel.SetEnabled(true);
+            }
         }
 
         function OnInit() {
@@ -77,7 +81,7 @@
                 toastr.options.debug = false;
                 toastr.options.newestOnTop = false;
                 toastr.options.progressBar = false;
-                toastr.options.preventDuplicates = true;             
+                toastr.options.preventDuplicates = true;
             }
             //else if ((new Date(ProdDate_To).getTime()) >  (new Date(ProdDate_From).getTime())){
             //    toastr.warning('Date From Can Not Less Then Date To!', 'Warning');
@@ -88,7 +92,7 @@
             //    toastr.options.preventDuplicates = true;
             //}
             else {
-                GridMenu.PerformCallback('Load|' + FactoryCode + '|' + ItemType_Code + '|' + LineCode + '|' + ItemCheck_Code +'|'+ ProdDate_From + '|' + ProdDate_To +'|' + MK + '|' + QC);
+                GridMenu.PerformCallback('Load|' + FactoryCode + '|' + ItemType_Code + '|' + LineCode + '|' + ItemCheck_Code + '|' + ProdDate_From + '|' + ProdDate_To + '|' + MK + '|' + QC);
             }
         }
 
@@ -128,17 +132,17 @@
             var ItemType_Code = cboItemType.GetValue();
             cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode); //GET LIST ITEM CHECK
         }
-        
+
         var Content_SelectData = ''
 
         function GetSelectedFieldValuesCallback(values) {
-            var result = ''          
+            var result = ''
             for (var i = 0; i < values.length; i++)
                 for (var j = 0; j < values[i].length; j++) {
                     result += values[i][j] + '|';
                 }
             Content_SelectData = result;
-          
+
             if (values.length == 0) {
                 btnVerification.SetEnabled(false);
             }
@@ -150,12 +154,25 @@
         function SelectionChanged(s, e) {
             s.GetSelectedFieldValues("SPCResultID;FactoryCode;ItemTypeCode;LineCode;ItemCheckCode;ProdDate;ShiftCode;SequenceNo", GetSelectedFieldValuesCallback);
         }
-     
+
         function Verification() {
             console.log(Content_SelectData);
-            window.open('ProdSampleVerification.aspx?prm=' + Content_SelectData +'','_self');
+            window.open('ProdSampleVerification.aspx?prm=' + Content_SelectData + '', '_self');
         }
 
+        //function Excel() {
+        //    var FactoryCode = cboFactory.GetValue();
+        //    var ItemType_Code = cboItemType.GetValue();
+        //    var LineCode = cboLineID.GetValue();
+        //    var ItemCheck_Code = cboItemCheck.GetValue();
+        //    var ProdDate_From = dtFromDate.GetText();
+        //    var ProdDate_To = dtToDate.GetText();
+        //    var MK = cboMK.GetValue();
+        //    var QC = cboQC.GetValue();
+
+
+        //        GridMenu.PerformCallback('Excel|' + FactoryCode + '|' + ItemType_Code + '|' + LineCode + '|' + ItemCheck_Code + '|' + ProdDate_From + '|' + ProdDate_To + '|' + MK + '|' + QC);
+        //}
 
     </script>
 </asp:Content>
@@ -282,7 +299,7 @@
                 <td style="width: 20px">&nbsp;</td>
                 <td>
                     <dx:ASPxComboBox ID="cboMK" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
-                        Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True"  Width="60px"
+                        Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True" Width="60px"
                         TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboMK">
                         <ItemStyle Height="10px" Paddings-Padding="4px" />
                         <ButtonStyle Paddings-Padding="4px" Width="5px">
@@ -307,15 +324,15 @@
 
                 <td style="width: 10px">&nbsp;</td>
                 <td>
-                    <dx:ASPxButton ID="btnBrowse" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse"
-                        Font-Names="Segoe UI" Font-Size="10pt" Text="Browse" Theme="Office2010Silver" Width="80px">
+                    <dx:ASPxButton ID="btnBrowse" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse" Height="25px"
+                        Font-Names="Segoe UI" Font-Size="9pt" Text="Browse" Theme="Office2010Silver" Width="80px">
                         <ClientSideEvents Click="Browse" />
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 10px">&nbsp;</td>
                 <td>
-                    <dx:ASPxButton ID="btnClear" runat="server" AutoPostBack="False" ClientInstanceName="btnClear"
-                        Font-Names="Segoe UI" Font-Size="10pt" Text="Clear" Theme="Office2010Silver" Width="80px">
+                    <dx:ASPxButton ID="btnClear" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Height="25px"
+                        Font-Names="Segoe UI" Font-Size="9pt" Text="Clear" Theme="Office2010Silver" Width="80px">
                         <ClientSideEvents Click="Clear" />
                     </dx:ASPxButton>
                 </td>
@@ -326,33 +343,37 @@
         <table>
             <tr>
                 <td>
-                    <dx:ASPxButton ID="btnVerification" runat="server" AutoPostBack="False" ClientInstanceName="btnVerification"
-                        Font-Names="Segoe UI" Font-Size="10pt" Text="Verification" Theme="Office2010Silver" Width="100px">
-                        <ClientSideEvents Click="Verification"/>
+                    <dx:ASPxButton ID="btnVerification" runat="server" AutoPostBack="False" ClientInstanceName="btnVerification" Height="25px"
+                        Font-Names="Segoe UI" Font-Size="9pt" Text="Verification" Theme="Office2010Silver" Width="100px">
+                        <ClientSideEvents Click="Verification" />
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 10px">&nbsp;</td>
                 <td>
-                    <dx:ASPxButton ID="btnViewSampleInput" runat="server" AutoPostBack="False" ClientInstanceName="btnViewSampleInput"
-                        Font-Names="Segoe UI" Font-Size="10pt" Text="View Sample Input" Theme="Office2010Silver" Width="100px">
+                    <dx:ASPxButton ID="btnViewSampleInput" runat="server" AutoPostBack="False" ClientInstanceName="btnViewSampleInput" Height="25px"
+                        Font-Names="Segoe UI" Font-Size="9pt" Text="View Sample Input" Theme="Office2010Silver" Width="100px">
                         <%-- <ClientSideEvents Click="ViewSampleInput" />--%>
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 10px">&nbsp;</td>
                 <td>
-                    <dx:ASPxButton ID="btnExcel" runat="server" AutoPostBack="False" ClientInstanceName="btnExcel"
-                        Font-Names="Segoe UI" Font-Size="10pt" Text="Excel" Theme="Office2010Silver" Width="100px">
-                        <%--<ClientSideEvents Click="Excel" />--%>
+                    <dx:ASPxButton ID="btnExcel" runat="server" AutoPostBack="False" ClientInstanceName="btnExcel" Height="25px"
+                        Font-Names="Segoe UI" Font-Size="9pt" Text="Excel" Theme="Office2010Silver" Width="100px">
+                        <%-- <ClientSideEvents Click="Excel" />--%>
                     </dx:ASPxButton>
+                </td>
+                <td>
+                    <dx:ASPxGridViewExporter ID="GridExport" runat="server" GridViewID="GridMenu">
+                    </dx:ASPxGridViewExporter>
                 </td>
             </tr>
         </table>
     </div>
     <div style="padding: 5px 5px 5px 5px">
-        <dx:ASPxGridView ID="GridMenu" runat="server" AutoGenerateColumns="False" ClientInstanceName="GridMenu" 
+        <dx:ASPxGridView ID="GridMenu" runat="server" AutoGenerateColumns="False" ClientInstanceName="GridMenu"
             EnableTheming="True" KeyFieldName="SPCResultID" Theme="Office2010Black"
             Width="100%" Font-Names="Segoe UI" Font-Size="9pt">
-            <ClientSideEvents EndCallback="OnEndCallback" Init="OnInit"  SelectionChanged="SelectionChanged" />
+            <ClientSideEvents EndCallback="OnEndCallback" Init="OnInit" SelectionChanged="SelectionChanged" />
             <Columns>
                 <dx:GridViewCommandColumn ShowSelectCheckbox="True" VisibleIndex="1" Width="30px" FixedStyle="Left" Caption=" ">
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
@@ -367,19 +388,34 @@
                 <dx:GridViewDataTextColumn FieldName="ItemCheckCode" Visible="false">
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="SPCResultID" Visible="false">
+
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="nMaxColor" Width="0" VisibleIndex="0">
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="nMinColor" Width="0" VisibleIndex="0">
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="nAvgColor" Width="0" VisibleIndex="0">
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="ResultColor" Width="0" VisibleIndex="0">
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="CorStsColor" Width="0" VisibleIndex="0">
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="MKColor" Width="0" VisibleIndex="0">
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="QCColor" Width="0" VisibleIndex="0">
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewDataTextColumn Caption="Date" VisibleIndex="2" Width="80px"
-                    FieldName="ProdDate" >
+                    FieldName="ProdDate">
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                     <CellStyle HorizontalAlign="Left" VerticalAlign="Middle">
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="Shift" VisibleIndex="3" Width="50px"
+                <dx:GridViewDataTextColumn Caption="Shift" VisibleIndex="3" Width="35px"
                     FieldName="ShiftCode">
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle">
+                    <CellStyle HorizontalAlign="center" VerticalAlign="Middle">
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
@@ -390,7 +426,7 @@
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="Item Check" VisibleIndex="5" Width="180px"
+                <dx:GridViewDataTextColumn Caption="Item Check" VisibleIndex="5" Width="250px"
                     FieldName="ItemCheck">
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                     <CellStyle HorizontalAlign="Left" VerticalAlign="Middle">
@@ -442,7 +478,7 @@
                 <dx:GridViewDataTextColumn Caption="SampleTime" VisibleIndex="12" Width="120px"
                     FieldName="SampleTime">
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle">
+                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
                     </CellStyle>
                 </dx:GridViewDataTextColumn>
 
@@ -462,10 +498,10 @@
                             </CellStyle>
                         </dx:GridViewDataTextColumn>
 
-                        <dx:GridViewDataTextColumn Caption="Time" VisibleIndex="2" Width="150px"
-                            FieldName="MK_Time" HeaderStyle-Paddings-PaddingBottom="2px" HeaderStyle-Paddings-PaddingTop="2px"> 
+                        <dx:GridViewDataTextColumn Caption="Time" VisibleIndex="2" Width="120px"
+                            FieldName="MK_Time" HeaderStyle-Paddings-PaddingBottom="2px" HeaderStyle-Paddings-PaddingTop="2px">
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                            <CellStyle HorizontalAlign="Left" VerticalAlign="Middle">
+                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
                             </CellStyle>
                         </dx:GridViewDataTextColumn>
                     </Columns>
@@ -480,10 +516,10 @@
                             </CellStyle>
                         </dx:GridViewDataTextColumn>
 
-                        <dx:GridViewDataTextColumn Caption="Time" VisibleIndex="2" Width="150px"
+                        <dx:GridViewDataTextColumn Caption="Time" VisibleIndex="2" Width="120px"
                             FieldName="QC_Time" HeaderStyle-Paddings-PaddingBottom="2px" HeaderStyle-Paddings-PaddingTop="2px">
                             <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                            <CellStyle HorizontalAlign="Left" VerticalAlign="Middle">
+                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
                             </CellStyle>
                         </dx:GridViewDataTextColumn>
                     </Columns>
@@ -498,5 +534,5 @@
         </dx:ASPxGridView>
     </div>
 
-    <dx:ASPxHiddenField ID="HideValue" runat="server" ClientInstanceName="HideValue"></dx:ASPxHiddenField>
+    <dx:ASPxHiddenField ID="HV" runat="server" ClientInstanceName="HV"></dx:ASPxHiddenField>
 </asp:Content>

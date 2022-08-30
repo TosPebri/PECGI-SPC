@@ -203,6 +203,15 @@ Partial Public Class ProductionSampleVerificationList
     Protected WithEvents btnExcel As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
+    '''GridExport control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents GridExport As Global.DevExpress.Web.ASPxGridViewExporter
+
+    '''<summary>
     '''GridMenu control.
     '''</summary>
     '''<remarks>
@@ -212,13 +221,13 @@ Partial Public Class ProductionSampleVerificationList
     Protected WithEvents GridMenu As Global.DevExpress.Web.ASPxGridView
 
     '''<summary>
-    '''HideValue control.
+    '''HV control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents HideValue As Global.DevExpress.Web.ASPxHiddenField
+    Protected WithEvents HV As Global.DevExpress.Web.ASPxHiddenField
 
     '''<summary>
     '''Master property.

@@ -7,8 +7,9 @@ Imports System.Data.SqlClient
 Imports System.IO
 Imports DevExpress.Web.ASPxGridView
 Imports DevExpress.Web.Data
-Imports OfficeOpenXml
 Imports DevExpress.Web
+Imports OfficeOpenXml
+Imports OfficeOpenXml.Style
 
 Public Class ProductionSampleVerificationList
     Inherits System.Web.UI.Page
@@ -21,10 +22,15 @@ Public Class ProductionSampleVerificationList
     Dim ItemCheck_Sel As String = "4"
     Dim MK_Sel As String = "5"
     Dim QC_Sel As String = "6"
-    Dim UCL As Decimal = 0
-    Dim LCL As Decimal = 0
-    Dim USL As Decimal = 0
-    Dim LSL As Decimal = 0
+
+    Dim nMinColor As String = ""
+    Dim nMaxColor As String = ""
+    Dim nAvgColor As String = ""
+    Dim ResultColor As String = ""
+    Dim CorStsColor As String = ""
+    Dim MKColor As String = ""
+    Dim QCColor As String = ""
+
     Private dt As DataTable
 
     Public AuthUpdate As Boolean = False
@@ -78,6 +84,7 @@ Public Class ProductionSampleVerificationList
                 cls.QCVerification = QCVerification
 
                 UpGridLoad(cls)
+
             ElseIf pAction = "Clear" Then
                 dt = clsProductionSampleVerificationListDB.LoadGrid(cls)
                 GridMenu.DataSource = dt
@@ -93,12 +100,14 @@ Public Class ProductionSampleVerificationList
         Try
             Dim data As New clsProductionSampleVerificationList()
             data.FactoryCode = e.Parameter
+            data.UserID = pUser
 
             Dim ErrMsg As String = ""
             dt = clsProductionSampleVerificationListDB.FillCombo(Line_Sel, data)
             With cboLineID
                 .DataSource = dt
                 .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With
 
         Catch ex As Exception
@@ -112,12 +121,14 @@ Public Class ProductionSampleVerificationList
             data.FactoryCode = Split(e.Parameter, "|")(0)
             data.ItemType_Code = Split(e.Parameter, "|")(1)
             data.LineCode = Split(e.Parameter, "|")(2)
+            data.UserID = pUser
 
             Dim ErrMsg As String = ""
             dt = clsProductionSampleVerificationListDB.FillCombo(ItemCheck_Sel, data)
             With cboItemCheck
                 .DataSource = dt
                 .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 0)
@@ -126,43 +137,39 @@ Public Class ProductionSampleVerificationList
 
     Private Sub GridMenu_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles GridMenu.HtmlDataCellPrepared
         Try
-            If (e.DataColumn.FieldName = "nMin" Or e.DataColumn.FieldName = "nMax" Or e.DataColumn.FieldName = "nAVG") Then
-                If e.CellValue < LSL Or e.CellValue > USL Then
-                    e.Cell.BackColor = Color.Red
-                ElseIf e.CellValue < LCL Or e.CellValue > UCL Then
-                    e.Cell.BackColor = Color.Yellow
-                End If
-            End If
 
-            If (e.DataColumn.FieldName = "Cor_Sts") Then
-                If e.CellValue = "C" Then
-                    e.Cell.BackColor = Color.Orange
-                End If
-            End If
-            If (e.DataColumn.FieldName = "Result") Then
-                If e.CellValue = "NG" Then
-                    e.Cell.BackColor = Color.Red
-                End If
-            End If
-            If (e.DataColumn.FieldName = "MK_PIC") Then
-                If IsDBNull(e.CellValue) Then
-                    e.Cell.BackColor = Color.Yellow
-                End If
-            End If
-            If (e.DataColumn.FieldName = "MK_Time") Then
-                If IsDBNull(e.CellValue) Then
-                    e.Cell.BackColor = Color.Yellow
-                End If
-            End If
-            If (e.DataColumn.FieldName = "QC_PIC") Then
-                If IsDBNull(e.CellValue) Then
-                    e.Cell.BackColor = Color.Yellow
-                End If
-            End If
-            If (e.DataColumn.FieldName = "QC_Time") Then
-                If IsDBNull(e.CellValue) Then
-                    e.Cell.BackColor = Color.Yellow
-                End If
+            If e.DataColumn.FieldName = "nMinColor" Then
+                nMinColor = e.CellValue
+            ElseIf e.DataColumn.FieldName = "nMaxColor" Then
+                nMaxColor = e.CellValue
+            ElseIf e.DataColumn.FieldName = "nAvgColor" Then
+                nAvgColor = e.CellValue
+            ElseIf e.DataColumn.FieldName = "ResultColor" Then
+                ResultColor = e.CellValue
+            ElseIf e.DataColumn.FieldName = "CorStsColor" Then
+                CorStsColor = e.CellValue
+            ElseIf e.DataColumn.FieldName = "MKColor" Then
+                MKColor = e.CellValue
+            ElseIf e.DataColumn.FieldName = "QCColor" Then
+                QCColor = e.CellValue
+            ElseIf e.DataColumn.FieldName = "nMin" Then
+                e.Cell.BackColor = ColorTranslator.FromHtml(nMinColor)
+            ElseIf e.DataColumn.FieldName = "nMax" Then
+                e.Cell.BackColor = ColorTranslator.FromHtml(nMaxColor)
+            ElseIf e.DataColumn.FieldName = "nAVG" Then
+                e.Cell.BackColor = ColorTranslator.FromHtml(nAvgColor)
+            ElseIf (e.DataColumn.FieldName = "Cor_Sts") Then
+                e.Cell.BackColor = ColorTranslator.FromHtml(CorStsColor)
+            ElseIf (e.DataColumn.FieldName = "Result") Then
+                e.Cell.BackColor = ColorTranslator.FromHtml(ResultColor)
+            ElseIf (e.DataColumn.FieldName = "MK_PIC") Then
+                e.Cell.BackColor = ColorTranslator.FromHtml(MKColor)
+            ElseIf (e.DataColumn.FieldName = "MK_Time") Then
+                e.Cell.BackColor = ColorTranslator.FromHtml(MKColor)
+            ElseIf (e.DataColumn.FieldName = "QC_PIC") Then
+                e.Cell.BackColor = ColorTranslator.FromHtml(QCColor)
+            ElseIf (e.DataColumn.FieldName = "QC_Time") Then
+                e.Cell.BackColor = ColorTranslator.FromHtml(QCColor)
             End If
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 0)
@@ -203,6 +210,7 @@ Public Class ProductionSampleVerificationList
             With cboMK
                 .DataSource = dt
                 .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With
             '======================================================'
 
@@ -212,6 +220,7 @@ Public Class ProductionSampleVerificationList
             With cboQC
                 .DataSource = dt
                 .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With
             '======================================================'
 
@@ -226,10 +235,7 @@ Public Class ProductionSampleVerificationList
             GridMenu.DataBind()
 
             If dt.Rows.Count > 0 Then
-                LCL = dt.Rows(0)("LCL")
-                UCL = dt.Rows(0)("UCL")
-                LsL = dt.Rows(0)("LSL")
-                UsL = dt.Rows(0)("USL")
+                GridMenu.JSProperties("cp_GridTot") = dt.Rows.Count
             Else
                 show_error(MsgTypeEnum.Warning, "Data Not Found !", 1)
             End If
@@ -237,6 +243,309 @@ Public Class ProductionSampleVerificationList
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
+    End Sub
+
+#Region "Download To Excel"
+    Private Sub up_Excel(cls As clsProductionSampleVerificationList)
+        Try
+
+            Using excel As New ExcelPackage
+
+                Dim ws As ExcelWorksheet
+                ws = excel.Workbook.Worksheets.Add("BO3 - Prod Sample Verifiaction List")
+
+                dt = clsProductionSampleVerificationListDB.LoadGrid(cls)
+                With ws
+                    InsertHeader(ws, cls)
+
+                    .Cells(11, 1, 12, 1).Value = "Date"
+                    .Cells(11, 1, 12, 1).Merge = True
+
+                    .Cells(11, 2, 12, 2).Value = "Shift"
+                    .Cells(11, 2, 12, 2).Merge = True
+
+                    .Cells(11, 3, 12, 3).Value = "seq"
+                    .Cells(11, 3, 12, 3).Merge = True
+
+                    .Cells(11, 4, 12, 4).Value = "Item Check"
+                    .Cells(11, 4, 12, 4).Merge = True
+
+                    .Cells(11, 5, 12, 5).Value = "Min"
+                    .Cells(11, 5, 12, 5).Merge = True
+
+                    .Cells(11, 6, 12, 6).Value = "Max"
+                    .Cells(11, 6, 12, 6).Merge = True
+
+                    .Cells(11, 7, 12, 7).Value = "Avg"
+                    .Cells(11, 7, 12, 7).Merge = True
+
+                    .Cells(11, 8, 12, 8).Value = "R"
+                    .Cells(11, 8, 12, 8).Merge = True
+
+                    .Cells(11, 9, 12, 9).Value = "Correction Status"
+                    .Cells(11, 9, 12, 9).Merge = True
+                    .Cells(11, 9, 12, 9).Style.WrapText = True
+
+                    .Cells(11, 10, 12, 10).Value = "Result"
+                    .Cells(11, 10, 12, 10).Merge = True
+
+                    .Cells(11, 11, 12, 11).Value = "Sample Time"
+                    .Cells(11, 11, 12, 11).Merge = True
+
+                    .Cells(11, 12, 12, 12).Value = "Operator"
+                    .Cells(11, 12, 12, 12).Merge = True
+
+                    .Cells(11, 13, 11, 14).Value = "Verification by MK"
+                    .Cells(11, 13, 11, 14).Merge = True
+
+                    .Cells(11, 15, 11, 16).Value = "Verification by QC"
+                    .Cells(11, 15, 11, 16).Merge = True
+
+                    .Cells(12, 13).Value = "PIC"
+                    .Cells(12, 14).Value = "Time"
+                    .Cells(12, 15).Value = "PIC"
+                    .Cells(12, 16).Value = "Time"
+
+                    Dim Hdr As ExcelRange = .Cells(11, 1, 12, 16)
+                    Hdr.Style.HorizontalAlignment = HorzAlignment.Far
+                    Hdr.Style.VerticalAlignment = VertAlignment.Center
+                    Hdr.Style.Font.Size = 10
+                    Hdr.Style.Font.Name = "Segoe UI"
+                    Hdr.Style.Font.Color.SetColor(Color.White)
+                    Hdr.Style.Fill.PatternType = ExcelFillStyle.Solid
+                    Hdr.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.DimGray)
+
+                    .Column(1).Width = 15
+                    .Column(2).Width = 5
+                    .Column(3).Width = 5
+                    .Column(4).Width = 35
+
+                    .Column(5).Width = 10
+                    .Column(6).Width = 10
+                    .Column(7).Width = 10
+                    .Column(8).Width = 10
+
+                    .Column(9).Width = 10
+                    .Column(10).Width = 10
+                    .Column(11).Width = 18
+                    .Column(12).Width = 18
+
+                    .Column(13).Width = 18
+                    .Column(14).Width = 18
+                    .Column(15).Width = 18
+                    .Column(16).Width = 18
+
+                    Dim irow = 13
+                    For i = 0 To dt.Rows.Count - 1
+                        Try
+                            .Cells(irow, 1).Value = dt.Rows(i)("ProdDate")
+                            .Cells(irow, 1).Style.HorizontalAlignment = HorizontalAlign.Center
+
+                            .Cells(irow, 2).Value = dt.Rows(i)("ShiftCode")
+                            .Cells(irow, 2).Style.HorizontalAlignment = HorizontalAlign.Center
+
+                            .Cells(irow, 3).Value = dt.Rows(i)("SequenceNo")
+                            .Cells(irow, 3).Style.HorizontalAlignment = HorizontalAlign.Center
+
+                            .Cells(irow, 4).Value = dt.Rows(i)("ItemCheck")
+                            .Cells(irow, 4).Style.HorizontalAlignment = HorizontalAlign.Left
+
+                            .Cells(irow, 5).Value = dt.Rows(i)("nMin")
+                            .Cells(irow, 5).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+                            .Cells(irow, 5).Style.Numberformat.Format = "####0.000"
+                            .Cells(irow, 5).Style.Fill.PatternType = ExcelFillStyle.Solid
+                            .Cells(irow, 5).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(dt.Rows(i)("nMinColor")))
+
+                            .Cells(irow, 6).Value = dt.Rows(i)("nMax")
+                            .Cells(irow, 6).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+                            .Cells(irow, 6).Style.Numberformat.Format = "####0.000"
+                            .Cells(irow, 6).Style.Fill.PatternType = ExcelFillStyle.Solid
+                            .Cells(irow, 6).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(dt.Rows(i)("nMaxColor")))
+
+                            .Cells(irow, 7).Value = dt.Rows(i)("nAvg")
+                            .Cells(irow, 7).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+                            .Cells(irow, 7).Style.Numberformat.Format = "####0.000"
+                            .Cells(irow, 7).Style.Fill.PatternType = ExcelFillStyle.Solid
+                            .Cells(irow, 7).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(dt.Rows(i)("nAvgColor")))
+
+                            .Cells(irow, 8).Value = dt.Rows(i)("nR")
+                            .Cells(irow, 8).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+                            .Cells(irow, 8).Style.Numberformat.Format = "####0.000"
+
+                            .Cells(irow, 9).Value = dt.Rows(i)("Cor_Sts")
+                            .Cells(irow, 9).Style.HorizontalAlignment = HorizontalAlign.Center
+                            .Cells(irow, 9).Style.Fill.PatternType = ExcelFillStyle.Solid
+                            .Cells(irow, 9).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(dt.Rows(i)("CorStsColor")))
+
+                            .Cells(irow, 10).Value = dt.Rows(i)("Result")
+                            .Cells(irow, 10).Style.HorizontalAlignment = HorizontalAlign.Center
+                            .Cells(irow, 10).Style.Fill.PatternType = ExcelFillStyle.Solid
+                            .Cells(irow, 10).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(dt.Rows(i)("ResultColor")))
+
+                            .Cells(irow, 11).Value = dt.Rows(i)("SampleTime")
+                            .Cells(irow, 11).Style.HorizontalAlignment = HorizontalAlign.Center
+
+                            .Cells(irow, 12).Value = dt.Rows(i)("Operator")
+                            .Cells(irow, 12).Style.HorizontalAlignment = HorizontalAlign.Left
+
+                            .Cells(irow, 13).Value = dt.Rows(i)("MK_PIC")
+                            .Cells(irow, 13).Style.HorizontalAlignment = HorizontalAlign.Left
+                            .Cells(irow, 13).Style.Fill.PatternType = ExcelFillStyle.Solid
+                            .Cells(irow, 13).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(dt.Rows(i)("MKColor")))
+
+                            .Cells(irow, 14).Value = dt.Rows(i)("MK_Time")
+                            .Cells(irow, 14).Style.HorizontalAlignment = HorizontalAlign.Center
+                            .Cells(irow, 14).Style.Fill.PatternType = ExcelFillStyle.Solid
+                            .Cells(irow, 14).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(dt.Rows(i)("MKColor")))
+
+                            .Cells(irow, 15).Value = dt.Rows(i)("QC_PIC")
+                            .Cells(irow, 15).Style.HorizontalAlignment = HorizontalAlign.Left
+                            .Cells(irow, 15).Style.Fill.PatternType = ExcelFillStyle.Solid
+                            .Cells(irow, 15).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(dt.Rows(i)("QCColor")))
+
+                            .Cells(irow, 16).Value = dt.Rows(i)("QC_Time")
+                            .Cells(irow, 16).Style.HorizontalAlignment = HorizontalAlign.Center
+                            .Cells(irow, 16).Style.Fill.PatternType = ExcelFillStyle.Solid
+                            .Cells(irow, 16).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(dt.Rows(i)("QCColor")))
+
+                            irow = irow + 1
+                        Catch ex As Exception
+                            Throw New Exception(ex.Message)
+                        End Try
+                    Next
+
+                    Dim Dtl As ExcelRange = .Cells(13, 1, irow - 1, 16)
+                    Hdr.Style.VerticalAlignment = VertAlignment.Center
+                    Hdr.Style.Font.Size = 10
+                    Hdr.Style.Font.Name = "Segoe UI"
+
+
+                    Dim Border As ExcelRange = .Cells(11, 1, irow - 1, 16)
+                    Border.Style.Border.Top.Style = ExcelBorderStyle.Thin
+                    Border.Style.Border.Bottom.Style = ExcelBorderStyle.Thin
+                    Border.Style.Border.Right.Style = ExcelBorderStyle.Thin
+                    Border.Style.Border.Left.Style = ExcelBorderStyle.Thin
+
+                End With
+                Response.Clear()
+                Response.Buffer = True
+                Response.Charset = ""
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                Response.AddHeader("content-disposition", "attachment; filename=Production Sample Verification List_" & Format(Date.Now, "yyyy-MM-dd_HHmmss") & ".xlsx")
+                Using MyMemoryStream As New MemoryStream()
+                    excel.SaveAs(MyMemoryStream)
+                    MyMemoryStream.WriteTo(Response.OutputStream)
+                    Response.Flush()
+                    Response.End()
+                End Using
+            End Using
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub InsertHeader(ByVal pExl As ExcelWorksheet, cls As clsProductionSampleVerificationList)
+
+        With pExl
+            .Cells(1, 1).Value = "Product Sample Verification List"
+            .Cells(1, 1, 1, 13).Merge = True
+            .Cells(1, 1, 1, 13).Style.HorizontalAlignment = HorzAlignment.Near
+            .Cells(1, 1, 1, 13).Style.VerticalAlignment = VertAlignment.Center
+            .Cells(1, 1, 1, 13).Style.Font.Bold = True
+            .Cells(1, 1, 1, 13).Style.Font.Size = 16
+            .Cells(1, 1, 1, 13).Style.Font.Name = "Segoe UI"
+
+            .Cells(3, 1, 3, 2).Value = "Factory Code"
+            .Cells(3, 1, 3, 2).Merge = True
+            .Cells(3, 3).Value = ": " & cls.FactoryName
+
+            .Cells(4, 1, 4, 2).Value = "Item Type"
+            .Cells(4, 1, 4, 2).Merge = True
+            .Cells(4, 3).Value = ": " & cls.ItemType_Name
+
+            .Cells(5, 1, 5, 2).Value = "Line Code"
+            .Cells(5, 1, 5, 2).Merge = True
+            .Cells(5, 3).Value = ": " & cls.LineName
+
+            .Cells(6, 1, 6, 2).Value = "Item Check"
+            .Cells(6, 1, 6, 2).Merge = True
+            .Cells(6, 3).Value = ": " & cls.ItemCheck_Name
+
+            .Cells(7, 1, 7, 2).Value = "Prod Date"
+            .Cells(7, 1, 7, 2).Merge = True
+            .Cells(7, 3).Value = ": " & cls.Period
+            .Cells(9, 1, 9, 2).Value = "MK Verification"
+            .Cells(9, 1, 9, 2).Merge = True
+            .Cells(9, 3).Value = ": " & cls.MKVerification_Name
+
+            .Cells(8, 1, 8, 2).Value = "QC Verification"
+            .Cells(8, 1, 8, 2).Merge = True
+            .Cells(8, 3).Value = ": " & cls.QCVerification_Name
+
+            Dim rgHeader As ExcelRange = .Cells(3, 3, 9, 4)
+            rgHeader.Style.HorizontalAlignment = HorzAlignment.Near
+            rgHeader.Style.VerticalAlignment = VertAlignment.Center
+            rgHeader.Style.Font.Size = 10
+            rgHeader.Style.Font.Name = "Segoe UI"
+
+        End With
+    End Sub
+#End Region
+
+    'Private Sub up_Excel(cls As clsProductionSampleVerificationList)
+    '    Dim ps As New PrintingSystem()
+    '    UpGridLoad(cls)
+    '    Dim linkX As New PrintableComponentLink(ps)
+    '    linkX.Component = GridExport
+    '    Dim compositeLink As New CompositeLink(ps)
+    '    compositeLink.Links.AddRange(New Object() {linkX})
+    '    compositeLink.CreateDocument()
+    '    Using stream As New MemoryStream()
+    '        compositeLink.PrintingSystem.ExportToXlsx(stream)
+    '        Response.Clear()
+    '        Response.Buffer = False
+    '        Response.AppendHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    '        Response.AppendHeader("Content-Disposition", "attachment; filename=Production Sample Verification List_" + Now.ToString("yyyyMMdd HHmmss") + ".xlsx")
+    '        Response.BinaryWrite(stream.ToArray())
+    '        Response.End()
+    '    End Using
+    '    ps.Dispose()
+    'End Sub
+
+    Protected Sub btnExcel_Click(sender As Object, e As EventArgs) Handles btnExcel.Click
+        Dim cls As New clsProductionSampleVerificationList
+        Dim Factory As String = cboFactory.Value
+        Dim FactoryName As String = cboFactory.Text
+        Dim Itemtype As String = cboItemType.Value
+        Dim Itemtype_Name As String = cboItemType.Text
+        Dim Line As String = cboLineID.Value
+        Dim LineName As String = cboLineID.Text
+        Dim ItemCheck As String = cboItemCheck.Value
+        Dim ItemCheck_Name As String = cboItemCheck.Text
+        Dim ProdDateFrom As String = Convert.ToDateTime(dtFromDate.Value).ToString("yyyy-MM-dd")
+        Dim ProdDateTo As String = Convert.ToDateTime(dtToDate.Value).ToString("yyyy-MM-dd")
+        Dim Period As String = Convert.ToDateTime(dtFromDate.Value).ToString("yyyy MMM dd") & " - " & Convert.ToDateTime(dtToDate.Value).ToString("yyyy MMM dd")
+        Dim MKVerification As String = cboMK.Value
+        Dim QCVerification As String = cboQC.Value
+        Dim MKVerification_Name As String = cboMK.Text
+        Dim QCVerification_Name As String = cboQC.Text
+
+        cls.FactoryCode = Factory
+        cls.FactoryName = FactoryName
+        cls.ItemType_Code = Itemtype
+        cls.ItemType_Name = Itemtype_Name
+        cls.LineCode = Line
+        cls.LineName = LineName
+        cls.ItemCheck_Code = ItemCheck
+        cls.ItemCheck_Name = ItemCheck_Name
+        cls.ProdDateFrom = ProdDateFrom
+        cls.ProdDateTo = ProdDateTo
+        cls.Period = Period
+        cls.MKVerification = MKVerification
+        cls.MKVerification_Name = MKVerification_Name
+        cls.QCVerification = QCVerification
+        cls.QCVerification_Name = QCVerification_Name
+
+        up_Excel(cls)
     End Sub
 
     'Private Sub up_Fillcombo()

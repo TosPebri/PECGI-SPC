@@ -10,15 +10,17 @@ Public Class ProdSampleInput
     Public ValueType As String
     Dim GlobalPrm As String = ""
 
-    Private Sub GridXLoad()
+    Private Sub GridXLoad(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String)
         With gridX
             .Columns.Clear()
             Dim Band1 As New GridViewBandColumn
             Band1.Caption = "DATE"
+            Band1.HeaderStyle.Height = 30
             .Columns.Add(Band1)
 
             Dim Band2 As New GridViewBandColumn
             Band2.Caption = "SHIFT"
+            Band1.HeaderStyle.Height = 30
             Band1.Columns.Add(Band2)
 
             Dim Col1 As New GridViewDataTextColumn
@@ -28,27 +30,38 @@ Public Class ProdSampleInput
             Col1.FixedStyle = GridViewColumnFixedStyle.Left
             Band2.Columns.Add(Col1)
 
-            Dim SelDay As Date = Now.Date.AddDays(-1)
+            Dim SelDay As Date = CDate(ProdDate).AddDays(-1)
+            Dim ColIndex As Integer = 1
             For iDay = 1 To 2
                 Dim BandDay As New GridViewBandColumn
                 BandDay.Caption = Format(SelDay, "dd MMM yyyy")
                 .Columns.Add(BandDay)
 
-                For iShift = 1 To 2
+                Dim Shiftlist As List(Of clsShift) = clsFrequencyDB.GetShift(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode)
+
+                For Each Shift In Shiftlist
                     Dim BandShift As New GridViewBandColumn
-                    BandShift.Caption = "Shift " & iShift
+                    BandShift.Caption = Shift.ShiftName
                     BandDay.Columns.Add(BandShift)
 
-                    For iTime = 1 To 5
+                    Dim SeqList As List(Of clsSequenceNo) = clsFrequencyDB.GetSequence(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, Shift.ShiftCode)
+                    For Each Seq In SeqList
                         Dim colTime As New GridViewDataTextColumn
-                        colTime.Caption = iTime
+                        colTime.Caption = Seq.SequenceNo
+                        colTime.FieldName = ColIndex
+                        colTime.Width = 90
+
                         BandShift.Columns.Add(colTime)
+                        ColIndex = ColIndex + 1
                     Next
 
                 Next
 
                 SelDay = SelDay.AddDays(1)
             Next
+            Dim dt As DataTable = clsSPCResultDetailDB.GetTableXR(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
+            gridX.DataSource = dt
+            gridX.DataBind()
         End With
     End Sub
 
@@ -77,12 +90,11 @@ Public Class ProdSampleInput
                 Dim Shift As String = Request.QueryString("Shift")
                 Dim Sequence As String = Request.QueryString("Sequence")
 
-                GridLoad(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence)
+                GridLoad(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence, 0)
             Else
                 dtDate.Value = Now.Date
             End If
         End If
-        GridXLoad()
     End Sub
 
     Private Sub up_FillCombo()
@@ -105,7 +117,7 @@ Public Class ProdSampleInput
         Result.RegisterUser = Session("user") & ""
         clsSPCResultDB.Insert(Result)
 
-        Dim SeqNo As Integer
+        Dim SeqNo As Integer = clsSPCResultDetailDB.GetSeqNo(Result.FactoryCode, Result.ItemTypeCode, Result.LineCode, Result.ItemCheckCode, Format(Result.ProdDate, "yyyy-MM-dd"), Result.ShiftCode, Result.SequenceNo)
         Dim Detail As New clsSPCResultDetail
         Detail.SPCResultID = Result.SPCResultID
         Detail.SequenceNo = SeqNo
@@ -123,9 +135,7 @@ Public Class ProdSampleInput
         e.Cancel = True
     End Sub
 
-    Private Sub up_ClearGrid()
-        grid.DataSource = Nothing
-        grid.DataBind()
+    Private Sub up_ClearJS()
         grid.JSProperties("cpUSL") = " "
         grid.JSProperties("cpLSL") = " "
         grid.JSProperties("cpUCL") = " "
@@ -136,45 +146,62 @@ Public Class ProdSampleInput
         grid.JSProperties("cpR") = " "
         grid.JSProperties("cpC") = " "
         grid.JSProperties("cpNG") = " "
+        grid.JSProperties("cpMKUser") = " "
+        grid.JSProperties("cpMKDate") = " "
+        grid.JSProperties("cpQCUser") = " "
+        grid.JSProperties("cpQCDate") = " "
+    End Sub
+
+    Private Sub up_ClearGrid()
+        grid.DataSource = Nothing
+        grid.DataBind()
+        up_ClearJS()
     End Sub
     Protected Sub grid_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles grid.AfterPerformCallback
         If e.CallbackName <> "CANCELEDIT" And e.CallbackName <> "CUSTOMCALLBACK" Then
-            GridLoad(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value, Format(dtDate.Value, "yyyy-MM-dd"), cboShift.Value, cboSeq.Value)
+            GridLoad(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value, Format(dtDate.Value, "yyyy-MM-dd"), cboShift.Value, cboSeq.Value, cboShow.Value)
+            GridXLoad(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value, Format(dtDate.Value, "yyyy-MM-dd"))
         End If
     End Sub
 
-    Private Sub GridLoad(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, Shift As String, Sequence As Integer)
+    Private Sub GridLoad(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, Shift As String, Sequence As Integer, VerifiedOnly As Integer)
         Dim ErrMsg As String = ""
-        Dim dt As DataTable = clsSPCResultDetailDB.GetTable(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence)
+        Dim dt As DataTable = clsSPCResultDetailDB.GetTable(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence, VerifiedOnly)
         grid.DataSource = dt
         grid.DataBind()
         If dt.Rows.Count = 0 Then
-            grid.JSProperties("cpUSL") = " "
-            grid.JSProperties("cpLSL") = " "
-            grid.JSProperties("cpUCL") = " "
-            grid.JSProperties("cpLCL") = " "
-            grid.JSProperties("cpMin") = " "
-            grid.JSProperties("cpMax") = " "
-            grid.JSProperties("cpAve") = " "
-            grid.JSProperties("cpR") = " "
-            grid.JSProperties("cpC") = " "
-            grid.JSProperties("cpNG") = " "
+            up_ClearJS()
         Else
             With dt.Rows(0)
-                grid.JSProperties("cpUSL") = .Item("SpecUSL")
-                grid.JSProperties("cpLSL") = .Item("SpecLSL")
-                grid.JSProperties("cpUCL") = .Item("XBarUCL")
-                grid.JSProperties("cpLCL") = .Item("XBarLCL")
-                grid.JSProperties("cpMin") = .Item("MinValue")
-                grid.JSProperties("cpMax") = .Item("MaxValue")
-                grid.JSProperties("cpAve") = .Item("AvgValue")
-                grid.JSProperties("cpR") = .Item("RValue")
+                grid.JSProperties("cpUSL") = AFormat(.Item("SpecUSL"))
+                grid.JSProperties("cpLSL") = AFormat(.Item("SpecLSL"))
+                grid.JSProperties("cpUCL") = AFormat(.Item("XBarUCL"))
+                grid.JSProperties("cpLCL") = AFormat(.Item("XBarLCL"))
+                grid.JSProperties("cpMin") = AFormat(.Item("MinValue"))
+                grid.JSProperties("cpMax") = AFormat(.Item("MaxValue"))
+                grid.JSProperties("cpAve") = AFormat(.Item("AvgValue"))
+                grid.JSProperties("cpR") = AFormat(.Item("RValue"))
                 grid.JSProperties("cpC") = .Item("CValue")
                 grid.JSProperties("cpNG") = .Item("NGValue")
+                grid.JSProperties("cpMKDate") = .Item("MKDate")
+                grid.JSProperties("cpMKUser") = .Item("MKUser")
+                grid.JSProperties("cpQCDate") = .Item("QCDate")
+                grid.JSProperties("cpQCUser") = .Item("QCUser")
+
+                Dim MKDate As String = .Item("MKDate")
+                Dim QCDate As String = .Item("QCDate")
             End With
         End If
-
     End Sub
+
+    Private Function AFormat(v As Object) As String
+        If v Is Nothing OrElse IsDBNull(v) Then
+            Return ""
+        Else
+            Return Format(v, "0.000")
+        End If
+    End Function
+
 
     Private Sub grid_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles grid.CustomCallback
         Dim pFunction As String = Split(e.Parameters, "|")(0)
@@ -189,8 +216,10 @@ Public Class ProdSampleInput
                 Dim pDate As String = Split(e.Parameters, "|")(5)
                 Dim pShift As String = Split(e.Parameters, "|")(6)
                 Dim pSeq As String = Split(e.Parameters, "|")(7)
+                Dim pVerified As String = Split(e.Parameters, "|")(8)
                 pSeq = Val(pSeq)
-                GridLoad(pFactory, pItemType, pLine, pItemCheck, pDate, pShift, pSeq)
+                GridLoad(pFactory, pItemType, pLine, pItemCheck, pDate, pShift, pSeq, pVerified)
+                GridXLoad(pFactory, pItemType, pLine, pItemCheck, pDate)
         End Select
     End Sub
 
@@ -316,7 +345,7 @@ Public Class ProdSampleInput
 
     Private Sub grid_CellEditorInitialize(sender As Object, e As ASPxGridViewEditorEventArgs) Handles grid.CellEditorInitialize
         If e.Column.FieldName = "Value" Then
-            If IsDBNull(e.Value) Then
+            If IsDBNull(e.Value) Or grid.IsNewRowEditing Then
                 e.Editor.ReadOnly = False
             Else
                 e.Editor.ReadOnly = True
@@ -337,6 +366,7 @@ Public Class ProdSampleInput
     End Sub
 
     Private Sub grid_HtmlRowPrepared(sender As Object, e As ASPxGridViewTableRowEventArgs) Handles grid.HtmlRowPrepared
+
         If e.GetValue("DeleteStatus") IsNot Nothing AndAlso e.GetValue("DeleteStatus").ToString = "1" Then
             e.Row.BackColor = System.Drawing.Color.Silver
         ElseIf e.GetValue("Judgement") IsNot Nothing AndAlso e.GetValue("Judgement").ToString = "NG" Then
@@ -352,5 +382,14 @@ Public Class ProdSampleInput
         Dim ShiftCode As String = Split(e.Parameter, "|")(4)
         cboSeq.DataSource = clsFrequencyDB.GetSequence(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ShiftCode)
         cboSeq.DataBind()
+    End Sub
+
+    Private Sub gridX_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles gridX.CustomCallback
+        Dim FactoryCode As String = Split(e.Parameters, "|")(0)
+        Dim ItemTypeCode As String = Split(e.Parameters, "|")(1)
+        Dim LineCode As String = Split(e.Parameters, "|")(2)
+        Dim ItemCheckCode As String = Split(e.Parameters, "|")(3)
+        Dim ProdDate As String = Split(e.Parameters, "|")(4)
+        GridXLoad(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
     End Sub
 End Class

@@ -12,10 +12,10 @@ Public Class ProdSampleQCSummary
 
 #Region "Declarations"
     Dim pUser As String = ""
-    Dim pMenuID As String = "B050 "
-    Public AuthInsert As Boolean = False
+    Dim pMenuID As String = "B050"
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
+    Public AuthAccess As Boolean = False
     Dim dataCount As String = ""
     Private dt As DataTable
 #End Region
@@ -31,7 +31,10 @@ Public Class ProdSampleQCSummary
         sGlobal.getMenu(pMenuID)
         Master.SiteTitle = sGlobal.menuName
         pUser = Session("user")
-        AuthUpdate = sGlobal.Auth_UserUpdate(pUser, pMenuID)
+        AuthAccess = sGlobal.Auth_UserAccess(pUser, pMenuID)
+        If AuthAccess = False Then
+            Response.Redirect("~/Main.aspx")
+        End If
     End Sub
 
     Private Sub cboMachine_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboMachine.Callback
@@ -161,7 +164,7 @@ Public Class ProdSampleQCSummary
             .TextField = "Description"
             .ValueField = "Code"
             .DataBind()
-            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+            .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)
 
             If .SelectedIndex < 0 Then
                 a = ""
@@ -197,7 +200,7 @@ Public Class ProdSampleQCSummary
 
     Private Sub up_FillcomboMachine()
         Dim a As String = ""
-        dt = clsProdSampleQCSummaryDB.FillCombo("2", HF.Get("FactoryCode"))
+        dt = clsProdSampleQCSummaryDB.FillCombo("2", HF.Get("FactoryCode"), pUser)
         With cboMachine
             .Items.Clear() : .Columns.Clear()
             .DataSource = dt
@@ -230,7 +233,7 @@ Public Class ProdSampleQCSummary
             .TextField = "Description"
             .ValueField = "Code"
             .DataBind()
-            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+            .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)
 
             If .SelectedIndex < 0 Then
                 a = ""
@@ -253,7 +256,7 @@ Public Class ProdSampleQCSummary
             .TextField = "Description"
             .ValueField = "Code"
             .DataBind()
-            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+            .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)
         End With
     End Sub
 

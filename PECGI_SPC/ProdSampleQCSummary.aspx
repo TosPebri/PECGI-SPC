@@ -91,7 +91,25 @@
         }
 
         function up_Browse() {
-            Grid.PerformCallback('Load');
+            debugger
+            var FactoryCode = cboFactory.GetValue();
+            var ItemType_Code = cboType.GetValue();
+            var LineCode = cboMachine.GetValue();
+            var Frequency = cboFrequency.GetValue();
+            var Period = dtPeriod.GetText();
+            var Sequence = cboSequence.GetValue();
+
+            if (FactoryCode == null || ItemType_Code == null || LineCode == null || Frequency == null || Period == "" || Sequence == null) {
+                toastr.warning('Please Fill All Combo Box Filter!', 'Warning');
+                toastr.options.closeButton = false;
+                toastr.options.debug = false;
+                toastr.options.newestOnTop = false;
+                toastr.options.progressBar = false;
+                toastr.options.preventDuplicates = true;
+            }
+            else {
+                Grid.PerformCallback('Load');
+            }
         }
     </script>
 </asp:Content>
@@ -99,176 +117,253 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
     <div style="padding: 5px 5px 5px 5px; padding-bottom: 20px; border-bottom: groove">
         <dx:ASPxHiddenField ID="HF" runat="server" ClientInstanceName="HF"></dx:ASPxHiddenField>
-        <table>
+        <table style="width:100%">
             <tr>
-                <td style="padding-right: 1em">
-                    <dx:ASPxLabel ID="ASPxLabel1" runat="server" Text="Factory" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt" />
-                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td style="padding-right: 1em">
+                                <dx:ASPxLabel ID="ASPxLabel1" runat="server" Text="Factory" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt" />
+                            </td>
 
-                <td style="padding-right: 1em">
-                    <dx:ASPxComboBox ID="cboFactory" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFactory">
-                        <ItemStyle Height="10px" Paddings-Padding="4px" />
-                        <ButtonStyle Width="5px" Paddings-Padding="4px" />
-                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
-                            debugger
-                                var FactoryCode = cboFactory.GetValue();
-                                HF.Set('FactoryCode', FactoryCode);
+                            <td style="padding-right: 1em">
+                                <dx:ASPxComboBox ID="cboFactory" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFactory">
+                                    <ItemStyle Height="10px" Paddings-Padding="4px" />
+                                    <ButtonStyle Width="5px" Paddings-Padding="4px" />
+                                    <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                        debugger
+                                        var FactoryCode = cboFactory.GetValue();
+                                        HF.Set('FactoryCode', FactoryCode);
 
-                                btnBrowse.SetEnabled(false);
-                                btnClear.SetEnabled(false);
-                                btnExcel.SetEnabled(false);
+                                        btnBrowse.SetEnabled(false);
+                                        btnClear.SetEnabled(false);
+                                        btnExcel.SetEnabled(false);
 
-                                cboMachine.SetEnabled(false);
-                                cboMachine.PerformCallback();
+                                        cboMachine.SetEnabled(false);
+                                        cboMachine.PerformCallback();
 
-                                cboFrequency.SetEnabled(false);
-                                cboFrequency.PerformCallback();
+                                        cboFrequency.SetEnabled(false);
+                                        cboFrequency.PerformCallback();
 
-                                cboSequence.SetEnabled(false);
-                                cboSequence.PerformCallback();
+                                        cboSequence.SetEnabled(false);
+                                        cboSequence.PerformCallback();
                                 
-                                Grid.PerformCallback('Kosong');
-                            }" />
-                    </dx:ASPxComboBox>
-                </td>
+                                        Grid.PerformCallback('Kosong');
+                                    }" />
+                                </dx:ASPxComboBox>
+                            </td>
 
-                <td style="padding-right: 1em">
-                    <dx:ASPxLabel ID="ASPxLabel2" runat="server" Text="Machine Process" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt" />
-                </td>
+                            <td style="padding-right: 1em">
+                                <dx:ASPxLabel ID="ASPxLabel2" runat="server" Text="Machine Process" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt" />
+                            </td>
 
-                <td style="padding-right: 1em">
-                    <dx:ASPxComboBox ID="cboMachine" runat="server" Theme="Office2010Black" Width="200px" Height="25px" ClientInstanceName="cboMachine">
-                        <ItemStyle Height="10px" Paddings-Padding="4px" />
-                        <ButtonStyle Width="5px" Paddings-Padding="4px" />
-                        <ClientSideEvents EndCallback="function(s, e) {cboMachine.SetEnabled(true);}" />
-                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
-                            debugger
-                                var MachineCode = cboMachine.GetValue();
-                                HF.Set('MachineCode', MachineCode);
+                            <td style="padding-right: 1em">
+                                <dx:ASPxComboBox ID="cboMachine" runat="server" Theme="Office2010Black" Width="200px" Height="25px" ClientInstanceName="cboMachine">
+                                    <ItemStyle Height="10px" Paddings-Padding="4px" />
+                                    <ButtonStyle Width="5px" Paddings-Padding="4px" />
+                                    <ClientSideEvents EndCallback="function(s, e) {cboMachine.SetEnabled(true);}" />
+                                    <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                        debugger
+                                        var MachineCode = cboMachine.GetValue();
+                                        HF.Set('MachineCode', MachineCode);
                                 
-                                btnBrowse.SetEnabled(false);
-                                btnClear.SetEnabled(false);
-                                btnExcel.SetEnabled(false);
+                                        btnBrowse.SetEnabled(false);
+                                        btnClear.SetEnabled(false);
+                                        btnExcel.SetEnabled(false);
 
-                                cboSequence.SetEnabled(false);
-                                cboSequence.PerformCallback();
+                                        cboSequence.SetEnabled(false);
+                                        cboSequence.PerformCallback();
 
-                                Grid.PerformCallback('Kosong');
-                            }" />
-                    </dx:ASPxComboBox>
-                </td>
+                                        Grid.PerformCallback('Kosong');
+                                    }" />
+                                </dx:ASPxComboBox>
+                            </td>
 
-                <td style="padding-right: 1em; padding-top: 0.5em">
-                    <dx:ASPxLabel ID="ASPxLabel5" runat="server" Text="Frequency" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt" />
-                </td>
+                            <td style="padding-right: 1em; padding-top: 0.5em">
+                                <dx:ASPxLabel ID="ASPxLabel5" runat="server" Text="Frequency" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt" />
+                            </td>
 
-                <td style="padding-right: 1em; padding-top: 0.5em">
-                    <dx:ASPxComboBox ID="cboFrequency" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFrequency">
-                        <ItemStyle Height="10px" Paddings-Padding="4px" />
-                        <ButtonStyle Width="5px" Paddings-Padding="4px" />
-                        <ClientSideEvents EndCallback="function(s, e) {cboFrequency.SetEnabled(true);}" />
-                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
-                                var Frequency = cboFrequency.GetValue();
-                                HF.Set('FrequencyCode', Frequency);
+                            <td style="padding-right: 1em; padding-top: 0.5em">
+                                <dx:ASPxComboBox ID="cboFrequency" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFrequency">
+                                    <ItemStyle Height="10px" Paddings-Padding="4px" />
+                                    <ButtonStyle Width="5px" Paddings-Padding="4px" />
+                                    <ClientSideEvents EndCallback="function(s, e) {cboFrequency.SetEnabled(true);}" />
+                                    <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                        var Frequency = cboFrequency.GetValue();
+                                        HF.Set('FrequencyCode', Frequency);
                                 
-                                btnBrowse.SetEnabled(false);
-                                btnClear.SetEnabled(false);
-                                btnExcel.SetEnabled(false);
+                                        btnBrowse.SetEnabled(false);
+                                        btnClear.SetEnabled(false);
+                                        btnExcel.SetEnabled(false);
 
-                                cboSequence.PerformCallback();
-                                Grid.PerformCallback('Kosong');
-                            }" />
-                    </dx:ASPxComboBox>
+                                        cboSequence.PerformCallback();
+                                        Grid.PerformCallback('Kosong');
+                                    }" />
+                                </dx:ASPxComboBox>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding-right: 1em; padding-top: 0.5em">
+                                <dx:ASPxLabel ID="ASPxLabel3" runat="server" Text="Type" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt" />
+                            </td>
+
+                            <td style="padding-right: 1em; padding-top: 0.5em">
+                                <dx:ASPxComboBox ID="cboType" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboType">
+                                    <ItemStyle Height="10px" Paddings-Padding="4px" />
+                                    <ButtonStyle Width="5px" Paddings-Padding="4px" />
+                                    <ClientSideEvents EndCallback="function(s, e) {cboType.SetEnabled(true);}" />
+                                    <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                        var TypeCode = cboType.GetValue();
+                                        HF.Set('TypeCode', TypeCode);
+                                        Grid.PerformCallback('Kosong');
+                                    }" />
+                                </dx:ASPxComboBox>
+                            </td>
+
+                            <td style="padding-right: 1em; padding-top: 0.5em">
+                                <dx:ASPxLabel ID="ASPxLabel4" runat="server" Text="Period" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt" />
+                            </td>
+
+                            <td style="padding-right: 1em; padding-top: 0.5em">
+                                <dx:ASPxDateEdit ID="dtPeriod" runat="server" Theme="Office2010Black" EditFormat="Date" ClientInstanceName="dtPeriod" Height="25px" Width="200px"
+                                    DisplayFormatString="dd MMM yyyy" EditFormatString="dd MMM yyyy" AutoPostBack="false">
+                                    <ClientSideEvents Init="function(s, e){var today = new Date(); dtPeriod.SetDate(today);}" />
+                                    <ClientSideEvents ValueChanged="function(s, e){
+                                        Grid.PerformCallback('Kosong');
+                                    }" />
+                                    <CalendarProperties>
+                                        <HeaderStyle Font-Size="12pt" Paddings-Padding="5px" />
+                                        <DayStyle Font-Size="9pt" Paddings-Padding="5px" />
+                                        <WeekNumberStyle Font-Size="9pt" Paddings-Padding="5px"></WeekNumberStyle>
+                                        <FooterStyle Font-Size="9pt" Paddings-Padding="5px" />
+                                        <ButtonStyle Font-Size="9pt" Paddings-Padding="5px"></ButtonStyle>
+                                    </CalendarProperties>
+                                    <ButtonStyle Width="5px" Paddings-Padding="4px"></ButtonStyle>
+                                </dx:ASPxDateEdit>
+
+                            </td>
+
+                            <td style="padding-right: 1em; padding-top: 0.5em">
+                                <dx:ASPxLabel ID="ASPxLabel6" runat="server" Text="Sequence" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt" />
+                            </td>
+
+                            <td style="padding-right: 1em; padding-top: 0.5em">
+                                <dx:ASPxComboBox ID="cboSequence" runat="server" Theme="Office2010Black" Width="100px" Height="15px" ClientInstanceName="cboSequence">
+                                    <ItemStyle Height="10px" Paddings-Padding="4px" />
+                                    <ButtonStyle Width="5px" Paddings-Padding="4px" />
+                                    <ClientSideEvents EndCallback="function(s, e) {
+                                        cboSequence.SetEnabled(true);
+                                        btnBrowse.SetEnabled(true);
+                                        btnClear.SetEnabled(true);
+                                        btnExcel.SetEnabled(true); 
+                                    }" />
+                                    <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                        Grid.PerformCallback('Kosong');
+                                    }" />
+                                </dx:ASPxComboBox>
+                            </td>
+
+                            <td style="padding-right: 1em; padding-top: 0.5em">
+                                <dx:ASPxButton ID="ASPxButton1" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse" Theme="Office2010Silver" Height="28px"
+                                    Text="Browse" Font-Names="Segoe UI" Font-Size="10pt">
+                                    <ClientSideEvents Click="up_Browse" />
+                                </dx:ASPxButton>
+                            </td>
+
+                            <td style="padding-right: 1em; padding-top: 0.5em">
+                                <dx:ASPxButton ID="ASPxButton2" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Theme="Office2010Silver" Height="28px"
+                                    Text="Clear" Font-Names="Segoe UI" Font-Size="10pt">
+                                    <ClientSideEvents Click="function(s, e) {
+                                        cboFactory.SetSelectedIndex(-1);
+                                        cboMachine.SetSelectedIndex(-1);
+                                        cboFrequency.SetSelectedIndex(-1);
+                                        cboType.SetSelectedIndex(-1);
+                                        cboSequence.SetSelectedIndex(-1);
+                                        var today = new Date(); dtPeriod.SetDate(today);
+                                        Grid.PerformCallback('Kosong');
+                                    }" />
+                                </dx:ASPxButton>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
-            </tr>
 
-            <tr>
-                <td style="padding-right: 1em; padding-top: 0.5em">
-                    <dx:ASPxLabel ID="ASPxLabel3" runat="server" Text="Type" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt" />
+                <td>
+                    <table style="width: 100%; height: 50px">
+                        <tr>
+                            <td style="width: 80px;" align="center" class="align">
+                                <dx:ASPxLabel ID="ASPxLabel10" runat="server" Text="Sample Time" CssClass="text" />
+                            </td>
+                            <td style="width: 100px;" align="center" class="align">
+                                <dx:ASPxLabel ID="ASPxLabel7" runat="server" Text=":" CssClass="text" />
+                                &nbsp
+                                <dx:ASPxLabel ID="lblSampleTime" ClientInstanceName="lblSampleTime" runat="server" Text="-" CssClass="text" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width: 80px;" align="center" class="align">
+                                <dx:ASPxLabel ID="ASPxLabel19" runat="server" Text="Total Sample" CssClass="text" />
+                            </td>
+                            <td style="width: 100px;" align="center" class="align">
+                                <dx:ASPxLabel ID="ASPxLabel20" runat="server" Text=":" CssClass="text" />
+                                &nbsp
+                                <dx:ASPxLabel ID="lblTotal" ClientInstanceName="lblTotal" runat="server" Text="0" CssClass="text" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="width: 80px;" align="center" class="align">
+                            </td>
+                            <td style="width: 100px;" align="center" class="align">
+                                &nbsp
+                            </td>
+                        </tr>
+                    </table>
                 </td>
 
-                <td style="padding-right: 1em; padding-top: 0.5em">
-                    <dx:ASPxComboBox ID="cboType" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboType">
-                        <ItemStyle Height="10px" Paddings-Padding="4px" />
-                        <ButtonStyle Width="5px" Paddings-Padding="4px" />
-                        <ClientSideEvents EndCallback="function(s, e) {cboType.SetEnabled(true);}" />
-                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
-                                var TypeCode = cboType.GetValue();
-                                HF.Set('TypeCode', TypeCode);
-                                Grid.PerformCallback('Kosong');
-                            }" />
-                    </dx:ASPxComboBox>
-                </td>
+                <td>
+                    <table style="width: 100%; height: 50px">
+                        <tr>
+                            <td style="width: 80px;" align="center" class="align">
+                                <dx:ASPxLabel ID="ASPxLabel9" runat="server" Text="OK Result" CssClass="text" />
+                            </td>
+                            <td style="width: 33px;" align="center" class="align">
+                                <dx:ASPxLabel ID="ASPxLabel11" runat="server" Text=":" CssClass="text" />
+                                &nbsp
+                                <dx:ASPxLabel ID="lblOK" ClientInstanceName="lblOK" runat="server" Text="0" CssClass="text" />
+                            </td>
+                        </tr>
 
-                <td style="padding-right: 1em; padding-top: 0.5em">
-                    <dx:ASPxLabel ID="ASPxLabel4" runat="server" Text="Period" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt" />
-                </td>
+                        <tr>
+                            <td style="width: 80px;" align="center" class="align">
+                                <dx:ASPxLabel ID="ASPxLabel13" runat="server" Text="NG Result" CssClass="text" />
+                            </td>
+                            <td style="width: 33px;" align="center" class="align">
+                                <dx:ASPxLabel ID="ASPxLabel14" runat="server" Text=":" CssClass="text" />
+                                &nbsp
+                                <dx:ASPxLabel ID="lblNG" ClientInstanceName="lblNG" runat="server" Text="0" CssClass="text" />
+                            </td>
+                        </tr>
 
-                <td style="padding-right: 1em; padding-top: 0.5em">
-                    <dx:ASPxDateEdit ID="dtPeriod" runat="server" Theme="Office2010Black" EditFormat="Date" ClientInstanceName="dtPeriod" Height="25px" Width="200px"
-                        DisplayFormatString="dd MMM yyyy" EditFormatString="dd MMM yyyy" AutoPostBack="false">
-                        <ClientSideEvents Init="function(s, e){var today = new Date(); dtPeriod.SetDate(today);}" />
-                        <ClientSideEvents ValueChanged="function(s, e){
-                                Grid.PerformCallback('Kosong');
-                            }" />
-                        <CalendarProperties>
-                            <HeaderStyle Font-Size="12pt" Paddings-Padding="5px" />
-                            <DayStyle Font-Size="9pt" Paddings-Padding="5px" />
-                            <WeekNumberStyle Font-Size="9pt" Paddings-Padding="5px"></WeekNumberStyle>
-                            <FooterStyle Font-Size="9pt" Paddings-Padding="5px" />
-                            <ButtonStyle Font-Size="9pt" Paddings-Padding="5px"></ButtonStyle>
-                        </CalendarProperties>
-                        <ButtonStyle Width="5px" Paddings-Padding="4px" ></ButtonStyle>
-                    </dx:ASPxDateEdit>
-
-                </td>
-
-                <td style="padding-right: 1em; padding-top: 0.5em">
-                    <dx:ASPxLabel ID="ASPxLabel6" runat="server" Text="Sequence" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt" />
-                </td>
-
-                <td style="padding-right: 1em; padding-top: 0.5em">
-                    <dx:ASPxComboBox ID="cboSequence" runat="server" Theme="Office2010Black" Width="100px" Height="15px" ClientInstanceName="cboSequence">
-                        <ItemStyle Height="10px" Paddings-Padding="4px" />
-                        <ButtonStyle Width="5px" Paddings-Padding="4px" />
-                        <ClientSideEvents EndCallback="function(s, e) {
-                                cboSequence.SetEnabled(true);
-                                btnBrowse.SetEnabled(true);
-                                btnClear.SetEnabled(true);
-                                btnExcel.SetEnabled(true); 
-                            }" />
-                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
-                                Grid.PerformCallback('Kosong');
-                            }" />
-                    </dx:ASPxComboBox>
-                </td>
-
-                <td style="padding-right: 1em; padding-top: 0.5em">
-                    <dx:ASPxButton ID="ASPxButton1" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse" Theme="Office2010Silver" Height="28px"
-                        Text="Browse">
-                        <ClientSideEvents Click="up_Browse" />
-                    </dx:ASPxButton>
-                </td>
-
-                <td style="padding-right: 1em; padding-top: 0.5em">
-                    <dx:ASPxButton ID="ASPxButton2" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Theme="Office2010Silver" Height="28px"
-                        Text="Clear">
-                        <ClientSideEvents Click="function(s, e) {
-                                cboFactory.SetSelectedIndex(0);
-                                cboMachine.SetSelectedIndex(0);
-                                cboFrequency.SetSelectedIndex(0);
-                                cboType.SetSelectedIndex(0);
-                                cboSequence.SetSelectedIndex(0);
-                                var today = new Date(); dtPeriod.SetDate(today);
-                                Grid.PerformCallback('Kosong');
-                            }" />
-                    </dx:ASPxButton>
+                        <tr>
+                            <td style="width: 80px;" align="center" class="align">
+                                <dx:ASPxLabel ID="ASPxLabel16" runat="server" Text="Incomplete" CssClass="text" />
+                            </td>
+                            <td style="width: 33px;" align="center" class="align">
+                                <dx:ASPxLabel ID="ASPxLabel17" runat="server" Text=":" CssClass="text" />
+                                &nbsp
+                                <dx:ASPxLabel ID="lblInComplete" ClientInstanceName="lblInComplete" runat="server" Text="0" CssClass="text" />
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>
     </div>
 
-    <div style="padding: 5px 5px 5px 5px; padding-top: 20px; padding-bottom: 20px">
+    <div style="padding: 20px 5px 5px 5px;">
         <table style="width:100%">
             <tr>
                 <td style="vertical-align:top">
@@ -297,69 +392,12 @@
                     </table>
                 </td>
 
-                <td style="width:300px">
-                    <table style="width: 100%; height: 50px">
-                        <tr>
-                            <td style="width: 80px;" align="center" class="align">
-                                <dx:ASPxLabel ID="ASPxLabel10" runat="server" Text="Sample Time" CssClass="text" />
-                            </td>
-                            <td style="width: 100px;" align="center" class="align">
-                                <dx:ASPxLabel ID="ASPxLabel7" runat="server" Text=":" CssClass="text" />
-                                &nbsp
-                                <dx:ASPxLabel ID="lblSampleTime" ClientInstanceName="lblSampleTime" runat="server" Text="-" CssClass = "text" />
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td style="width: 80px;" align="center" class="align">
-                                <dx:ASPxLabel ID="ASPxLabel9" runat="server" Text="OK Result" CssClass="text" />
-                            </td>
-                            <td style="width: 100px;" align="center" class="align">
-                                <dx:ASPxLabel ID="ASPxLabel11" runat="server" Text=":" CssClass = "text" />
-                                &nbsp
-                                <dx:ASPxLabel ID="lblOK" ClientInstanceName="lblOK" runat="server" Text="0" CssClass = "text" />
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td style="width: 80px;" align="center" class="align">
-                                <dx:ASPxLabel ID="ASPxLabel13" runat="server" Text="NG Result" CssClass = "text" />
-                            </td>
-                            <td style="width: 100px;" align="center" class="align">
-                                <dx:ASPxLabel ID="ASPxLabel14" runat="server" Text=":" CssClass = "text" />
-                                &nbsp
-                                <dx:ASPxLabel ID="lblNG" ClientInstanceName="lblNG" runat="server" Text="0" CssClass = "text" />
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td style="width: 80px;" align="center" class="align">
-                                <dx:ASPxLabel ID="ASPxLabel16" runat="server" Text="Incomplete" CssClass = "text" />
-                            </td>
-                            <td style="width: 100px;" align="center" class="align">
-                                <dx:ASPxLabel ID="ASPxLabel17" runat="server" Text=":" CssClass = "text" />
-                                &nbsp
-                                <dx:ASPxLabel ID="lblInComplete" ClientInstanceName="lblInComplete" runat="server" Text="0" CssClass = "text" />
-                            </td>    
-                        </tr>
-
-                        <tr>
-                            <td style="width: 80px;" align="center" class="align">
-                                <dx:ASPxLabel ID="ASPxLabel19" runat="server" Text="Total Sample" CssClass = "text" />
-                            </td>
-                            <td style="width: 100px;" align="center" class="align">
-                                <dx:ASPxLabel ID="ASPxLabel20" runat="server" Text=":" CssClass = "text" />
-                                &nbsp
-                                <dx:ASPxLabel ID="lblTotal" ClientInstanceName="lblTotal"  runat="server" Text="0" CssClass = "text" />
-                            </td>    
-                        </tr>
-                    </table>
-                </td>
+                
             </tr>
         </table>
     </div>
 
-    <div style="padding: 20px 5px 5px 5px">
+    <div style="padding: 20px 5px 5px 0px">
         <dx:ASPxGridView ID="Grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="Grid"
             EnableTheming="True" KeyFieldName="Type" Theme="Office2010Black" Width="100%"
             Font-Names="Segoe UI" Font-Size="9pt">
@@ -381,7 +419,7 @@
             <SettingsPager Mode="ShowPager" PageSize="20" AlwaysShowPager="true">
                 <PageSizeItemSettings Visible="True" />
             </SettingsPager>
-            <Settings HorizontalScrollBarMode="Auto" VerticalScrollBarMode="Auto" VerticalScrollableHeight="300" />
+            <Settings HorizontalScrollBarMode="Auto" VerticalScrollBarMode="Auto" VerticalScrollableHeight="225" />
         </dx:ASPxGridView>
     </div>
 

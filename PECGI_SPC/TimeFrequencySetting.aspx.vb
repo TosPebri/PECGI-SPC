@@ -15,6 +15,7 @@ Public Class TimeFrequencySetting
     Public AuthInsert As Boolean = False
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
+    Public AuthAccess As Boolean = False
     Private dt As DataTable
 #End Region
 
@@ -64,11 +65,11 @@ Public Class TimeFrequencySetting
 
             Call up_InsUpd("0", _
                 e.NewValues("Frequency"), _
-                0, _
+                e.NewValues("No"), _
                 e.NewValues("Shift"), _
                 StTime.ToString("HH:mm"), _
                 EnTime.ToString("HH:mm"), _
-                IIf(e.NewValues("Status") = "Yes", "1", "0"), _
+                IIf(e.NewValues("Status") Is Nothing, "0", e.NewValues("Status")), _
                 pUser)
             Grid.CancelEdit()
             up_GridLoad()
@@ -89,7 +90,7 @@ Public Class TimeFrequencySetting
                 e.NewValues("Shift"), _
                 StTime.ToString("HH:mm"), _
                 EnTime.ToString("HH:mm"), _
-                IIf(e.NewValues("Status") = "Yes", "1", "0"), _
+                e.NewValues("Status"), _
                 pUser)
             Grid.CancelEdit()
             up_GridLoad()
@@ -129,20 +130,10 @@ Public Class TimeFrequencySetting
                 e.Editor.ReadOnly = True
                 e.Editor.ForeColor = Color.Silver
             End If
-        ElseIf Grid.IsNewRowEditing Then
-            If e.Column.FieldName = "No" Then
-                e.Editor.ReadOnly = True
-                e.Editor.ForeColor = Color.Silver
-            End If
-            If e.Column.FieldName = "Status" Then
-                e.Editor.Value = "Yes"
-            End If
         End If
 
         If e.Column.FieldName = "Frequency" Or e.Column.FieldName = "Shift" Then
             e.Editor.Width = "75"
-        ElseIf e.Column.FieldName = "Status" Then
-            e.Editor.Width = "55"
         End If
     End Sub
 
@@ -188,14 +179,6 @@ Public Class TimeFrequencySetting
                 End If
             End If
 
-            If dataColumn.FieldName = "Status" Then
-                If IsNothing(e.NewValues("Status")) OrElse e.NewValues("Status").ToString.Trim = "" Then
-                    e.Errors(dataColumn) = "Please Choose Active Status!"
-                    show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
-                    AdaError = True
-                End If
-            End If
-
             If dataColumn.FieldName = "LastUser" Then
                 dataCol = dataColumn
             End If
@@ -205,6 +188,8 @@ Public Class TimeFrequencySetting
             Dim pErr As String = ""
             Dim StTime As DateTime = Convert.ToDateTime(e.NewValues("Start"))
             Dim EnTime As DateTime = Convert.ToDateTime(e.NewValues("End"))
+
+            If StTime = EnTime Then show_error(MsgTypeEnum.Warning, "Cannot Insert Start " + StTime.ToString("HH:mm") + " - " + EnTime.ToString("HH:mm") + " in This Frequency " + cboFreq.Text + ", Because it is Overlapping with Existing Data. Please Check Again", 1) : e.Errors(dataCol) = "" : Exit Sub
 
             Dim cls As New clsTimeFrequencySetting With
             {
@@ -302,7 +287,7 @@ Public Class TimeFrequencySetting
                 .Status = Status,
                 .User = User
             }
-            clsTimeFrequencySettingDB.InsertUpdate(cls)
+            clsTimeFrequencySettingDB.InsertUpdate(cls, Type)
             show_error(MsgTypeEnum.Success, message, 1)
         Catch ex As Exception
             Throw New Exception(ex.Message)

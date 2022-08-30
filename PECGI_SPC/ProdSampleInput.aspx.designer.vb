@@ -239,6 +239,24 @@ Partial Public Class ProdSampleInput
     Protected WithEvents ASPxLabel11 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
+    '''lblMKUser control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblMKUser As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
+    '''lblMKDate control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblMKDate As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
     '''ASPxLabel12 control.
     '''</summary>
     '''<remarks>
@@ -246,6 +264,24 @@ Partial Public Class ProdSampleInput
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents ASPxLabel12 As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
+    '''lblQCUser control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblQCUser As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
+    '''lblQCDate control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblQCDate As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''grid control.
@@ -266,13 +302,13 @@ Partial Public Class ProdSampleInput
     Protected WithEvents ASPxLabel20 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
-    '''ASPxTextBox1 control.
+    '''txtSubLotNo control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxTextBox1 As Global.DevExpress.Web.ASPxTextBox
+    Protected WithEvents txtSubLotNo As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
     '''ASPxLabel21 control.
@@ -284,13 +320,13 @@ Partial Public Class ProdSampleInput
     Protected WithEvents ASPxLabel21 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
-    '''ASPxTextBox2 control.
+    '''txtRemarks control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxTextBox2 As Global.DevExpress.Web.ASPxTextBox
+    Protected WithEvents txtRemarks As Global.DevExpress.Web.ASPxTextBox
 
     '''<summary>
     '''ASPxLabel22 control.
@@ -480,15 +516,6 @@ Partial Public Class ProdSampleInput
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents lblR As Global.DevExpress.Web.ASPxLabel
-
-    '''<summary>
-    '''ASPxLabel25 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ASPxLabel25 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''gridX control.

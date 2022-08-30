@@ -149,15 +149,6 @@ Partial Public Class ProdSampleQCSummary
     Protected WithEvents ASPxButton2 As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
-    '''btnExcel control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnExcel As Global.DevExpress.Web.ASPxButton
-
-    '''<summary>
     '''ASPxLabel10 control.
     '''</summary>
     '''<remarks>
@@ -183,6 +174,33 @@ Partial Public Class ProdSampleQCSummary
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents lblSampleTime As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
+    '''ASPxLabel19 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ASPxLabel19 As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
+    '''ASPxLabel20 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ASPxLabel20 As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
+    '''lblTotal control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblTotal As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''ASPxLabel9 control.
@@ -266,31 +284,13 @@ Partial Public Class ProdSampleQCSummary
     Protected WithEvents lblInComplete As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
-    '''ASPxLabel19 control.
+    '''btnExcel control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel19 As Global.DevExpress.Web.ASPxLabel
-
-    '''<summary>
-    '''ASPxLabel20 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ASPxLabel20 As Global.DevExpress.Web.ASPxLabel
-
-    '''<summary>
-    '''lblTotal control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents lblTotal As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents btnExcel As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''Grid control.

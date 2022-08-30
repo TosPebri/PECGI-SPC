@@ -275,7 +275,7 @@
             SelectCommand="Exec sp_ChartSetup_FillCombo '5' "></asp:SqlDataSource>
 
         <dx:ASPxGridView ID="Grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="Grid"
-            EnableTheming="True" Theme="Office2010Black" Width="100%" KeyFieldName="Factory;Type;Machine;Start"
+            EnableTheming="True" Theme="Office2010Black" Width="100%" KeyFieldName="Factory;Type;Machine;ItemCheck;Start;LastUpdate"
             Font-Names="Segoe UI" Font-Size="9pt"
             OnRowValidating="Grid_RowValidating" OnStartRowEditing="Grid_StartRowEditing"
             OnRowInserting="Grid_RowInserting" OnRowDeleting="Grid_RowDeleting"
@@ -412,7 +412,7 @@
                     <Columns>
                         <dx:GridViewDataSpinEditColumn Caption="USL" FieldName="SpecUSL"
                             width="50px" Settings-AutoFilterCondition="Contains" >
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -423,7 +423,7 @@
 
                         <dx:GridViewDataSpinEditColumn Caption="LSL" FieldName="SpecLSL"
                             width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0.001" DecimalPlaces="3" Increment="0.001">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0.001" DecimalPlaces="3" Increment="0.001" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -439,7 +439,7 @@
                     <Columns>
                         <dx:GridViewDataSpinEditColumn Caption="CL" FieldName="XCL"
                             width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -450,7 +450,7 @@
 
                         <dx:GridViewDataSpinEditColumn Caption="UCL" FieldName="XUCL"
                             width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -461,7 +461,7 @@
 
                         <dx:GridViewDataSpinEditColumn Caption="LCL" FieldName="XLCL"
                             width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -477,7 +477,7 @@
                     <Columns>
                         <dx:GridViewDataSpinEditColumn Caption="CL" FieldName="RCL"
                             width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -488,7 +488,7 @@
 
                         <dx:GridViewDataSpinEditColumn Caption="UCL" FieldName="RUCL"
                             width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>
@@ -499,7 +499,7 @@
 
                         <dx:GridViewDataSpinEditColumn Caption="LCL" FieldName="RLCL"
                             width="50px" Settings-AutoFilterCondition="Contains">
-                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001">
+                            <PropertiesSpinEdit MaxValue="10000" MinValue="0" DecimalPlaces="3" Increment="0.001" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
                                 <ButtonStyle Width="5px" Paddings-Padding="2px">
                                     <Paddings Padding="2px" />
                                 </ButtonStyle>

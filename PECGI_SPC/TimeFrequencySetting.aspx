@@ -71,15 +71,6 @@
                 </td>
 
                 <td style="padding-right: 1em">
-                    <dx:ASPxComboBox ID="cboItemType" runat="server" Font-Names="Segoe UI" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
-                        Theme="Office2010Black" EnableTheming="True" Height="25px" EnableIncrementalFiltering="True"
-                        TextField="CODENAME" ValueField="CODE" ClientInstanceName="cboItemType" Width="120px">
-                        <ClientSideEvents SelectedIndexChanged="ChangeItemType" />
-                        <ItemStyle Height="10px" Paddings-Padding="4px" />
-                        <ButtonStyle Paddings-Padding="4px" Width="5px">
-                        </ButtonStyle>
-                    </dx:ASPxComboBox>
-
                     <dx:ASPxComboBox ID="cboFreq" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFreq"
                         EnableIncrementalFiltering="True" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains">
                         <ItemStyle Height="10px" Paddings-Padding="4px" />
@@ -93,14 +84,14 @@
 
                 <td style="padding-right: 1em">
                     <dx:ASPxButton ID="btnBrowse" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse" Theme="Office2010Silver" Height="28px"
-                        Text="Browse">
+                        Text="Browse" Font-Names="Segoe UI" Font-Size="10pt">
                         <ClientSideEvents Click="up_Browse" />
                     </dx:ASPxButton>
                 </td>
 
                 <td style="padding-right: 1em">
                     <dx:ASPxButton ID="btnClear" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Theme="Office2010Silver" Height="28px"
-                        Text="Clear">
+                        Text="Clear" Font-Names="Segoe UI" Font-Size="10pt">
                         <ClientSideEvents Click="function(s, e) {
                                     cboFreq.SetSelectedIndex(0);
                                     Grid.PerformCallback('Kosong');

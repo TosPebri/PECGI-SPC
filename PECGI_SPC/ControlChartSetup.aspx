@@ -150,14 +150,14 @@
 
                 <td style="padding-right: 1em; padding-top: 0.5em">
                     <dx:ASPxButton ID="ASPxButton1" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse" Theme="Office2010Silver" Height="28px"
-                        Text="Browse">
+                        Text="Browse" Font-Names="Segoe UI" Font-Size="10pt">
                         <ClientSideEvents Click="up_Browse" />
                     </dx:ASPxButton>
                 </td>
 
                 <td style="padding-right: 1em; padding-top: 0.5em">
                     <dx:ASPxButton ID="ASPxButton2" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Theme="Office2010Silver" Height="28px"
-                        Text="Clear">
+                        Text="Clear" Font-Names="Segoe UI" Font-Size="10pt">
                         <ClientSideEvents Click="function(s, e) {
                                 cboFactory.SetSelectedIndex(0);
                                 cboMachine.SetSelectedIndex(0);
@@ -546,7 +546,7 @@
                 <PageSizeItemSettings Visible="True" />
             </SettingsPager>
             <Settings ShowFilterRow="True" VerticalScrollBarMode="Auto"
-                VerticalScrollableHeight="300" HorizontalScrollBarMode="Auto" />
+                VerticalScrollableHeight="275" HorizontalScrollBarMode="Auto" />
             <SettingsText ConfirmDelete="Are you sure want to delete ?"></SettingsText>
             <SettingsPopup>
                 <EditForm Modal="false" HorizontalAlign="WindowCenter" VerticalAlign="WindowCenter" Width="200" />

@@ -15,6 +15,7 @@ Public Class TimeFrequencySetting
     Public AuthInsert As Boolean = False
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
+    Public AuthAccess As Boolean = False
     Private dt As DataTable
 #End Region
 

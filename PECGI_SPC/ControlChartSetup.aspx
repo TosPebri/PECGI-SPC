@@ -67,6 +67,96 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
     <div style="padding: 5px 5px 5px 5px;">
+        <div class="row" style="margin-bottom:0.5%">
+            <div class="col col-1" style="width: 5%">
+                <dx:ASPxLabel ID="ASPxLabel1" runat="server" Text="Factory" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt"/>
+            </div>
+            <div class="col col-1">
+                <dx:ASPxComboBox ID="cboFactory" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFactory">
+                        <ItemStyle Height="10px" Paddings-Padding="4px" />
+                        <ButtonStyle Width="5px" Paddings-Padding="4px" />
+                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                var FactoryCode = cboFactory.GetValue();
+                                cboMachine.PerformCallback(FactoryCode);
+                                HF.Set('FactoryCode', FactoryCode);
+                                Grid.PerformCallback('Kosong');
+                            }" />
+                    </dx:ASPxComboBox>
+            </div>
+            <div class="col col-1">
+                <dx:ASPxLabel ID="ASPxLabel2" runat="server" Text="Machine Process" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt"/>
+            </div>
+            <div class="col col-1">
+                <dx:ASPxComboBox ID="cboMachine" runat="server" Theme="Office2010Black" Width="200px" Height="25px" ClientInstanceName="cboMachine">
+                        <ItemStyle Height="10px" Paddings-Padding="4px" />
+                        <ButtonStyle Width="5px" Paddings-Padding="4px" />
+                        <ClientSideEvents EndCallback="OnEndCallback" />
+                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                var MachineCode = cboMachine.GetValue();
+                                HF.Set('MachineCode', MachineCode);
+                                Grid.PerformCallback('Kosong');
+                            }" />
+                    </dx:ASPxComboBox>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col col-1" style="width: 5%">
+                <dx:ASPxLabel ID="ASPxLabel3" runat="server" Text="Type" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt" />
+            </div>
+            <div class="col col-1">
+                <dx:ASPxComboBox ID="cboType" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboType">
+                        <ItemStyle Height="10px" Paddings-Padding="4px" />
+                        <ButtonStyle Width="5px" Paddings-Padding="4px" />
+                        <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                var TypeCode = cboType.GetValue();
+                                HF.Set('Type', TypeCode);
+                                Grid.PerformCallback('Kosong');
+                            }" />
+                    </dx:ASPxComboBox>
+            </div>
+            <div class="col col-1">
+                <dx:ASPxLabel ID="ASPxLabel4" runat="server" Text="Period" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt"/>
+            </div>
+            <div class="col col-1" style="margin-bottom:1%;width: 7%">
+                <dx:ASPxDateEdit ID="dtPeriod" runat="server" Theme="Office2010Black" EditFormat="Date" ClientInstanceName="dtPeriod" Height="25px" Width="100px"
+                        DisplayFormatString="dd MMM yyyy" EditFormatString="dd MMM yyyy" AutoPostBack="false">
+                        <ClientSideEvents Init="function(s, e){var today = new Date(); dtPeriod.SetDate(today);}" />
+                        <ClientSideEvents ValueChanged="function(s, e){
+                                Grid.PerformCallback('Kosong');
+                            }" />
+                        <CalendarProperties>
+                            <HeaderStyle Font-Size="12pt" Paddings-Padding="5px" />
+                            <DayStyle Font-Size="9pt" Paddings-Padding="5px" />
+                            <WeekNumberStyle Font-Size="9pt" Paddings-Padding="5px"></WeekNumberStyle>
+                            <FooterStyle Font-Size="9pt" Paddings-Padding="5px" />
+                            <ButtonStyle Font-Size="9pt" Paddings-Padding="5px"></ButtonStyle>
+                        </CalendarProperties>
+                        <ButtonStyle Width="5px" Paddings-Padding="4px" ></ButtonStyle>
+                    </dx:ASPxDateEdit>
+            </div>
+            <div class="col col-1" style="width:5%">
+                <dx:ASPxButton ID="ASPxButton1" runat="server" AutoPostBack="False" ClientInstanceName="btnBrowse" Theme="Office2010Silver" Height="28px"
+                        Text="Browse" Font-Names="Segoe UI" Font-Size="10pt">
+                        <ClientSideEvents Click="up_Browse" />
+                    </dx:ASPxButton>
+            </div>
+            <div class="col col-1" style="width:5%">
+                <dx:ASPxButton ID="ASPxButton2" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Theme="Office2010Silver" Height="28px"
+                        Text="Clear " Font-Names="Segoe UI" Font-Size="10pt">
+                        <ClientSideEvents Click="function(s, e) {
+                                cboFactory.SetSelectedIndex(0);
+                                cboMachine.SetSelectedIndex(0);
+                                cboType.SetSelectedIndex(0);
+                                var today = new Date(); dtPeriod.SetDate(today);
+                                Grid.PerformCallback('Kosong');
+                            }" />
+                    </dx:ASPxButton>
+            </div>
+        </div>
+    </div>
+
+    <%--<div style="padding: 5px 5px 5px 5px;">
         <table>
             <tr>
                 <td style="padding-right: 1em">
@@ -169,9 +259,9 @@
                 </td>
             </tr>
         </table>
-    </div>
+    </div>--%>
 
-    <div style="padding: 20px 5px 5px 5px">
+    <div style="padding: 0px 5px 5px 5px">
         <asp:SqlDataSource ID="dsType" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
             SelectCommand="Exec sp_ChartSetup_FillCombo '1' "></asp:SqlDataSource>

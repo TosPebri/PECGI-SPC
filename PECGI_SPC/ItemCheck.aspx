@@ -104,8 +104,8 @@
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewDataTextColumn Caption="Item Check" FieldName="ItemCheck" VisibleIndex="2"
-                    Width="150px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesTextEdit MaxLength="50" Width="150px">
+                    Width="250px" Settings-AutoFilterCondition="Contains">
+                    <PropertiesTextEdit MaxLength="50" Width="200px">
                         <Style HorizontalAlign="Left"></Style>
                     </PropertiesTextEdit>
                     <Settings AutoFilterCondition="Contains"></Settings>
@@ -115,7 +115,7 @@
                     <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
                         <Paddings PaddingLeft="5px"></Paddings>
                     </HeaderStyle>
-                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewDataTextColumn Caption="Measuring Unit" FieldName="UnitMeasurement"
@@ -130,12 +130,12 @@
                     <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
                     <Paddings PaddingLeft="5px"></Paddings>
                     </HeaderStyle>
-                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"></CellStyle>
+                    <CellStyle HorizontalAlign="center" VerticalAlign="Middle"></CellStyle>
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewDataTextColumn Caption="Description" FieldName="Description" VisibleIndex="4"
-                    Width="150px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesTextEdit MaxLength="50" Width="150px">
+                    Width="200px" Settings-AutoFilterCondition="Contains">
+                    <PropertiesTextEdit MaxLength="50" Width="200px">
                         <Style HorizontalAlign="Left"></Style>
                     </PropertiesTextEdit>
                     <Settings AutoFilterCondition="Contains"></Settings>
@@ -145,7 +145,7 @@
                     <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
                         <Paddings PaddingLeft="5px"></Paddings>
                     </HeaderStyle>
-                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewDataCheckColumn Caption="Active Status" FieldName="ActiveStatus" 
@@ -172,8 +172,8 @@
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewDataTextColumn Caption="Last Update" FieldName="UpdateDate" VisibleIndex="7"
-                    Width="150px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesTextEdit MaxLength="15" Width="100px">
+                    Width="125px" Settings-AutoFilterCondition="Contains">
+                    <PropertiesTextEdit MaxLength="15" Width="125px">
                         <Style HorizontalAlign="Left"></Style>
                     </PropertiesTextEdit>
                     <Settings AutoFilterCondition="Contains"></Settings>
@@ -215,7 +215,7 @@
                     <div style="padding: 15px 15px 15px 15px; width: 300px"">
                         <dx:ContentControl ID="ContentControl1" runat="server">
                             <table align="center">
-                                <tr style="height:25px">
+                                <tr style="height:30px">
                                     <td>
                                         <dx:ASPxLabel ID="ASPxLabel1" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Code" Width="90px"></dx:ASPxLabel>
                                     </td>                                
@@ -225,7 +225,7 @@
                                         </dx:ASPxGridViewTemplateReplacement>                                    
                                     </td>
                                 </tr>
-                                <tr style="height:25px">
+                                <tr style="height:30px">
                                     <td>Item Check</td>                                
                                     <td>
                                         <dx:ASPxGridViewTemplateReplacement ID="editItemCheck" ReplacementType="EditFormCellEditor"
@@ -233,7 +233,7 @@
                                         </dx:ASPxGridViewTemplateReplacement>                                    
                                     </td>
                                 </tr>
-                                <tr style="height:25px">
+                                <tr style="height:30px">
                                     <td>Measuring Unit</td>                                
                                     <td>
                                         <dx:ASPxGridViewTemplateReplacement ID="editUnitMeasurement" ReplacementType="EditFormCellEditor"
@@ -241,7 +241,7 @@
                                         </dx:ASPxGridViewTemplateReplacement>                                    
                                     </td>
                                 </tr>
-                                <tr style="height:25px">
+                                <tr style="height:30px">
                                     <td>Description</td>                                
                                     <td>
                                         <dx:ASPxGridViewTemplateReplacement ID="editDescription" ReplacementType="EditFormCellEditor"

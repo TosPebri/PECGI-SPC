@@ -15,6 +15,9 @@
         .body {
             border: 1px solid silver; 
         }
+        .auto-style1 {
+            height: 12px;
+        }
     </style>
     <script type="text/javascript" >
         var rowIndex, columnIndex;
@@ -90,8 +93,7 @@
         }
 
         function cboShiftChanged(s, e) {            
-            ClearGrid();
-            cboSeq.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + cboShift.GetValue());            
+            cboSeq.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + cboShift.GetValue() + '|' + dtDate.GetText());            
         }
 
         function cboLineChanged(s, e) {    
@@ -180,21 +182,48 @@
             lblMax.SetText(s.cpMax);
             lblAve.SetText(s.cpAve);
             lblR.SetText(s.cpR);
-            lblC.SetText(s.cpC);
-            lblNG.SetText(s.cpNG);
-            if (s.cpNG == 'NG') {
+            lblC.SetText(s.cpC);            
+            txtRemarks.SetText(s.cpRemarks);
+            txtSubLotNo.SetText(s.cpSubLotNo);
+            
+            if (s.cpNG == '2') {
+                lblNG.SetText('NG');
                 document.getElementById('NG').style.backgroundColor = 'Red';
-            } else if (s.cpNG == 'OK') {
+            } else if (s.cpNG == '1') {
+                lblNG.SetText('NG');
+                document.getElementById('NG').style.backgroundColor = 'Pink';
+            } else if (s.cpNG == '0') {
+                lblNG.SetText('OK');
                 document.getElementById('NG').style.backgroundColor = 'Green';
             } else {
+                lblNG.SetText('');
                 document.getElementById('NG').style.backgroundColor = 'White';
             }
             if (s.cpC == 'C') {
                 document.getElementById('C').style.backgroundColor = 'Orange';
             } else {
                 document.getElementById('C').style.backgroundColor = 'White';
+            }      
+
+            if (s.cpMin < s.cpLSL) {
+                document.getElementById('Min').style.backgroundColor = 'Red';
+            } else if (s.cpMin < s.cpLCL) {
+                document.getElementById('Min').style.backgroundColor = 'Pink';
+            } else {
+                document.getElementById('Min').style.backgroundColor = 'White';
             }
-            gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
+
+            if (s.cpMax > s.cpUSL) {
+                document.getElementById('Max').style.backgroundColor = 'Red';
+            } else if (s.cpMax > s.cpUCL) {
+                document.getElementById('Max').style.backgroundColor = 'Pink';
+            } else {
+                document.getElementById('Max').style.backgroundColor = 'White';
+            }
+            if (s.cpRefresh == '1') {
+                gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
+                chartX.PerformCallback();
+            }            
         }
     </script>
 </asp:Content>
@@ -421,7 +450,7 @@
                 
                 <dx:ASPxButton ID="btnSearch" runat="server" AutoPostBack="False" 
                     ClientInstanceName="btnSearch" Font-Names="Segoe UI" Font-Size="9pt" 
-                    Height="25px" Text="Search" Theme="Office2010Silver" UseSubmitBehavior="False" 
+                    Height="25px" Text="Browse" Theme="Office2010Silver" UseSubmitBehavior="False" 
                     Width="90px" TabIndex="10">
                     <ClientSideEvents Click="function(s, e) {
                         var errmsg = '';
@@ -458,9 +487,6 @@
                         }
                         grid.CancelEdit();
  	                    grid.PerformCallback('load' + '|' + cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + cboShift.GetValue() + '|' + cboSeq.GetValue() + '|' + cboShow.GetValue());
-                        gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
-                        
-
                     }" />
                     <Paddings Padding="2px" />
                 </dx:ASPxButton>
@@ -476,7 +502,7 @@
     <dx:ASPxHiddenField ID="hfRevNo" runat="server" ClientInstanceName="hfRevNo">
     </dx:ASPxHiddenField>
 </div>
-<hr style="border-color:darkgray; height:12px"/>
+<hr style="border-color:darkgray; " class="auto-style1"/>
 <div>
     <table style="width: 100%;">
         <tr>
@@ -513,65 +539,13 @@
                 </table>
             </td>
             <td style="width:300px">            
-        <table style="width: 100%; height: 50px">
-        <tr>
-            <td style="width: 80px;" align="center" class="header">
-                <dx:ASPxLabel ID="ASPxLabel10" runat="server" Text="Verification" 
-                    Font-Names="Segoe UI" Font-Size="9pt">
-                </dx:ASPxLabel>
-            </td>
-            <td style="width: 100px;" align="center" class="header">
-                <dx:ASPxLabel ID="ASPxLabel3" runat="server" Text="PIC" 
-                    Font-Names="Segoe UI" Font-Size="9pt">
-                </dx:ASPxLabel>
-            </td>
-           <td style="width: 100px;" align="center" class="header">
-                <dx:ASPxLabel ID="ASPxLabel5" runat="server" Text="Date" 
-                    Font-Names="Segoe UI" Font-Size="9pt">
-                </dx:ASPxLabel>
-            </td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid silver;" align="center">
-                <dx:ASPxLabel ID="ASPxLabel11" runat="server" Text="MK" 
-                    Font-Names="Segoe UI" Font-Size="9pt">
-                </dx:ASPxLabel>
-            </td>
-            <td style="border: 1px solid silver; width: 100px" align="center">                
-                <dx:ASPxLabel ID="lblMKUser" runat="server" Text="" 
-                    Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblMKUser">
-                </dx:ASPxLabel>
-            </td>
-            <td style="border: 1px solid silver; width: 100px" align="center">                
-                <dx:ASPxLabel ID="lblMKDate" runat="server" Text="" 
-                    Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblMKDate">
-                </dx:ASPxLabel>
-            </td>
-        </tr>
-        <tr>
-            <td style="border: 1px solid silver;" align="center">                
-                <dx:ASPxLabel ID="ASPxLabel12" runat="server" Text="QC" 
-                    Font-Names="Segoe UI" Font-Size="9pt">
-                </dx:ASPxLabel>
-            </td>
-            <td style="border: 1px solid silver; width: 100px" align="center">
-                <dx:ASPxLabel ID="lblQCUser" runat="server" Text="" 
-                    Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblQCUser">
-                </dx:ASPxLabel>
-            </td>
-            <td style="border: 1px solid silver; width: 100px" align="center">
-                &nbsp;<dx:ASPxLabel ID="lblQCDate" runat="server" Text="" 
-                    Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblQCDate">
-                </dx:ASPxLabel>
-            &nbsp;</td>
-        </tr>
-    </table>
+        
             </td>
         </tr>
     </table>
     
 </div>
-<div style="padding: 2px 5px 5px 5px">
+<div style="padding: 10px 5px 5px 5px">
 <dx:ASPxGridView ID="grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="grid"
             EnableTheming="True" KeyFieldName="SeqNo" Theme="Office2010Black"            
             OnBatchUpdate="grid_BatchUpdate"          
@@ -607,6 +581,8 @@
             </dx:GridViewDataTextColumn>
             <dx:GridViewDataTextColumn Caption="Judgement" VisibleIndex="3" Width="80px" FieldName="Judgement">
                 <EditFormSettings Visible="False" />
+                <CellStyle HorizontalAlign="Center">
+                </CellStyle>
             </dx:GridViewDataTextColumn>
             <dx:GridViewDataTextColumn Caption="Operator" VisibleIndex="4" FieldName="RegisterUser">
                 <EditFormSettings Visible="False" />
@@ -615,6 +591,8 @@
                 <PropertiesTextEdit DisplayFormatString="HH:mm">
                 </PropertiesTextEdit>
                 <EditFormSettings Visible="False" />
+                <CellStyle HorizontalAlign="Center">
+                </CellStyle>
             </dx:GridViewDataTextColumn>
             <dx:GridViewDataTextColumn Caption="Remarks" VisibleIndex="8" FieldName="Remark">
                 <PropertiesTextEdit Width="120px">
@@ -628,6 +606,8 @@
                 <PropertiesTextEdit DisplayFormatString="d MMM yyyy HH:mm:ss">
                 </PropertiesTextEdit>
                 <EditFormSettings Visible="False" />
+                <CellStyle HorizontalAlign="Center">
+                </CellStyle>
             </dx:GridViewDataTextColumn>
 
             <dx:GridViewDataCheckColumn Caption="Delete Status" FieldName="DeleteStatus" VisibleIndex="6" Width="70px" Visible="False">
@@ -637,6 +617,8 @@
             </dx:GridViewDataCheckColumn>
 
             <dx:GridViewDataTextColumn Caption="Delete Status" FieldName="DelStatus" VisibleIndex="7" Width="70px">
+                <CellStyle HorizontalAlign="Center">
+                </CellStyle>
             </dx:GridViewDataTextColumn>
 
         </Columns>        
@@ -646,7 +628,7 @@
             </SettingsEditing>
         <SettingsPager AlwaysShowPager="true" Mode="ShowAllRecords" PageSize="30">
         </SettingsPager>
-        <Settings HorizontalScrollBarMode="Auto" VerticalScrollableHeight="230" 
+        <Settings HorizontalScrollBarMode="Auto" VerticalScrollableHeight="180" 
             VerticalScrollBarMode="Auto" ShowStatusBar="Hidden" />
         <Styles EditFormColumnCaption-Paddings-PaddingLeft="10px" 
             EditFormColumnCaption-Paddings-PaddingRight="10px" 
@@ -739,6 +721,61 @@
                 </tr>
             </table>
         </td>
+        <td>
+            <table style="width: 240px; height: 50px">
+                    <tr>
+                        <td style="width: 80px;" align="center" class="header">
+                            <dx:ASPxLabel ID="ASPxLabel10" runat="server" Text="Verification" 
+                                Font-Names="Segoe UI" Font-Size="9pt">
+                            </dx:ASPxLabel>
+                        </td>
+                        <td style="width: 80px;" align="center" class="header">
+                            <dx:ASPxLabel ID="ASPxLabel3" runat="server" Text="PIC" 
+                                Font-Names="Segoe UI" Font-Size="9pt">
+                            </dx:ASPxLabel>
+                        </td>
+                       <td style="width: 80px;" align="center" class="header">
+                            <dx:ASPxLabel ID="ASPxLabel5" runat="server" Text="Date" 
+                                Font-Names="Segoe UI" Font-Size="9pt">
+                            </dx:ASPxLabel>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid silver;" align="center">
+                            <dx:ASPxLabel ID="ASPxLabel11" runat="server" Text="MK" 
+                                Font-Names="Segoe UI" Font-Size="9pt">
+                            </dx:ASPxLabel>
+                        </td>
+                        <td style="border: 1px solid silver; width: 100px" align="center">                
+                            <dx:ASPxLabel ID="lblMKUser" runat="server" Text="" 
+                                Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblMKUser">
+                            </dx:ASPxLabel>
+                        </td>
+                        <td style="border: 1px solid silver; width: 100px" align="center">                
+                            <dx:ASPxLabel ID="lblMKDate" runat="server" Text="" 
+                                Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblMKDate">
+                            </dx:ASPxLabel>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid silver;" align="center">                
+                            <dx:ASPxLabel ID="ASPxLabel12" runat="server" Text="QC" 
+                                Font-Names="Segoe UI" Font-Size="9pt">
+                            </dx:ASPxLabel>
+                        </td>
+                        <td style="border: 1px solid silver; width: 100px" align="center">
+                            <dx:ASPxLabel ID="lblQCUser" runat="server" Text="" 
+                                Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblQCUser">
+                            </dx:ASPxLabel>
+                        </td>
+                        <td style="border: 1px solid silver; width: 100px" align="center">
+                            &nbsp;<dx:ASPxLabel ID="lblQCDate" runat="server" Text="" 
+                                Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblQCDate">
+                            </dx:ASPxLabel>
+                        &nbsp;</td>
+                    </tr>
+                </table>
+        </td>
         <td style="width:500px">
             <table style="width:100%">
                 <tr>
@@ -759,21 +796,21 @@
                     <td class="body" align="center" rowspan="2" style="width:50px" id="NG"><dx:ASPxLabel ID="lblNG" runat="server" Text="" Font-Names="Segoe UI" Font-Size="Medium" ClientInstanceName="lblNG" Font-Bold="True" ForeColor="Black"></dx:ASPxLabel></td>
                 </tr>
                 <tr>
-                    <td class="body" align="right"><dx:ASPxLabel ID="lblUSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUSL"></dx:ASPxLabel></td>
+                    <td class="body" align="right"><dx:ASPxLabel ID="lblUSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUSL"></dx:ASPxLabel>&nbsp;</td>
                     <td class="body" align="right"><dx:ASPxLabel ID="lblLSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLSL"></dx:ASPxLabel></td>
                     <td class="body" align="right"><dx:ASPxLabel ID="lblUCL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUCL"></dx:ASPxLabel></td>
                     <td class="body" align="right"><dx:ASPxLabel ID="lblLCL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLCL"></dx:ASPxLabel></td>
-                    <td class="body" align="right"><dx:ASPxLabel ID="lblMin" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblMin"></dx:ASPxLabel></td>
-                    <td class="body" align="right"><dx:ASPxLabel ID="lblMax" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblMax"></dx:ASPxLabel></td>
-                    <td class="body" align="right"><dx:ASPxLabel ID="lblAve" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblAve"></dx:ASPxLabel></td>
-                    <td class="body" align="right"><dx:ASPxLabel ID="lblR" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblR"></dx:ASPxLabel></td>                    
+                    <td class="body" align="right" id="Min"><dx:ASPxLabel ID="lblMin" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblMin"></dx:ASPxLabel></td>
+                    <td class="body" align="right" id="Max"><dx:ASPxLabel ID="lblMax" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblMax"></dx:ASPxLabel></td>
+                    <td class="body" align="right" id="Ave"><dx:ASPxLabel ID="lblAve" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblAve"></dx:ASPxLabel></td>
+                    <td class="body" align="right" id="R"><dx:ASPxLabel ID="lblR" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblR"></dx:ASPxLabel></td>                    
                 </tr>
             </table>
         </td>
     </tr>
 </table>    
     <div style="height:10px; vertical-align:middle">
-        <hr style="border-color:darkgray; height:6px"/>
+        <hr style="border-color:darkgray; height:10px"/>
 
     </div>
 
@@ -818,6 +855,7 @@
         </tr>
         <tr>
             <td>
+                <div style="height:10px"></div>
                 
     <dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
         Height="200px" Width="1080px" AutoBindingSettingsEnabled="False"
@@ -868,11 +906,6 @@
                 lblLSL.SetText(s.cpLSL);
                 lblUCL.SetText(s.cpUCL);
                 lblLCL.SetText(s.cpLCL);
-                lblMin.SetText(s.cpMin);
-                lblMax.SetText(s.cpMax);
-                lblAve.SetText(s.cpAve);
-                lblR.SetText(s.cpR);
-                lblNG.SetText(s.cpNG);
             }" 
             />
 

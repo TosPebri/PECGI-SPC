@@ -41,7 +41,7 @@ Public Class TimeFrequencySetting
 
         If AuthUpdate = False Then
             commandColumn.ShowEditButton = False
-            commandColumn.ShowNewButton = False
+            commandColumn.ShowNewButtonInHeader = False
         End If
 
         If AuthDelete = False Then

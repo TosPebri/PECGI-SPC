@@ -13,8 +13,6 @@ Public Class ProdSampleQCSummary
 #Region "Declarations"
     Dim pUser As String = ""
     Dim pMenuID As String = "B050"
-    Public AuthUpdate As Boolean = False
-    Public AuthDelete As Boolean = False
     Public AuthAccess As Boolean = False
     Dim dataCount As String = ""
     Private dt As DataTable
@@ -23,6 +21,7 @@ Public Class ProdSampleQCSummary
 #Region "Events"
     Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
         If Not Page.IsPostBack Then
+            HF.Set("Excel", "0")
             up_Fillcombo()
         End If
     End Sub
@@ -91,6 +90,7 @@ Public Class ProdSampleQCSummary
                     .Frequency = HF.Get("FrequencyCode")
                     .Sequence = cboSequence.Value
                     .Period = dTime.ToString("yyyy-MM-dd")
+                    .UserID = pUser
                 End With
 
                 up_GridLoad(cls)
@@ -102,6 +102,7 @@ Public Class ProdSampleQCSummary
                     .Frequency = ""
                     .Sequence = "0"
                     .Period = dTime.ToString("yyyy-MM-dd")
+                    .UserID = pUser
                 End With
 
                 up_GridLoad(cls)
@@ -117,19 +118,25 @@ Public Class ProdSampleQCSummary
             If e.DataColumn.FieldName = "DataCount" Then
                 dataCount = e.CellValue
             Else
-                If e.CellValue = "NG" Then
-                    e.Cell.BackColor = Color.Red
-                    e.Cell.ForeColor = Color.White
-                ElseIf e.CellValue = "" Then
+                If e.CellValue = "" Then
                     If dataCount = "1" Then
                         e.Cell.BackColor = Color.Yellow
                     Else
                         e.Cell.BackColor = Color.Gray
                         e.Cell.BorderColor = Color.Gray
                     End If
+                ElseIf e.CellValue.ToString.Contains("NG") Then
+                    If Split(e.CellValue, "||").Count = 2 Then
+                        e.Cell.Text = "NG"
+                        e.Cell.BackColor = ColorTranslator.FromHtml(Split(e.CellValue, "||")(1))
+                    End If
                 End If
             End If
         End If
+    End Sub
+
+    Private Sub btnExcel_Click(sender As Object, e As EventArgs) Handles btnExcel.Click
+        DownloadExcel()
     End Sub
 #End Region
 
@@ -153,111 +160,121 @@ Public Class ProdSampleQCSummary
     End Sub
 
     Private Sub up_FillcomboFactory()
-        Dim a As String = ""
-        dt = clsProdSampleQCSummaryDB.FillCombo("0")
-        With cboFactory
-            .Items.Clear() : .Columns.Clear()
-            .DataSource = dt
-            .Columns.Add("Code") : .Columns(0).Visible = False
-            .Columns.Add("Description") : .Columns(1).Width = 100
+        If HF.Get("Excel") = "0" Then
+            Dim a As String = ""
+            dt = clsProdSampleQCSummaryDB.FillCombo("0")
+            With cboFactory
+                .Items.Clear() : .Columns.Clear()
+                .DataSource = dt
+                .Columns.Add("Code") : .Columns(0).Visible = False
+                .Columns.Add("Description") : .Columns(1).Width = 100
 
-            .TextField = "Description"
-            .ValueField = "Code"
-            .DataBind()
-            .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)
+                .TextField = "Description"
+                .ValueField = "Code"
+                .DataBind()
+                .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)
 
-            If .SelectedIndex < 0 Then
-                a = ""
-            Else
-                a = .SelectedItem.GetFieldValue("Code")
-            End If
-        End With
-        HF.Set("FactoryCode", a)
+                If .SelectedIndex < 0 Then
+                    a = ""
+                Else
+                    a = .SelectedItem.GetFieldValue("Code")
+                End If
+            End With
+            HF.Set("FactoryCode", a)
+        End If
     End Sub
 
     Private Sub up_FillcomboType()
-        Dim a As String = ""
-        dt = clsProdSampleQCSummaryDB.FillCombo("1")
-        With cboType
-            .Items.Clear() : .Columns.Clear()
-            .DataSource = dt
-            .Columns.Add("Code") : .Columns(0).Visible = False
-            .Columns.Add("Description") : .Columns(1).Width = 100
+        If HF.Get("Excel") = "0" Then
+            Dim a As String = ""
+            dt = clsProdSampleQCSummaryDB.FillCombo("1")
+            With cboType
+                .Items.Clear() : .Columns.Clear()
+                .DataSource = dt
+                .Columns.Add("Code") : .Columns(0).Visible = False
+                .Columns.Add("Description") : .Columns(1).Width = 100
 
-            .TextField = "Description"
-            .ValueField = "Code"
-            .DataBind()
-            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+                .TextField = "Description"
+                .ValueField = "Code"
+                .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
 
-            If .SelectedIndex < 0 Then
-                a = ""
-            Else
-                a = .SelectedItem.GetFieldValue("Code")
-            End If
-        End With
-        HF.Set("TypeCode", a)
+                If .SelectedIndex < 0 Then
+                    a = ""
+                Else
+                    a = .SelectedItem.GetFieldValue("Code")
+                End If
+            End With
+            HF.Set("TypeCode", a)
+        End If
     End Sub
 
     Private Sub up_FillcomboMachine()
-        Dim a As String = ""
-        dt = clsProdSampleQCSummaryDB.FillCombo("2", HF.Get("FactoryCode"), pUser)
-        With cboMachine
-            .Items.Clear() : .Columns.Clear()
-            .DataSource = dt
-            .Columns.Add("Code") : .Columns(0).Visible = False
-            .Columns.Add("Description") : .Columns(1).Width = 100
+        If HF.Get("Excel") = "0" Then
+            Dim a As String = ""
+            dt = clsProdSampleQCSummaryDB.FillCombo("2", HF.Get("FactoryCode"), pUser)
+            With cboMachine
+                .Items.Clear() : .Columns.Clear()
+                .DataSource = dt
+                .Columns.Add("Code") : .Columns(0).Visible = False
+                .Columns.Add("Description") : .Columns(1).Width = 100
 
-            .TextField = "Description"
-            .ValueField = "Code"
-            .DataBind()
-            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+                .TextField = "Description"
+                .ValueField = "Code"
+                .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
 
-            If .SelectedIndex < 0 Then
-                a = ""
-            Else
-                a = .SelectedItem.GetFieldValue("Code")
-            End If
-        End With
-        HF.Set("MachineCode", a)
+                If .SelectedIndex < 0 Then
+                    a = ""
+                Else
+                    a = .SelectedItem.GetFieldValue("Code")
+                End If
+            End With
+            HF.Set("MachineCode", a)
+        End If
     End Sub
 
     Private Sub up_FillcomboFrequency()
-        Dim a As String = ""
-        dt = clsProdSampleQCSummaryDB.FillCombo("3", HF.Get("FactoryCode"), HF.Get("TypeCode"), HF.Get("MachineCode"))
-        With cboFrequency
-            .Items.Clear() : .Columns.Clear()
-            .DataSource = dt
-            .Columns.Add("Code") : .Columns(0).Visible = False
-            .Columns.Add("Description") : .Columns(1).Width = 100
+        If HF.Get("Excel") = "0" Then
+            Dim a As String = ""
+            dt = clsProdSampleQCSummaryDB.FillCombo("3", HF.Get("FactoryCode"), HF.Get("TypeCode"), HF.Get("MachineCode"), pUser)
+            With cboFrequency
+                .Items.Clear() : .Columns.Clear()
+                .DataSource = dt
+                .Columns.Add("Code") : .Columns(0).Visible = False
+                .Columns.Add("Description") : .Columns(1).Width = 100
 
-            .TextField = "Description"
-            .ValueField = "Code"
-            .DataBind()
-            .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)
+                .TextField = "Description"
+                .ValueField = "Code"
+                .DataBind()
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
 
-            If .SelectedIndex < 0 Then
-                a = ""
-            Else
-                a = .SelectedItem.GetFieldValue("Code")
-            End If
-        End With
-        HF.Set("FrequencyCode", a)
+                If .SelectedIndex < 0 Then
+                    a = ""
+                Else
+                    a = .SelectedItem.GetFieldValue("Code")
+                End If
+            End With
+            HF.Set("FrequencyCode", a)
+        End If
     End Sub
 
     Private Sub up_FillcomboSequence()
-        Dim a As String = ""
-        dt = clsProdSampleQCSummaryDB.FillCombo("4", HF.Get("FactoryCode"), HF.Get("FrequencyCode"), HF.Get("TypeCode"), HF.Get("MachineCode"))
-        With cboSequence
-            .Items.Clear() : .Columns.Clear()
-            .DataSource = dt
-            .Columns.Add("Code") : .Columns(0).Visible = False
-            .Columns.Add("Description") : .Columns(1).Width = 100
+        If HF.Get("Excel") = "0" Then
+            Dim a As String = ""
+            dt = clsProdSampleQCSummaryDB.FillCombo("4", HF.Get("FactoryCode"), HF.Get("FrequencyCode"), HF.Get("TypeCode"), HF.Get("MachineCode"), pUser)
+            With cboSequence
+                .Items.Clear() : .Columns.Clear()
+                .DataSource = dt
+                .Columns.Add("Code") : .Columns(0).Visible = False
+                .Columns.Add("Description") : .Columns(1).Width = 100
 
-            .TextField = "Description"
-            .ValueField = "Code"
-            .DataBind()
-            .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)
-        End With
+                .TextField = "Description"
+                .ValueField = "Code"
+                .DataBind()
+                .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)
+            End With
+        End If
     End Sub
 
     Private Sub up_GridLoad(cls As clsProdSampleQCSummary)
@@ -297,7 +314,7 @@ Public Class ProdSampleQCSummary
             If dt.Rows.Count > 0 Then
                 For i = 1 To dt.Columns.Count - 1
                     OK = OK + dt.Select("[" + dt.Columns(i).ColumnName + "] = 'OK'").Length
-                    NG = NG + dt.Select("[" + dt.Columns(i).ColumnName + "] = 'NG'").Length
+                    NG = NG + dt.Select("[" + dt.Columns(i).ColumnName + "] Like '%NG%'").Length
                     no = no + dt.Select("[" + dt.Columns(i).ColumnName + "] = ''").Length
 
                     Dim Col As New GridViewDataTextColumn
@@ -349,8 +366,6 @@ Public Class ProdSampleQCSummary
         End With
     End Sub
 
-#End Region
-
     Private Sub DownloadExcel()
         Try
             Dim cls As New clsProdSampleQCSummary
@@ -363,13 +378,14 @@ Public Class ProdSampleQCSummary
                 .Frequency = HF.Get("FrequencyCode")
                 .Sequence = cboSequence.Value
                 .Period = dTime.ToString("yyyy-MM-dd")
+                .UserID = pUser
             End With
             dt = clsProdSampleQCSummaryDB.GetList(cls).Tables(0)
 
-            If dt.Rows.Count = 0 Then
-                show_error(MsgTypeEnum.Warning, "Data is Not Found", 1)
-                Return
-            End If
+            'If dt.Rows.Count = 0 Then
+            '    show_error(MsgTypeEnum.Warning, "Data is Not Found", 1)
+            '    Return
+            'End If
 
             Using excel As New ExcelPackage
                 Dim ws As ExcelWorksheet = excel.Workbook.Worksheets.Add("B05 - Sample Control Quality Summary")
@@ -480,7 +496,7 @@ Public Class ProdSampleQCSummary
                     .Cells(5, 4).Style.Font.Size = 12
                     .Cells(5, 4).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
                     .Cells(5, 4).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Red)
-                    .Cells(5, 4).Style.Font.Color.SetColor(System.Drawing.Color.White)
+                    '.Cells(5, 4).Style.Font.Color.SetColor(System.Drawing.Color.White)
 
                     '----------------Moving Rows--------------------'
 
@@ -493,7 +509,7 @@ Public Class ProdSampleQCSummary
                     .Cells(6, 4).Style.Font.Size = 12
                     .Cells(6, 4).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
                     .Cells(6, 4).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Gray)
-                    .Cells(6, 4).Style.Font.Color.SetColor(System.Drawing.Color.White)
+                    '.Cells(6, 4).Style.Font.Color.SetColor(System.Drawing.Color.White)
 
                     'End Info Title
                     rowsExcel = 9
@@ -508,44 +524,47 @@ Public Class ProdSampleQCSummary
                     Next
 
                     rowsExcel += 1
-                    For i = 0 To dt.Rows.Count - 1
-                        dataCount = ""
-                        For j = 0 To lastCol
-                            .Cells(rowsExcel, j + 1).Value = dt.Rows(i)(j).ToString()
-                            .Cells(rowsExcel, j + 1).Style.Font.Size = 10
-                            .Cells(rowsExcel, j + 1).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
-                            .Cells(rowsExcel, j + 1).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
-                            If j = 0 Then
-                                .Column(j + 1).Width = 13
-                            ElseIf j <> 0 Then
-                                .Column(j + 1).Width = 17
-                                '.Cells(1, 1, 3, lastCol).Style.WrapText = True
-                                If dt.Rows(i)(j).ToString() = "NG" Or dt.Rows(i)(j).ToString() = "OK" Then dataCount = "1"
-                                If dt.Rows(i)(j).ToString() = "NG" Then
-                                    .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
-                                    .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Red)
-                                    .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Font.Color.SetColor(System.Drawing.Color.White)
-                                ElseIf dt.Rows(i)(j).ToString() = "" Then
-                                    .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
-                                    .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow)
+                    If dt.Rows.Count > 1 Then
+                        For i = 0 To dt.Rows.Count - 1
+                            dataCount = ""
+                            For j = 0 To lastCol
+                                .Cells(rowsExcel, j + 1).Value = dt.Rows(i)(j).ToString()
+                                .Cells(rowsExcel, j + 1).Style.Font.Size = 10
+                                .Cells(rowsExcel, j + 1).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
+                                .Cells(rowsExcel, j + 1).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
+                                If j = 0 Then
+                                    .Column(j + 1).Width = 13
+                                ElseIf j <> 0 Then
+                                    .Column(j + 1).Width = 17
+                                    '.Cells(1, 1, 3, lastCol).Style.WrapText = True
+                                    If dt.Rows(i)(j).ToString.Contains("NG") Or dt.Rows(i)(j).ToString() = "OK" Then dataCount = "1"
+                                    If dt.Rows(i)(j).ToString.Contains("NG") Then
+                                        .Cells(rowsExcel, j + 1).Value = "NG"
+                                        If Split(dt.Rows(i)(j).ToString, "||").Count = 2 Then
+                                            .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
+                                            .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(Split(dt.Rows(i)(j).ToString, "||")(1)))
+                                        End If
+                                    Else
+                                        .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
+                                        .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(Color.Yellow)
+                                    End If
                                 End If
+                            Next
+                            If dataCount = "" Then
+                                .Cells(rowsExcel, 2, rowsExcel, lastCol + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
+                                .Cells(rowsExcel, 2, rowsExcel, lastCol + 1).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Gray)
                             End If
+                            rowsExcel += 1
                         Next
-                        If dataCount = "" Then
-                            .Cells(rowsExcel, 2, rowsExcel, lastCol + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
-                            .Cells(rowsExcel, 2, rowsExcel, lastCol + 1).Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Gray)
-                        End If
-                        rowsExcel += 1
-                    Next
 
-                    .View.FreezePanes(10, 2)
-                    .Cells(9, 2, 9, lastCol + 1).Style.WrapText = True
-                    .Cells(9, 1, rowsExcel - 1, lastCol + 1).Style.Border.Top.Style = Style.ExcelBorderStyle.Thin
-                    .Cells(9, 1, rowsExcel - 1, lastCol + 1).Style.Border.Bottom.Style = Style.ExcelBorderStyle.Thin
-                    .Cells(9, 1, rowsExcel - 1, lastCol + 1).Style.Border.Right.Style = Style.ExcelBorderStyle.Thin
-                    .Cells(9, 1, rowsExcel - 1, lastCol + 1).Style.Border.Left.Style = Style.ExcelBorderStyle.Thin
-
-
+                        .View.FreezePanes(10, 2)
+                        .Cells(9, 2, 9, lastCol + 1).Style.WrapText = True
+                        .Cells(9, 1, rowsExcel - 1, lastCol + 1).Style.Border.Top.Style = Style.ExcelBorderStyle.Thin
+                        .Cells(9, 1, rowsExcel - 1, lastCol + 1).Style.Border.Bottom.Style = Style.ExcelBorderStyle.Thin
+                        .Cells(9, 1, rowsExcel - 1, lastCol + 1).Style.Border.Right.Style = Style.ExcelBorderStyle.Thin
+                        .Cells(9, 1, rowsExcel - 1, lastCol + 1).Style.Border.Left.Style = Style.ExcelBorderStyle.Thin
+                    End If
+                    
                     'Dim iDay As Integer = 2
                     'Dim iCol As Integer = 2
 
@@ -764,8 +783,6 @@ Public Class ProdSampleQCSummary
 
         End Try
     End Sub
-
-    Private Sub btnExcel_Click(sender As Object, e As EventArgs) Handles btnExcel.Click
-        DownloadExcel()
-    End Sub
+#End Region
+    
 End Class

@@ -57,12 +57,18 @@
             }
         }
 
-        function OnInit() {
-            var today = new Date();
-            dtFromDate.SetDate(today);
-            dtToDate.SetDate(today);
+        function OnInit(s, e) {
+            if (s.cp_GridTot > 0) {
+                console.log(s.cp_GridTot);
+                btnExcel.SetEnabled(true);
+            } else {
+                btnExcel.SetEnabled(false);
+            }
+            //var today = new Date();
+            //dtFromDate.SetDate(today);
+            //dtToDate.SetDate(today);
             btnVerification.SetEnabled(false);
-            btnExcel.SetEnabled(false);
+            
         }
 
         function Browse() {
@@ -156,23 +162,14 @@
         }
 
         function Verification() {
-            console.log(Content_SelectData);
-            window.open('ProdSampleVerification.aspx?prm=' + Content_SelectData + '', '_self');
+            GridMenu.PerformCallback('Verify|' + Content_SelectData);
+            millisecondsToWait = 100;
+            setTimeout(function () {
+                console.log(Content_SelectData);
+                window.open('ProdSampleVerification.aspx?prm=Verify', '_self');
+            }, millisecondsToWait);               
         }
 
-        //function Excel() {
-        //    var FactoryCode = cboFactory.GetValue();
-        //    var ItemType_Code = cboItemType.GetValue();
-        //    var LineCode = cboLineID.GetValue();
-        //    var ItemCheck_Code = cboItemCheck.GetValue();
-        //    var ProdDate_From = dtFromDate.GetText();
-        //    var ProdDate_To = dtToDate.GetText();
-        //    var MK = cboMK.GetValue();
-        //    var QC = cboQC.GetValue();
-
-
-        //        GridMenu.PerformCallback('Excel|' + FactoryCode + '|' + ItemType_Code + '|' + LineCode + '|' + ItemCheck_Code + '|' + ProdDate_From + '|' + ProdDate_To + '|' + MK + '|' + QC);
-        //}
 
     </script>
 </asp:Content>

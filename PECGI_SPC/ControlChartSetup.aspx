@@ -67,7 +67,8 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
     <div style="padding: 5px 5px 5px 5px;">
-        <div class="row" style="margin-bottom:0.5%">
+
+        <%--<div class="row" style="margin-bottom:0.5%">
             <div class="col col-1" style="width: 5%">
                 <dx:ASPxLabel ID="ASPxLabel1" runat="server" Text="Factory" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt"/>
             </div>
@@ -154,9 +155,9 @@
                     </dx:ASPxButton>
             </div>
         </div>
-    </div>
+    </div>--%>
 
-    <%--<div style="padding: 5px 5px 5px 5px;">
+    <div style="padding: 5px 5px 5px 5px;">
         <table>
             <tr>
                 <td style="padding-right: 1em">
@@ -259,7 +260,7 @@
                 </td>
             </tr>
         </table>
-    </div>--%>
+    </div>
 
     <div style="padding: 0px 5px 5px 5px">
         <asp:SqlDataSource ID="dsType" runat="server"
@@ -692,6 +693,13 @@
                                     <td>
                                         <dx:ASPxGridViewTemplateReplacement ID="editStart" ReplacementType="EditFormCellEditor"
                                             runat="server" ColumnID="Start"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>End</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="ASPxGridViewTemplateReplacement1" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="End"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
                                 </tr>
                                 <tr style="height: 30px">

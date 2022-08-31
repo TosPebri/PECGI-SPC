@@ -125,7 +125,7 @@
 
                 <dx:GridViewDataSpinEditColumn Caption="Sequence No" FieldName="No" VisibleIndex="1"
                     Width="75px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesSpinEdit MaxValue="50" MinValue="1" Width="75px">
+                    <PropertiesSpinEdit MaxValue="6" MinValue="1" Width="75px">
                         <ButtonStyle Width="5px" Paddings-Padding="4px"/>
                     </PropertiesSpinEdit>
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />

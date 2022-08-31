@@ -56,7 +56,7 @@ Public Class ItemCheck
         Try
             Dim CheckUser As ClsSPCItemCheckMaster = ClsSPCItemCheckMasterDB.GetData(User.ItemCheckCode)
             If CheckUser IsNot Nothing Then
-                show_error(MsgTypeEnum.ErrorMsg, "Item already exists!", 1)
+                show_error(MsgTypeEnum.ErrorMsg, "Can't insert data, item code '" + User.ItemCheckCode + "' already exists!", 1)
                 Return
             End If
             ClsSPCItemCheckMasterDB.Insert(User)
@@ -97,7 +97,7 @@ Public Class ItemCheck
             Dim ActiveStatus As String = e.Values("ActiveStatus")
             Dim ValidationDelete As ClsSPCItemCheckMaster = ClsSPCItemCheckMasterDB.ValidationDelete(ItemCheckCode)
             If ValidationDelete IsNot Nothing Then
-                show_error(MsgTypeEnum.ErrorMsg, "Can't Delete, Item already used!", 1)
+                show_error(MsgTypeEnum.ErrorMsg, "Can't Delete, item '" + ItemCheckCode + "' has been used in Item Check by Battery Type", 1)
                 Return
             End If
             ClsSPCItemCheckMasterDB.Delete(ItemCheckCode)
@@ -120,6 +120,11 @@ Public Class ItemCheck
             If e.Column.FieldName = "ItemCheckCode" Then
                 e.Editor.ReadOnly = True
                 e.Editor.ForeColor = Color.Silver
+            End If
+        End If
+        If Grid.IsNewRowEditing Then
+            If e.Column.FieldName = "ActiveStatus" Then
+                TryCast(e.Editor, ASPxCheckBox).Checked = True
             End If
         End If
     End Sub

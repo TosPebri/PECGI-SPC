@@ -10,13 +10,14 @@ End Class
 
 
 Public Class ClsLineDB
-    Public Shared Function GetList(FactoryCode As String, ItemTypeCode As String) As List(Of ClsLine)
+    Public Shared Function GetList(UserID As String, FactoryCode As String, ItemTypeCode As String) As List(Of ClsLine)
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
             Dim q As String = "select distinct L.FactoryCode, L.ProcessCode, L.LineCode, L.LineCode + ' - ' + L.LineName as LineName " & vbCrLf &
                 "from MS_Line L inner join spc_ItemCheckByType I " & vbCrLf &
                 "on L.FactoryCode = I.FactoryCode and L.LineCode = I.LineCode " & vbCrLf &
-                "where L.LineCode is not Null " & vbCrLf
+                "inner join spc_UserLine P on L.LineCode = P.LineCode " & vbCrLf &
+                "where P.UserID = @UserID and P.AllowShow = 1 " & vbCrLf
             If FactoryCode <> "" Then
                 q = q & "and L.FactoryCode = @FactoryCode "
             End If
@@ -25,6 +26,7 @@ Public Class ClsLineDB
             End If
             q = q & "order by LineCode"
             Dim cmd As New SqlCommand(q, Cn)
+            cmd.Parameters.AddWithValue("UserID", UserID)
             cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
             cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
             Dim rd As SqlDataReader = cmd.ExecuteReader

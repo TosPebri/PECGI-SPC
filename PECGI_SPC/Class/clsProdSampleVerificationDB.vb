@@ -1,6 +1,6 @@
 ﻿Imports System.Data.SqlClient
 Public Class clsProdSampleVerificationDB
-    Public Shared Function FillCombo(ByVal Status As String, data As clsProdSampleVerification, Optional ByRef pErr As String = "") As DataTable
+    Public Shared Function FillCombo(ByVal Status As String, data As clsProdSampleVerification) As DataTable
         Try
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
@@ -21,13 +21,12 @@ Public Class clsProdSampleVerificationDB
                 Return dt
             End Using
         Catch ex As Exception
-            pErr = ex.Message
-            Return Nothing
+            Throw New Exception("Query Error !" & ex.Message)
         End Try
     End Function
 
 
-    Public Shared Function GridLoad(ActionGrid As String, data As clsProdSampleVerification, Optional ByRef pErr As String = "") As DataSet
+    Public Shared Function GridLoad(ActionGrid As String, data As clsProdSampleVerification) As DataSet
         Try
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
@@ -45,14 +44,14 @@ Public Class clsProdSampleVerificationDB
                 cmd.Parameters.AddWithValue("ActionGrid", If(ActionGrid, ""))
                 cmd.Parameters.AddWithValue("Shiftcode_Grid", If(data.Shiftcode_Grid, ""))
                 cmd.Parameters.AddWithValue("ProdDate_Grid", If(data.ProdDate_Grid, ""))
+                cmd.Parameters.AddWithValue("User", If(data.User, ""))
                 Dim da As New SqlDataAdapter(cmd)
                 Dim ds As New DataSet
                 da.Fill(ds)
                 Return ds
             End Using
         Catch ex As Exception
-            pErr = ex.Message
-            Return Nothing
+            Throw New Exception("Query Error !" & ex.Message)
         End Try
     End Function
 
@@ -70,6 +69,7 @@ Public Class clsProdSampleVerificationDB
                 cmd.Parameters.AddWithValue("ItemCheckCode", If(data.ItemCheck_Code, ""))
                 cmd.Parameters.AddWithValue("ProdDate", If(data.ProdDate, ""))
                 cmd.Parameters.AddWithValue("ShiftCode", If(data.ShiftCode, ""))
+                cmd.Parameters.AddWithValue("PIC", If(data.PIC, ""))
                 cmd.Parameters.AddWithValue("Action", If(data.Action, ""))
                 cmd.Parameters.AddWithValue("Result", If(data.Result, ""))
                 cmd.Parameters.AddWithValue("Remark", If(data.Remark, ""))
@@ -84,12 +84,11 @@ Public Class clsProdSampleVerificationDB
 
             End Using
         Catch ex As Exception
-            Throw ex
-            Return False
+            Throw New Exception("Query Error !" & ex.Message)
         End Try
     End Function
 
-    Public Shared Function Verify(data As clsProdSampleVerification) As Boolean
+    Public Shared Function Verify(data As clsProdSampleVerification) As String
         Try
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
@@ -99,16 +98,14 @@ Public Class clsProdSampleVerificationDB
                 cmd.Parameters.AddWithValue("SPCResultID", If(data.SPCResultID, ""))
                 cmd.Parameters.AddWithValue("User", If(data.User, ""))
 
-                If cmd.ExecuteNonQuery Then
-                    Return True
-                Else
-                    Return False
-                End If
+                Dim da As New SqlDataAdapter(cmd)
+                Dim ds As New DataSet
+                da.Fill(ds)
+                Return ds.Tables(0).Rows(0)("Result")
 
             End Using
         Catch ex As Exception
-            Throw ex
-            Return False
+            Throw New Exception("Query Error !" & ex.Message)
         End Try
     End Function
 

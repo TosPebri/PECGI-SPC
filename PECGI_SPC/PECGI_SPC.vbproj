@@ -158,6 +158,7 @@
     <Content Include="AlertDashboard.aspx" />
     <Content Include="ItemCheckByBattery.aspx" />
     <Content Include="ProdSampleInput.aspx" />
+    <Content Include="ProdSampleQCSummary.aspx" />
     <Content Include="ProdSampleVerification.aspx" />
     <Content Include="ProductionSampleVerificationList.aspx" />
     <Content Include="StretchSession.aspx" />
@@ -877,6 +878,7 @@
     <Compile Include="Class\clsItemType.vb" />
     <Compile Include="Class\ClsLine.vb" />
     <Compile Include="Class\ClsLineDB.vb" />
+    <Compile Include="Class\clsProdSampleQCSummary.vb" />
     <Compile Include="Class\clsProdSampleVerification.vb" />
     <Compile Include="Class\clsProdSampleVerificationDB.vb" />
     <Compile Include="Class\clsProductionSampleVerificationList.vb" />
@@ -932,6 +934,13 @@
     </Compile>
     <Compile Include="ProdSampleInput.aspx.vb">
       <DependentUpon>ProdSampleInput.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProdSampleQCSummary.aspx.designer.vb">
+      <DependentUpon>ProdSampleQCSummary.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProdSampleQCSummary.aspx.vb">
+      <DependentUpon>ProdSampleQCSummary.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ProdSampleVerification.aspx.designer.vb">

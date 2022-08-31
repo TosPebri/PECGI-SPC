@@ -92,6 +92,7 @@
 
         function up_Browse() {
             debugger
+            HF.Set('Excel', '0');
             var FactoryCode = cboFactory.GetValue();
             var ItemType_Code = cboType.GetValue();
             var LineCode = cboMachine.GetValue();
@@ -132,6 +133,7 @@
                                     <ButtonStyle Width="5px" Paddings-Padding="4px" />
                                     <ClientSideEvents SelectedIndexChanged="function(s, e) {
                                         debugger
+                                        HF.Set('Excel', '0');
                                         var FactoryCode = cboFactory.GetValue();
                                         HF.Set('FactoryCode', FactoryCode);
 
@@ -164,6 +166,7 @@
                                     <ClientSideEvents EndCallback="function(s, e) {cboMachine.SetEnabled(true);}" />
                                     <ClientSideEvents SelectedIndexChanged="function(s, e) {
                                         debugger
+                                        HF.Set('Excel', '0');
                                         var MachineCode = cboMachine.GetValue();
                                         HF.Set('MachineCode', MachineCode);
                                 
@@ -189,6 +192,7 @@
                                     <ButtonStyle Width="5px" Paddings-Padding="4px" />
                                     <ClientSideEvents EndCallback="function(s, e) {cboFrequency.SetEnabled(true);}" />
                                     <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                        HF.Set('Excel', '0');
                                         var Frequency = cboFrequency.GetValue();
                                         HF.Set('FrequencyCode', Frequency);
                                 
@@ -214,6 +218,7 @@
                                     <ButtonStyle Width="5px" Paddings-Padding="4px" />
                                     <ClientSideEvents EndCallback="function(s, e) {cboType.SetEnabled(true);}" />
                                     <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                        HF.Set('Excel', '0');
                                         var TypeCode = cboType.GetValue();
                                         HF.Set('TypeCode', TypeCode);
                                         Grid.PerformCallback('Kosong');
@@ -253,6 +258,7 @@
                                     <ItemStyle Height="10px" Paddings-Padding="4px" />
                                     <ButtonStyle Width="5px" Paddings-Padding="4px" />
                                     <ClientSideEvents EndCallback="function(s, e) {
+                                        HF.Set('Excel', '0');
                                         cboSequence.SetEnabled(true);
                                         btnBrowse.SetEnabled(true);
                                         btnClear.SetEnabled(true);
@@ -275,6 +281,7 @@
                                 <dx:ASPxButton ID="ASPxButton2" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Theme="Office2010Silver" Height="28px"
                                     Text="Clear" Font-Names="Segoe UI" Font-Size="10pt">
                                     <ClientSideEvents Click="function(s, e) {
+                                        HF.Set('Excel', '0');
                                         cboFactory.SetSelectedIndex(-1);
                                         cboMachine.SetSelectedIndex(-1);
                                         cboFrequency.SetSelectedIndex(-1);
@@ -374,6 +381,7 @@
                                     Font-Names="Segoe UI" Font-Size="10pt" Text="Excel" Theme="Office2010Silver" Width="100px">
                                     <ClientSideEvents Click="function(s, e){
                                         debugger
+                                        HF.Set('Excel', '1');
                                             if (Grid.GetVisibleRowsOnPage() == 0){
                                                 toastr.warning('Please Click Browse First!', 'Warning');
                                                 toastr.options.closeButton = false;
@@ -391,8 +399,6 @@
                         </tr>
                     </table>
                 </td>
-
-                
             </tr>
         </table>
     </div>

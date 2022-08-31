@@ -12,7 +12,7 @@ Public Class ControlChartSetup
 #Region "Declarations"
     Dim pUser As String = ""
     Dim pMenuID As String = "A040"
-    Public AuthInsert As Boolean = False
+    Public AuthAccess As Boolean = False
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
     Private dt As DataTable
@@ -29,7 +29,25 @@ Public Class ControlChartSetup
         sGlobal.getMenu(pMenuID)
         Master.SiteTitle = sGlobal.menuName
         pUser = Session("user")
+
+        Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
+        AuthAccess = sGlobal.Auth_UserAccess(pUser, pMenuID)
         AuthUpdate = sGlobal.Auth_UserUpdate(pUser, pMenuID)
+        AuthDelete = sGlobal.Auth_UserDelete(pUser, pMenuID)
+
+        If AuthAccess = False Then
+            Response.Redirect("~/Main.aspx")
+        End If
+
+        If AuthUpdate = False Then
+            commandColumn.ShowEditButton = False
+            commandColumn.ShowNewButtonInHeader = False
+        End If
+
+        If AuthDelete = False Then
+            commandColumn.ShowDeleteButton = False
+        End If
+
         show_error(MsgTypeEnum.Info, "", 0)
     End Sub
 
@@ -47,9 +65,15 @@ Public Class ControlChartSetup
 
     Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles Grid.CellEditorInitialize
         If Not Grid.IsNewRowEditing Then
-            If e.Column.FieldName = "Factory" Or e.Column.FieldName = "TypeEditGrid" Or e.Column.FieldName = "MachineEditGrid" Or e.Column.FieldName = "ItemCheckEditGrid" Or e.Column.FieldName = "Start" Then
+            If e.Column.FieldName = "Factory" Or e.Column.FieldName = "TypeEditGrid" Or e.Column.FieldName = "MachineEditGrid" Or e.Column.FieldName = "ItemCheckEditGrid" Then
                 e.Editor.ReadOnly = True
                 e.Editor.ForeColor = Color.Silver
+            End If
+        ElseIf Grid.IsNewRowEditing Then
+            If e.Column.FieldName = "End" Then
+                Dim endTime As DateTime
+                endTime = Convert.ToDateTime("9999-12-31")
+                e.Editor.Value = endTime
             End If
         End If
 
@@ -71,7 +95,7 @@ Public Class ControlChartSetup
             If Grid.IsEditing Then combo.Value = e.Value
         End If
 
-        If e.Column.FieldName = "Factory" Or e.Column.FieldName = "TypeEditGrid" Or e.Column.FieldName = "Start" Then
+        If e.Column.FieldName = "Factory" Or e.Column.FieldName = "TypeEditGrid" Or e.Column.FieldName = "Start" Or e.Column.FieldName = "End" Then
             e.Editor.Width = "125"
         ElseIf e.Column.FieldName = "MachineEditGrid" Or e.Column.FieldName = "ItemCheckEditGrid" Then
             e.Editor.Width = "200"
@@ -116,6 +140,7 @@ Public Class ControlChartSetup
         e.Cancel = True
         Try
             Dim StTime As DateTime = Convert.ToDateTime(e.NewValues("Start"))
+            Dim EnTime As DateTime = Convert.ToDateTime(e.NewValues("End"))
 
             Call up_InsUpd("0", _
                 e.NewValues("Factory"), _
@@ -123,6 +148,7 @@ Public Class ControlChartSetup
                 e.NewValues("MachineEditGrid"), _
                 e.NewValues("ItemCheckEditGrid"), _
                 StTime.ToString("yyyy-MM-dd"),
+                EnTime.ToString("yyyy-MM-dd"),
                 e.NewValues("SpecUSL"), e.NewValues("SpecLSL"), _
                 e.NewValues("XCL"), e.NewValues("XUCL"), e.NewValues("XLCL"), _
                 e.NewValues("RCL"), e.NewValues("RLCL"), e.NewValues("RUCL"), _
@@ -138,6 +164,7 @@ Public Class ControlChartSetup
         e.Cancel = True
         Try
             Dim StTime As DateTime = Convert.ToDateTime(e.NewValues("Start"))
+            Dim EnTime As DateTime = Convert.ToDateTime(e.NewValues("End"))
 
             Call up_InsUpd("1", _
                 e.NewValues("Factory"), _
@@ -145,6 +172,7 @@ Public Class ControlChartSetup
                 e.NewValues("MachineEditGrid"), _
                 e.NewValues("ItemCheckEditGrid"), _
                 StTime.ToString("yyyy-MM-dd"),
+                EnTime.ToString("yyyy-MM-dd"),
                 e.NewValues("SpecUSL"), e.NewValues("SpecLSL"), _
                 e.NewValues("XCL"), e.NewValues("XUCL"), e.NewValues("XLCL"), _
                 e.NewValues("RCL"), e.NewValues("RLCL"), e.NewValues("RUCL"), _
@@ -234,6 +262,13 @@ Public Class ControlChartSetup
             AdaError = True
         End If
 
+        tmpdataCol = Grid.DataColumns("End")
+        If IsNothing(e.NewValues("End")) OrElse e.NewValues("End").ToString.Trim = "" Then
+            e.Errors(tmpdataCol) = "Please Choose Period End!"
+            show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
+            AdaError = True
+        End If
+
         tmpdataCol = Grid.DataColumns("SpecUSL")
         If IsNothing(e.NewValues("SpecUSL")) OrElse e.NewValues("SpecUSL").ToString.Trim = "" Then
             e.Errors(tmpdataCol) = "please Input a Number!"
@@ -293,6 +328,7 @@ Public Class ControlChartSetup
         If e.IsNewRow And Not AdaError Then
             Dim pErr As String = ""
             Dim StTime As DateTime = Convert.ToDateTime(e.NewValues("Start"))
+            Dim EnTime As DateTime = Convert.ToDateTime(e.NewValues("End"))
 
             Dim cls As New clsControlChartSetup With
             {
@@ -300,7 +336,8 @@ Public Class ControlChartSetup
                 .ItemType = e.NewValues("TypeEditGrid"),
                 .Machine = e.NewValues("MachineEditGrid"),
                 .ItemCheck = e.NewValues("ItemCheckEditGrid"),
-                .StartTime = StTime.ToString("yyyy-MM-dd")
+                .StartTime = StTime.ToString("yyyy-MM-dd"),
+                .EndTime = EnTime.ToString("yyyy-MM-dd")
             }
 
             clsControlChartSetupDB.Check(cls, pErr)
@@ -456,7 +493,7 @@ Public Class ControlChartSetup
         End Try
     End Sub
 
-    Private Function up_InsUpd(Type As String, Factory As String, ItemType As String, Machine As String, ItemCheck As String, Start As String, _
+    Private Function up_InsUpd(Type As String, Factory As String, ItemType As String, Machine As String, ItemCheck As String, Start As String, EndTime As String, _
                                SpecUSL As String, SpecLSL As String, _
                                XBarCL As String, XBarUCL As String, XBarLCL As String, _
                                RCL As String, RLCL As String, RUCL As String, User As String) As Boolean
@@ -469,6 +506,7 @@ Public Class ControlChartSetup
                 .ItemCheck = ItemCheck,
                 .Machine = Machine,
                 .StartTime = Start,
+                .EndTime = EndTime,
                 .SpecUSL = SpecUSL, .SpecLSL = SpecLSL,
                 .XBarCL = XBarCL, .XBarUCL = XBarUCL, .XBarLCL = XBarLCL,
                 .RCL = RCL, .RLCL = RLCL, .RUCL = RUCL,

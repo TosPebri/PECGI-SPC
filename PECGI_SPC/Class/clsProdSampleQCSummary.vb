@@ -7,10 +7,11 @@ Public Class clsProdSampleQCSummary
     Public Property Frequency As String
     Public Property Sequence As String
     Public Property Period As String
+    Public Property UserID As String
 End Class
 
 Public Class clsProdSampleQCSummaryDB
-    Public Shared Function FillCombo(type As String, Optional param As String = "", Optional param2 As String = "", Optional param3 As String = "", Optional param4 As String = "") As DataTable
+    Public Shared Function FillCombo(type As String, Optional param As String = "", Optional param2 As String = "", Optional param3 As String = "", Optional param4 As String = "", Optional param5 As String = "") As DataTable
         Using cn As New SqlConnection(Sconn.Stringkoneksi)
             cn.Open()
             Dim sql As String
@@ -22,6 +23,7 @@ Public Class clsProdSampleQCSummaryDB
             If param2 <> "" Then cmd.Parameters.AddWithValue("Param2", param2)
             If param3 <> "" Then cmd.Parameters.AddWithValue("Param3", param3)
             If param4 <> "" Then cmd.Parameters.AddWithValue("Param4", param4)
+            If param4 <> "" Then cmd.Parameters.AddWithValue("Param5", param5)
 
             Dim da As New SqlDataAdapter(cmd)
             Dim dt As New DataTable
@@ -44,6 +46,7 @@ Public Class clsProdSampleQCSummaryDB
             cmd.Parameters.AddWithValue("Frequency", cls.Frequency)
             cmd.Parameters.AddWithValue("Sequence", CInt(cls.Sequence))
             cmd.Parameters.AddWithValue("Period", cls.Period)
+            cmd.Parameters.AddWithValue("UserID", cls.UserID)
 
             Dim da As New SqlDataAdapter(cmd)
             Dim ds As New DataSet

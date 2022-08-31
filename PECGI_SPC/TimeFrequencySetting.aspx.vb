@@ -12,7 +12,6 @@ Public Class TimeFrequencySetting
 #Region "Declare"
     Dim pUser As String = ""
     Dim pMenuID As String = "A030"
-    Public AuthInsert As Boolean = False
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
     Public AuthAccess As Boolean = False
@@ -30,7 +29,25 @@ Public Class TimeFrequencySetting
         sGlobal.getMenu(pMenuID)
         Master.SiteTitle = sGlobal.menuName
         pUser = Session("user")
+
+        Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
+        AuthAccess = sGlobal.Auth_UserAccess(pUser, pMenuID)
         AuthUpdate = sGlobal.Auth_UserUpdate(pUser, pMenuID)
+        AuthDelete = sGlobal.Auth_UserDelete(pUser, pMenuID)
+
+        If AuthAccess = False Then
+            Response.Redirect("~/Main.aspx")
+        End If
+
+        If AuthUpdate = False Then
+            commandColumn.ShowEditButton = False
+            commandColumn.ShowNewButtonInHeader = False
+        End If
+
+        If AuthDelete = False Then
+            commandColumn.ShowDeleteButton = False
+        End If
+
         show_error(MsgTypeEnum.Info, "", 0)
     End Sub
 
@@ -83,6 +100,8 @@ Public Class TimeFrequencySetting
         Try
             Dim StTime As DateTime = Convert.ToDateTime(e.NewValues("Start"))
             Dim EnTime As DateTime = Convert.ToDateTime(e.NewValues("End"))
+            Dim StTimeOld As DateTime = Convert.ToDateTime(e.OldValues("Start"))
+            Dim EnTimeOld As DateTime = Convert.ToDateTime(e.OldValues("End"))
 
             Call up_InsUpd("1", _
                 e.NewValues("Frequency"), _

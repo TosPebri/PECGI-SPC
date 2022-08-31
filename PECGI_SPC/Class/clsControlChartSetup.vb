@@ -109,7 +109,7 @@ Public Class clsControlChartSetupDB
         End Try
     End Function
 
-    Public Shared Function Delete(cls As clsControlChartSetup, Optional ByRef pErr As String = "") As Boolean
+    Public Shared Function Delete(cls As clsControlChartSetup) As Boolean
         Try
             Using cn As New SqlConnection(Sconn.Stringkoneksi)
                 cn.Open()
@@ -126,7 +126,7 @@ Public Class clsControlChartSetupDB
                 cmd.ExecuteNonQuery()
             End Using
         Catch ex As Exception
-            pErr = ex.Message
+            Throw New Exception(ex.Message)
         End Try
     End Function
 End Class

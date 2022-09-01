@@ -22,13 +22,8 @@
     <script type="text/javascript" >
         var rowIndex, columnIndex;
         function OnInit(s, e) {
-            ASPxClientUtils.AttachEventToElement(s.GetMainElement(), "keydown", function (event) {
-                if (event.keyCode == 13) {
-                    if (ASPxClientUtils.IsExists(columnIndex) && ASPxClientUtils.IsExists(rowIndex)) {
-                        ASPxClientUtils.PreventEventAndBubble(event);                        
-                    }
-                }
-            });             
+            var d = new Date(2022, 8, 3);
+            dtDate.SetDate(d);  
         }
 
         function isNumeric(n) {
@@ -222,7 +217,7 @@
             }
             if (s.cpRefresh == '1') {
                 gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
-                chartX.PerformCallback();
+                chartX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
             }            
         }
     </script>
@@ -532,6 +527,9 @@
                                     ClientInstanceName="btnExcel" Font-Names="Segoe UI" Font-Size="9pt" 
                                     Height="25px" Text="Excel" Theme="Office2010Silver" UseSubmitBehavior="False" 
                                     Width="90px" TabIndex="10">
+                                    <ClientSideEvents Click="function(s, e) {
+	chartX.PerformCallback();
+}" />
                                     <Paddings Padding="2px" />
                                 </dx:ASPxButton>                            
                         </td>
@@ -858,40 +856,37 @@
                 <div style="height:10px"></div>
                 
     <dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
-        Height="200px" Width="1080px" AutoBindingSettingsEnabled="False"
-        AutoLayoutSettingsEnabled="False" CrosshairEnabled="True">
-        <DiagramSerializable>
-            <cc1:XYDiagram>
-            <AxisX VisibleInPanesSerializable="-1"></AxisX>
-            <AxisY VisibleInPanesSerializable="-1"></AxisY>
-            </cc1:XYDiagram>
-            </DiagramSerializable>
-        <seriesserializable>
-
-            <cc1:Series ArgumentDataMember="Seq" Name="Warning" 
-                        ValueDataMembersSerializable="Warning">
-                <viewserializable>
-                    <cc1:PointSeriesView>
-                        <PointMarkerOptions size="4" kind="6"></PointMarkerOptions>
-                    </cc1:PointSeriesView>
-                </viewserializable>
+        Height="290px" Width="1080px" CrosshairEnabled="True" SeriesDataMember="Description">
+    
+        <SeriesSerializable>
+            <cc1:Series ArgumentDataMember="Seq" Name="Average" ValueDataMembersSerializable="AvgValue">
+                <ViewSerializable>
+                    <cc1:LineSeriesView Color="Blue">
+                        <LineStyle Thickness="1" />
+                        <LineMarkerOptions Color="Blue" Size="3">
+                        </LineMarkerOptions>
+                    </cc1:LineSeriesView>
+                </ViewSerializable>
             </cc1:Series>
-        </seriesserializable>
-
-        <seriestemplate>
+        </SeriesSerializable>
+    
+        <seriestemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
             <viewserializable>
-                <cc1:LineSeriesView>
-                    <linemarkeroptions size="2"></linemarkeroptions>
-                    <linestyle thickness="1" />
-                </cc1:LineSeriesView>
+                <cc1:PointSeriesView>                    
+                    <PointMarkerOptions kind="Circle" BorderColor="255, 255, 255"></PointMarkerOptions>
+                </cc1:PointSeriesView>
             </viewserializable>
         </seriestemplate>  
+        <DiagramSerializable>
+            <cc1:XYDiagram>
+                <AxisX VisibleInPanesSerializable="-1">
+                </AxisX>
+                <AxisY VisibleInPanesSerializable="-1">
+                </AxisY>
+            </cc1:XYDiagram>
+        </DiagramSerializable>
         <legend alignmenthorizontal="Left" alignmentvertical="BottomOutside" 
             direction="LeftToRight"></legend> 
-        <titles>
-            <cc1:ChartTitle Font="Segoe UI, 12pt, style=Bold" Text="CONTROL X" />
-        </titles>
-
     </dx:WebChartControl>
 
 

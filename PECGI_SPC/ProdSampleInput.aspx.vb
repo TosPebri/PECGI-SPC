@@ -104,7 +104,9 @@ Public Class ProdSampleInput
         sGlobal.getMenu("B020")
         Master.SiteTitle = sGlobal.menuName
         pUser = Session("user") & ""
-        AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "B040")
+        AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "B020")
+        grid.SettingsDataSecurity.AllowInsert = False
+        grid.SettingsDataSecurity.AllowEdit = False
         show_error(MsgTypeEnum.Info, "", 0)
         If Not IsPostBack And Not IsCallback Then
             up_FillCombo()
@@ -435,25 +437,95 @@ Public Class ProdSampleInput
         End If
     End Sub
 
-    Private Sub LoadChart()
-        Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartX()
+    Private Sub LoadChart(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String)
+        Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartXR(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
         With chartX
-            CType(.Diagram, XYDiagram).SecondaryAxesY.Clear()
-            Dim myAxisY As New SecondaryAxisY("my Y-Axis")
-            CType(.Diagram, XYDiagram).SecondaryAxesY.Add(myAxisY)
-
-            CType(.Series("Warning").View, XYDiagramSeriesViewBase).AxisY = myAxisY
-
             .DataSource = xr
-            .SeriesDataMember = "Description"
-            .SeriesTemplate.ArgumentDataMember = "Seq"
-            .SeriesTemplate.ValueDataMembers.AddRange(New String() {"Value"})
+            '.SeriesDataMember = "Description"
+            '.SeriesTemplate.ArgumentDataMember = "Seq"
+            '.SeriesTemplate.ValueDataMembers.AddRange(New String() {"Value"})
             .DataBind()
+
+            Dim diagram As XYDiagram = CType(.Diagram, XYDiagram)
+            diagram.AxisX.WholeRange.MinValue = 0
+            diagram.AxisX.WholeRange.MaxValue = 12
+
+            diagram.AxisX.GridLines.LineStyle.DashStyle = DashStyle.Solid
+            diagram.AxisX.GridLines.MinorVisible = True
+            diagram.AxisX.MinorCount = 1
+            diagram.AxisX.GridLines.Visible = False
+
+            diagram.AxisY.MinorCount = 4
+            diagram.AxisY.GridLines.MinorVisible = True
+
+
+            'myAxisY.WholeRange.MinValue = 2.64
+            'myAxisY.WholeRange.MaxValue = 2.71
+
+            Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+
+            diagram.AxisY.ConstantLines.Clear()
+            Dim LCL As New ConstantLine("LCL")
+            LCL.Color = Drawing.Color.Purple
+            LCL.LineStyle.Thickness = 2
+            LCL.LineStyle.DashStyle = DashStyle.DashDot
+            diagram.AxisY.ConstantLines.Add(LCL)
+            LCL.AxisValue = Setup.XBarLCL
+
+            Dim UCL As New ConstantLine("UCL")
+            UCL.Color = Drawing.Color.Purple
+            UCL.LineStyle.Thickness = 2
+            UCL.LineStyle.DashStyle = DashStyle.DashDot
+            diagram.AxisY.ConstantLines.Add(UCL)
+            UCL.AxisValue = Setup.XBarUCL
+
+            Dim LSL As New ConstantLine("LSL")
+            LSL.Color = Drawing.Color.Red
+            LSL.LineStyle.Thickness = 2
+            LSL.LineStyle.DashStyle = DashStyle.Solid
+            diagram.AxisY.ConstantLines.Add(LSL)
+            LSL.AxisValue = Setup.SpecLSL
+
+            Dim USL As New ConstantLine("USL")
+            USL.Color = Drawing.Color.Red
+            USL.LineStyle.Thickness = 2
+            USL.LineStyle.DashStyle = DashStyle.Solid
+            diagram.AxisY.ConstantLines.Add(USL)
+            USL.AxisValue = Setup.SpecUSL
+
+            diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
+            diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
         End With
     End Sub
 
     Private Sub chartX_CustomCallback(sender As Object, e As CustomCallbackEventArgs) Handles chartX.CustomCallback
-        LoadChart()
+
+        Dim Prm As String = e.Parameter
+        If Prm = "" Then
+            Prm = "F001|TPMSBR011|015|IC021|03 Aug 2022"
+        End If
+        Dim FactoryCode As String = Split(Prm, "|")(0)
+        Dim ItemTypeCode As String = Split(Prm, "|")(1)
+        Dim LineCode As String = Split(Prm, "|")(2)
+        Dim ItemCheckCode As String = Split(Prm, "|")(3)
+        Dim ProdDate As String = Split(Prm, "|")(4)
+
+        If FactoryCode = "" Then
+            FactoryCode = "F001"
+        End If
+        If ItemTypeCode = "" Then
+            ItemTypeCode = "TPMSBR011"
+        End If
+        If LineCode = "" Then
+            LineCode = "015"
+        End If
+        If ItemCheckCode = "" Then
+            ItemCheckCode = "IC021"
+        End If
+        If ProdDate = "" Then
+            ProdDate = "2022-08-03"
+        End If
+        LoadChart(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
     End Sub
 
     Private Sub gridX_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles gridX.HtmlDataCellPrepared

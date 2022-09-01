@@ -71,7 +71,7 @@ Public Class clsSPCResultDetailDB
     Public Shared Function GetTableXR(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String) As DataTable
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
-            Dim q As String = "sp_SPC_XRChart"
+            Dim q As String = "sp_SPC_XRTable"
             Dim cmd As New SqlCommand(q, Cn)
             cmd.CommandType = CommandType.StoredProcedure
             cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)

@@ -885,13 +885,15 @@ Public Class ProdSampleVerification
                     GridTitle(ws, cls)
                     HeaderResult(ws, cls)
                     CellResult(ws, cls)
+                    HeaderActivity(ws, cls)
+                    CellActivity(ws, cls)
                 End With
 
                 Response.Clear()
                 Response.Buffer = True
                 Response.Charset = ""
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                Response.AddHeader("content-disposition", "attachment; filename=Production Sample Verification List_" & Format(Date.Now, "yyyy-MM-dd_HHmmss") & ".xlsx")
+                Response.AddHeader("content-disposition", "attachment; filename=Production Sample Verification_" & Format(Date.Now, "yyyy-MM-dd_HHmmss") & ".xlsx")
                 Using MyMemoryStream As New MemoryStream()
                     excel.SaveAs(MyMemoryStream)
                     MyMemoryStream.WriteTo(Response.OutputStream)
@@ -905,198 +907,325 @@ Public Class ProdSampleVerification
 
     Private Sub GridTitle(ByVal pExl As ExcelWorksheet, cls As clsProdSampleVerification)
         With pExl
-            .Cells(1, 1).Value = "Product Sample Verification"
-            .Cells(1, 1, 1, 13).Merge = True
-            .Cells(1, 1, 1, 13).Style.HorizontalAlignment = HorzAlignment.Near
-            .Cells(1, 1, 1, 13).Style.VerticalAlignment = VertAlignment.Center
-            .Cells(1, 1, 1, 13).Style.Font.Bold = True
-            .Cells(1, 1, 1, 13).Style.Font.Size = 16
-            .Cells(1, 1, 1, 13).Style.Font.Name = "Segoe UI"
+            Try
+                .Cells(1, 1).Value = "Product Sample Verification"
+                .Cells(1, 1, 1, 13).Merge = True
+                .Cells(1, 1, 1, 13).Style.HorizontalAlignment = HorzAlignment.Near
+                .Cells(1, 1, 1, 13).Style.VerticalAlignment = VertAlignment.Center
+                .Cells(1, 1, 1, 13).Style.Font.Bold = True
+                .Cells(1, 1, 1, 13).Style.Font.Size = 16
+                .Cells(1, 1, 1, 13).Style.Font.Name = "Segoe UI"
 
-            .Cells(3, 1, 3, 2).Value = "Factory Code"
-            .Cells(3, 1, 3, 2).Merge = True
-            .Cells(3, 3).Value = ": " & cls.FactoryName
+                .Cells(3, 1, 3, 2).Value = "Factory Code"
+                .Cells(3, 1, 3, 2).Merge = True
+                .Cells(3, 3).Value = ": " & cls.FactoryName
 
-            .Cells(4, 1, 4, 2).Value = "Item Type Code"
-            .Cells(4, 1, 4, 2).Merge = True
-            .Cells(4, 3).Value = ": " & cls.ItemType_Name
+                .Cells(4, 1, 4, 2).Value = "Item Type Code"
+                .Cells(4, 1, 4, 2).Merge = True
+                .Cells(4, 3).Value = ": " & cls.ItemType_Name
 
-            .Cells(5, 1, 5, 2).Value = "Line Code"
-            .Cells(5, 1, 5, 2).Merge = True
-            .Cells(5, 3).Value = ": " & cls.LineName
+                .Cells(5, 1, 5, 2).Value = "Line Code"
+                .Cells(5, 1, 5, 2).Merge = True
+                .Cells(5, 3).Value = ": " & cls.LineName
 
-            .Cells(6, 1, 6, 2).Value = "Item Check Code"
-            .Cells(6, 1, 6, 2).Merge = True
-            .Cells(6, 3).Value = ": " & cls.ItemCheck_Name
+                .Cells(6, 1, 6, 2).Value = "Item Check Code"
+                .Cells(6, 1, 6, 2).Merge = True
+                .Cells(6, 3).Value = ": " & cls.ItemCheck_Name
 
-            .Cells(7, 1, 7, 2).Value = "Prod Date"
-            .Cells(7, 1, 7, 2).Merge = True
-            .Cells(7, 3).Value = ": " & cls.Period
+                .Cells(7, 1, 7, 2).Value = "Prod Date"
+                .Cells(7, 1, 7, 2).Merge = True
+                .Cells(7, 3).Value = ": " & cls.Period
 
-            .Cells(8, 1, 8, 2).Value = "Shift Code"
-            .Cells(8, 1, 8, 2).Merge = True
-            .Cells(8, 3).Value = ": " & cls.ShiftName
+                .Cells(8, 1, 8, 2).Value = "Shift Code"
+                .Cells(8, 1, 8, 2).Merge = True
+                .Cells(8, 3).Value = ": " & cls.ShiftName
 
-            .Cells(9, 1, 9, 2).Value = "Sequence No"
-            .Cells(9, 1, 9, 2).Merge = True
-            .Cells(9, 3).Value = ": " & cls.SeqCode
+                .Cells(9, 1, 9, 2).Value = "Sequence No"
+                .Cells(9, 1, 9, 2).Merge = True
+                .Cells(9, 3).Value = ": " & cls.Seq
 
-            Dim rgHeader As ExcelRange = .Cells(3, 3, 9, 4)
-            rgHeader.Style.HorizontalAlignment = HorzAlignment.Near
-            rgHeader.Style.VerticalAlignment = VertAlignment.Center
-            rgHeader.Style.Font.Size = 10
-            rgHeader.Style.Font.Name = "Segoe UI"
+                Dim rgHeader As ExcelRange = .Cells(3, 3, 9, 4)
+                rgHeader.Style.HorizontalAlignment = HorzAlignment.Near
+                rgHeader.Style.VerticalAlignment = VertAlignment.Center
+                rgHeader.Style.Font.Size = 10
+                rgHeader.Style.Font.Name = "Segoe UI"
 
-            row_GridTitle = 9
-
+                row_GridTitle = 9
+            Catch ex As Exception
+                Throw New Exception(ex.Message)
+            End Try
         End With
     End Sub
 
     Private Sub HeaderResult(ByVal pExl As ExcelWorksheet, cls As clsProdSampleVerification)
         With pExl
-            Dim irow = row_GridTitle + 3
-            Dim nColDate = 2
-            Dim nColSeq = 2
-            Dim nColShift = 2
+            Try
+                Dim irow = row_GridTitle + 4
+                Dim nColDate = 2
+                Dim nColSeq = 2
+                Dim nColShift = 2
 
-            .Cells(irow, 1).Value = "Date"
-            .Cells(irow + 1, 1).Value = "Shift"
-            .Cells(irow + 2, 1).Value = "Time"
+                .Cells(irow, 1).Value = "Date"
+                .Cells(irow + 1, 1).Value = "Shift"
+                .Cells(irow + 2, 1).Value = "Time"
+                .Column(1).Width = 15
 
-            row_HeaderResult = irow + 2
+                row_HeaderResult = irow + 2
 
-            ds = clsProdSampleVerificationDB.GridLoad(GetHeader_ProdDate, cls)
-            Dim dtDate As DataTable = ds.Tables(0)
-            If dtDate.Rows.Count > 0 Then
-                For i = 0 To dtDate.Rows.Count - 1
-                    Dim nProdDate = dtDate.Rows(i)("ProdDate")
-                    cls.ProdDate_Grid = Convert.ToDateTime(nProdDate).ToString("yyyy-MM-dd")
+                ds = clsProdSampleVerificationDB.GridLoad(GetHeader_ProdDate, cls)
+                Dim dtDate As DataTable = ds.Tables(0)
+                If dtDate.Rows.Count > 0 Then
+                    For i = 0 To dtDate.Rows.Count - 1
+                        Dim nProdDate = dtDate.Rows(i)("ProdDate")
+                        cls.ProdDate_Grid = Convert.ToDateTime(nProdDate).ToString("yyyy-MM-dd")
 
-                    'GET COLUMN SHIFT
-                    ds = clsProdSampleVerificationDB.GridLoad(GetHeader_ShifCode, cls)
-                    Dim dtShift As DataTable = ds.Tables(0)
-                    If dtShift.Rows.Count > 0 Then
-                        For n = 0 To dtShift.Rows.Count - 1
-                            cls.Shiftcode_Grid = dtShift.Rows(n)("ShiftCode")
+                        'GET COLUMN SHIFT
+                        ds = clsProdSampleVerificationDB.GridLoad(GetHeader_ShifCode, cls)
+                        Dim dtShift As DataTable = ds.Tables(0)
+                        If dtShift.Rows.Count > 0 Then
+                            For n = 0 To dtShift.Rows.Count - 1
+                                cls.Shiftcode_Grid = dtShift.Rows(n)("ShiftCode")
 
-                            'GET COLUMN SHIFT
-                            ds = clsProdSampleVerificationDB.GridLoad(GetHeader_Time, cls)
-                            Dim dtSeq As DataTable = ds.Tables(0)
-                            Dim nSeq = dtSeq.Rows.Count
-                            If dtSeq.Rows.Count > 0 Then
-                                For r = 0 To dtSeq.Rows.Count - 1
-                                    .Cells(irow + 2, nColSeq).Value = dtSeq.Rows(r)("nTimeDesc")
-                                    .Cells(irow + 2, nColSeq).Style.HorizontalAlignment = HorzAlignment.Center
+                                'GET COLUMN SHIFT
+                                ds = clsProdSampleVerificationDB.GridLoad(GetHeader_Time, cls)
+                                Dim dtSeq As DataTable = ds.Tables(0)
+                                Dim nSeq = dtSeq.Rows.Count
+                                If dtSeq.Rows.Count > 0 Then
+                                    For r = 0 To dtSeq.Rows.Count - 1
+                                        .Cells(irow + 2, nColSeq).Value = dtSeq.Rows(r)("nTimeDesc")
+                                        .Cells(irow + 2, nColSeq).Style.HorizontalAlignment = HorzAlignment.Center
+                                        .Column(nColSeq).Width = 15
+                                        nColSeq = nColSeq + 1
+                                        col_HeaderResult = col_HeaderResult + 1
+                                    Next
+                                End If
+                                '-----------------------------
 
-                                    nColSeq = nColSeq + 1
-                                    col_HeaderResult = col_HeaderResult + 1
-                                Next
-                            End If
+                                Dim nShiftCode = dtShift.Rows(n)("ShiftCode")
+                                If nShiftCode = "SH001" Then
+                                    nShiftCode = "Shift 1"
+                                ElseIf nShiftCode = "SH002" Then
+                                    nShiftCode = "Shift 2"
+                                End If
+
+                                .Cells(irow + 1, nColShift, irow + 1, nColShift + nSeq - 1).Value = nShiftCode
+                                .Cells(irow + 1, nColShift, irow + 1, nColShift + nSeq - 1).Merge = True
+                                .Cells(irow + 1, nColShift, irow + 1, nColShift + nSeq - 1).Style.HorizontalAlignment = HorzAlignment.Center
+
+                                nColShift = nColSeq
+                            Next
                             '-----------------------------
 
-                            Dim nShiftCode = dtShift.Rows(n)("ShiftCode")
-                            If nShiftCode = "SH001" Then
-                                nShiftCode = "Shift 1"
-                            ElseIf nShiftCode = "SH002" Then
-                                nShiftCode = "Shift 2"
-                            End If
+                            .Cells(irow, nColDate, irow, nColShift - 1).Value = dtDate.Rows(i)("ProdDate")
+                            .Cells(irow, nColDate, irow, nColShift - 1).Merge = True
+                            .Cells(irow, nColDate, irow, nColShift - 1).Style.HorizontalAlignment = HorzAlignment.Center
 
-                            .Cells(irow + 1, nColShift, irow + 1, nColShift + nSeq - 1).Value = nShiftCode
-                            .Cells(irow + 1, nColShift, irow + 1, nColShift + nSeq - 1).Merge = True
-                            .Cells(irow + 1, nColShift, irow + 1, nColShift + nSeq - 1).Style.HorizontalAlignment = HorzAlignment.Center
+                        End If
+                    Next
+                End If
 
-                            nColShift = nColSeq
-                        Next
-                        '-----------------------------
+                .Cells(irow - 1, 1, irow - 1, col_HeaderResult + 1).Value = "STATISTIC PRODUCT MONITORING"
+                .Cells(irow - 1, 1, irow - 1, col_HeaderResult + 1).Merge = True
+                .Cells(irow - 1, 1, irow - 1, col_HeaderResult + 1).Style.HorizontalAlignment = MenuItemAlignment.Center
+                .Cells(irow - 1, 1, irow - 1, col_HeaderResult + 1).Style.Font.Bold = True
 
-                        .Cells(irow, nColDate, irow, nColShift).Value = dtDate.Rows(i)("ProdDate")
-                        .Cells(irow, nColDate, irow, nColShift).Merge = True
-                        .Cells(irow, nColDate, irow, nColShift).Style.HorizontalAlignment = HorzAlignment.Center
-
-                    End If
-                Next
-            End If
-
-            Dim rgHeader As ExcelRange = .Cells(irow, 1, row_HeaderResult - 1, col_HeaderResult)
-            rgHeader.Style.Font.Size = 10
-            rgHeader.Style.Font.Name = "Segoe UI"
-
+                Dim rgCell As ExcelRange = .Cells(irow, 1, row_HeaderResult, col_HeaderResult + 1)
+                rgCell.Style.Font.Size = 10
+                rgCell.Style.Font.Name = "Segoe UI"
+                rgCell.Style.HorizontalAlignment = HorzAlignment.Center
+                rgCell.Style.Font.Color.SetColor(Color.White)
+                rgCell.Style.Fill.PatternType = ExcelFillStyle.Solid
+                rgCell.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.DimGray)
+            Catch ex As Exception
+                Throw New Exception(ex.Message)
+            End Try
         End With
     End Sub
     Private Sub CellResult(ByVal pExl As ExcelWorksheet, cls As clsProdSampleVerification)
         With pExl
-            Dim irow = row_HeaderResult + 1
+            Try
+                Dim irow = row_HeaderResult + 1
+                ds = clsProdSampleVerificationDB.GridLoad(GetCharSetup, cls)
+                Dim dtColBrowse As DataTable = ds.Tables(0)
+                If dtColBrowse.Rows.Count > 0 Then
+                    UCL = dtColBrowse.Rows(0)("UCL")
+                    LCL = dtColBrowse.Rows(0)("LCL")
+                    USL = dtColBrowse.Rows(0)("USL")
+                    LSL = dtColBrowse.Rows(0)("LSL")
+                End If
 
-            ds = clsProdSampleVerificationDB.GridLoad(GetGridData, cls)
-            Dim dtGrid As DataTable = ds.Tables(0)
-            If dtGrid.Rows.Count > 0 Then
-                For i = 0 To dtGrid.Rows.Count - 1
-                    For n = 1 To dtGrid.Columns.Count - 1
-                        Try
-                            .Cells(irow + i, n).Value = dtGrid.Rows(i)(n) & ""
-                        Catch ex As Exception
-                            Throw New Exception(ex.Message)
-                        End Try
+                ds = clsProdSampleVerificationDB.GridLoad(GetGridData, cls)
+                Dim dtGrid As DataTable = ds.Tables(0)
+                If dtGrid.Rows.Count > 0 Then
+                    For i = 0 To dtGrid.Rows.Count - 2
+                        For n = 1 To dtGrid.Columns.Count - 1
+                            Try
+
+                                Dim data = dtGrid.Rows(i)(n)
+                                .Cells(irow + i, n).Value = dtGrid.Rows(i)(n)
+
+                                If n > 2 Then
+                                    Dim Color = "#FFFFFF"
+                                    Dim RowIndex = Trim(dtGrid.Rows(i)(0))
+
+                                    If RowIndex = "EachData" Then
+                                        If data < LSL Or data > USL Then
+                                            Color = "#ff0000"
+                                        ElseIf data < LSL Or data > UCL Then
+                                            Color = "#ffc0cb"
+                                        End If
+                                    ElseIf RowIndex = "XBar" Then
+                                        If data < LSL Or data > USL Then
+                                            Color = "#ff0000"
+                                        ElseIf data < LSL Or data > UCL Then
+                                            Color = "#fffb00"
+                                        End If
+                                    ElseIf RowIndex = "Judgement" Then
+                                        If data = "NG" Then
+                                            Color = "#ff0000"
+                                        End If
+                                    ElseIf RowIndex = "Correction" Then
+                                        If data = "C" Then
+                                            Color = "#FFA500"
+                                        End If
+                                    End If
+
+                                    .Cells(irow + i, n).Style.Fill.PatternType = ExcelFillStyle.Solid
+                                    .Cells(irow + i, n).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(Color))
+                                End If
+
+                            Catch ex As Exception
+                                Throw New Exception(ex.Message)
+                            End Try
+                        Next
                     Next
-                Next
-            End If
+                End If
 
-            row_CellResult = dtGrid.Columns.Count
-            row_HeaderResult = irow + dtGrid.Rows.Count
+                col_CellResult = dtGrid.Columns.Count
+                row_CellResult = irow + dtGrid.Rows.Count
 
-            Dim Border As ExcelRange = .Cells(row_GridTitle + 3, 1, row_HeaderResult - 1, row_CellResult - 1)
-            Border.Style.Border.Top.Style = ExcelBorderStyle.Thin
-            Border.Style.Border.Bottom.Style = ExcelBorderStyle.Thin
-            Border.Style.Border.Right.Style = ExcelBorderStyle.Thin
-            Border.Style.Border.Left.Style = ExcelBorderStyle.Thin
-
+                Dim Border As ExcelRange = .Cells(row_GridTitle + 4, 1, row_CellResult - 2, col_CellResult - 1)
+                Border.Style.Border.Top.Style = ExcelBorderStyle.Thin
+                Border.Style.Border.Bottom.Style = ExcelBorderStyle.Thin
+                Border.Style.Border.Right.Style = ExcelBorderStyle.Thin
+                Border.Style.Border.Left.Style = ExcelBorderStyle.Thin
+                Border.Style.Font.Size = 10
+                Border.Style.Font.Name = "Segoe UI"
+                Border.Style.HorizontalAlignment = HorzAlignment.Center
+            Catch ex As Exception
+                Throw New Exception(ex.Message)
+            End Try
         End With
     End Sub
 
-    Private Sub HeaderActivity(ByVal pExl As ExcelWorksheet, cls As clsProductionSampleVerificationList)
-        With pExl
-            .Cells(1, 1).Value = "Product Sample Verification List"
-            .Cells(1, 1, 1, 13).Merge = True
-            .Cells(1, 1, 1, 13).Style.HorizontalAlignment = HorzAlignment.Near
-            .Cells(1, 1, 1, 13).Style.VerticalAlignment = VertAlignment.Center
-            .Cells(1, 1, 1, 13).Style.Font.Bold = True
-            .Cells(1, 1, 1, 13).Style.Font.Size = 16
-            .Cells(1, 1, 1, 13).Style.Font.Name = "Segoe UI"
+    Private Sub HeaderActivity(ByVal pExl As ExcelWorksheet, cls As clsProdSampleVerification)
+        Try
+            Dim irow = row_CellResult + 2
+            With pExl
+                .Cells(irow, 1, irow, 7).Value = "ACTIVITY MONITORING"
+                .Cells(irow, 1, irow, 7).Merge = True
+                .Cells(irow, 1, irow, 7).Style.HorizontalAlignment = MenuItemAlignment.Center
+                .Cells(irow, 1, irow, 7).Style.Font.Bold = True
+                irow = irow + 1
 
-            .Cells(3, 1, 3, 2).Value = "Factory Code"
-            .Cells(3, 1, 3, 2).Merge = True
-            .Cells(3, 3).Value = ": " & cls.FactoryName
+                .Cells(irow, 1).Value = "Date"
+                .Cells(irow, 2).Value = "PIC"
 
-            .Cells(4, 1, 4, 2).Value = "Item Type"
-            .Cells(4, 1, 4, 2).Merge = True
-            .Cells(4, 3).Value = ": " & cls.ItemType_Name
+                .Cells(irow, 3, irow, 4).Value = "Action"
+                .Cells(irow, 3, irow, 4).Style.HorizontalAlignment = HorzAlignment.Center
+                .Cells(irow, 3, irow, 4).Merge = True
+                .Cells(irow, 3, irow, 4).Style.WrapText = True
 
-            .Cells(5, 1, 5, 2).Value = "Line Code"
-            .Cells(5, 1, 5, 2).Merge = True
-            .Cells(5, 3).Value = ": " & cls.LineName
+                .Cells(irow, 5).Value = "Result"
 
-            .Cells(6, 1, 6, 2).Value = "Item Check"
-            .Cells(6, 1, 6, 2).Merge = True
-            .Cells(6, 3).Value = ": " & cls.ItemCheck_Name
+                .Cells(irow, 6).Value = "Remark"
+                .Cells(irow, 6, irow, 7).Style.HorizontalAlignment = HorzAlignment.Center
+                .Cells(irow, 6, irow, 7).Merge = True
+                .Cells(irow, 6, irow, 7).Style.WrapText = True
 
-            .Cells(7, 1, 7, 2).Value = "Prod Date"
-            .Cells(7, 1, 7, 2).Merge = True
-            .Cells(7, 3).Value = ": " & cls.Period
-            .Cells(9, 1, 9, 2).Value = "MK Verification"
-            .Cells(9, 1, 9, 2).Merge = True
-            .Cells(9, 3).Value = ": " & cls.MKVerification_Name
 
-            .Cells(8, 1, 8, 2).Value = "QC Verification"
-            .Cells(8, 1, 8, 2).Merge = True
-            .Cells(8, 3).Value = ": " & cls.QCVerification_Name
+                .Cells(irow, 8).Value = "Last User"
+                .Cells(irow, 9).Value = "Last Update"
 
-            Dim rgHeader As ExcelRange = .Cells(3, 3, 9, 4)
-            rgHeader.Style.HorizontalAlignment = HorzAlignment.Near
-            rgHeader.Style.VerticalAlignment = VertAlignment.Center
-            rgHeader.Style.Font.Size = 10
-            rgHeader.Style.Font.Name = "Segoe UI"
+                .Column(1).Width = 15
+                .Column(2).Width = 15
+                .Column(3).Width = 15
+                .Column(4).Width = 15
 
-        End With
+                .Column(5).Width = 15
+                .Column(6).Width = 15
+                .Column(7).Width = 15
+                .Column(8).Width = 15
+                .Column(9).Width = 15
+
+                col_HeaderActivity = 9
+                row_HeaderActivity = irow
+
+                Dim rgCell As ExcelRange = .Cells(irow, 1, irow, col_HeaderActivity)
+                rgCell.Style.Font.Size = 10
+                rgCell.Style.Font.Name = "Segoe UI"
+                rgCell.Style.HorizontalAlignment = HorzAlignment.Center
+                rgCell.Style.Font.Color.SetColor(Color.White)
+                rgCell.Style.Fill.PatternType = ExcelFillStyle.Solid
+                rgCell.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.DimGray)
+            End With
+        Catch ex As Exception
+            Throw New Exception(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub CellActivity(ByVal pExl As ExcelWorksheet, cls As clsProdSampleVerification)
+        Try
+            Dim irow = row_HeaderActivity + 1
+            With pExl
+                ds = clsProdSampleVerificationDB.GridLoad(GetGridData_Activity, cls)
+                Dim dtGridMenu As DataTable = ds.Tables(0)
+                Dim nRow = dtGridMenu.Rows.Count
+                If dtGridMenu.Rows.Count > 0 Then
+                    For i = 0 To dtGridMenu.Rows.Count - 1
+                        .Cells(irow + i, 1).Value = dtGridMenu.Rows(0)("ProdDate")
+                        .Cells(irow + i, 1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center
+
+                        .Cells(irow + i, 2).Value = dtGridMenu.Rows(0)("PIC")
+                        .Cells(irow + i, 2).Style.HorizontalAlignment = ExcelHorizontalAlignment.Left
+
+                        .Cells(irow + i, 3, irow + i, 4).Value = dtGridMenu.Rows(0)("Action")
+                        .Cells(irow + i, 3, irow + i, 4).Style.HorizontalAlignment = ExcelHorizontalAlignment.Left
+                        .Cells(irow + i, 3, irow + i, 4).Merge = True
+                        .Cells(irow + i, 3, irow + i, 4).Style.WrapText = True
+
+                        .Cells(irow + i, 5).Value = If(dtGridMenu.Rows(0)("Result") = 0, "OK", "NG")
+                        .Cells(irow + i, 5).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center
+
+                        .Cells(irow + i, 6, irow + i, 7).Value = dtGridMenu.Rows(0)("Remark")
+                        .Cells(irow + i, 6, irow + i, 7).Style.HorizontalAlignment = ExcelHorizontalAlignment.Left
+                        .Cells(irow + i, 6, irow + i, 7).Merge = True
+                        .Cells(irow + i, 6, irow + i, 7).Style.WrapText = True
+
+                        .Cells(irow + i, 8).Value = dtGridMenu.Rows(0)("LastUser")
+                        .Cells(irow + i, 8).Style.HorizontalAlignment = ExcelHorizontalAlignment.Left
+
+                        .Cells(irow + i, 9).Value = dtGridMenu.Rows(0)("LastDate")
+                        .Cells(irow + i, 9).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center
+                    Next
+                End If
+
+                col_CellActivity = 9
+                row_CellActivity = irow + nRow
+
+                Dim Border As ExcelRange = .Cells(irow, 1, row_CellActivity - 1, col_CellActivity)
+                Border.Style.Border.Top.Style = ExcelBorderStyle.Thin
+                Border.Style.Border.Bottom.Style = ExcelBorderStyle.Thin
+                Border.Style.Border.Right.Style = ExcelBorderStyle.Thin
+                Border.Style.Border.Left.Style = ExcelBorderStyle.Thin
+                Border.Style.Font.Size = 10
+                Border.Style.Font.Name = "Segoe UI"
+
+            End With
+        Catch ex As Exception
+            Throw New Exception(ex.Message)
+        End Try
+
     End Sub
 #End Region
 

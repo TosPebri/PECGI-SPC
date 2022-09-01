@@ -191,7 +191,7 @@ Public Class ProductionSampleVerificationList
         Dim ItemCheck_Name As String = cboItemCheck.Text
         Dim ProdDateFrom As String = Convert.ToDateTime(dtFromDate.Value).ToString("yyyy-MM-dd")
         Dim ProdDateTo As String = Convert.ToDateTime(dtToDate.Value).ToString("yyyy-MM-dd")
-        Dim Period As String = Convert.ToDateTime(dtFromDate.Value).ToString("yyyy MMM dd") & " - " & Convert.ToDateTime(dtToDate.Value).ToString("yyyy MMM dd")
+        Dim Period As String = Convert.ToDateTime(dtFromDate.Value).ToString("dd MMM yyyy") & " - " & Convert.ToDateTime(dtToDate.Value).ToString("dd MMM yyyy")
         Dim MKVerification As String = cboMK.Value
         Dim QCVerification As String = cboQC.Value
         Dim MKVerification_Name As String = cboMK.Text
@@ -639,18 +639,18 @@ Public Class ProductionSampleVerificationList
     Private Sub InsertHeader(ByVal pExl As ExcelWorksheet, cls As clsProductionSampleVerificationList)
         With pExl
             .Cells(1, 1).Value = "Product Sample Verification List"
-            .Cells(1, 1, 1, 13).Merge = True
-            .Cells(1, 1, 1, 13).Style.HorizontalAlignment = HorzAlignment.Near
-            .Cells(1, 1, 1, 13).Style.VerticalAlignment = VertAlignment.Center
-            .Cells(1, 1, 1, 13).Style.Font.Bold = True
-            .Cells(1, 1, 1, 13).Style.Font.Size = 16
-            .Cells(1, 1, 1, 13).Style.Font.Name = "Segoe UI"
+            .Cells(1, 1, 1, 16).Merge = True
+            .Cells(1, 1, 1, 16).Style.HorizontalAlignment = HorzAlignment.Near
+            .Cells(1, 1, 1, 16).Style.VerticalAlignment = VertAlignment.Center
+            .Cells(1, 1, 1, 16).Style.Font.Bold = True
+            .Cells(1, 1, 1, 16).Style.Font.Size = 16
+            .Cells(1, 1, 1, 16).Style.Font.Name = "Segoe UI"
 
             .Cells(3, 1, 3, 2).Value = "Factory Code"
             .Cells(3, 1, 3, 2).Merge = True
             .Cells(3, 3).Value = ": " & cls.FactoryName
 
-            .Cells(4, 1, 4, 2).Value = "Item Type"
+            .Cells(4, 1, 4, 2).Value = "Item Type Code"
             .Cells(4, 1, 4, 2).Merge = True
             .Cells(4, 3).Value = ": " & cls.ItemType_Name
 
@@ -658,7 +658,7 @@ Public Class ProductionSampleVerificationList
             .Cells(5, 1, 5, 2).Merge = True
             .Cells(5, 3).Value = ": " & cls.LineName
 
-            .Cells(6, 1, 6, 2).Value = "Item Check"
+            .Cells(6, 1, 6, 2).Value = "Item Check Code"
             .Cells(6, 1, 6, 2).Merge = True
             .Cells(6, 3).Value = ": " & cls.ItemCheck_Name
 

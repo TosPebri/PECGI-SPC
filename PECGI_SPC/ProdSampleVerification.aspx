@@ -122,8 +122,17 @@
 
         function Clear() {
             var today = new Date();
-            dtProdDate.SetDate(today);
-            GridMenu.PerformCallback('Clear');
+            dtProdDate.SetDate(today);      
+            cboFactory.SetValue('');
+            cboItemType.SetValue('');
+            cboLineID.SetValue('');
+            cboItemCheck.SetValue('');
+            cboShift.SetValue('');
+            cboSeq.SetValue('');
+
+            Grid.PerformCallback('Clear|');
+            GridMenu.PerformCallback('Clear|');
+            e.cancel = true;
         }
 
         function Verify() {

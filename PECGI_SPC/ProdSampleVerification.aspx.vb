@@ -100,20 +100,13 @@ Public Class ProdSampleVerification
                 dtProdDate.Value = Convert.ToDateTime(prmProdDate)
                 dtProdDate.Enabled = False
 
-                Dim ShiftCode = ""
-                If prmShifCode = "1" Then
-                    ShiftCode = "SH001"
-                ElseIf prmShifCode = "2" Then
-                    ShiftCode = "SH002"
-                End If
-
                 btnBrowse.Enabled = False
                 btnClear.Enabled = False
 
                 UpFillCombo()
 
-                Up_GridLoad(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd"), ShiftCode, prmSeqNo)
-                Up_GridLoadActivities(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd"), ShiftCode, prmSeqNo)
+                Up_GridLoad(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd"), prmShifCode, prmSeqNo)
+                Up_GridLoadActivities(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd"), prmShifCode, prmSeqNo)
 
                 'If VerifyStatus = 1 Then
                 '    btnVerification.Enabled = True
@@ -174,6 +167,32 @@ Public Class ProdSampleVerification
                 End If
                 Verify(SpcResultID)
                 Grid.JSProperties("cp_Verify") = VerifyStatus
+            ElseIf pAction = "Clear" Then
+
+                ds = clsProdSampleVerificationDB.GridLoad(GetGridData, cls)
+                Dim dt = ds.Tables(0)
+
+                With Grid
+                    .Columns.Clear()
+                    Dim Band1 As New GridViewBandColumn
+                    Band1.Caption = "Date"
+                    .Columns.Add(Band1)
+
+                    Dim Band2 As New GridViewBandColumn
+                    Band2.Caption = "Shift"
+                    Band1.Columns.Add(Band2)
+
+                    Dim ColDesc As New GridViewDataTextColumn
+                    ColDesc.FieldName = "nDesc"
+                    ColDesc.Caption = "Time"
+                    ColDesc.Width = 80
+                    ColDesc.CellStyle.HorizontalAlign = HorizontalAlign.Center
+                    Band2.Columns.Add(ColDesc)
+
+                    .DataSource = dt
+                    .DataBind()
+                End With
+
             End If
 
         Catch ex As Exception
@@ -198,9 +217,13 @@ Public Class ProdSampleVerification
 
                 Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
             ElseIf pAction = "Clear" Then
-                'dt = clsProdSampleVerificationDB.LoadGrid(cls, msgErr)
-                'GridMenu.DataSource = dt
-                'GridMenu.DataBind()          
+                ds = clsProdSampleVerificationDB.GridLoad(GetGridData_Activity, cls)
+                dt = ds.Tables(0)
+                With GridMenu
+                    .DataSource = dt
+                    .DataBind()
+                End With
+
             End If
 
         Catch ex As Exception
@@ -786,16 +809,6 @@ Public Class ProdSampleVerification
                     End If
                 Next
 
-                ds = clsProdSampleVerificationDB.GridLoad(GetGridData, cls)
-                Dim dtGrid As DataTable = ds.Tables(0)
-                If dtGrid.Rows.Count > 0 Then
-                    .KeyFieldName = "nDesc"
-                    .DataSource = dtGrid
-                    .DataBind()
-                    .Styles.CommandColumn.BackColor = Color.White
-                    .Styles.CommandColumn.ForeColor = Color.Black
-                End If
-
                 ds = clsProdSampleVerificationDB.GridLoad(GetCharSetup, cls)
                 Dim dtColBrowse As DataTable = ds.Tables(0)
                 If dtColBrowse.Rows.Count > 0 Then
@@ -814,6 +827,17 @@ Public Class ProdSampleVerification
             Else
                 show_errorGrid(MsgTypeEnum.Warning, "Data Not Found", 1)
             End If
+
+            ds = clsProdSampleVerificationDB.GridLoad(GetGridData, cls)
+            Dim dtGrid As DataTable = ds.Tables(0)
+            If dtGrid.Rows.Count > 0 Then
+                .KeyFieldName = "nDesc"
+                .DataSource = dtGrid
+                .DataBind()
+                .Styles.CommandColumn.BackColor = Color.White
+                .Styles.CommandColumn.ForeColor = Color.Black
+            End If
+
         End With
     End Sub
 
@@ -908,7 +932,7 @@ Public Class ProdSampleVerification
     Private Sub GridTitle(ByVal pExl As ExcelWorksheet, cls As clsProdSampleVerification)
         With pExl
             Try
-                .Cells(1, 1).Value = "Product Sample Verification"
+                .Cells(1, 1).Value = "Production Sample Verification"
                 .Cells(1, 1, 1, 13).Merge = True
                 .Cells(1, 1, 1, 13).Style.HorizontalAlignment = HorzAlignment.Near
                 .Cells(1, 1, 1, 13).Style.VerticalAlignment = VertAlignment.Center

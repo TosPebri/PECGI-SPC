@@ -158,7 +158,7 @@
         };
 
         function SelectionChanged(s, e) {
-            s.GetSelectedFieldValues("SPCResultID;FactoryCode;ItemTypeCode;LineCode;ItemCheckCode;ProdDate;ShiftCode;SequenceNo", GetSelectedFieldValuesCallback);
+            s.GetSelectedFieldValues("SPCResultID;FactoryCode;ItemTypeCode;LineCode;ItemCheckCode;ProdDate;Shift;SequenceNo", GetSelectedFieldValuesCallback);
         }
 
         function Verification() {
@@ -385,7 +385,8 @@
                 <dx:GridViewDataTextColumn FieldName="ItemCheckCode" Visible="false">
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="SPCResultID" Visible="false">
-
+                </dx:GridViewDataTextColumn>
+                 <dx:GridViewDataTextColumn FieldName="Shift" Visible="false">
                 </dx:GridViewDataTextColumn>
                 <dx:GridViewDataTextColumn FieldName="nMaxColor" Width="0" VisibleIndex="0">
                 </dx:GridViewDataTextColumn>

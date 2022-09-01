@@ -54,7 +54,7 @@
         }
 
         function OnInit(s, e) {
-            if (s.cp_Verify == "0") {
+            if (s.cp_Verify == "1") {
                 btnVerification.SetEnabled(true);
             }
             else {
@@ -108,8 +108,10 @@
                     toastr.options.onclick = null;
                 }
             }
-            if (s.cp_Verify == "0") {
+            if (s.cp_Verify == "1") {
                 btnVerification.SetEnabled(true);
+            } else{
+                btnVerification.SetEnabled(false);
             }
         }
 
@@ -120,8 +122,17 @@
 
         function Clear() {
             var today = new Date();
-            dtProdDate.SetDate(today);
-            GridMenu.PerformCallback('Clear');
+            dtProdDate.SetDate(today);      
+            cboFactory.SetValue('');
+            cboItemType.SetValue('');
+            cboLineID.SetValue('');
+            cboItemCheck.SetValue('');
+            cboShift.SetValue('');
+            cboSeq.SetValue('');
+
+            Grid.PerformCallback('Clear|');
+            GridMenu.PerformCallback('Clear|');
+            e.cancel = true;
         }
 
         function Verify() {
@@ -200,9 +211,56 @@
             window.open('ProductionSampleVerificationList.aspx?prm=Verify', '_self');
         }
 
+        //DECLARATION FILL COMBO SEL//
+        var LineSel = "3";
+        var ItemCheckSel = "4";
+        var ShiftSel = "5";
+
+        function GridFactoryChange() {
+            var FactoryCode = GridMenu.GetEditor("FactoryCode").GetValue();
+            var ItemTypeCode = GridMenu.GetEditor("ItemTypeCode").GetValue();
+            var LineCode = GridMenu.GetEditor("LineCode").GetValue();
+            var ItemCheckCode = GridMenu.GetEditor("ItemCheckCode").GetValue();
+
+
+            GridMenu.GetEditor("LineCode").PerformCallback("LineCode|" + LineSel + "|" + FactoryCode);
+            GridMenu.GetEditor("ItemCheckCode").PerformCallback("ItemCheckCode|" + ItemCheckSel + "|" + FactoryCode + "|" + ItemTypeCode + "|" + LineCode);
+            GridMenu.GetEditor("ShiftCode").PerformCallback("ShiftCode|" + ShiftSel + "|"+ FactoryCode + "|" + ItemTypeCode + "|" + LineCode + "|" + ItemCheckCode );
+        }
+
+        function GridItemTypeChange() {
+            var FactoryCode = GridMenu.GetEditor("FactoryCode").GetValue();
+            var ItemTypeCode = GridMenu.GetEditor("ItemTypeCode").GetValue();
+            var LineCode = GridMenu.GetEditor("LineCode").GetValue();
+            var ItemCheckCode = GridMenu.GetEditor("ItemCheckCode").GetValue();
+
+            GridMenu.GetEditor("ItemCheckCode").PerformCallback("ItemCheckCode|" + ItemCheckSel + "|" + FactoryCode + "|" + ItemTypeCode + "|" + LineCode);
+            GridMenu.GetEditor("ShiftCode").PerformCallback("ShiftCode|" + ShiftSel + "|"  + FactoryCode + "|" + ItemTypeCode + "|" + LineCode + "|" + ItemCheckCode);
+        }
+
+
+        function GridLineChange() {
+            var FactoryCode = GridMenu.GetEditor("FactoryCode").GetValue();
+            var ItemTypeCode = GridMenu.GetEditor("ItemTypeCode").GetValue();
+            var LineCode = GridMenu.GetEditor("LineCode").GetValue();
+            var ItemCheckCode = GridMenu.GetEditor("ItemCheckCode").GetValue();
+
+            GridMenu.GetEditor("ItemCheckCode").PerformCallback("ItemCheckCode|" + ItemCheckSel + "|"  + FactoryCode + "|" + ItemTypeCode + "|" + LineCode);
+            GridMenu.GetEditor("ShiftCode").PerformCallback("ShiftCode|" + ShiftSel + "|" + FactoryCode + "|" + ItemTypeCode + "|" + LineCode + "|" + ItemCheckCode);
+        }
+
+        function GridItemCheckChange() {
+            var FactoryCode = GridMenu.GetEditor("FactoryCode").GetValue();
+            var ItemTypeCode = GridMenu.GetEditor("ItemTypeCode").GetValue();
+            var LineCode = GridMenu.GetEditor("LineCode").GetValue();
+            var ItemCheckCode = GridMenu.GetEditor("ItemCheckCode").GetValue();
+
+            GridMenu.GetEditor("ShiftCode").PerformCallback("ShiftCode|" + ShiftSel + "|" + FactoryCode + "|" + ItemTypeCode + "|" + LineCode + "|" + ItemCheckCode);
+        }
+
         function OnBatchEditStartEditing(s, e) {
             var rowIndex = e.visibleIndex;
-            var levelno = grid.batchEditApi.GetCellValue(rowIndex, 'View');
+            var levelno = Grid.batchEditApi.GetCellValue(rowIndex, 'View');
             if (levelno == 'View') {
                 window.open('ProdSampleVerification.aspx?', '_self');
             }
@@ -397,7 +455,6 @@
                 <td>
                     <dx:ASPxButton ID="btnExcel" runat="server" AutoPostBack="False" ClientInstanceName="btnExcel"
                         Font-Names="Segoe UI" Font-Size="10pt" Text="Excel" Theme="Office2010Silver" Width="100px">
-                        <%--  <ClientSideEvents Click="Excel" />--%>
                     </dx:ASPxButton>
                 </td>
             </tr>
@@ -457,7 +514,6 @@
                         </HeaderStyle>
                     </dx:GridViewCommandColumn>
 
-
                     <dx:GridViewDataTextColumn Caption="Acitivity ID" VisibleIndex="1" Width="10px"
                         FieldName="ActivityID" Visible="false">
                         <PropertiesTextEdit ClientInstanceName="ActivityID" Width="60px">
@@ -467,23 +523,42 @@
                         </CellStyle>
                     </dx:GridViewDataTextColumn>
 
-                    <dx:GridViewDataTextColumn Caption="Date" VisibleIndex="2" Width="100px"
-                        FieldName="ProdDate">
-                        <PropertiesTextEdit ClientInstanceName="ProdDate">
-                        </PropertiesTextEdit>
-                        <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                        <CellStyle HorizontalAlign="Center" VerticalAlign="Middle">
-                        </CellStyle>
-                    </dx:GridViewDataTextColumn>
+                    <dx:GridViewDataDateColumn Caption="Date" FieldName="ProdDate"
+                            Width="100px" Settings-AutoFilterCondition="Contains">
+                            <PropertiesDateEdit DisplayFormatString="dd MMM yyyy" EditFormat="Custom" EditFormatString="dd MMM yyyy" MaxDate="9999-12-31" MinDate="2000-12-01">
+                                <ButtonStyle Width="5px" Paddings-Padding="2px"/>
+                                <CalendarProperties>
+                                    <HeaderStyle Font-Size="12pt" Paddings-Padding="5px" />
+                                    <DayStyle Font-Size="9pt" Paddings-Padding="5px" />
+                                    <WeekNumberStyle Font-Size="9pt" Paddings-Padding="5px"></WeekNumberStyle>
+                                    <FooterStyle Font-Size="9pt" Paddings-Padding="5px" />
+                                    <ButtonStyle Font-Size="9pt" Paddings-Padding="5px"></ButtonStyle>
+                                </CalendarProperties>
+                            </PropertiesDateEdit>
+                            <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                            <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                        </dx:GridViewDataDateColumn>
 
-                    <dx:GridViewDataTextColumn Caption="PIC" VisibleIndex="3" Width="120px"
-                        FieldName="PIC">
-                        <PropertiesTextEdit ClientInstanceName="PIC">
-                        </PropertiesTextEdit>
-                        <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                        <CellStyle HorizontalAlign="Left" VerticalAlign="Middle">
-                        </CellStyle>
-                    </dx:GridViewDataTextColumn>
+                      <dx:GridViewDataComboBoxColumn Caption="PIC" FieldName="PIC" VisibleIndex="3">
+                        <PropertiesComboBox DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                            DisplayFormatInEditMode="true" Width="170px" TextField="CODE"
+                            ValueField="CODENAME" ClientInstanceName="PIC">
+                            <ItemStyle Height="10px" Paddings-Padding="4px">
+                                <Paddings Padding="4px"></Paddings>
+                            </ItemStyle>
+                            <ButtonStyle Width="5px" Paddings-Padding="2px">
+                                <Paddings Padding="2px"></Paddings>
+                            </ButtonStyle>
+                        </PropertiesComboBox>
+                        <Settings AutoFilterCondition="Contains"></Settings>
+                        <FilterCellStyle Paddings-PaddingRight="4px">
+                            <Paddings PaddingRight="4px"></Paddings>
+                        </FilterCellStyle>
+                        <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                            <Paddings PaddingLeft="5px"></Paddings>
+                        </HeaderStyle>
+                        <CellStyle HorizontalAlign="Left" VerticalAlign="Middle" />
+                    </dx:GridViewDataComboBoxColumn>
 
                     <dx:GridViewDataTextColumn Caption="Action" VisibleIndex="4" Width="200px"
                         FieldName="Action">
@@ -544,9 +619,9 @@
                     </dx:GridViewDataTextColumn>
 
                     <dx:GridViewDataComboBoxColumn Caption="" FieldName="FactoryCode" Visible="false">
-                        <PropertiesComboBox DropDownStyle="DropDownList" IncrementalFilteringMode="Contains" 
-                            DisplayFormatInEditMode="true" Width="95px" TextField="CODE" 
-                            ValueField="CODENAME" ClientInstanceName="FactoryCode">
+                        <PropertiesComboBox DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                            DisplayFormatInEditMode="true" Width="170px" TextField="CODENAME"
+                            ValueField="CODE" ClientInstanceName="FactoryCode">
                             <ClientSideEvents ValueChanged="GridFactoryChange" />
                             <ItemStyle Height="10px" Paddings-Padding="4px">
                                 <Paddings Padding="4px"></Paddings>
@@ -565,10 +640,10 @@
                         <CellStyle HorizontalAlign="Left" VerticalAlign="Middle" />
                     </dx:GridViewDataComboBoxColumn>
 
-                     <dx:GridViewDataComboBoxColumn Caption="" FieldName="ItemTypeCode" Visible="false">
-                        <PropertiesComboBox DropDownStyle="DropDownList" IncrementalFilteringMode="Contains" 
-                            DisplayFormatInEditMode="true" Width="95px" TextField="CODE" 
-                            ValueField="CODENAME" ClientInstanceName="ItemTypeCode">
+                    <dx:GridViewDataComboBoxColumn Caption="" FieldName="ItemTypeCode" Visible="false">
+                        <PropertiesComboBox DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                            DisplayFormatInEditMode="true" Width="170px" TextField="CODENAME"
+                            ValueField="CODE" ClientInstanceName="ItemTypeCode">
                             <ClientSideEvents ValueChanged="GridItemTypeChange" />
                             <ItemStyle Height="10px" Paddings-Padding="4px">
                                 <Paddings Padding="4px"></Paddings>
@@ -587,10 +662,10 @@
                         <CellStyle HorizontalAlign="Left" VerticalAlign="Middle" />
                     </dx:GridViewDataComboBoxColumn>
 
-                     <dx:GridViewDataComboBoxColumn Caption="" FieldName="LineCode" Visible="false">
-                        <PropertiesComboBox DropDownStyle="DropDownList" IncrementalFilteringMode="Contains" 
-                            DisplayFormatInEditMode="true" Width="95px" TextField="CODE" 
-                            ValueField="CODENAME" ClientInstanceName="LineCode">
+                    <dx:GridViewDataComboBoxColumn Caption="" FieldName="LineCode" Visible="false">
+                        <PropertiesComboBox DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                            DisplayFormatInEditMode="true" Width="170px" TextField="CODENAME"
+                            ValueField="CODE" ClientInstanceName="LineCode">
                             <ClientSideEvents ValueChanged="GridLineChange" />
                             <ItemStyle Height="10px" Paddings-Padding="4px">
                                 <Paddings Padding="4px"></Paddings>
@@ -609,10 +684,10 @@
                         <CellStyle HorizontalAlign="Left" VerticalAlign="Middle" />
                     </dx:GridViewDataComboBoxColumn>
 
-                     <dx:GridViewDataComboBoxColumn Caption="" FieldName="ItemCheckCode" Visible="false">
-                        <PropertiesComboBox DropDownStyle="DropDownList" IncrementalFilteringMode="Contains" 
-                            DisplayFormatInEditMode="true" Width="95px" TextField="CODE" 
-                            ValueField="CODENAME" ClientInstanceName="ItemCheckCode">
+                    <dx:GridViewDataComboBoxColumn Caption="" FieldName="ItemCheckCode" Visible="false">
+                        <PropertiesComboBox DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                            DisplayFormatInEditMode="true" Width="170px" TextField="CODENAME"
+                            ValueField="CODE" ClientInstanceName="ItemCheckCode">
                             <ClientSideEvents ValueChanged="GridItemCheckChange" />
                             <ItemStyle Height="10px" Paddings-Padding="4px">
                                 <Paddings Padding="4px"></Paddings>
@@ -631,11 +706,10 @@
                         <CellStyle HorizontalAlign="Left" VerticalAlign="Middle" />
                     </dx:GridViewDataComboBoxColumn>
 
-                     <dx:GridViewDataComboBoxColumn Caption="" FieldName="ShiftCode" Visible="false">
-                        <PropertiesComboBox DropDownStyle="DropDownList" IncrementalFilteringMode="Contains" 
-                            DisplayFormatInEditMode="true" Width="95px" TextField="CODE" 
-                            ValueField="CODENAME" ClientInstanceName="ShiftCode">
-                            <ClientSideEvents ValueChanged="GridShiftChange" />
+                    <dx:GridViewDataComboBoxColumn Caption="" FieldName="ShiftCode" Visible="false">
+                        <PropertiesComboBox DropDownStyle="DropDownList" IncrementalFilteringMode="Contains"
+                            DisplayFormatInEditMode="true" Width="80px" TextField="CODENAME"
+                            ValueField="CODE" ClientInstanceName="ShiftCode">
                             <ItemStyle Height="10px" Paddings-Padding="4px">
                                 <Paddings Padding="4px"></Paddings>
                             </ItemStyle>
@@ -684,15 +758,71 @@
                                 <table align="center">
                                     <tr style="height: 30px">
                                         <td>
-                                            <dx:ASPxLabel ID="lblAction" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text=" Action" Width="60px"></dx:ASPxLabel>
+                                            <dx:ASPxLabel ID="lblFactoryCode" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Factory" Width="80px"></dx:ASPxLabel>
                                         </td>
                                         <td>
-                                            <dx:ASPxGridViewTemplateReplacement ID="editAction" ReplacementType="EditFormCellEditor"
-                                                runat="server" ColumnID="Action"></dx:ASPxGridViewTemplateReplacement>
+                                            <dx:ASPxGridViewTemplateReplacement ID="EditFactoryCode" ReplacementType="EditFormCellEditor"
+                                                runat="server" ColumnID="FactoryCode"></dx:ASPxGridViewTemplateReplacement>
                                         </td>
                                         <td style="visibility: hidden">
-                                            <dx:ASPxGridViewTemplateReplacement ID="editActivityID" ReplacementType="EditFormCellEditor"
+                                            <dx:ASPxGridViewTemplateReplacement ID="ASPxGridViewTemplateReplacement2" ReplacementType="EditFormCellEditor"
                                                 runat="server" ColumnID="ActivityID"></dx:ASPxGridViewTemplateReplacement>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="height: 30px">
+                                        <td>Item Type</td>
+                                        <td>
+                                            <dx:ASPxGridViewTemplateReplacement ID="EditItemTypeCode" ReplacementType="EditFormCellEditor"
+                                                runat="server" ColumnID="ItemTypeCode"></dx:ASPxGridViewTemplateReplacement>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="height: 30px">
+                                        <td>Line</td>
+                                        <td>
+                                            <dx:ASPxGridViewTemplateReplacement ID="EditLineCode" ReplacementType="EditFormCellEditor"
+                                                runat="server" ColumnID="LineCode"></dx:ASPxGridViewTemplateReplacement>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="height: 30px">
+                                        <td>Item Check</td>
+                                        <td>
+                                            <dx:ASPxGridViewTemplateReplacement ID="EditItemCheckCode" ReplacementType="EditFormCellEditor"
+                                                runat="server" ColumnID="ItemCheckCode"></dx:ASPxGridViewTemplateReplacement>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="height: 30px">
+                                        <td>Shift</td>
+                                        <td>
+                                            <dx:ASPxGridViewTemplateReplacement ID="EditShiftCode" ReplacementType="EditFormCellEditor"
+                                                runat="server" ColumnID="ShiftCode"></dx:ASPxGridViewTemplateReplacement>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="height: 30px">
+                                        <td>Prod Date</td>
+                                        <td>
+                                            <dx:ASPxGridViewTemplateReplacement ID="EditProdDate" ReplacementType="EditFormCellEditor"
+                                                runat="server" ColumnID="ProdDate"></dx:ASPxGridViewTemplateReplacement>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="height: 30px">
+                                        <td>PIC </td>
+                                        <td>
+                                            <dx:ASPxGridViewTemplateReplacement ID="EditPIC" ReplacementType="EditFormCellEditor"
+                                                runat="server" ColumnID="PIC"></dx:ASPxGridViewTemplateReplacement>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="height: 30px">
+                                        <td>Action</td>
+                                        <td>
+                                            <dx:ASPxGridViewTemplateReplacement ID="EditAction" ReplacementType="EditFormCellEditor"
+                                                runat="server" ColumnID="Action"></dx:ASPxGridViewTemplateReplacement>
                                         </td>
                                     </tr>
 
@@ -700,7 +830,7 @@
                                         <td>Remark</td>
                                         <td>
                                             <dx:LayoutItemNestedControlContainer>
-                                                <dx:ASPxGridViewTemplateReplacement ID="editRemark" ReplacementType="EditFormCellEditor"
+                                                <dx:ASPxGridViewTemplateReplacement ID="EditRemark" ReplacementType="EditFormCellEditor"
                                                     runat="server" ColumnID="Remark"></dx:ASPxGridViewTemplateReplacement>
                                                 <dx:LayoutItemNestedControlContainer>
                                         </td>
@@ -710,7 +840,7 @@
                                         <td>Result</td>
                                         <td>
                                             <dx:LayoutItemNestedControlContainer>
-                                                <dx:ASPxGridViewTemplateReplacement ID="editResult" ReplacementType="EditFormCellEditor"
+                                                <dx:ASPxGridViewTemplateReplacement ID="EditResult" ReplacementType="EditFormCellEditor"
                                                     runat="server" ColumnID="Result"></dx:ASPxGridViewTemplateReplacement>
                                                 <dx:LayoutItemNestedControlContainer>
                                         </td>

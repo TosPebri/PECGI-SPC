@@ -17,11 +17,11 @@ Public Class clsXRChartDB
             Dim q As String = "sp_SPC_XRChart"
             Dim cmd As New SqlCommand(q, Cn)
             cmd.CommandType = CommandType.StoredProcedure
-            'cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
-            'cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
-            'cmd.Parameters.AddWithValue("Line", Line)
-            'cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
-            'cmd.Parameters.AddWithValue("ProdDate", ProdDate)
+            cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
+            cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
+            cmd.Parameters.AddWithValue("Line", Line)
+            cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
+            cmd.Parameters.AddWithValue("ProdDate", ProdDate)
             Dim da As New SqlDataAdapter(cmd)
             Dim dt As New DataTable
             da.Fill(dt)

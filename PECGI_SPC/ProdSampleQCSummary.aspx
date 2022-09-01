@@ -356,7 +356,7 @@
 
                         <tr>
                             <td style="width: 80px;" align="center" class="align">
-                                <dx:ASPxLabel ID="ASPxLabel16" runat="server" Text="Incomplete" CssClass="text" />
+                                <dx:ASPxLabel ID="ASPxLabel16" runat="server" Text="Delay" CssClass="text" />
                             </td>
                             <td style="width: 33px;" align="center" class="align">
                                 <dx:ASPxLabel ID="ASPxLabel17" runat="server" Text=":" CssClass="text" />
@@ -436,7 +436,7 @@
                     <dx:ASPxLabel ID="ASPxLabel15" runat="server" Text=" "/>
                 </td>
                 <td align="center" class="align" style="width:0.5%;padding-left:0.5%">
-                    <dx:ASPxLabel ID="ASPxLabel8" runat="server" Text="Not Yet Input" CssClass="text" />
+                    <dx:ASPxLabel ID="ASPxLabel8" runat="server" Text="Delay" CssClass="text" />
                 </td>
 
                 <td style="background-color:red; width:0.2%; text-align:center; color:#fff">

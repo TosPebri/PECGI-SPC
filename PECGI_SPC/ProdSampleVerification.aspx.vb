@@ -490,12 +490,16 @@ Public Class ProdSampleVerification
             .Remark = e.NewValues("Remark") & "",
             .User = pUser}
         Try
-            Dim Insert = clsProdSampleVerificationDB.Activity_Insert("CREATE", data)
-            If Insert = True Then
+            Dim Msg = clsProdSampleVerificationDB.Activity_Insert("CREATE", data)
+            If Msg = "" Then
                 show_error(MsgTypeEnum.Success, "Save data successfully!", 1)
                 GridMenu.CancelEdit()
-                'Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+                Up_GridLoadActivities(data.FactoryCode, data.ItemType_Code, data.LineCode, data.ItemCheck_Code, e.NewValues("ProdDate"), data.ShiftCode, "")
                 Return
+            Else
+                show_error(MsgTypeEnum.Warning, Msg, 1)
+                GridMenu.CancelEdit()
+                Up_GridLoadActivities(data.FactoryCode, data.ItemType_Code, data.LineCode, data.ItemCheck_Code, e.NewValues("ProdDate"), data.ShiftCode, "")
             End If
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
@@ -503,29 +507,31 @@ Public Class ProdSampleVerification
     End Sub
     Protected Sub GridMenu_RowUpdating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataUpdatingEventArgs) Handles GridMenu.RowUpdating
         e.Cancel = True
-        'Dim Factory As String = HideValue.Get("FactoryCode")
-        'Dim Itemtype As String = HideValue.Get("ItemType_Code")
-        'Dim Line As String = HideValue.Get("LineCode")
-        'Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
-        'Dim ProdDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
-        'Dim Shift As String = HideValue.Get("ShiftCode")
-        'Dim Seq As String = HideValue.Get("Seq")
-
         Dim data As New clsProdSampleVerification With {
+             .FactoryCode = e.NewValues("FactoryCode") & "",
+            .ItemType_Code = e.NewValues("ItemTypeCode") & "",
+            .LineCode = e.NewValues("LineCode") & "",
+            .ItemCheck_Code = e.NewValues("ItemCheckCode") & "",
+            .ProdDate = Convert.ToDateTime(e.NewValues("ProdDate")).ToString("yyyy-MM-dd"),
             .Time = Convert.ToDateTime(e.NewValues("Time")).ToString("HH:mm"),
+            .ShiftCode = e.NewValues("ShiftCode") & "",
+            .Action = e.NewValues("Action") & "",
             .PIC = e.NewValues("PIC") & "",
             .ActivityID = e.NewValues("ActivityID") & "",
-            .Action = e.NewValues("Action") & "",
             .Result = e.NewValues("Result") & "",
             .Remark = e.NewValues("Remark") & "",
             .User = pUser}
         Try
-            Dim Update = clsProdSampleVerificationDB.Activity_Insert("UPDATE", data)
-            If Update = True Then
+            Dim Msg = clsProdSampleVerificationDB.Activity_Insert("UPDATE", data)
+            If Msg = "" Then
                 show_error(MsgTypeEnum.Success, "Update data successfully!", 1)
                 GridMenu.CancelEdit()
-                'Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+                Up_GridLoadActivities(data.FactoryCode, data.ItemType_Code, data.LineCode, data.ItemCheck_Code, e.NewValues("ProdDate"), data.ShiftCode, "")
                 Return
+            Else
+                show_error(MsgTypeEnum.Warning, Msg, 1)
+                GridMenu.CancelEdit()
+                Up_GridLoadActivities(data.FactoryCode, data.ItemType_Code, data.LineCode, data.ItemCheck_Code, e.NewValues("ProdDate"), data.ShiftCode, "")
             End If
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
@@ -544,10 +550,16 @@ Public Class ProdSampleVerification
         Dim data As New clsProdSampleVerification With {
             .ActivityID = e.Values("ActivityID")}
         Try
-            Dim Delete = clsProdSampleVerificationDB.Activity_Insert("DELETE", data)
-            show_error(MsgTypeEnum.Success, "Delete data successfully!", 1)
-            GridMenu.CancelEdit()
-            Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+            Dim Msg = clsProdSampleVerificationDB.Activity_Insert("DELETE", data)
+            If Msg = "" Then
+                show_error(MsgTypeEnum.Success, "Delete data successfully!", 1)
+                GridMenu.CancelEdit()
+                Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+            Else
+                show_error(MsgTypeEnum.Warning, Msg, 1)
+                GridMenu.CancelEdit()
+                Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+            End If
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try

@@ -489,7 +489,7 @@
             </Styles>
         </dx:ASPxGridView>
     </div>
-    <div style="height: 26px; padding-top: 30px; padding-bottom: 5px; padding-left: 360px" align="Left">
+    <div style="height: 26px; padding-top: 30px; padding-bottom: 5px;" align="center">
         <dx:ASPxLabel ID="lblGridMenu" runat="server" Text="ACTIVITY MONITORING"
             Font-Names="Segoe UI" Font-Size="12pt" Font-Bold="True"
             Font-Underline="True">

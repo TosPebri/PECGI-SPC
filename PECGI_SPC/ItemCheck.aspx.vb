@@ -14,6 +14,7 @@ Public Class ItemCheck
     Public AuthInsert As Boolean = False
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
+    Public AuthAccess As Boolean = False
 #End Region
 
 #Region "Events"
@@ -26,12 +27,32 @@ Public Class ItemCheck
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         sGlobal.getMenu("A010")
         Master.SiteTitle = sGlobal.menuName
+
+        'pUser = Session("user")
+        'AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "A010")
+        'show_error(MsgTypeEnum.Info, "", 0)
+        'If AuthUpdate = False Then
+        '    Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
+        '    commandColumn.Visible = False
+        'End If
+
         pUser = Session("user")
+        AuthAccess = sGlobal.Auth_UserAccess(pUser, "A010")
+        If AuthAccess = False Then
+            Response.Redirect("~/Main.aspx")
+        End If
+
         AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "A010")
-        show_error(MsgTypeEnum.Info, "", 0)
         If AuthUpdate = False Then
             Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
-            commandColumn.Visible = False
+            commandColumn.ShowEditButton = False
+            commandColumn.ShowNewButtonInHeader = False
+        End If
+
+        AuthDelete = sGlobal.Auth_UserDelete(pUser, "A010")
+        If AuthDelete = False Then
+            Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
+            commandColumn.ShowDeleteButton = False
         End If
     End Sub
 
@@ -44,7 +65,7 @@ Public Class ItemCheck
     Protected Sub Grid_RowInserting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles Grid.RowInserting
         e.Cancel = True
         Dim pErr As String = ""
-        Dim User As New ClsSPCItemCheckMaster With {
+        Dim ItemCheck As New ClsSPCItemCheckMaster With {
             .ItemCheckCode = e.NewValues("ItemCheckCode"),
             .ItemCheck = e.NewValues("ItemCheck"),
             .UnitMeasurement = e.NewValues("UnitMeasurement"),
@@ -54,12 +75,15 @@ Public Class ItemCheck
             .CreateUser = pUser
         }
         Try
-            Dim CheckUser As ClsSPCItemCheckMaster = ClsSPCItemCheckMasterDB.GetData(User.ItemCheckCode)
-            If CheckUser IsNot Nothing Then
-                show_error(MsgTypeEnum.ErrorMsg, "Can't insert data, item code '" + User.ItemCheckCode + "' already exists!", 1)
+            Dim CheckItemMaster As ClsSPCItemCheckMaster = ClsSPCItemCheckMasterDB.GetData(ItemCheck.ItemCheckCode)
+            If CheckItemMaster IsNot Nothing Then
+                show_error(MsgTypeEnum.ErrorMsg, "Can't insert data, item code '" + ItemCheck.ItemCheckCode + "' already exists!", 1)
                 Return
             End If
-            ClsSPCItemCheckMasterDB.Insert(User)
+            If IsNothing(ItemCheck.Description) Then
+                ItemCheck.Description = ""
+            End If
+            ClsSPCItemCheckMasterDB.Insert(ItemCheck)
             Grid.CancelEdit()
             up_GridLoad()
             show_error(MsgTypeEnum.Success, "Save data successfully!", 1)
@@ -79,6 +103,9 @@ Public Class ItemCheck
             .UpdateUser = pUser
         }
         Try
+            If IsNothing(User.Description) Then
+                User.Description = ""
+            End If
             ClsSPCItemCheckMasterDB.Update(User)
             Grid.CancelEdit()
             up_GridLoad()
@@ -130,6 +157,28 @@ Public Class ItemCheck
     End Sub
 
     Protected Sub Grid_RowValidating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs) Handles Grid.RowValidating
+        Dim GridItemCheck As GridViewDataColumn
+
+        GridItemCheck = Grid.DataColumns("ItemCheckCode")
+        If IsNothing(e.NewValues("ItemCheckCode")) OrElse e.NewValues("ItemCheckCode").ToString.Trim = "" Then
+            e.Errors(GridItemCheck) = "Code Must Be Filled !"
+            show_error(MsgTypeEnum.ErrorMsg, "Code Must Be Filled !", 1)
+            Return
+        End If
+
+        GridItemCheck = Grid.DataColumns("ItemCheck")
+        If IsNothing(e.NewValues("ItemCheck")) OrElse e.NewValues("ItemCheck").ToString.Trim = "" Then
+            e.Errors(GridItemCheck) = "Item Check Must Be Filled !"
+            show_error(MsgTypeEnum.ErrorMsg, "Item Check Must Be Filled !", 1)
+            Return
+        End If
+
+        GridItemCheck = Grid.DataColumns("UnitMeasurement")
+        If IsNothing(e.NewValues("UnitMeasurement")) OrElse e.NewValues("UnitMeasurement").ToString.Trim = "" Then
+            e.Errors(GridItemCheck) = "Measuring Unit Must Be Filled !"
+            show_error(MsgTypeEnum.ErrorMsg, "Measuring Unit Must Be Filled !", 1)
+            Return
+        End If
     End Sub
 
     Protected Sub Grid_StartRowEditing(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxStartRowEditingEventArgs) Handles Grid.StartRowEditing

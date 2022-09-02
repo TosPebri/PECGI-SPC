@@ -11,6 +11,7 @@ Public Class ItemCheckByBattery
 
 #Region "Declare"
     Dim pUser As String = ""
+    Public AuthAccess As Boolean = False
     Public AuthInsert As Boolean = False
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
@@ -20,37 +21,54 @@ Public Class ItemCheckByBattery
 #Region "Events"
     Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
         If Not Page.IsPostBack Then
-            'up_GridLoad()
-            GetComboBoxData()
+            If Not Page.IsPostBack Then
+                GetFactoryCode()
+            End If
         End If
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         sGlobal.getMenu("A020")
         Master.SiteTitle = sGlobal.menuName
+
         pUser = Session("user")
+        AuthAccess = sGlobal.Auth_UserAccess(pUser, "A020")
+        If AuthAccess = False Then
+            Response.Redirect("~/Main.aspx")
+        End If
+
         AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "A020")
-        show_error(MsgTypeEnum.Info, "", 0)
         If AuthUpdate = False Then
             Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
-            commandColumn.Visible = False
+            commandColumn.ShowEditButton = False
+            commandColumn.ShowNewButtonInHeader = False
+        End If
+
+        AuthDelete = sGlobal.Auth_UserDelete(pUser, "A020")
+        If AuthDelete = False Then
+            Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
+            commandColumn.ShowDeleteButton = False
         End If
     End Sub
 
     Protected Sub Grid_AfterPerformCallback(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles Grid.AfterPerformCallback
         If e.CallbackName <> "CANCELEDIT" Then
-            up_GridLoad(cboFactory.Value, cboTypeCode.Text, cboMachineProccess.Text)
+            up_GridLoad(cboFactory.Value, cboType.Text, cboLine.Text)
         End If
     End Sub
+    Private Sub GetFactoryCode()
+        cboFactory.DataSource = clsFactoryDB.GetList
+        cboFactory.DataBind()
 
+    End Sub
     Protected Sub Grid_RowInserting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles Grid.RowInserting
         e.Cancel = True
         Dim pErr As String = ""
-        Dim User As New ClsSPCItemCheckByType With {
+        Dim BatteryType As New ClsSPCItemCheckByType With {
             .FactoryCode = e.NewValues("FactoryCode"),
             .FactoryName = cboFactory.Text,
-            .ItemTypeCode = e.NewValues("ItemTypeName"),
-            .LineCode = e.NewValues("LineCode"),
+            .ItemTypeCode = e.NewValues("ItemTypeCode"),
+            .LineCode = e.NewValues("LineName"),
             .ItemCheck = e.NewValues("ItemCheck"),
             .FrequencyCode = e.NewValues("FrequencyCode"),
             .RegistrationNo = e.NewValues("RegistrationNo"),
@@ -63,9 +81,14 @@ Public Class ItemCheckByBattery
             .CreateUser = pUser
         }
         Try
+            Dim CheckDataBattery As ClsSPCItemCheckByType = ClsSPCItemCheckByTypeDB.GetData(BatteryType.FactoryCode, BatteryType.ItemTypeCode, BatteryType.LineCode, BatteryType.ItemCheck)
+            If CheckDataBattery IsNot Nothing Then
+                show_error(MsgTypeEnum.ErrorMsg, "Can't insert data, Battery type '" + CheckDataBattery.ItemTypeName + "' for item check '" + BatteryType.ItemCheck + "' on machine '" + BatteryType.LineCode + "' in factory '" + BatteryType.FactoryName + "' is already registered", 1)
+                Return
+            End If
             ClsSPCItemCheckByTypeDB.Insert(User)
             Grid.CancelEdit()
-            up_GridLoad(cboFactory.Value, cboTypeCode.Text, cboMachineProccess.Text)
+            up_GridLoad(cboFactory.Value, cboType.Text, cboLine.Text)
             show_error(MsgTypeEnum.Success, "Save data successfully!", 1)
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
@@ -77,7 +100,7 @@ Public Class ItemCheckByBattery
         Dim pErr As String = ""
         Dim LineCode As String = ""
         Dim ItemCheck As String = ""
-        LineCode = e.NewValues("LineCode")
+        LineCode = e.NewValues("LineName")
         ItemCheck = e.NewValues("ItemCheck")
         Dim User As New ClsSPCItemCheckByType With {
             .FactoryCode = e.NewValues("FactoryCode"),
@@ -97,7 +120,7 @@ Public Class ItemCheckByBattery
         Try
             ClsSPCItemCheckByTypeDB.Update(User)
             Grid.CancelEdit()
-            up_GridLoad(cboFactory.Value, cboTypeCode.Text, cboMachineProccess.Text)
+            up_GridLoad(cboFactory.Value, cboType.Text, cboLine.Text)
             show_error(MsgTypeEnum.Success, "Update data successfully!", 1)
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
@@ -109,15 +132,20 @@ Public Class ItemCheckByBattery
         Try
             Dim FactoryCode As String = e.Values("FactoryCode")
             Dim ItemTypeCode As String = e.Values("ItemTypeCode")
-            Dim LineCode As String = e.Values("LineCode")
+            Dim LineCode As String = e.Values("LineName")
             Dim ItemCheck As String = e.Values("ItemCheck")
 
             LineCode = LineCode.Substring(0, LineCode.IndexOf(" -"))
             ItemCheck = ItemCheck.Substring(0, ItemCheck.IndexOf(" -"))
 
+            Dim ValidationDelete As ClsSPCItemCheckByType = ClsSPCItemCheckByTypeDB.ValidationDelete(FactoryCode, ItemTypeCode, LineCode, ItemCheck)
+            If ValidationDelete IsNot Nothing Then
+                show_error(MsgTypeEnum.ErrorMsg, "Can't Delete, item check '" + ItemCheck + "' On machine '" + LineCode + "' has been used in Production Sample Input", 1)
+                Return
+            End If
             ClsSPCItemCheckByTypeDB.Delete(FactoryCode, ItemTypeCode, LineCode, ItemCheck)
             Grid.CancelEdit()
-            up_GridLoad(cboFactory.Value, cboTypeCode.Text, cboMachineProccess.Text)
+            up_GridLoad(cboFactory.Value, cboType.Text, cboLine.Text)
             show_error(MsgTypeEnum.Success, "Delete data successfully!", 1)
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
@@ -132,7 +160,7 @@ Public Class ItemCheckByBattery
 
     Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles Grid.CellEditorInitialize
         If Not Grid.IsNewRowEditing Then
-            If e.Column.FieldName = "ItemCheckCode" Or e.Column.FieldName = "FactoryCode" Or e.Column.FieldName = "ItemTypeCode" Or e.Column.FieldName = "LineCode" Or e.Column.FieldName = "ItemTypeName" Or e.Column.FieldName = "ItemCheck" Then
+            If e.Column.FieldName = "ItemCheckCode" Or e.Column.FieldName = "FactoryCode" Or e.Column.FieldName = "ItemTypeCode" Or e.Column.FieldName = "LineName" Or e.Column.FieldName = "ItemTypeCode" Or e.Column.FieldName = "ItemCheck" Then
                 e.Editor.ReadOnly = True
                 e.Editor.ForeColor = Color.Silver
                 e.Editor.Visible = True
@@ -143,13 +171,67 @@ Public Class ItemCheckByBattery
             If e.Column.FieldName = "FactoryCode" Then
                 e.Editor.Value = cboFactory.Value
             End If
-            If e.Column.FieldName = "ItemTypeCode" Then
-                e.Editor.Visible = False
-                e.Editor.ForeColor = Color.Silver
+            'If e.Column.FieldName = "ItemTypeCode" Then
+            '    e.Editor.Visible = True
+            '    e.Editor.ForeColor = Color.Silver
+            'End If
+            If e.Column.FieldName = "ActiveStatus" Then
+                TryCast(e.Editor, ASPxCheckBox).Checked = True
             End If
         End If
     End Sub
     Protected Sub Grid_RowValidating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs) Handles Grid.RowValidating
+        Dim GridColumn As New GridViewDataColumn
+
+        GridColumn = Grid.DataColumns("FactoryCode")
+        If IsNothing(e.NewValues("FactoryCode")) OrElse e.NewValues("FactoryCode").ToString.Trim = "" Then
+            e.Errors(GridColumn) = "Factory Name Must Be Filled !"
+            show_error(MsgTypeEnum.ErrorMsg, "Factory Name Must Be Filled !", 1)
+            Return
+        End If
+
+        GridColumn = Grid.DataColumns("ItemTypeCode")
+        If IsNothing(e.NewValues("ItemTypeCode")) OrElse e.NewValues("ItemTypeCode").ToString.Trim = "" Then
+            e.Errors(GridColumn) = "Type Name Must Be Filled !"
+            show_error(MsgTypeEnum.ErrorMsg, "Type Name Must Be Filled !", 1)
+            Return
+        End If
+
+        GridColumn = Grid.DataColumns("LineName")
+        If IsNothing(e.NewValues("LineName")) OrElse e.NewValues("LineName").ToString.Trim = "" Then
+            e.Errors(GridColumn) = "Machine Proccess Must Be Filled !"
+            show_error(MsgTypeEnum.ErrorMsg, "Machine Proccess Must Be Filled !", 1)
+            Return
+        End If
+
+        GridColumn = Grid.DataColumns("ItemCheck")
+        If IsNothing(e.NewValues("ItemCheck")) OrElse e.NewValues("ItemCheck").ToString.Trim = "" Then
+            e.Errors(GridColumn) = "Item Check Must Be Filled !"
+            show_error(MsgTypeEnum.ErrorMsg, "Item Check Must Be Filled !", 1)
+            Return
+        End If
+
+        GridColumn = Grid.DataColumns("FrequencyCode")
+        If IsNothing(e.NewValues("FrequencyCode")) OrElse e.NewValues("FrequencyCode").ToString.Trim = "" Then
+            e.Errors(GridColumn) = "Frequency Must Be Filled !"
+            show_error(MsgTypeEnum.ErrorMsg, "Frequency Must Be Filled !", 1)
+            Return
+        End If
+
+        GridColumn = Grid.DataColumns("RegistrationNo")
+        If IsNothing(e.NewValues("RegistrationNo")) OrElse e.NewValues("RegistrationNo").ToString.Trim = "" Then
+            e.Errors(GridColumn) = "Registration Number Must Be Filled !"
+            show_error(MsgTypeEnum.ErrorMsg, "Registration Number Must Be Filled !", 1)
+            Return
+        End If
+
+        GridColumn = Grid.DataColumns("SampleSize")
+        If IsNothing(e.NewValues("SampleSize")) OrElse e.NewValues("SampleSize").ToString.Trim = "" Then
+            e.Errors(GridColumn) = "Sample Size Must Be Filled !"
+            show_error(MsgTypeEnum.ErrorMsg, "Sample Size Must Be Filled !", 1)
+            Return
+        End If
+
     End Sub
 
     Protected Sub Grid_StartRowEditing(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxStartRowEditingEventArgs) Handles Grid.StartRowEditing
@@ -158,69 +240,6 @@ Public Class ItemCheckByBattery
         End If
         show_error(MsgTypeEnum.Info, "", 0)
     End Sub
-    Private Sub GetComboBoxData()
-        GetTypeCode()
-        GetFactoryCode()
-        GetMachineProccess()
-    End Sub
-    Private Sub GetTypeCode()
-        Dim a As String = ""
-        dt = ClsSPCItemCheckByTypeDB.GetItemTypeCode()
-        With cboTypeCode
-            .Items.Clear() : .Columns.Clear()
-            .DataSource = dt
-            .Columns.Add("ItemTypeCode") : .Columns(0).Visible = False
-            .Columns.Add("ItemTypeName") : .Columns(1).Width = 100
-
-            .TextField = "ItemTypeName"
-            .ValueField = "ItemTypeCode"
-            .DataBind()
-            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-        End With
-        If cboTypeCode.SelectedIndex < 0 Then
-            a = ""
-        Else
-            a = cboTypeCode.SelectedItem.GetFieldValue("ItemTypeCode")
-        End If
-        HF.Set("ItemTypeCode", a)
-    End Sub
-    Private Sub GetFactoryCode()
-        Dim a As String = ""
-        dt = ClsSPCItemCheckByTypeDB.GetFactoryCode()
-        With cboFactory
-            .Items.Clear() : .Columns.Clear()
-            .DataSource = dt
-            .Columns.Add("FactoryCode") : .Columns(0).Visible = False
-            .Columns.Add("FactoryName") : .Columns(1).Width = 100
-
-            .TextField = "FactoryName"
-            .ValueField = "FactoryCode"
-            .DataBind()
-            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-        End With
-    End Sub
-    Private Sub GetMachineProccess()
-        Dim a As String = ""
-        dt = ClsSPCItemCheckByTypeDB.GetMachineProccess()
-        With cboMachineProccess
-            .Items.Clear() : .Columns.Clear()
-            .DataSource = dt
-            .Columns.Add("LineCode") : .Columns(0).Visible = False
-            .Columns.Add("LineName") : .Columns(1).Width = 100
-
-            .TextField = "LineName"
-            .ValueField = "LineCode"
-            .DataBind()
-            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-        End With
-        If cboMachineProccess.SelectedIndex < 0 Then
-            a = ""
-        Else
-            a = cboMachineProccess.SelectedItem.GetFieldValue("LineCode")
-        End If
-        HF.Set("LineCode", a)
-    End Sub
-
 #End Region
 
 #Region "Functions"
@@ -233,6 +252,18 @@ Public Class ItemCheckByBattery
     Private Sub up_GridLoad(FactoryCode As String, ItemTypeDescription As String, MachineProccess As String)
         Dim dtItemCheckByType As DataTable
         Try
+            If FactoryCode Is Nothing Then
+                FactoryCode = ""
+            End If
+            If ItemTypeDescription Is Nothing Then
+                ItemTypeDescription = ""
+            End If
+            If MachineProccess Is Nothing Then
+                MachineProccess = ""
+            End If
+            If MachineProccess <> "ALL" AndAlso MachineProccess <> "" Then
+                MachineProccess = MachineProccess.Substring(0, MachineProccess.IndexOf(" -"))
+            End If
             dtItemCheckByType = ClsSPCItemCheckByTypeDB.GetList(FactoryCode, ItemTypeDescription, MachineProccess)
             Grid.DataSource = dtItemCheckByType
             Grid.DataBind()
@@ -245,12 +276,24 @@ Public Class ItemCheckByBattery
             Dim pAction As String = Split(e.Parameters, "|")(0)
 
             If pAction = "Load" Then
-                up_GridLoad(cboFactory.Value, cboTypeCode.Text, cboMachineProccess.Text)
+                up_GridLoad(cboFactory.Value, cboType.Text, cboLine.Text)
             End If
 
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
+    End Sub
+    Private Sub cboType_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboType.Callback
+        Dim FactoryCode As String = Split(e.Parameter, "|")(0)
+        cboType.DataSource = clsItemTypeDB.GetList(FactoryCode)
+        cboType.DataBind()
+    End Sub
+    Private Sub cboLine_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboLine.Callback
+        Dim FactoryCode As String = Split(e.Parameter, "|")(0)
+        Dim ItemTypeCode As String = Split(e.Parameter, "|")(1)
+        Dim UserID As String = Session("user") & ""
+        cboLine.DataSource = ClsSPCItemCheckByTypeDB.GetMachineProccess(UserID, FactoryCode, ItemTypeCode)
+        cboLine.DataBind()
     End Sub
 #End Region
 

@@ -14,6 +14,7 @@ Public Class AlertDashboard
     Public AuthInsert As Boolean = False
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
+    Public AuthAccess As Boolean = False
     Public dt As DataTable
     Dim UCL As String = ""
     Dim LCL As String = ""
@@ -37,12 +38,32 @@ Public Class AlertDashboard
         sGlobal.getMenu("X010")
         Master.SiteTitle = sGlobal.menuName
         pUser = Session("user")
+        'AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "X010")
+        'show_error(MsgTypeEnum.Info, "", 0)
+        'If AuthUpdate = False Then
+        '    Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
+        '    'commandColumn.Visible = False
+        'End If
+        pUser = Session("user")
+        AuthAccess = sGlobal.Auth_UserAccess(pUser, "X010")
+        If AuthAccess = False Then
+            Response.Redirect("~/Main.aspx")
+        End If
+
         AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "X010")
-        show_error(MsgTypeEnum.Info, "", 0)
         If AuthUpdate = False Then
             Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
-            'commandColumn.Visible = False
+            commandColumn.ShowEditButton = False
+            commandColumn.ShowNewButtonInHeader = False
         End If
+
+        AuthDelete = sGlobal.Auth_UserDelete(pUser, "X010")
+        If AuthDelete = False Then
+            Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
+            commandColumn.ShowDeleteButton = False
+        End If
+
+        lblDateNow.Text = DateTime.Now.ToString("dd-MMM-yyyy") 'HH:mm:ss
     End Sub
 
     Protected Sub Grid_AfterPerformCallback(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles Grid.AfterPerformCallback
@@ -170,19 +191,8 @@ Public Class AlertDashboard
         GetFactoryCode()
     End Sub
     Private Sub GetFactoryCode()
-        Dim a As String = ""
-        dt = clsSPCAlertDashboardDB.GetFactoryCode()
-        With cboFactory
-            .Items.Clear() : .Columns.Clear()
-            .DataSource = dt
-            .Columns.Add("FactoryCode") : .Columns(0).Visible = False
-            .Columns.Add("FactoryName") : .Columns(1).Width = 100
-
-            .TextField = "FactoryName"
-            .ValueField = "FactoryCode"
-            .DataBind()
-            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-        End With
+        cboFactory.DataSource = clsFactoryDB.GetList
+        cboFactory.DataBind()
     End Sub
 
 #End Region
@@ -201,7 +211,7 @@ Public Class AlertDashboard
     Private Sub LoadGridNG(FactoryCode As String)
         Try
             Dim dtLoadNGData As DataTable
-            dtLoadNGData = clsSPCAlertDashboardDB.GetNGDataList(FactoryCode)
+            'dtLoadNGData = clsSPCAlertDashboardDB.GetNGDataList(FactoryCode)
             GridNG.DataSource = clsSPCAlertDashboardDB.GetNGDataList(FactoryCode)
             GridNG.DataBind()
         Catch ex As Exception

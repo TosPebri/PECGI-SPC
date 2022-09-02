@@ -22,13 +22,8 @@
     <script type="text/javascript" >
         var rowIndex, columnIndex;
         function OnInit(s, e) {
-            ASPxClientUtils.AttachEventToElement(s.GetMainElement(), "keydown", function (event) {
-                if (event.keyCode == 13) {
-                    if (ASPxClientUtils.IsExists(columnIndex) && ASPxClientUtils.IsExists(rowIndex)) {
-                        ASPxClientUtils.PreventEventAndBubble(event);                        
-                    }
-                }
-            });             
+            var d = new Date(2022, 8, 3);
+            dtDate.SetDate(d);  
         }
 
         function isNumeric(n) {
@@ -75,25 +70,11 @@
         function cboFactoryChanged(s, e) { 
             cboType.SetEnabled(false);
             cboType.PerformCallback(cboFactory.GetValue());
-            cboLine.SetEnabled(false);   
-            cboLine.PerformCallback(cboFactory.GetValue()  + '|' + cboType.GetValue() );
-            cboItemCheck.SetEnabled(false);
-            cboItemCheck.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue());
-            cboShift.SetEnabled(false);
-            cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());            
         }
 
         function cboTypeChanged(s, e) {
             cboLine.SetEnabled(false);   
             cboLine.PerformCallback(cboFactory.GetValue()  + '|' + cboType.GetValue());
-            cboItemCheck.SetEnabled(false);
-            cboItemCheck.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue());
-            cboShift.SetEnabled(false);
-            cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());            
-        }
-
-        function cboShiftChanged(s, e) {            
-            cboSeq.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + cboShift.GetValue() + '|' + dtDate.GetText());            
         }
 
         function cboLineChanged(s, e) {    
@@ -105,6 +86,10 @@
 
         function cboItemCheckChanged(s, e) {
             cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());            
+        }
+
+        function cboShiftChanged(s, e) {            
+            cboSeq.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + cboShift.GetValue() + '|' + dtDate.GetText());            
         }
 
         function OnBatchEditStartEditing(s, e) {
@@ -222,7 +207,8 @@
             }
             if (s.cpRefresh == '1') {
                 gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
-                chartX.PerformCallback();
+                chartX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
+                chartR.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
             }            
         }
     </script>
@@ -304,7 +290,7 @@
                             <ButtonStyle Font-Size="9pt" Paddings-Padding="10px"><Paddings Padding="10px"></Paddings>
                             </ButtonStyle>
                         </CalendarProperties>                        
-                                    <ClientSideEvents DateChanged="ClearGrid" />
+                                    <ClientSideEvents DateChanged="cboShiftChanged" />
                         <ButtonStyle Width="5px" Paddings-Padding="4px" >
 <Paddings Padding="4px"></Paddings>
                         </ButtonStyle>
@@ -532,6 +518,9 @@
                                     ClientInstanceName="btnExcel" Font-Names="Segoe UI" Font-Size="9pt" 
                                     Height="25px" Text="Excel" Theme="Office2010Silver" UseSubmitBehavior="False" 
                                     Width="90px" TabIndex="10">
+                                    <ClientSideEvents Click="function(s, e) {
+	chartX.PerformCallback();
+}" />
                                     <Paddings Padding="2px" />
                                 </dx:ASPxButton>                            
                         </td>
@@ -825,7 +814,11 @@
                                 Font-Names="Segoe UI" Font-Size="9pt">
 
 
-                    <Settings HorizontalScrollBarMode="Auto" />
+                    <SettingsPager Mode="ShowAllRecords">
+                    </SettingsPager>
+
+
+                    <Settings HorizontalScrollBarMode="Auto" VerticalScrollableHeight="340" VerticalScrollBarMode="Auto" />
                     <SettingsDataSecurity AllowDelete="False" AllowEdit="False" AllowInsert="False" />
 
 
@@ -858,40 +851,77 @@
                 <div style="height:10px"></div>
                 
     <dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
-        Height="200px" Width="1080px" AutoBindingSettingsEnabled="False"
-        AutoLayoutSettingsEnabled="False" CrosshairEnabled="True">
+        Height="290px" Width="1080px" CrosshairEnabled="True" SeriesDataMember="Description">
+    
+        <SeriesSerializable>
+            <cc1:Series ArgumentDataMember="Seq" Name="Average" ValueDataMembersSerializable="AvgValue">
+                <ViewSerializable>
+                    <cc1:LineSeriesView Color="Blue">
+                        <LineStyle Thickness="1" />
+                        <LineMarkerOptions Color="Blue" Size="3">
+                        </LineMarkerOptions>
+                    </cc1:LineSeriesView>
+                </ViewSerializable>
+            </cc1:Series>
+        </SeriesSerializable>
+    
+        <seriestemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
+            <viewserializable>
+                <cc1:PointSeriesView>                    
+                    <PointMarkerOptions kind="Circle" BorderColor="255, 255, 255"></PointMarkerOptions>
+                </cc1:PointSeriesView>
+            </viewserializable>
+        </seriestemplate>  
         <DiagramSerializable>
             <cc1:XYDiagram>
-            <AxisX VisibleInPanesSerializable="-1"></AxisX>
-            <AxisY VisibleInPanesSerializable="-1"></AxisY>
+                <AxisX VisibleInPanesSerializable="-1">
+                </AxisX>
+                <AxisY VisibleInPanesSerializable="-1">
+                </AxisY>
             </cc1:XYDiagram>
-            </DiagramSerializable>
-        <seriesserializable>
+        </DiagramSerializable>
+        <legend alignmenthorizontal="Left" alignmentvertical="BottomOutside" 
+            direction="LeftToRight"></legend> 
+    </dx:WebChartControl>
 
-            <cc1:Series ArgumentDataMember="Seq" Name="Warning" 
-                        ValueDataMembersSerializable="Warning">
-                <viewserializable>
-                    <cc1:PointSeriesView>
-                        <PointMarkerOptions size="4" kind="6"></PointMarkerOptions>
-                    </cc1:PointSeriesView>
-                </viewserializable>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div style="height:10px"></div>
+                
+    <dx:WebChartControl ID="chartR" runat="server" ClientInstanceName="chartR"
+        Height="290px" Width="1080px" CrosshairEnabled="True">
+        <SeriesSerializable>
+            <cc1:Series ArgumentDataMember="Seq" Name="R" ValueDataMembersSerializable="RValue">
+                <ViewSerializable>
+                    <cc1:LineSeriesView>
+                    </cc1:LineSeriesView>
+                </ViewSerializable>
             </cc1:Series>
-        </seriesserializable>
-
-        <seriestemplate>
+        </SeriesSerializable>
+        <seriestemplate ValueDataMembersSerializable="Value">
             <viewserializable>
                 <cc1:LineSeriesView>
-                    <linemarkeroptions size="2"></linemarkeroptions>
-                    <linestyle thickness="1" />
+                    <LineMarkerOptions BorderColor="White" Size="8">
+                    </LineMarkerOptions>
                 </cc1:LineSeriesView>
             </viewserializable>
         </seriestemplate>  
+        <DiagramSerializable>
+            <cc1:XYDiagram>
+                <AxisX VisibleInPanesSerializable="-1" MinorCount="1">
+                    <GridLines MinorVisible="True">
+                    </GridLines>
+                </AxisX>
+                <AxisY VisibleInPanesSerializable="-1">
+                </AxisY>
+            </cc1:XYDiagram>
+        </DiagramSerializable>
         <legend alignmenthorizontal="Left" alignmentvertical="BottomOutside" 
             direction="LeftToRight"></legend> 
-        <titles>
-            <cc1:ChartTitle Font="Segoe UI, 12pt, style=Bold" Text="CONTROL X" />
-        </titles>
-
     </dx:WebChartControl>
 
 

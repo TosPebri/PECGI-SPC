@@ -29,8 +29,9 @@ Public Class ProdSampleInput
             Dim Col1 As New GridViewDataTextColumn
             Col1.FieldName = "Des"
             Col1.Caption = "TIME"
-            Col1.Width = 55
+            Col1.Width = 90
             Col1.FixedStyle = GridViewColumnFixedStyle.Left
+            Col1.CellStyle.HorizontalAlign = HorizontalAlign.Center
             Band2.Columns.Add(Col1)
 
             Dim SelDay As Object = clsSPCResultDB.GetPrevDate(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
@@ -54,6 +55,7 @@ Public Class ProdSampleInput
                             colTime.Caption = Seq.StartTime
                             colTime.FieldName = iDay.ToString + "_" + Shift.ShiftName.ToString + "_" + Seq.SequenceNo.ToString
                             colTime.Width = 55
+                            colTime.CellStyle.HorizontalAlign = HorizontalAlign.Center
 
                             BandShift.Columns.Add(colTime)
                             ColIndex = ColIndex + 1
@@ -104,7 +106,9 @@ Public Class ProdSampleInput
         sGlobal.getMenu("B020")
         Master.SiteTitle = sGlobal.menuName
         pUser = Session("user") & ""
-        AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "B040")
+        AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "B020")
+        grid.SettingsDataSecurity.AllowInsert = AuthUpdate
+        grid.SettingsDataSecurity.AllowEdit = AuthUpdate
         show_error(MsgTypeEnum.Info, "", 0)
         If Not IsPostBack And Not IsCallback Then
             up_FillCombo()
@@ -431,29 +435,96 @@ Public Class ProdSampleInput
     Private Sub gridX_HtmlRowPrepared(sender As Object, e As ASPxGridViewTableRowEventArgs) Handles gridX.HtmlRowPrepared
         If e.KeyValue = "-" Then
             e.Row.BackColor = System.Drawing.Color.Black
-            e.Row.Height = 10
+            e.Row.BorderWidth = 30
         End If
     End Sub
 
-    Private Sub LoadChart()
-        Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartX()
-        With chartX
-            CType(.Diagram, XYDiagram).SecondaryAxesY.Clear()
-            Dim myAxisY As New SecondaryAxisY("my Y-Axis")
-            CType(.Diagram, XYDiagram).SecondaryAxesY.Add(myAxisY)
-
-            CType(.Series("Warning").View, XYDiagramSeriesViewBase).AxisY = myAxisY
-
+    Private Sub LoadChartR(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String)
+        Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartR(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+        With chartR
             .DataSource = xr
-            .SeriesDataMember = "Description"
-            .SeriesTemplate.ArgumentDataMember = "Seq"
-            .SeriesTemplate.ValueDataMembers.AddRange(New String() {"Value"})
             .DataBind()
+
+            Dim diagram As XYDiagram = CType(.Diagram, XYDiagram)
+            diagram.AxisX.WholeRange.MinValue = 0
+            diagram.AxisX.WholeRange.MaxValue = 12
+
+            diagram.AxisX.GridLines.LineStyle.DashStyle = DashStyle.Solid
+            diagram.AxisX.GridLines.MinorVisible = True
+            diagram.AxisX.MinorCount = 1
+            diagram.AxisX.GridLines.Visible = False
+
+            diagram.AxisY.MinorCount = 4
+            diagram.AxisY.GridLines.MinorVisible = True
+        End With
+    End Sub
+
+    Private Sub LoadChart(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String)
+        Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartXR(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+        With chartX
+            .DataSource = xr
+            .DataBind()
+
+            Dim diagram As XYDiagram = CType(.Diagram, XYDiagram)
+            diagram.AxisX.WholeRange.MinValue = 0
+            diagram.AxisX.WholeRange.MaxValue = 12
+
+            diagram.AxisX.GridLines.LineStyle.DashStyle = DashStyle.Solid
+            diagram.AxisX.GridLines.MinorVisible = True
+            diagram.AxisX.MinorCount = 1
+            diagram.AxisX.GridLines.Visible = False
+
+            diagram.AxisY.MinorCount = 4
+            diagram.AxisY.GridLines.MinorVisible = True
+
+            Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+            diagram.AxisY.ConstantLines.Clear()
+            Dim LCL As New ConstantLine("LCL")
+            LCL.Color = Drawing.Color.Purple
+            LCL.LineStyle.Thickness = 2
+            LCL.LineStyle.DashStyle = DashStyle.DashDot
+            diagram.AxisY.ConstantLines.Add(LCL)
+            LCL.AxisValue = Setup.XBarLCL
+
+            Dim UCL As New ConstantLine("UCL")
+            UCL.Color = Drawing.Color.Purple
+            UCL.LineStyle.Thickness = 2
+            UCL.LineStyle.DashStyle = DashStyle.DashDot
+            diagram.AxisY.ConstantLines.Add(UCL)
+            UCL.AxisValue = Setup.XBarUCL
+
+            Dim LSL As New ConstantLine("LSL")
+            LSL.Color = Drawing.Color.Red
+            LSL.LineStyle.Thickness = 2
+            LSL.LineStyle.DashStyle = DashStyle.Solid
+            diagram.AxisY.ConstantLines.Add(LSL)
+            LSL.AxisValue = Setup.SpecLSL
+
+            Dim USL As New ConstantLine("USL")
+            USL.Color = Drawing.Color.Red
+            USL.LineStyle.Thickness = 2
+            USL.LineStyle.DashStyle = DashStyle.Solid
+            diagram.AxisY.ConstantLines.Add(USL)
+            USL.AxisValue = Setup.SpecUSL
+
+            diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
+            diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
         End With
     End Sub
 
     Private Sub chartX_CustomCallback(sender As Object, e As CustomCallbackEventArgs) Handles chartX.CustomCallback
-        LoadChart()
+
+        Dim Prm As String = e.Parameter
+        If Prm = "" Then
+            Prm = "F001|TPMSBR011|015|IC021|03 Aug 2022"
+        End If
+        Dim FactoryCode As String = Split(Prm, "|")(0)
+        Dim ItemTypeCode As String = Split(Prm, "|")(1)
+        Dim LineCode As String = Split(Prm, "|")(2)
+        Dim ItemCheckCode As String = Split(Prm, "|")(3)
+        Dim ProdDate As String = Split(Prm, "|")(4)
+
+        LoadChart(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
     End Sub
 
     Private Sub gridX_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles gridX.HtmlDataCellPrepared
@@ -462,14 +533,15 @@ Public Class ProdSampleInput
         Dim LSL As Double
         Dim USL As Double
 
-        If Not IsDBNull(e.CellValue) AndAlso (e.DataColumn.FieldName.StartsWith("1") Or e.DataColumn.FieldName.StartsWith("2")) And e.GetValue("Seq") = "1" Then
+        If Not IsDBNull(e.CellValue) AndAlso (e.DataColumn.FieldName.StartsWith("1") Or e.DataColumn.FieldName.StartsWith("2")) _
+            And e.GetValue("Seq") = "1" Then
             If (e.DataColumn.FieldName.StartsWith("1")) Then
                 LCL = e.GetValue("XBarLCL1")
                 UCL = e.GetValue("XBarUCL1")
                 LSL = e.GetValue("SpecLSL1")
                 USL = e.GetValue("SpecUSL1")
             ElseIf (e.DataColumn.FieldName.StartsWith("2")) Then
-                LCL = Val(e.GetValue("XBarLCL2"))
+                LCL = e.GetValue("XBarLCL2")
                 UCL = e.GetValue("XBarUCL2")
                 LSL = e.GetValue("SpecLSL2")
                 USL = e.GetValue("SpecUSL2")
@@ -480,5 +552,18 @@ Public Class ProdSampleInput
                 e.Cell.BackColor = Color.Pink
             End If
         End If
+    End Sub
+
+    Private Sub chartR_CustomCallback(sender As Object, e As CustomCallbackEventArgs) Handles chartR.CustomCallback
+        Dim Prm As String = e.Parameter
+        If Prm = "" Then
+            Prm = "F001|TPMSBR011|015|IC021|03 Aug 2022"
+        End If
+        Dim FactoryCode As String = Split(Prm, "|")(0)
+        Dim ItemTypeCode As String = Split(Prm, "|")(1)
+        Dim LineCode As String = Split(Prm, "|")(2)
+        Dim ItemCheckCode As String = Split(Prm, "|")(3)
+        Dim ProdDate As String = Split(Prm, "|")(4)
+        LoadChartR(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
     End Sub
 End Class

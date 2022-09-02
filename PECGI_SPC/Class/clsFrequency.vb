@@ -43,10 +43,10 @@ Public Class clsFrequencyDB
     Public Shared Function GetSequence(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ShiftCode As String, ProdDate As String) As List(Of clsSequenceNo)
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
-            Dim q As String = "select distinct F.SequenceNo, convert(char(5), coalesce(R.RegisterDate, F.StartTime), 114) StartTime " & vbCrLf &
+            Dim q As String = "select distinct R.SequenceNo, convert(char(5), coalesce(R.RegisterDate, F.StartTime), 114) StartTime " & vbCrLf &
                 "From spc_ItemCheckByType T inner Join spc_MS_Frequency F on T.FrequencyCode = F.FrequencyCode " & vbCrLf &
                 "left join spc_Result R on R.FactoryCode = T.FactoryCode and R.ItemTypeCode = T.ItemTypeCode and R.LineCode = T.LineCode and R.ItemCheckCode = T.ItemCheckCode and R.ProdDate = @ProdDate " & vbCrLf &
-                "where T.FactoryCode = @FactoryCode and T.ItemTypeCode = @ItemTypeCode and T.LineCode = @LineCode and T.ItemCheckCode = @ItemCheckCode and F.ShiftCode = @ShiftCode " & vbCrLf &
+                "where T.FactoryCode = @FactoryCode and T.ItemTypeCode = @ItemTypeCode and T.LineCode = @LineCode and T.ItemCheckCode = @ItemCheckCode and R.ShiftCode = @ShiftCode and R.ProdDate = @ProdDate " & vbCrLf &
                 "and T.ActiveStatus = 1 and F.ActiveStatus = 1  " & vbCrLf
             Dim cmd As New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)

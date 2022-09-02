@@ -115,8 +115,40 @@
     </script>
 </asp:Content>
 
+<%--<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolderJavaScriptBody" runat="server">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            gridHeight(275);
+            
+            $("#fullscreen").click(function () {
+                var fcval = $("#flscr").val();
+                if (fcval == "0") { //toClickFullScreen
+                    gridHeight(175);
+                    $("#flscr").val("1");
+                } else if (fcval == "1") { //toNormalFullScreen
+                    gridHeight(385);
+                    $("#flscr").val("0");
+                }
+            })
+        });
+
+        function gridHeight(pF) {
+            var h1 = 49;
+            var p1 = 10;
+            var h2 = 34;
+            var p2 = 13;
+            var h3 = $("#divhead").height();
+
+            var hAll = h1 + p1 + h2 + p2 + h3 + pF;
+            /* alert(h1 + p1 + h2 + p2 + h3);*/
+            var height = Math.max(0, document.documentElement.clientHeight);
+            Grid.SetHeight(height - hAll);
+        };
+    </script>
+</asp:Content>--%>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
-    <div style="padding: 5px 5px 5px 5px; padding-bottom: 20px; border-bottom: groove">
+    <div id="divhead" style="padding: 5px 5px 5px 5px; padding-bottom: 20px; border-bottom: groove">
         <dx:ASPxHiddenField ID="HF" runat="server" ClientInstanceName="HF"></dx:ASPxHiddenField>
         <table style="width:100%">
             <tr>
@@ -128,7 +160,7 @@
                             </td>
 
                             <td style="padding-right: 1em">
-                                <dx:ASPxComboBox ID="cboFactory" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFactory">
+                                <dx:ASPxComboBox ID="cboFactory" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFactory" TextField="Description" ValueField="Code">
                                     <ItemStyle Height="10px" Paddings-Padding="4px" />
                                     <ButtonStyle Width="5px" Paddings-Padding="4px" />
                                     <ClientSideEvents SelectedIndexChanged="function(s, e) {
@@ -160,7 +192,7 @@
                             </td>
 
                             <td style="padding-right: 1em">
-                                <dx:ASPxComboBox ID="cboMachine" runat="server" Theme="Office2010Black" Width="200px" Height="25px" ClientInstanceName="cboMachine">
+                                <dx:ASPxComboBox ID="cboMachine" runat="server" Theme="Office2010Black" Width="200px" Height="25px" ClientInstanceName="cboMachine" TextField="Description" ValueField="Code">
                                     <ItemStyle Height="10px" Paddings-Padding="4px" />
                                     <ButtonStyle Width="5px" Paddings-Padding="4px" />
                                     <ClientSideEvents EndCallback="function(s, e) {cboMachine.SetEnabled(true);}" />
@@ -187,7 +219,7 @@
                             </td>
 
                             <td style="padding-right: 1em; padding-top: 0.5em">
-                                <dx:ASPxComboBox ID="cboFrequency" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFrequency">
+                                <dx:ASPxComboBox ID="cboFrequency" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFrequency" TextField="Description" ValueField="Code">
                                     <ItemStyle Height="10px" Paddings-Padding="4px" />
                                     <ButtonStyle Width="5px" Paddings-Padding="4px" />
                                     <ClientSideEvents EndCallback="function(s, e) {cboFrequency.SetEnabled(true);}" />
@@ -213,7 +245,7 @@
                             </td>
 
                             <td style="padding-right: 1em; padding-top: 0.5em">
-                                <dx:ASPxComboBox ID="cboType" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboType">
+                                <dx:ASPxComboBox ID="cboType" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboType" TextField="Description" ValueField="Code">
                                     <ItemStyle Height="10px" Paddings-Padding="4px" />
                                     <ButtonStyle Width="5px" Paddings-Padding="4px" />
                                     <ClientSideEvents EndCallback="function(s, e) {cboType.SetEnabled(true);}" />
@@ -254,7 +286,7 @@
                             </td>
 
                             <td style="padding-right: 1em; padding-top: 0.5em">
-                                <dx:ASPxComboBox ID="cboSequence" runat="server" Theme="Office2010Black" Width="100px" Height="15px" ClientInstanceName="cboSequence">
+                                <dx:ASPxComboBox ID="cboSequence" runat="server" Theme="Office2010Black" Width="100px" Height="15px" ClientInstanceName="cboSequence" TextField="Description" ValueField="Code">
                                     <ItemStyle Height="10px" Paddings-Padding="4px" />
                                     <ButtonStyle Width="5px" Paddings-Padding="4px" />
                                     <ClientSideEvents EndCallback="function(s, e) {

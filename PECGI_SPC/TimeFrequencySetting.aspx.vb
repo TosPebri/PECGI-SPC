@@ -259,13 +259,7 @@ Public Class TimeFrequencySetting
             dt = clsTimeFrequencySettingDB.FillCombo()
 
             With cboFreq
-                .Items.Clear() : .Columns.Clear()
                 .DataSource = dt
-                .Columns.Add("Code") : .Columns(0).Visible = False
-                .Columns.Add("Description") : .Columns(1).Width = 100
-
-                .TextField = "Description"
-                .ValueField = "Code"
                 .DataBind()
                 .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With

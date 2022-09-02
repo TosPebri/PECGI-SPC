@@ -397,15 +397,9 @@ Public Class ControlChartSetup
             Dim a As String = ""
             dt = clsControlChartSetupDB.FillCombo("0")
             With cboFactory
-                .Items.Clear() : .Columns.Clear()
                 .DataSource = dt
-                .Columns.Add("Code") : .Columns(0).Visible = False
-                .Columns.Add("Description") : .Columns(1).Width = 100
-
-                .TextField = "Description"
-                .ValueField = "Code"
                 .DataBind()
-                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+                .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)
             End With
             If cboFactory.SelectedIndex < 0 Then
                 a = ""
@@ -416,15 +410,9 @@ Public Class ControlChartSetup
 
             dt = clsControlChartSetupDB.FillCombo("1")
             With cboType
-                .Items.Clear() : .Columns.Clear()
                 .DataSource = dt
-                .Columns.Add("Code") : .Columns(0).Visible = False
-                .Columns.Add("Description") : .Columns(1).Width = 100
-
-                .TextField = "Description"
-                .ValueField = "Code"
                 .DataBind()
-                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+                .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)IIf(dt.Rows.Count > 0, 0, -1)
             End With
             If cboType.SelectedIndex < 0 Then
                 a = ""
@@ -435,13 +423,7 @@ Public Class ControlChartSetup
 
             dt = clsControlChartSetupDB.FillCombo("2", HF.Get("FactoryCode"))
             With cboMachine
-                .Items.Clear() : .Columns.Clear()
                 .DataSource = dt
-                .Columns.Add("Code") : .Columns(0).Visible = False
-                .Columns.Add("Description") : .Columns(1).Width = 100
-
-                .TextField = "Description"
-                .ValueField = "Code"
                 .DataBind()
                 .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With

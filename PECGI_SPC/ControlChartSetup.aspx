@@ -55,7 +55,22 @@
         }
 
         function up_Browse() {
-            Grid.PerformCallback('Load');
+            var FactoryCode = cboFactory.GetValue();
+            var ItemType_Code = cboType.GetValue();
+            var LineCode = cboMachine.GetValue();
+            var Period = dtPeriod.GetText();
+
+            if (FactoryCode == null || ItemType_Code == null || LineCode == null ||Period == "") {
+                toastr.warning('Please Fill All Combo Box Filter!', 'Warning');
+                toastr.options.closeButton = false;
+                toastr.options.debug = false;
+                toastr.options.newestOnTop = false;
+                toastr.options.progressBar = false;
+                toastr.options.preventDuplicates = true;
+            }
+            else {
+                Grid.PerformCallback('Load');
+            }
         }
 
         function gridFactorySelected() {
@@ -65,10 +80,41 @@
     </script>
 </asp:Content>
 
-<asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
-    <div style="padding: 5px 5px 5px 5px;">
+<%--<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolderJavaScriptBody" runat="server">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            gridHeight(150);
 
-        <%--<div class="row" style="margin-bottom:0.5%">
+            $("#fullscreen").click(function () {
+                var fcval = $("#flscr").val();
+                if (fcval == "0") { //toClickFullScreen
+                    gridHeight(50);
+                    $("#flscr").val("1");
+                } else if (fcval == "1") { //toNormalFullScreen
+                    gridHeight(260);
+                    $("#flscr").val("0");
+                }
+            })
+        });
+
+        function gridHeight(pF) {
+            var h1 = 49;
+            var p1 = 10;
+            var h2 = 34;
+            var p2 = 13;
+            var h3 = $("#divhead").height();
+
+            var hAll = h1 + p1 + h2 + p2 + h3 + pF;
+            /* alert(h1 + p1 + h2 + p2 + h3);*/
+            var height = Math.max(0, document.documentElement.clientHeight);
+            Grid.SetHeight(height - hAll);
+        };
+    </script>
+</asp:Content>--%>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
+        <%--<div style="padding: 5px 5px 5px 5px;">
+            <div class="row" style="margin-bottom:0.5%">
             <div class="col col-1" style="width: 5%">
                 <dx:ASPxLabel ID="ASPxLabel1" runat="server" Text="Factory" Theme="Office2010Black" Font-Names="Segoe UI" Font-Size="10pt"/>
             </div>
@@ -157,7 +203,7 @@
         </div>
     </div>--%>
 
-    <div style="padding: 5px 5px 5px 5px;">
+    <div id="divhead" style="padding: 5px 5px 5px 5px;">
         <table>
             <tr>
                 <td style="padding-right: 1em">
@@ -166,7 +212,7 @@
                 </td>
 
                 <td style="padding-right: 1em">
-                    <dx:ASPxComboBox ID="cboFactory" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFactory">
+                    <dx:ASPxComboBox ID="cboFactory" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFactory" TextField="Description" ValueField="Code">
                         <ItemStyle Height="10px" Paddings-Padding="4px" />
                         <ButtonStyle Width="5px" Paddings-Padding="4px" />
                         <ClientSideEvents SelectedIndexChanged="function(s, e) {
@@ -184,7 +230,7 @@
                 </td>
 
                 <td style="padding-right: 1em">
-                    <dx:ASPxComboBox ID="cboMachine" runat="server" Theme="Office2010Black" Width="200px" Height="25px" ClientInstanceName="cboMachine">
+                    <dx:ASPxComboBox ID="cboMachine" runat="server" Theme="Office2010Black" Width="200px" Height="25px" ClientInstanceName="cboMachine" TextField="Description" ValueField="Code">
                         <ItemStyle Height="10px" Paddings-Padding="4px" />
                         <ButtonStyle Width="5px" Paddings-Padding="4px" />
                         <ClientSideEvents EndCallback="OnEndCallback" />
@@ -204,7 +250,7 @@
                 </td>
 
                 <td style="padding-right: 1em; padding-top: 0.5em">
-                    <dx:ASPxComboBox ID="cboType" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboType">
+                    <dx:ASPxComboBox ID="cboType" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboType" TextField="Description" ValueField="Code">
                         <ItemStyle Height="10px" Paddings-Padding="4px" />
                         <ButtonStyle Width="5px" Paddings-Padding="4px" />
                         <ClientSideEvents SelectedIndexChanged="function(s, e) {
@@ -262,7 +308,7 @@
         </table>
     </div>
 
-    <div style="padding: 0px 5px 5px 5px">
+    <div style="padding: 20px 5px 5px 5px">
         <asp:SqlDataSource ID="dsType" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
             SelectCommand="Exec sp_ChartSetup_FillCombo '1' "></asp:SqlDataSource>

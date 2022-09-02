@@ -70,25 +70,11 @@
         function cboFactoryChanged(s, e) { 
             cboType.SetEnabled(false);
             cboType.PerformCallback(cboFactory.GetValue());
-            cboLine.SetEnabled(false);   
-            cboLine.PerformCallback(cboFactory.GetValue()  + '|' + cboType.GetValue() );
-            cboItemCheck.SetEnabled(false);
-            cboItemCheck.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue());
-            cboShift.SetEnabled(false);
-            cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());            
         }
 
         function cboTypeChanged(s, e) {
             cboLine.SetEnabled(false);   
             cboLine.PerformCallback(cboFactory.GetValue()  + '|' + cboType.GetValue());
-            cboItemCheck.SetEnabled(false);
-            cboItemCheck.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue());
-            cboShift.SetEnabled(false);
-            cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());            
-        }
-
-        function cboShiftChanged(s, e) {            
-            cboSeq.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + cboShift.GetValue() + '|' + dtDate.GetText());            
         }
 
         function cboLineChanged(s, e) {    
@@ -100,6 +86,10 @@
 
         function cboItemCheckChanged(s, e) {
             cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());            
+        }
+
+        function cboShiftChanged(s, e) {            
+            cboSeq.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + cboShift.GetValue() + '|' + dtDate.GetText());            
         }
 
         function OnBatchEditStartEditing(s, e) {
@@ -218,6 +208,7 @@
             if (s.cpRefresh == '1') {
                 gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
                 chartX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
+                chartR.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
             }            
         }
     </script>
@@ -299,7 +290,7 @@
                             <ButtonStyle Font-Size="9pt" Paddings-Padding="10px"><Paddings Padding="10px"></Paddings>
                             </ButtonStyle>
                         </CalendarProperties>                        
-                                    <ClientSideEvents DateChanged="ClearGrid" />
+                                    <ClientSideEvents DateChanged="cboShiftChanged" />
                         <ButtonStyle Width="5px" Paddings-Padding="4px" >
 <Paddings Padding="4px"></Paddings>
                         </ButtonStyle>
@@ -823,7 +814,11 @@
                                 Font-Names="Segoe UI" Font-Size="9pt">
 
 
-                    <Settings HorizontalScrollBarMode="Auto" />
+                    <SettingsPager Mode="ShowAllRecords">
+                    </SettingsPager>
+
+
+                    <Settings HorizontalScrollBarMode="Auto" VerticalScrollableHeight="340" VerticalScrollBarMode="Auto" />
                     <SettingsDataSecurity AllowDelete="False" AllowEdit="False" AllowInsert="False" />
 
 
@@ -880,6 +875,46 @@
         <DiagramSerializable>
             <cc1:XYDiagram>
                 <AxisX VisibleInPanesSerializable="-1">
+                </AxisX>
+                <AxisY VisibleInPanesSerializable="-1">
+                </AxisY>
+            </cc1:XYDiagram>
+        </DiagramSerializable>
+        <legend alignmenthorizontal="Left" alignmentvertical="BottomOutside" 
+            direction="LeftToRight"></legend> 
+    </dx:WebChartControl>
+
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div style="height:10px"></div>
+                
+    <dx:WebChartControl ID="chartR" runat="server" ClientInstanceName="chartR"
+        Height="290px" Width="1080px" CrosshairEnabled="True">
+        <SeriesSerializable>
+            <cc1:Series ArgumentDataMember="Seq" Name="R" ValueDataMembersSerializable="RValue">
+                <ViewSerializable>
+                    <cc1:LineSeriesView>
+                    </cc1:LineSeriesView>
+                </ViewSerializable>
+            </cc1:Series>
+        </SeriesSerializable>
+        <seriestemplate ValueDataMembersSerializable="Value">
+            <viewserializable>
+                <cc1:LineSeriesView>
+                    <LineMarkerOptions BorderColor="White" Size="8">
+                    </LineMarkerOptions>
+                </cc1:LineSeriesView>
+            </viewserializable>
+        </seriestemplate>  
+        <DiagramSerializable>
+            <cc1:XYDiagram>
+                <AxisX VisibleInPanesSerializable="-1" MinorCount="1">
+                    <GridLines MinorVisible="True">
+                    </GridLines>
                 </AxisX>
                 <AxisY VisibleInPanesSerializable="-1">
                 </AxisY>

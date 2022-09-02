@@ -70,6 +70,8 @@ Public Class clsXRChartDB
                     xr.AvgValue = value
                     value = .Item("RValue")
                     xr.RValue = .Item("RValue")
+                    value = .Item("MaxValue")
+                    xr.MaxValue = value
                 End With
                 XRList.Add(xr)
             Next

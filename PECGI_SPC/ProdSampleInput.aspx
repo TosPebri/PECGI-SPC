@@ -874,12 +874,21 @@
         </seriestemplate>  
         <DiagramSerializable>
             <cc1:XYDiagram>
-                <AxisX VisibleInPanesSerializable="-1">
+                <AxisX VisibleInPanesSerializable="-1" MinorCount="1">
+                    <GridLines MinorVisible="True">
+                    </GridLines>
                 </AxisX>
                 <AxisY VisibleInPanesSerializable="-1">
+                    <Tickmarks MinorVisible="False" />
+                    <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0" MaxValueSerializable="2.73" MinValueSerializable="2.6" StartSideMargin="0" />
+                    <WholeRange AlwaysShowZeroLevel="False" Auto="False" AutoSideMargins="False" EndSideMargin="0.1" MaxValueSerializable="2.7" MinValueSerializable="0.1" StartSideMargin="0.1" />
+                    <NumericScaleOptions AutoGrid="False" CustomGridAlignment="0.01" GridAlignment="Custom" />
                 </AxisY>
             </cc1:XYDiagram>
         </DiagramSerializable>
+        <titles>
+            <cc1:ChartTitle Font="Segoe UI, 12pt, style=Bold" Text="X bar Control Chart" />
+        </titles>
         <legend alignmenthorizontal="Left" alignmentvertical="BottomOutside" 
             direction="LeftToRight"></legend> 
     </dx:WebChartControl>
@@ -916,10 +925,19 @@
                     <GridLines MinorVisible="True">
                     </GridLines>
                 </AxisX>
-                <AxisY VisibleInPanesSerializable="-1">
+                <AxisY VisibleInPanesSerializable="-1" MinorCount="1">
+                    <Tickmarks MinorLength="1" MinorVisible="False" />
+                    <Label TextAlignment="Near">
+                    </Label>
+                    <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0.001" MaxValueSerializable="0.027" MinValueSerializable="0" StartSideMargin="0" />
+                    <WholeRange Auto="False" MaxValueSerializable="0.027" MinValueSerializable="0" AutoSideMargins="False" EndSideMargin="1" StartSideMargin="1" />
+                    <NumericScaleOptions AutoGrid="False" CustomGridAlignment="0.001" GridAlignment="Custom" GridOffset="1" />
                 </AxisY>
             </cc1:XYDiagram>
         </DiagramSerializable>
+        <titles>
+            <cc1:ChartTitle Font="Segoe UI, 12pt, style=Bold" Text="R Control Chart" />
+        </titles>
         <legend alignmenthorizontal="Left" alignmentvertical="BottomOutside" 
             direction="LeftToRight"></legend> 
     </dx:WebChartControl>

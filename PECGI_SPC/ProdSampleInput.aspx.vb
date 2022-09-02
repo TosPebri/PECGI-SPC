@@ -125,8 +125,33 @@ Public Class ProdSampleInput
                 GridLoad(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence, 0)
             Else
                 dtDate.Value = Now.Date
+                'InitCombo()
             End If
         End If
+    End Sub
+
+    Private Sub InitCombo()
+        dtDate.Value = CDate("2022-08-03")
+        cboFactory.Value = "F001"
+        cboType.DataSource = clsItemTypeDB.GetList(cboFactory.Value)
+        cboType.DataBind()
+        cboType.Value = "TPMSBR011"
+
+        cboLine.DataSource = ClsLineDB.GetList("admin", cboFactory.Value, cboType.Value)
+        cboLine.DataBind()
+        cboLine.Value = "015"
+
+        cboItemCheck.DataSource = clsItemCheckDB.GetList(cboFactory.Value, cboType.Value, cboLine.Value)
+        cboItemCheck.DataBind()
+        cboItemCheck.Value = "IC021"
+
+        cboShift.DataSource = clsFrequencyDB.GetShift(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value)
+        cboShift.DataBind()
+        cboShift.Value = "SH001"
+
+        cboSeq.Value = "1"
+        cboSeq.DataSource = clsFrequencyDB.GetSequence(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value, cboShift.Value, Format(dtDate.Value, "yyyy-MM-dd"))
+        cboSeq.DataBind()
     End Sub
 
     Private Sub up_FillCombo()
@@ -443,8 +468,6 @@ Public Class ProdSampleInput
         Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartR(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
         With chartR
             .DataSource = xr
-            .DataBind()
-
             Dim diagram As XYDiagram = CType(.Diagram, XYDiagram)
             diagram.AxisX.WholeRange.MinValue = 0
             diagram.AxisX.WholeRange.MaxValue = 12
@@ -454,17 +477,42 @@ Public Class ProdSampleInput
             diagram.AxisX.MinorCount = 1
             diagram.AxisX.GridLines.Visible = False
 
-            diagram.AxisY.MinorCount = 4
-            diagram.AxisY.GridLines.MinorVisible = True
+
+
+            Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+            diagram.AxisY.ConstantLines.Clear()
+            Dim RCL As New ConstantLine("CL R")
+            RCL.Color = Drawing.Color.Purple
+            RCL.LineStyle.Thickness = 2
+            RCL.LineStyle.DashStyle = DashStyle.DashDot
+            diagram.AxisY.ConstantLines.Add(RCL)
+            RCL.AxisValue = Setup.RCL
+
+            Dim RUCL As New ConstantLine("UCL R")
+            RUCL.Color = Drawing.Color.Purple
+            RUCL.LineStyle.Thickness = 2
+            RUCL.LineStyle.DashStyle = DashStyle.DashDot
+            diagram.AxisY.ConstantLines.Add(RUCL)
+            RUCL.AxisValue = Setup.RUCL
+
+            Dim MaxValue As Double
+            If xr.Count > 0 Then
+                If xr(0).MaxValue > Setup.RUCL Then
+                    MaxValue = xr(0).MaxValue
+                Else
+                    MaxValue = Setup.RUCL
+                End If
+            End If
+            diagram.AxisY.WholeRange.MaxValue = MaxValue
+
+            .DataBind()
         End With
     End Sub
 
-    Private Sub LoadChart(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String)
+    Private Sub LoadChartX(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String)
         Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartXR(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
         With chartX
             .DataSource = xr
-            .DataBind()
-
             Dim diagram As XYDiagram = CType(.Diagram, XYDiagram)
             diagram.AxisX.WholeRange.MinValue = 0
             diagram.AxisX.WholeRange.MaxValue = 12
@@ -474,8 +522,9 @@ Public Class ProdSampleInput
             diagram.AxisX.MinorCount = 1
             diagram.AxisX.GridLines.Visible = False
 
-            diagram.AxisY.MinorCount = 4
-            diagram.AxisY.GridLines.MinorVisible = True
+            diagram.AxisY.NumericScaleOptions.CustomGridAlignment = 0.01
+            diagram.AxisY.GridLines.MinorVisible = False
+
 
             Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
             diagram.AxisY.ConstantLines.Clear()
@@ -509,6 +558,7 @@ Public Class ProdSampleInput
 
             diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
             diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
+            .DataBind()
         End With
     End Sub
 
@@ -524,7 +574,7 @@ Public Class ProdSampleInput
         Dim ItemCheckCode As String = Split(Prm, "|")(3)
         Dim ProdDate As String = Split(Prm, "|")(4)
 
-        LoadChart(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
+        LoadChartX(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
     End Sub
 
     Private Sub gridX_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles gridX.HtmlDataCellPrepared

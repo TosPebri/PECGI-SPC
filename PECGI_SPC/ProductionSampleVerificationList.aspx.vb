@@ -10,6 +10,9 @@ Imports DevExpress.Web.Data
 Imports DevExpress.Web
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
+Imports DevExpress.XtraGrid
+Imports DevExpress.XtraGrid.Views.Base
+Imports DevExpress.Data
 
 Public Class ProductionSampleVerificationList
     Inherits System.Web.UI.Page
@@ -719,137 +722,32 @@ Public Class ProductionSampleVerificationList
         Session("sProdDateTo") = sProdDateTo
     End Sub
 
+    Private Sub GridMenu_SelectionChanged(sender As Object, e As EventArgs) Handles GridMenu.SelectionChanged
+
+    End Sub
+
+    Public Event SelectionChanged As SelectionChangedEventHandler
+
+    Private lockSelection As Boolean = False
+    Private Sub gridView1_SelectionChanged(ByVal sender As Object, ByVal e As DevExpress.Data.SelectionChangedEventArgs)
+        'If lockSelection Then
+        '    Return
+        'End If
+        'Dim view As GridView = TryCast(sender, GridView)
+        'Dim selectedRows() As Integer = view.GetSelectedRows()
+        'lockSelection = True
+        'For Each selectedRow As Integer In selectedRows
+        '    If selectedRow <> e.ControllerRow Then
+        '        view.UnselectRow(selectedRow)
+        '    End If
+        'Next selectedRow
+        'lockSelection = False
+    End Sub
+
+
+
 
 #End Region
-
-    'Private Sub up_Excel(cls As clsProductionSampleVerificationList)
-    '    Dim ps As New PrintingSystem()
-    '    UpGridLoad(cls)
-    '    Dim linkX As New PrintableComponentLink(ps)
-    '    linkX.Component = GridExport
-    '    Dim compositeLink As New CompositeLink(ps)
-    '    compositeLink.Links.AddRange(New Object() {linkX})
-    '    compositeLink.CreateDocument()
-    '    Using stream As New MemoryStream()
-    '        compositeLink.PrintingSystem.ExportToXlsx(stream)
-    '        Response.Clear()
-    '        Response.Buffer = False
-    '        Response.AppendHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    '        Response.AppendHeader("Content-Disposition", "attachment; filename=Production Sample Verification List_" + Now.ToString("yyyyMMdd HHmmss") + ".xlsx")
-    '        Response.BinaryWrite(stream.ToArray())
-    '        Response.End()
-    '    End Using
-    '    ps.Dispose()
-    'End Sub
-
-
-    'Private Sub up_Fillcombo()
-    '    Try
-    '        Dim data As New clsProductionSampleVerificationList()
-    '        Dim ErrMsg As String = ""
-    '        Dim a As String
-
-    '        '============ FILL COMBO FACTORY CODE ================'
-    '        dt = clsProductionSampleVerificationListDB.FillCombo(Factory_Sel, data, ErrMsg)
-    '        With cboFactory
-    '            .DataSource = dt
-    '            .DataBind()
-    '        End With
-    '        If cboFactory.SelectedIndex < 0 Then
-    '            a = ""
-    '        Else
-    '            a = cboFactory.SelectedItem.GetFieldValue("CODE")
-    '        End If
-    '        HideValue.Set("FactoryCode", a)
-    '        data.FactoryCode = HideValue.Get("FactoryCode")
-    '        '======================================================'
-
-
-    '        '============== FILL COMBO ITEM TYPE =================='
-    '        dt = clsProductionSampleVerificationListDB.FillCombo(ItemType_Sel, data, ErrMsg)
-    '        With cboItemType
-    '            .DataSource = dt
-    '            .DataBind()
-    '            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-    '        End With
-    '        If cboItemType.SelectedIndex < 0 Then
-    '            a = ""
-    '        Else
-    '            a = cboItemType.SelectedItem.GetFieldValue("CODE")
-    '        End If
-    '        HideValue.Set("ItemType_Code", a)
-    '        data.ItemType_Code = HideValue.Get("ItemType_Code")
-    '        '======================================================'
-
-
-    '        '============== FILL COMBO LINE CODE =================='
-    '        dt = clsProductionSampleVerificationListDB.FillCombo(Line_Sel, data, ErrMsg)
-    '        With cboLineID
-    '            .DataSource = dt
-    '            .DataBind()
-    '            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-    '        End With
-    '        If cboLineID.SelectedIndex < 0 Then
-    '            a = ""
-    '        Else
-    '            a = cboLineID.SelectedItem.GetFieldValue("CODE")
-    '        End If
-    '        HideValue.Set("LineCode", a)
-    '        data.LineCode = HideValue.Get("LineCode")
-    '        '======================================================'
-
-
-    '        '============== FILL COMBO ITEM CHECK =================='
-    '        dt = clsProductionSampleVerificationListDB.FillCombo(ItemCheck_Sel, data, ErrMsg)
-    '        With cboItemCheck
-    '            .DataSource = dt
-    '            .DataBind()
-    '            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-    '        End With
-    '        If cboItemCheck.SelectedIndex < 0 Then
-    '            a = ""
-    '        Else
-    '            a = cboItemCheck.SelectedItem.GetFieldValue("CODE")
-    '        End If
-    '        HideValue.Set("ItemCheck_Code", a)
-    '        data.ItemCheck_Code = HideValue.Get("ItemCheck_Code")
-    '        '======================================================'
-
-    '        '============== FILL MK VERIFICATION =================='
-    '        dt = clsProductionSampleVerificationListDB.FillCombo(MK_Sel, data, ErrMsg)
-    '        With cboMK
-    '            .DataSource = dt
-    '            .DataBind()
-    '            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-    '        End With
-    '        If cboMK.SelectedIndex < 0 Then
-    '            a = ""
-    '        Else
-    '            a = cboMK.SelectedItem.GetFieldValue("CODE")
-    '        End If
-    '        HideValue.Set("MK", a)
-    '        '======================================================'
-
-
-    '        '============== FILL QC VERIFICATION =================='
-    '        dt = clsProductionSampleVerificationListDB.FillCombo(QC_Sel, data, ErrMsg)
-    '        With cboQC
-    '            .DataSource = dt
-    '            .DataBind()
-    '            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-    '        End With
-    '        If cboQC.SelectedIndex < 0 Then
-    '            a = ""
-    '        Else
-    '            a = cboQC.SelectedItem.GetFieldValue("CODE")
-    '        End If
-    '        HideValue.Set("QC", a)
-    '        '======================================================'
-
-    '    Catch ex As Exception
-    '        show_error(MsgTypeEnum.Info, "", 0)
-    '    End Try
-    'End Sub
 
 #End Region
 

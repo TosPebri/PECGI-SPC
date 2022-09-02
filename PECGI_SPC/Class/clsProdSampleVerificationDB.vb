@@ -69,6 +69,7 @@ Public Class clsProdSampleVerificationDB
                 cmd.Parameters.AddWithValue("ItemCheckCode", If(data.ItemCheck_Code, ""))
                 cmd.Parameters.AddWithValue("ProdDate", If(data.ProdDate, ""))
                 cmd.Parameters.AddWithValue("ShiftCode", If(data.ShiftCode, ""))
+                cmd.Parameters.AddWithValue("Time", If(data.Time, ""))
                 cmd.Parameters.AddWithValue("PIC", If(data.PIC, ""))
                 cmd.Parameters.AddWithValue("Action", If(data.Action, ""))
                 cmd.Parameters.AddWithValue("Result", If(data.Result, ""))

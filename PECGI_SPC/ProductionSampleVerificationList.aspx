@@ -143,12 +143,13 @@
 
         function GetSelectedFieldValuesCallback(values) {
             var result = ''
-            for (var i = 0; i < values.length; i++)
-                for (var j = 0; j < values[i].length; j++) {
-                    result += values[i][j] + '|';
-                }
+            var n = values.length;
+            for (var j = 0; j < values[n-1].length; j++) {
+                result += values[n-1][j] + '|';
+            }
+         
             Content_SelectData = result;
-
+            console.log(Content_SelectData);
             if (values.length == 0) {
                 btnVerification.SetEnabled(false);
             }
@@ -157,11 +158,22 @@
             }
         };
 
+        //function SelectionChanged(s, e) {
+        //    s.GetSelectedFieldValues("SPCResultID;FactoryCode;ItemTypeCode;LineCode;ItemCheckCode;ProdDate;Shift;SequenceNo", GetSelectedFieldValuesCallback);
+        //}
+
         function SelectionChanged(s, e) {
-            s.GetSelectedFieldValues("SPCResultID;FactoryCode;ItemTypeCode;LineCode;ItemCheckCode;ProdDate;Shift;SequenceNo", GetSelectedFieldValuesCallback);
+            if (e.isSelected) {
+                if (s.GetSelectedRowCount() > 1 && previuosRowIndex != null) {
+                    s.UnselectRowsByKey(previuosRowIndex);
+                } 
+                previuosRowIndex = s.GetRowKey(e.visibleIndex);
+                s.GetSelectedFieldValues("SPCResultID;FactoryCode;ItemTypeCode;LineCode;ItemCheckCode;ProdDate;Shift;SequenceNo", GetSelectedFieldValuesCallback);
+            }
         }
 
         function Verification() {
+            console.log(Content_SelectData);
             GridMenu.PerformCallback('Verify|' + Content_SelectData);
             millisecondsToWait = 100;
             setTimeout(function () {
@@ -523,12 +535,12 @@
                     </Columns>
                 </dx:GridViewBandColumn>
             </Columns>
-            <SettingsBehavior ColumnResizeMode="control" />
+            <SettingsBehavior ColumnResizeMode="control"/>
             <SettingsPager Mode="ShowPager" PageSize="20" AlwaysShowPager="true" PageSizeItemSettings-Visible="true">
                 <PageSizeItemSettings Visible="True"></PageSizeItemSettings>
             </SettingsPager>
             <Settings HorizontalScrollBarMode="Auto" VerticalScrollBarMode="Auto" VerticalScrollableHeight="300" />
-
+            
         </dx:ASPxGridView>
     </div>
 

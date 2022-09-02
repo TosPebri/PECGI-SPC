@@ -44,7 +44,6 @@ Public Class ProdSampleVerification
     Dim dt As DataTable
     Dim ds As DataSet
 
-
     'EXCEL DECLARE
     Dim row_GridTitle = 0
     Dim row_HeaderResult = 0
@@ -73,8 +72,7 @@ Public Class ProdSampleVerification
     Public AuthAccess As Boolean = False
 
 #End Region
-
-#Region "StartForm"
+#Region "LOAD FORM"
     Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
         pUser = Session("user")
         AuthAccess = sGlobal.Auth_UserAccess(pUser, "B040")
@@ -84,7 +82,6 @@ Public Class ProdSampleVerification
         sGlobal.getMenu("B040")
         Master.SiteTitle = sGlobal.menuName
     End Sub
-
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             If Request.QueryString("prm") IsNot Nothing Then
@@ -107,15 +104,10 @@ Public Class ProdSampleVerification
 
                 Up_GridLoad(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd"), prmShifCode, prmSeqNo)
                 Up_GridLoadActivities(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd"), prmShifCode, prmSeqNo)
-
-                'If VerifyStatus = 1 Then
-                '    btnVerification.Enabled = True
-                'End If
                 Grid.JSProperties("cp_Verify") = VerifyStatus
             Else
                 dtProdDate.Value = DateTime.Now
                 UpFillCombo()
-                Up_GridLoadActivities("", "", "", "", "", "", "")
                 Grid.JSProperties("cp_Verify") = VerifyStatus
                 btnBack.Visible = False
             End If
@@ -124,7 +116,112 @@ Public Class ProdSampleVerification
     End Sub
 #End Region
 
-#Region "Event"
+#Region "EVENT CALLBACK"
+    Private Sub cboLineID_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboLineID.Callback
+        Try
+            Dim data As New clsProdSampleVerification()
+            data.User = pUser
+            data.FactoryCode = e.Parameter
+
+            dt = clsProdSampleVerificationDB.FillCombo(Line_Sel, data)
+            With cboLineID
+                .DataSource = dt
+                .DataBind()
+            End With
+        Catch ex As Exception
+            show_error(MsgTypeEnum.Info, ex.Message, 0)
+        End Try
+    End Sub
+    Private Sub cboItemCheck_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboItemCheck.Callback
+        Try
+            Dim data As New clsProdSampleVerification()
+            data.FactoryCode = Split(e.Parameter, "|")(0)
+            data.ItemType_Code = Split(e.Parameter, "|")(1)
+            data.LineCode = Split(e.Parameter, "|")(2)
+            data.User = pUser
+
+            dt = clsProdSampleVerificationDB.FillCombo(ItemCheck_Sel, data)
+            With cboItemCheck
+                .DataSource = dt
+                .DataBind()
+            End With
+        Catch ex As Exception
+            show_error(MsgTypeEnum.Info, ex.Message, 0)
+        End Try
+    End Sub
+    Private Sub cboShift_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboShift.Callback
+        Try
+            Dim data As New clsProdSampleVerification()
+            data.FactoryCode = Split(e.Parameter, "|")(0)
+            data.ItemType_Code = Split(e.Parameter, "|")(1)
+            data.LineCode = Split(e.Parameter, "|")(2)
+            data.ItemCheck_Code = Split(e.Parameter, "|")(3)
+
+            dt = clsProdSampleVerificationDB.FillCombo(Shift_Sel, data)
+            With cboShift
+                .DataSource = dt
+                .DataBind()
+            End With
+
+        Catch ex As Exception
+            show_error(MsgTypeEnum.Info, ex.Message, 0)
+        End Try
+    End Sub
+    Private Sub cboSeq_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboSeq.Callback
+        Try
+            Dim data As New clsProdSampleVerification()
+            data.FactoryCode = Split(e.Parameter, "|")(0)
+            data.ItemType_Code = Split(e.Parameter, "|")(1)
+            data.LineCode = Split(e.Parameter, "|")(2)
+            data.ItemCheck_Code = Split(e.Parameter, "|")(3)
+            data.ShiftCode = Split(e.Parameter, "|")(4)
+
+            dt = clsProdSampleVerificationDB.FillCombo(Seq_Sel, data)
+            With cboSeq
+                .DataSource = dt
+                .DataBind()
+            End With
+
+        Catch ex As Exception
+            show_error(MsgTypeEnum.Info, ex.Message, 0)
+        End Try
+    End Sub
+    Private Sub btnExcel_Click(sender As Object, e As EventArgs) Handles btnExcel.Click
+        Dim cls As New clsProdSampleVerification
+        Dim Factory As String = cboFactory.Value
+        Dim FactoryName As String = cboFactory.Text
+        Dim Itemtype As String = cboItemType.Value
+        Dim Itemtype_Name As String = cboItemType.Text
+        Dim Line As String = cboLineID.Value
+        Dim LineName As String = cboLineID.Text
+        Dim ItemCheck As String = cboItemCheck.Value
+        Dim ItemCheck_Name As String = cboItemCheck.Text
+        Dim prodDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
+        Dim Period As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy MMM dd")
+        Dim Shift As String = cboShift.Value
+        Dim ShiftName As String = cboShift.Text
+        Dim Seq As String = cboSeq.Value
+
+        cls.FactoryCode = Factory
+        cls.FactoryName = FactoryName
+        cls.ItemType_Code = Itemtype
+        cls.ItemType_Name = Itemtype_Name
+        cls.LineCode = Line
+        cls.LineName = LineName
+        cls.ItemCheck_Code = ItemCheck
+        cls.ItemCheck_Name = ItemCheck_Name
+        cls.ProdDate = prodDate
+        cls.Period = Period
+        cls.ShiftCode = Shift
+        cls.ShiftName = ShiftName
+        cls.Seq = Seq
+
+        up_Excel(cls)
+    End Sub
+
+#End Region
+
+#Region "GRID CALLBACK"
     Private Sub Grid_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles Grid.CustomCallback
         Try
             Dim cls As New clsProdSampleVerification
@@ -199,7 +296,6 @@ Public Class ProdSampleVerification
             show_errorGrid(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
-
     Private Sub GridMenu_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles GridMenu.CustomCallback
         Try
             Dim cls As New clsProdSampleVerification
@@ -235,32 +331,38 @@ Public Class ProdSampleVerification
             GridMenu.SettingsCommandButton.UpdateButton.Text = "Save"
         End If
     End Sub
-
     Private Sub Grid_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles Grid.HtmlDataCellPrepared
         Try
             If e.DataColumn.FieldName = "nDescIndex" Then
                 DescIndex = e.CellValue
             ElseIf e.DataColumn.FieldName <> "nDesc" Then
-
                 If DescIndex = "EachData" Then
-                    If e.CellValue < LSL Or e.CellValue > USL Then
-                        e.Cell.BackColor = Color.Red
-                    ElseIf e.CellValue < LSL Or e.CellValue > UCL Then
-                        e.Cell.BackColor = Color.Pink
+                    If Not IsDBNull(e.CellValue) Then
+                        If e.CellValue < LSL Or e.CellValue > USL Then
+                            e.Cell.BackColor = Color.Red
+                        ElseIf e.CellValue < LSL Or e.CellValue > UCL Then
+                            e.Cell.BackColor = Color.Pink
+                        End If
                     End If
                 ElseIf DescIndex = "XBar" Then
-                    If e.CellValue < LSL Or e.CellValue > USL Then
-                        e.Cell.BackColor = Color.Red
-                    ElseIf e.CellValue < LSL Or e.CellValue > UCL Then
-                        e.Cell.BackColor = Color.Yellow
+                    If Not IsDBNull(e.CellValue) Then
+                        If e.CellValue < LSL Or e.CellValue > USL Then
+                            e.Cell.BackColor = Color.Red
+                        ElseIf e.CellValue < LSL Or e.CellValue > UCL Then
+                            e.Cell.BackColor = Color.Yellow
+                        End If
                     End If
                 ElseIf DescIndex = "Judgement" Then
-                    If e.CellValue = "NG" Then
-                        e.Cell.BackColor = Color.Red
+                    If Not IsDBNull(e.CellValue) Then
+                        If e.CellValue = "NG" Then
+                            e.Cell.BackColor = Color.Red
+                        End If
                     End If
                 ElseIf DescIndex = "Correction" Then
-                    If e.CellValue = "C" Then
-                        e.Cell.BackColor = Color.Orange
+                    If Not IsDBNull(e.CellValue) Then
+                        If e.CellValue = "C" Then
+                            e.Cell.BackColor = Color.Orange
+                        End If
                     End If
                 ElseIf DescIndex = "View" Then
                     e.Cell.ForeColor = Color.Blue
@@ -281,100 +383,50 @@ Public Class ProdSampleVerification
         End Try
     End Sub
     Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
-        If Not GridMenu.IsNewRowEditing Then
-            If e.Column.FieldName = "FactoryCode" Or e.Column.FieldName = "ItemTypeCode" Or
-                e.Column.FieldName = "LineCode" Or e.Column.FieldName = "ItemCheckCode" Or
-                e.Column.FieldName = "ShiftCode" Or e.Column.FieldName = "ProdDate" Then
+
+        If e.Column.FieldName = "FactoryName" Or e.Column.FieldName = "ItemTypeName" Or e.Column.FieldName = "LineName" Or e.Column.FieldName = "ItemCheckName" Or e.Column.FieldName = "ShiftName" Then
+            e.Editor.ReadOnly = True
+            e.Editor.ForeColor = Color.Silver
+        End If
+
+        If GridMenu.IsNewRowEditing Then
+            If e.Column.FieldName = "FactoryCode" Then
+                e.Editor.Value = cboFactory.Value
+            ElseIf e.Column.FieldName = "FactoryName" Then
+                e.Editor.Value = cboFactory.Text
+            ElseIf e.Column.FieldName = "ItemTypeCode" Then
+                e.Editor.Value = cboItemType.Value
+            ElseIf e.Column.FieldName = "ItemTypeName" Then
+                e.Editor.Value = cboItemType.Text
+            ElseIf e.Column.FieldName = "LineCode" Then
+                e.Editor.Value = cboLineID.Value
+            ElseIf e.Column.FieldName = "LineName" Then
+                e.Editor.Value = cboLineID.Text
+            ElseIf e.Column.FieldName = "ItemCheckCode" Then
+                e.Editor.Value = cboItemCheck.Value
+            ElseIf e.Column.FieldName = "ItemCheckName" Then
+                e.Editor.Value = cboItemCheck.Text
+            ElseIf e.Column.FieldName = "ShiftCode" Then
+                e.Editor.Value = cboShift.Value
+            ElseIf e.Column.FieldName = "ShiftName" Then
+                e.Editor.Value = cboShift.Text
+            ElseIf e.Column.FieldName = "ProdDate" Then
+                e.Editor.Value = dtProdDate.Value
+            End If
+
+        ElseIf Not GridMenu.IsNewRowEditing Then
+            If e.Column.FieldName = "ProdDate" Then
                 e.Editor.ReadOnly = True
                 e.Editor.ForeColor = Color.Silver
             End If
         End If
-
-        Dim cls As New clsProdSampleVerification
-        cls.User = pUser
-
-        If e.Column.FieldName = "FactoryCode" Then
-            Dim combo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
-            up_FillcomboGrid(combo, Factory_Sel, cls)
-            If GridMenu.IsEditing Then combo.Value = e.Value : HideValue.Set("FactoryCode", e.Value)
-        ElseIf e.Column.FieldName = "ItemTypeCode" Then
-            Dim combo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
-            up_FillcomboGrid(combo, ItemType_Sel, cls)
-            If GridMenu.IsEditing Then combo.Value = e.Value : HideValue.Set("ItemTypeCode", e.Value)
-        ElseIf e.Column.FieldName = "LineCode" Then
-            Dim combo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
-            AddHandler combo.Callback, AddressOf GridChange_OnCallback
-            If GridMenu.IsEditing Then
-                cls.FactoryCode = HideValue.Get("FactoryCode")
-                Call up_FillcomboGrid(combo, Line_Sel, cls)
-                combo.Value = e.Value
-            End If
-        ElseIf e.Column.FieldName = "ItemCheckCode" Then
-            Dim combo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
-            AddHandler combo.Callback, AddressOf GridChange_OnCallback
-            If GridMenu.IsEditing Then
-                cls.FactoryCode = HideValue.Get("FactoryCode")
-                cls.ItemType_Code = HideValue.Get("ItemTypeCode")
-                cls.LineCode = HideValue.Get("LineCode")
-                up_FillcomboGrid(combo, ItemCheck_Sel, cls)
-                combo.Value = e.Value
-                HideValue.Set("ItemCheckCode", e.Value)
-            End If
-        ElseIf e.Column.FieldName = "ShiftCode" Then
-            Dim combo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
-            AddHandler combo.Callback, AddressOf GridChange_OnCallback
-            If GridMenu.IsEditing Then
-                cls.FactoryCode = HideValue.Get("FactoryCode")
-                cls.ItemType_Code = HideValue.Get("ItemTypeCode")
-                cls.LineCode = HideValue.Get("LineCode")
-                cls.ItemCheck_Code = HideValue.Get("ItemCheckCode")
-                up_FillcomboGrid(combo, Shift_Sel, cls)
-                combo.Value = e.Value
-            End If
-        ElseIf e.Column.FieldName = "PIC" Then
-            Dim combo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
-            up_FillcomboGrid(combo, User_Sel, cls)
-        End If
-
     End Sub
+#End Region
 
-    Private Sub GridChange_OnCallback(ByVal source As Object, ByVal e As CallbackEventArgsBase)
-        Dim cmb As ASPxComboBox = source
-        Dim cls As New clsProdSampleVerification
-        Dim ItemTypeCode = ""
-        Dim LineCode = ""
-        Dim ItemCheckCode = ""
-
-        Dim prm As String = Split(e.Parameter, "|")(0)
-        Dim Sel As String = Split(e.Parameter, "|")(1)
-        Dim FactoryCode As String = Split(e.Parameter, "|")(2)
-        If prm = "ItemCheckCode" Then
-            ItemTypeCode = Split(e.Parameter, "|")(3)
-            LineCode = Split(e.Parameter, "|")(4)
-        ElseIf prm = "ShiftCode" Then
-            ItemTypeCode = Split(e.Parameter, "|")(3)
-            LineCode = Split(e.Parameter, "|")(4)
-            ItemCheckCode = Split(e.Parameter, "|")(5)
-        End If
-
-
-        With cls
-            .User = pUser
-            .FactoryCode = FactoryCode
-            .ItemType_Code = ItemTypeCode
-            .LineCode = LineCode
-            .ItemCheck_Code = ItemCheckCode
-        End With
-        dt = clsProdSampleVerificationDB.FillCombo(Sel, cls)
-        With cmb
-            .Items.Clear() : .Columns.Clear()
-            .DataSource = dt
-            .DataBind()
-        End With
-    End Sub
-
+#Region "GRID EVENT INSERT - UPDATE - DELETE"
     Protected Sub GridMenu_RowInserting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles GridMenu.RowInserting
         e.Cancel = True
+        Dim a = e.NewValues("Time")
 
         Dim data As New clsProdSampleVerification With {
             .FactoryCode = e.NewValues("FactoryCode") & "",
@@ -382,6 +434,7 @@ Public Class ProdSampleVerification
             .LineCode = e.NewValues("LineCode") & "",
             .ItemCheck_Code = e.NewValues("ItemCheckCode") & "",
             .ProdDate = Convert.ToDateTime(e.NewValues("ProdDate")).ToString("yyyy-MM-dd"),
+            .Time = Convert.ToDateTime(e.NewValues("Time")).ToString("HH:mm"),
             .ShiftCode = e.NewValues("ShiftCode") & "",
             .Action = e.NewValues("Action") & "",
             .PIC = e.NewValues("PIC") & "",
@@ -411,6 +464,7 @@ Public Class ProdSampleVerification
         'Dim Seq As String = HideValue.Get("Seq")
 
         Dim data As New clsProdSampleVerification With {
+            .Time = Convert.ToDateTime(e.NewValues("Time")).ToString("HH:mm"),
             .PIC = e.NewValues("PIC") & "",
             .ActivityID = e.NewValues("ActivityID") & "",
             .Action = e.NewValues("Action") & "",
@@ -429,7 +483,6 @@ Public Class ProdSampleVerification
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
-
     Protected Sub GridMenu_RowDeleting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataDeletingEventArgs) Handles GridMenu.RowDeleting
         e.Cancel = True
         Dim Factory As String = HideValue.Get("FactoryCode")
@@ -451,123 +504,14 @@ Public Class ProdSampleVerification
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
-
-    Private Sub cboLineID_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboLineID.Callback
-        Try
-            Dim data As New clsProdSampleVerification()
-            data.User = pUser
-            data.FactoryCode = e.Parameter
-
-            dt = clsProdSampleVerificationDB.FillCombo(Line_Sel, data)
-            With cboLineID
-                .DataSource = dt
-                .DataBind()
-            End With
-        Catch ex As Exception
-            show_error(MsgTypeEnum.Info, ex.Message, 0)
-        End Try
-    End Sub
-
-    Private Sub cboItemCheck_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboItemCheck.Callback
-        Try
-            Dim data As New clsProdSampleVerification()
-            data.FactoryCode = Split(e.Parameter, "|")(0)
-            data.ItemType_Code = Split(e.Parameter, "|")(1)
-            data.LineCode = Split(e.Parameter, "|")(2)
-            data.User = pUser
-
-            dt = clsProdSampleVerificationDB.FillCombo(ItemCheck_Sel, data)
-            With cboItemCheck
-                .DataSource = dt
-                .DataBind()
-            End With
-        Catch ex As Exception
-            show_error(MsgTypeEnum.Info, ex.Message, 0)
-        End Try
-    End Sub
-
-    Private Sub cboShift_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboShift.Callback
-        Try
-            Dim data As New clsProdSampleVerification()
-            data.FactoryCode = Split(e.Parameter, "|")(0)
-            data.ItemType_Code = Split(e.Parameter, "|")(1)
-            data.LineCode = Split(e.Parameter, "|")(2)
-            data.ItemCheck_Code = Split(e.Parameter, "|")(3)
-
-            dt = clsProdSampleVerificationDB.FillCombo(Shift_Sel, data)
-            With cboShift
-                .DataSource = dt
-                .DataBind()
-            End With
-
-        Catch ex As Exception
-            show_error(MsgTypeEnum.Info, ex.Message, 0)
-        End Try
-    End Sub
-
-    Private Sub cboSeq_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboSeq.Callback
-        Try
-            Dim data As New clsProdSampleVerification()
-            data.FactoryCode = Split(e.Parameter, "|")(0)
-            data.ItemType_Code = Split(e.Parameter, "|")(1)
-            data.LineCode = Split(e.Parameter, "|")(2)
-            data.ItemCheck_Code = Split(e.Parameter, "|")(3)
-            data.ShiftCode = Split(e.Parameter, "|")(4)
-
-            dt = clsProdSampleVerificationDB.FillCombo(Seq_Sel, data)
-            With cboSeq
-                .DataSource = dt
-                .DataBind()
-            End With
-
-        Catch ex As Exception
-            show_error(MsgTypeEnum.Info, ex.Message, 0)
-        End Try
-    End Sub
-
-
-    Private Sub btnExcel_Click(sender As Object, e As EventArgs) Handles btnExcel.Click
-        Dim cls As New clsProdSampleVerification
-        Dim Factory As String = cboFactory.Value
-        Dim FactoryName As String = cboFactory.Text
-        Dim Itemtype As String = cboItemType.Value
-        Dim Itemtype_Name As String = cboItemType.Text
-        Dim Line As String = cboLineID.Value
-        Dim LineName As String = cboLineID.Text
-        Dim ItemCheck As String = cboItemCheck.Value
-        Dim ItemCheck_Name As String = cboItemCheck.Text
-        Dim prodDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
-        Dim Period As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy MMM dd")
-        Dim Shift As String = cboShift.Value
-        Dim ShiftName As String = cboShift.Text
-        Dim Seq As String = cboSeq.Value
-
-        cls.FactoryCode = Factory
-        cls.FactoryName = FactoryName
-        cls.ItemType_Code = Itemtype
-        cls.ItemType_Name = Itemtype_Name
-        cls.LineCode = Line
-        cls.LineName = LineName
-        cls.ItemCheck_Code = ItemCheck
-        cls.ItemCheck_Name = ItemCheck_Name
-        cls.ProdDate = prodDate
-        cls.Period = Period
-        cls.ShiftCode = Shift
-        cls.ShiftName = ShiftName
-        cls.Seq = Seq
-
-        up_Excel(cls)
-    End Sub
-
 #End Region
 
-#Region "Procedure"
+#Region "FUNCTION"
     Private Sub show_error(ByVal msgType As MsgTypeEnum, ByVal ErrMsg As String, ByVal pVal As Integer)
         GridMenu.JSProperties("cp_message") = ErrMsg
         GridMenu.JSProperties("cp_type") = msgType
         GridMenu.JSProperties("cp_val") = pVal
     End Sub
-
     Private Sub show_errorGrid(ByVal msgType As MsgTypeEnum, ByVal ErrMsg As String, ByVal pVal As Integer)
         Grid.JSProperties("cp_message") = ErrMsg
         Grid.JSProperties("cp_type") = msgType
@@ -728,7 +672,6 @@ Public Class ProdSampleVerification
             show_error(MsgTypeEnum.Info, "", 0)
         End Try
     End Sub
-
     Private Sub Up_GridLoad(Factory As String, ItemType As String, Line As String, ItemCheck As String, ProdDate As String, Shift As String, Seq As String)
         Dim msgErr As String = ""
 
@@ -840,7 +783,6 @@ Public Class ProdSampleVerification
 
         End With
     End Sub
-
     Private Sub Up_GridLoadActivities(Factory As String, ItemType As String, Line As String, ItemCheck As String, ProdDate As String, Shift As String, Seq As String)
 
         Dim cls As New clsProdSampleVerification
@@ -852,6 +794,9 @@ Public Class ProdSampleVerification
         cls.ShiftCode = Shift
         cls.Seq = Seq
 
+        Dim commandColumn = TryCast(GridMenu.Columns(0), GridViewCommandColumn)
+        commandColumn.ShowNewButtonInHeader = True
+
         With GridMenu
             ds = clsProdSampleVerificationDB.GridLoad(GetGridData_Activity, cls)
             Dim dtGridMenu As DataTable = ds.Tables(0)
@@ -859,7 +804,6 @@ Public Class ProdSampleVerification
             .DataBind()
         End With
     End Sub
-
     Private Sub Verify(SpcResultId As String)
         Dim cls As New clsProdSampleVerification
         cls.SPCResultID = SpcResultId
@@ -887,18 +831,23 @@ Public Class ProdSampleVerification
             show_errorGrid(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
-
-    Private Sub up_FillcomboGrid(ByVal cmb As ASPxComboBox, Action As String, cls As clsProdSampleVerification)
+    Private Sub up_FillcomboGrid(ByVal cmb As ASPxComboBox, Action As String, cls As clsProdSampleVerification, Value As String)
         dt = clsProdSampleVerificationDB.FillCombo(Action, cls)
         With cmb
             .Items.Clear() : .Columns.Clear()
             .DataSource = dt
             .DataBind()
         End With
+        For i = 0 To dt.Rows.Count - 1
+            If dt.Rows(i)("CODE") = Value Then
+                cmb.SelectedIndex = i
+                Exit For
+            End If
+        Next
     End Sub
+#End Region
 
-
-#Region "Download To Excel"
+#Region "DOWNLOAD EXCEl"
     Private Sub up_Excel(cls As clsProdSampleVerification)
         Try
             Using excel As New ExcelPackage
@@ -928,7 +877,6 @@ Public Class ProdSampleVerification
         Catch ex As Exception
         End Try
     End Sub
-
     Private Sub GridTitle(ByVal pExl As ExcelWorksheet, cls As clsProdSampleVerification)
         With pExl
             Try
@@ -980,7 +928,6 @@ Public Class ProdSampleVerification
             End Try
         End With
     End Sub
-
     Private Sub HeaderResult(ByVal pExl As ExcelWorksheet, cls As clsProdSampleVerification)
         With pExl
             Try
@@ -1141,7 +1088,6 @@ Public Class ProdSampleVerification
             End Try
         End With
     End Sub
-
     Private Sub HeaderActivity(ByVal pExl As ExcelWorksheet, cls As clsProdSampleVerification)
         Try
             Dim irow = row_CellResult + 2
@@ -1197,7 +1143,6 @@ Public Class ProdSampleVerification
             Throw New Exception(ex.Message)
         End Try
     End Sub
-
     Private Sub CellActivity(ByVal pExl As ExcelWorksheet, cls As clsProdSampleVerification)
         Try
             Dim irow = row_HeaderActivity + 1
@@ -1251,178 +1196,10 @@ Public Class ProdSampleVerification
         End Try
 
     End Sub
-#End Region
-
-    'Private Sub UpFillCombo()
-    '    Try
-    '        Dim data As New clsProdSampleVerification()
-    '        Dim ErrMsg As String = ""
-    '        Dim a As String
-    '        data.User = pUser
-
-    '        '============ FILL COMBO FACTORY CODE ================'
-    '        dt = clsProdSampleVerificationDB.FillCombo(Factory_Sel, data, ErrMsg)
-    '        With cboFactory
-    '            .DataSource = dt
-    '            .DataBind()
-    '        End With
-    '        If prmFactoryCode <> "" Then
-    '            For i = 0 To dt.Rows.Count - 1
-    '                If dt.Rows(i)("CODE") = prmFactoryCode Then
-    '                    cboFactory.SelectedIndex = i
-    '                    Exit For
-    '                End If
-    '            Next
-    '            cboFactory.Enabled = False
-    '        Else
-    '            cboFactory.SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-    '        End If
-    '        If cboFactory.SelectedIndex < 0 Then
-    '            a = ""
-    '        Else
-    '            a = cboFactory.SelectedItem.GetFieldValue("CODE")
-    '        End If
-    '        HideValue.Set("FactoryCode", a)
-    '        data.FactoryCode = HideValue.Get("FactoryCode")
-    '        '======================================================'
-
-    '        '============== FILL COMBO ITEM TYPE =================='
-    '        dt = clsProdSampleVerificationDB.FillCombo(ItemType_Sel, data, ErrMsg)
-    '        With cboItemType
-    '            .DataSource = dt
-    '            .DataBind()
-    '        End With
-    '        If prmItemType <> "" Then
-    '            For i = 0 To dt.Rows.Count - 1
-    '                If dt.Rows(i)("CODE") = prmItemType Then
-    '                    cboItemType.SelectedIndex = i
-    '                    Exit For
-    '                End If
-    '            Next
-    '            cboItemType.Enabled = False
-    '        Else
-    '            cboItemType.SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-    '        End If
-    '        If cboItemType.SelectedIndex < 0 Then
-    '            a = ""
-    '        Else
-    '            a = cboItemType.SelectedItem.GetFieldValue("CODE")
-    '        End If
-    '        HideValue.Set("ItemType_Code", a)
-    '        data.ItemType_Code = HideValue.Get("ItemType_Code")
-    '        '======================================================'
-
-    '        '============== FILL COMBO LINE CODE =================='
-    '        dt = clsProdSampleVerificationDB.FillCombo(Line_Sel, data, ErrMsg)
-    '        With cboLineID
-    '            .DataSource = dt
-    '            .DataBind()
-    '        End With
-    '        If prmLineCode <> "" Then
-    '            For i = 0 To dt.Rows.Count - 1
-    '                If dt.Rows(i)("CODE") = prmLineCode Then
-    '                    cboLineID.SelectedIndex = i
-    '                    Exit For
-    '                End If
-    '            Next
-    '            cboLineID.Enabled = False
-    '        Else
-    '            cboLineID.SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-    '        End If
-    '        If cboLineID.SelectedIndex < 0 Then
-    '            a = ""
-    '        Else
-    '            a = cboLineID.SelectedItem.GetFieldValue("CODE")
-    '        End If
-    '        HideValue.Set("LineCode", a)
-    '        data.LineCode = HideValue.Get("LineCode")
-    '        '======================================================'
-
-
-    '        '============== FILL COMBO ITEM CHECK =================='
-    '        dt = clsProdSampleVerificationDB.FillCombo(ItemCheck_Sel, data, ErrMsg)
-    '        With cboItemCheck
-    '            .DataSource = dt
-    '            .DataBind()
-    '        End With
-    '        If prmItemCheck <> "" Then
-    '            For i = 0 To dt.Rows.Count - 1
-    '                If dt.Rows(i)("CODE") = prmItemCheck Then
-    '                    cboItemCheck.SelectedIndex = i
-    '                    Exit For
-    '                End If
-    '            Next
-    '            cboItemCheck.Enabled = False
-    '        Else
-    '            cboItemCheck.SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-    '        End If
-    '        If cboItemCheck.SelectedIndex < 0 Then
-    '            a = ""
-    '        Else
-    '            a = cboItemCheck.SelectedItem.GetFieldValue("CODE")
-    '        End If
-    '        HideValue.Set("ItemCheck_Code", a)
-    '        data.ItemCheck_Code = HideValue.Get("ItemCheck_Code")
-    '        '======================================================'
-
-    '        '============== FILL COMBO SHIFY =================='
-    '        dt = clsProdSampleVerificationDB.FillCombo(Shift_Sel, data, ErrMsg)
-    '        With cboShift
-    '            .DataSource = dt
-    '            .DataBind()
-    '            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-    '        End With
-    '        If prmShifCode <> "" Then
-    '            For i = 0 To dt.Rows.Count - 1
-    '                If dt.Rows(i)("CODE") = prmShifCode Then
-    '                    cboShift.SelectedIndex = i
-    '                    Exit For
-    '                End If
-    '            Next
-    '            cboShift.Enabled = False
-    '        Else
-    '            cboShift.SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-    '        End If
-    '        If cboShift.SelectedIndex < 0 Then
-    '            a = ""
-    '        Else
-    '            a = cboShift.SelectedItem.GetFieldValue("CODE")
-    '        End If
-    '        HideValue.Set("ShiftCode", a)
-    '        data.ShiftCode = HideValue.Get("ShiftCode")
-    '        '======================================================'
-
-    '        '============== FILL COMBO SEQ =================='
-    '        dt = clsProdSampleVerificationDB.FillCombo(Seq_Sel, data, ErrMsg)
-    '        With cboSeq
-    '            .DataSource = dt
-    '            .DataBind()
-    '            .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-    '        End With
-    '        If prmSeqNo <> "" Then
-    '            For i = 0 To dt.Rows.Count - 1
-    '                If dt.Rows(i)("CODE") = prmSeqNo Then
-    '                    cboSeq.SelectedIndex = i
-    '                    Exit For
-    '                End If
-    '            Next
-    '            cboSeq.Enabled = False
-    '        Else
-    '            cboSeq.SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
-    '        End If
-    '        If cboSeq.SelectedIndex < 0 Then
-    '            a = ""
-    '        Else
-    '            a = cboSeq.SelectedItem.GetFieldValue("CODE")
-    '        End If
-    '        HideValue.Set("Seq", a)
-    '        data.Seq = HideValue.Get("Seq")
-    '        '======================================================'
-
-    '    Catch ex As Exception
-    '        show_error(MsgTypeEnum.Info, "", 0)
-    '    End Try
-    'End Sub
+    Private Sub GridMenu_CancelRowEditing(sender As Object, e As ASPxStartRowEditingEventArgs) Handles GridMenu.CancelRowEditing
+        Dim commandColumn = TryCast(GridMenu.Columns(0), GridViewCommandColumn)
+        commandColumn.ShowNewButtonInHeader = True
+    End Sub
 
 #End Region
 End Class

@@ -366,6 +366,7 @@ Public Class ProdSampleVerification
                     End If
                 ElseIf DescIndex = "View" Then
                     e.Cell.ForeColor = Color.Blue
+
                 End If
 
                 If (e.DataColumn.FieldName = ColumnBrowse) Then
@@ -376,14 +377,26 @@ Public Class ProdSampleVerification
                     End If
 
                 End If
-
             End If
+
+            If DescIndex = "GridNothing" Then
+                e.Cell.BackColor = ColorTranslator.FromHtml("#4C4348")
+                e.Cell.BorderStyle = BorderStyle.None
+            End If
+
         Catch ex As Exception
             Throw New Exception("Error_EditingGrid !" & ex.Message)
         End Try
     End Sub
-    Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
 
+#End Region
+
+#Region "GRID EVENT INSERT - UPDATE - DELETE"
+    Private Sub GridMenu_CancelRowEditing(sender As Object, e As ASPxStartRowEditingEventArgs) Handles GridMenu.CancelRowEditing
+        Dim commandColumn = TryCast(GridMenu.Columns(0), GridViewCommandColumn)
+        commandColumn.ShowNewButtonInHeader = True
+    End Sub
+    Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
         If e.Column.FieldName = "FactoryName" Or e.Column.FieldName = "ItemTypeName" Or e.Column.FieldName = "LineName" Or e.Column.FieldName = "ItemCheckName" Or e.Column.FieldName = "ShiftName" Then
             e.Editor.ReadOnly = True
             e.Editor.ForeColor = Color.Silver
@@ -413,7 +426,6 @@ Public Class ProdSampleVerification
             ElseIf e.Column.FieldName = "ProdDate" Then
                 e.Editor.Value = dtProdDate.Value
             End If
-
         ElseIf Not GridMenu.IsNewRowEditing Then
             If e.Column.FieldName = "ProdDate" Then
                 e.Editor.ReadOnly = True
@@ -421,12 +433,48 @@ Public Class ProdSampleVerification
             End If
         End If
     End Sub
-#End Region
+    Protected Sub GridMenu_Validating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs) Handles GridMenu.RowValidating
+        Dim dataCol As New GridViewDataColumn
+        For Each column As GridViewColumn In GridMenu.Columns
+            Dim dataColumn As GridViewDataColumn = TryCast(column, GridViewDataColumn)
+            If dataColumn Is Nothing Then
+                Continue For
+            End If
 
-#Region "GRID EVENT INSERT - UPDATE - DELETE"
+            If dataColumn.FieldName = "ProdDate" Then
+                If IsNothing(e.NewValues("ProdDate")) OrElse e.NewValues("ProdDate").ToString.Trim = "" Then
+                    e.Errors(dataColumn) = "Please Fill Production Date!"
+                End If
+            End If
+
+            If dataColumn.FieldName = "Time" Then
+                If IsNothing(e.NewValues("Time")) OrElse e.NewValues("Time").ToString.Trim = "" Then
+                    e.Errors(dataColumn) = "Please Fill Time!"
+                End If
+            End If
+
+            If dataColumn.FieldName = "PIC" Then
+                If IsNothing(e.NewValues("PIC")) OrElse e.NewValues("PIC").ToString.Trim = "" Then
+                    e.Errors(dataColumn) = "Please Fill PIC!"
+                End If
+            End If
+
+            If dataColumn.FieldName = "Action" Then
+                If IsNothing(e.NewValues("Action")) OrElse e.NewValues("Action").ToString.Trim = "" Then
+                    e.Errors(dataColumn) = "Please Fill Action!"
+                End If
+            End If
+
+            If dataColumn.FieldName = "Result" Then
+                If IsNothing(e.NewValues("Result")) OrElse e.NewValues("Result").ToString.Trim = "" Then
+                    e.Errors(dataColumn) = "Please Fill Result!"
+                End If
+            End If
+        Next
+
+    End Sub
     Protected Sub GridMenu_RowInserting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles GridMenu.RowInserting
         e.Cancel = True
-        Dim a = e.NewValues("Time")
 
         Dim data As New clsProdSampleVerification With {
             .FactoryCode = e.NewValues("FactoryCode") & "",
@@ -1195,10 +1243,6 @@ Public Class ProdSampleVerification
             Throw New Exception(ex.Message)
         End Try
 
-    End Sub
-    Private Sub GridMenu_CancelRowEditing(sender As Object, e As ASPxStartRowEditingEventArgs) Handles GridMenu.CancelRowEditing
-        Dim commandColumn = TryCast(GridMenu.Columns(0), GridViewCommandColumn)
-        commandColumn.ShowNewButtonInHeader = True
     End Sub
 
 #End Region

@@ -230,6 +230,15 @@ Partial Public Class ProdSampleVerification
     Protected WithEvents lblGridMenu As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
+    '''dsUserSetup control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents dsUserSetup As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
     '''GridMenu control.
     '''</summary>
     '''<remarks>

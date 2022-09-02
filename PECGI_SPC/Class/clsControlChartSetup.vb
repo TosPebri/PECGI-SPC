@@ -25,7 +25,7 @@ Public Class clsControlChartSetupDB
         Using cn As New SqlConnection(Sconn.Stringkoneksi)
             cn.Open()
             Dim sql As String
-            sql = "sp_ChartSetup_FillCombo"
+            sql = "sp_SPC_ChartSetup_FillCombo"
             Dim cmd As New SqlCommand(sql, cn)
             cmd.CommandType = CommandType.StoredProcedure
             cmd.Parameters.AddWithValue("Type", type)
@@ -43,7 +43,7 @@ Public Class clsControlChartSetupDB
         Using cn As New SqlConnection(Sconn.Stringkoneksi)
             cn.Open()
             Dim sql As String
-            sql = "sp_ChartSetup_Sel"
+            sql = "sp_SPC_ChartSetup_Sel"
             Dim cmd As New SqlCommand(sql, cn)
             cmd.Parameters.AddWithValue("Factory", cls.Factory)
             cmd.Parameters.AddWithValue("Machine", cls.Machine)
@@ -63,7 +63,7 @@ Public Class clsControlChartSetupDB
             Using cn As New SqlConnection(Sconn.Stringkoneksi)
                 cn.Open()
                 Dim sql As String
-                sql = "sp_ChartSetup_InsUpd"
+                sql = "sp_SPC_ChartSetup_InsUpd"
                 Dim cmd As New SqlCommand(sql, cn)
                 cmd.CommandType = CommandType.StoredProcedure
                 cmd.Parameters.AddWithValue("Factory", cls.Factory)
@@ -93,7 +93,7 @@ Public Class clsControlChartSetupDB
             Using cn As New SqlConnection(Sconn.Stringkoneksi)
                 cn.Open()
                 Dim sql As String
-                sql = "sp_ChartSetup_Check"
+                sql = "sp_SPC_ChartSetup_Check"
                 Dim cmd As New SqlCommand(sql, cn)
                 cmd.CommandType = CommandType.StoredProcedure
                 cmd.Parameters.AddWithValue("Factory", cls.Factory)
@@ -114,7 +114,7 @@ Public Class clsControlChartSetupDB
             Using cn As New SqlConnection(Sconn.Stringkoneksi)
                 cn.Open()
                 Dim sql As String
-                sql = "sp_ChartSetup_Del"
+                sql = "sp_SPC_ChartSetup_Del"
                 Dim cmd As New SqlCommand(sql, cn)
                 cmd.CommandType = CommandType.StoredProcedure
                 cmd.Parameters.AddWithValue("Factory", cls.Factory)

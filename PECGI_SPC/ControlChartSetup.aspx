@@ -311,15 +311,15 @@
     <div style="padding: 20px 5px 5px 5px">
         <asp:SqlDataSource ID="dsType" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
-            SelectCommand="Exec sp_ChartSetup_FillCombo '1' "></asp:SqlDataSource>
+            SelectCommand="Exec sp_SPC_ChartSetup_FillCombo '1' "></asp:SqlDataSource>
 
         <asp:SqlDataSource ID="dsMachine" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
-            SelectCommand="Exec sp_ChartSetup_FillCombo '4' "></asp:SqlDataSource>
+            SelectCommand="Exec sp_SPC_ChartSetup_FillCombo '4' "></asp:SqlDataSource>
 
         <asp:SqlDataSource ID="dsItemCheck" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
-            SelectCommand="Exec sp_ChartSetup_FillCombo '5' "></asp:SqlDataSource>
+            SelectCommand="Exec sp_SPC_ChartSetup_FillCombo '5' "></asp:SqlDataSource>
 
         <dx:ASPxGridView ID="Grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="Grid"
             EnableTheming="True" Theme="Office2010Black" Width="100%" KeyFieldName="Factory;Type;Machine;ItemCheck;Start;LastUpdate"

@@ -137,7 +137,7 @@
     <div style="padding: 20px 5px 5px 5px">
         <asp:SqlDataSource ID="dsMS_Frequency" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
-            SelectCommand="Exec sp_MS_FrequencySetting_FillCombo"></asp:SqlDataSource>
+            SelectCommand="Exec sp_SPC_MS_FrequencySetting_FillCombo"></asp:SqlDataSource>
 
         <dx:ASPxGridView ID="Grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="Grid"
             EnableTheming="True" KeyFieldName="No;Frequency" Theme="Office2010Black" Width="100%"

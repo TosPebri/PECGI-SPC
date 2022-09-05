@@ -61,8 +61,40 @@
     </script>
 </asp:Content>
 
+<%--<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolderJavaScriptBody" runat="server">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            gridHeight(150);
+
+            $("#fullscreen").click(function () {
+                var fcval = $("#flscr").val();
+                if (fcval == "0") { //toClickFullScreen
+                    gridHeight(50);
+                    $("#flscr").val("1");
+                } else if (fcval == "1") { //toNormalFullScreen
+                    gridHeight(260);
+                    $("#flscr").val("0");
+                }
+            })
+        });
+
+        function gridHeight(pF) {
+            var h1 = 49;
+            var p1 = 10;
+            var h2 = 34;
+            var p2 = 13;
+            var h3 = $("#divhead").height();
+
+            var hAll = h1 + p1 + h2 + p2 + h3 + pF;
+            /* alert(h1 + p1 + h2 + p2 + h3);*/
+            var height = Math.max(0, document.documentElement.clientHeight);
+            Grid.SetHeight(height - hAll);
+        };
+    </script>
+</asp:Content>--%>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
-    <div style="padding: 5px 5px 5px 5px;">
+    <div id="divhead" style="padding: 5px 5px 5px 5px;">
         <table>
             <tr>
                 <td style="padding-right: 1em">
@@ -72,7 +104,7 @@
 
                 <td style="padding-right: 1em">
                     <dx:ASPxComboBox ID="cboFreq" runat="server" Theme="Office2010Black" Width="100px" Height="25px" ClientInstanceName="cboFreq"
-                        EnableIncrementalFiltering="True" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains">
+                        EnableIncrementalFiltering="True" DropDownStyle="DropDownList" IncrementalFilteringMode="Contains" TextField="Description" ValueField="Code">
                         <ItemStyle Height="10px" Paddings-Padding="4px" />
                         <ButtonStyle Width="5px" Paddings-Padding="4px" />
                         <ClientSideEvents SelectedIndexChanged="function(s, e) {
@@ -105,7 +137,7 @@
     <div style="padding: 20px 5px 5px 5px">
         <asp:SqlDataSource ID="dsMS_Frequency" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
-            SelectCommand="Exec sp_MS_FrequencySetting_FillCombo"></asp:SqlDataSource>
+            SelectCommand="Exec sp_SPC_MS_FrequencySetting_FillCombo"></asp:SqlDataSource>
 
         <dx:ASPxGridView ID="Grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="Grid"
             EnableTheming="True" KeyFieldName="No;Frequency" Theme="Office2010Black" Width="100%"

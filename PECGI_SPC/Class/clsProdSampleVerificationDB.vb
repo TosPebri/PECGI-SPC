@@ -55,7 +55,7 @@ Public Class clsProdSampleVerificationDB
         End Try
     End Function
 
-    Public Shared Function Activity_Insert(ActionStatus As String, data As clsProdSampleVerification) As Boolean
+    Public Shared Function Activity_Insert(ActionStatus As String, data As clsProdSampleVerification) As String
         Try
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
@@ -77,11 +77,10 @@ Public Class clsProdSampleVerificationDB
                 cmd.Parameters.AddWithValue("User", If(data.User, ""))
                 cmd.Parameters.AddWithValue("ActionSts", If(ActionStatus, ""))
 
-                If cmd.ExecuteNonQuery Then
-                    Return True
-                Else
-                    Return False
-                End If
+                Dim da As New SqlDataAdapter(cmd)
+                Dim ds As New DataSet
+                da.Fill(ds)
+                Return ds.Tables(0).Rows(0)("Response")
 
             End Using
         Catch ex As Exception

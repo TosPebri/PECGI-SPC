@@ -4,6 +4,7 @@
     Public Property ItemTypeCode As String
     Public Property ItemTypeName As String
     Public Property LineCode As String
+    Public Property LineName As String
     Public Property ItemCheck As String
     Public Property FrequencyCode As String
     Public Property RegistrationNo As String

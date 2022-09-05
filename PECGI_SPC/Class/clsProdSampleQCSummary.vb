@@ -15,7 +15,7 @@ Public Class clsProdSampleQCSummaryDB
         Using cn As New SqlConnection(Sconn.Stringkoneksi)
             cn.Open()
             Dim sql As String
-            sql = "sp_ProdQualitySummary_FillCombo"
+            sql = "sp_SPC_ProdQualitySummary_FillCombo"
             Dim cmd As New SqlCommand(sql, cn)
             cmd.CommandType = CommandType.StoredProcedure
             cmd.Parameters.AddWithValue("Type", type)
@@ -37,7 +37,7 @@ Public Class clsProdSampleQCSummaryDB
         Using cn As New SqlConnection(Sconn.Stringkoneksi)
             cn.Open()
             Dim sql As String
-            sql = "sp_ProdQualitySummary_Sel"
+            sql = "sp_SPC_ProdQualitySummary_Sel"
             Dim cmd As New SqlCommand(sql, cn)
             cmd.CommandType = CommandType.StoredProcedure
             cmd.Parameters.AddWithValue("Factory", cls.FactoryCode)

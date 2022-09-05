@@ -14,13 +14,13 @@ Option Explicit On
 Partial Public Class AlertDashboard
 
     '''<summary>
-    '''ASPxLabel1 control.
+    '''ASPxLabel3 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel1 As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents ASPxLabel3 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''cboFactory control.
@@ -39,6 +39,51 @@ Partial Public Class AlertDashboard
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents btnSearch As Global.DevExpress.Web.ASPxButton
+
+    '''<summary>
+    '''ASPxLabel9 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ASPxLabel9 As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
+    '''ASPxLabel11 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ASPxLabel11 As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
+    '''lblDateNow control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblDateNow As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
+    '''ASPxLabel1 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ASPxLabel1 As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
+    '''ASPxLabel2 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ASPxLabel2 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''dsFactory control.

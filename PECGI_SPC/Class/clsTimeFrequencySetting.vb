@@ -16,7 +16,7 @@ Public Class clsTimeFrequencySettingDB
         Using cn As New SqlConnection(Sconn.Stringkoneksi)
             cn.Open()
             Dim sql As String
-            sql = "sp_MS_FrequencySetting_FillCombo"
+            sql = "sp_SPC_MS_FrequencySetting_FillCombo"
             Dim cmd As New SqlCommand(sql, cn)
             cmd.CommandType = CommandType.StoredProcedure
             Dim da As New SqlDataAdapter(cmd)
@@ -30,7 +30,7 @@ Public Class clsTimeFrequencySettingDB
         Using cn As New SqlConnection(Sconn.Stringkoneksi)
             cn.Open()
             Dim sql As String
-            sql = "sp_MS_FrequencySetting_Sel"
+            sql = "sp_SPC_MS_FrequencySetting_Sel"
             Dim cmd As New SqlCommand(sql, cn)
             cmd.Parameters.AddWithValue("Frequency", Freq)
             cmd.CommandType = CommandType.StoredProcedure
@@ -47,7 +47,7 @@ Public Class clsTimeFrequencySettingDB
             Using cn As New SqlConnection(Sconn.Stringkoneksi)
                 cn.Open()
                 Dim sql As String
-                sql = "sp_MS_FrequencySetting_InsUpd"
+                sql = "sp_SPC_MS_FrequencySetting_InsUpd"
                 Dim cmd As New SqlCommand(sql, cn)
                 cmd.CommandType = CommandType.StoredProcedure
                 cmd.Parameters.AddWithValue("Frequency", cls.FrequencyCode)
@@ -71,7 +71,7 @@ Public Class clsTimeFrequencySettingDB
             Using cn As New SqlConnection(Sconn.Stringkoneksi)
                 cn.Open()
                 Dim sql As String
-                sql = "sp_MS_FrequencySetting_Del"
+                sql = "sp_SPC_MS_FrequencySetting_Del"
                 Dim cmd As New SqlCommand(sql, cn)
                 cmd.CommandType = CommandType.StoredProcedure
                 cmd.Parameters.AddWithValue("Frequency", cls.FrequencyCode)
@@ -89,7 +89,7 @@ Public Class clsTimeFrequencySettingDB
             Using cn As New SqlConnection(Sconn.Stringkoneksi)
                 cn.Open()
                 Dim sql As String
-                sql = "sp_MS_FrequencySetting_Check"
+                sql = "sp_SPC_MS_FrequencySetting_Check"
                 Dim cmd As New SqlCommand(sql, cn)
                 cmd.CommandType = CommandType.StoredProcedure
                 cmd.Parameters.AddWithValue("Frequency", cls.FrequencyCode)

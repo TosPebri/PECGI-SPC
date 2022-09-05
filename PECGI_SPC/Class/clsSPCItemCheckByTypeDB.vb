@@ -71,59 +71,6 @@ Public Class ClsSPCItemCheckByTypeDB
             Return i
         End Using
     End Function
-
-    'Public Shared Function GetList(FactoryCode As String, ItemTypeDescription As String, MachineProccess As String) As ClsSPCItemCheckByType
-    '    Using cn As New SqlConnection(Sconn.Stringkoneksi)
-    '        Dim sql As String
-    '        Dim clsDESEncryption As New clsDESEncryption("TOS")
-    '        'sql = " SELECT ICT.ItemTypeCode, LineCode = MSL.LineCode + ' - ' + MSL.LineName, ItemCheck = ICM.ItemCheckCode + ' - ' + ICM.ItemCheck, " &
-    '        '      " FS.FrequencyName, ICT.RegistrationNo, ICT.SampleSize, ICT.Remark, ICT.Evaluation, " &
-    '        '      " --CASE
-    '        '        -- WHEN ICT.CharacteristicStatus = '0' THEN 'No'
-    '        '         --WHEN ICT.CharacteristicStatus = '1' THEN 'Yes'
-    '        '         --ELSE ''
-    '        '        --END AS CharacteristicItem, 
-    '        '        --CASE
-    '        '        -- WHEN ICT.ActiveStatus = '0' THEN 'No'
-    '        '         --WHEN ICT.ActiveStatus = '1' THEN 'Yes'
-    '        '         --ELSE ''
-    '        '        --END AS ActiveStatus,
-    '        '      ICT.CharacteristicStatus, ICT.ActiveStatus,
-    '        '      " &
-    '        '      " ICT.UpdateUser, ICT.UpdateDate from spc_ItemCheckByType ICT JOIN MS_Line MSL ON ICT.FactoryCode = MSL.FactoryCode AND ICT.LineCode = MSL.LineCode " &
-    '        '      " JOIN spc_ItemCheckMaster ICM ON ICT.ItemCheckCode = ICM.ItemCheckCode JOIN spc_MS_FrequencySetting FS ON ICT.FrequencyCode = FS.FrequencyCode"
-    '        sql = "sp_ItemCheckByType_GetList"
-    '        Dim cmd As New SqlCommand(sql, cn)
-    '        cmd.CommandType = CommandType.StoredProcedure
-    '        With cmd.Parameters
-    '            .AddWithValue("FactoryCode", FactoryCode)
-    '            .AddWithValue("ItemTypeDescription", ItemTypeDescription)
-    '            .AddWithValue("MachineProccess", MachineProccess)
-    '        End With
-    '        Dim da As New SqlDataAdapter(cmd)
-    '        Dim dt As New DataTable
-    '        da.Fill(dt)
-    '        Dim Users As New List(Of ClsSPCItemCheckByType)
-    '        For i = 0 To dt.Rows.Count - 1
-    '            Dim pItemCheckByType As New ClsSPCItemCheckByType With {
-    '                .ItemTypeCode = dt.Rows(i)("ItemTypeCode"),
-    '                .LineCode = dt.Rows(i)("LineCode"),
-    '                .ItemCheck = Trim(dt.Rows(i)("ItemCheck")),
-    '                .FrequencyCode = Trim(dt.Rows(i)("FrequencyName")),
-    '                .RegistrationNo = Trim(dt.Rows(i)("RegistrationNo")),
-    '                .SampleSize = Trim(dt.Rows(i)("SampleSize")),
-    '                .Remark = Trim(dt.Rows(i)("Remark")),
-    '                .Evaluation = Trim(dt.Rows(i)("Evaluation")),
-    '                .CharacteristicItem = Trim(dt.Rows(i)("CharacteristicStatus")),
-    '                .ActiveStatus = Trim(dt.Rows(i)("ActiveStatus")),
-    '                .UpdateUser = Trim(dt.Rows(i)("UpdateUser")),
-    '                .UpdateDate = Trim(dt.Rows(i)("UpdateDate"))
-    '            }
-    '            Users.Add(pItemCheckByType)
-    '        Next
-    '        Return Users
-    '    End Using
-    'End Function
     Public Shared Function GetList(FactoryCode As String, ItemTypeDescription As String, MachineProccess As String, Optional ByRef pErr As String = "") As DataTable
         Try
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
@@ -153,7 +100,8 @@ Public Class ClsSPCItemCheckByTypeDB
         Using cn As New SqlConnection(Sconn.Stringkoneksi)
             Dim sql As String
             Dim clsDESEncryption As New clsDESEncryption("TOS")
-            sql = " select * from spc_ItemCheckByType where FactoryCode = @FactoryCode and ItemTypeCode = @ItemTypeCode and LineCode = @LineCode and ItemCheckCode = @ItemCheckCode " & vbCrLf
+            sql = " select ICT.*, ItemTypeName = IT.Description from spc_ItemCheckByType ICT inner join MS_ItemType IT ON ICT.ItemTypeCode = IT.ItemTypeCode where 
+                    ICT.FactoryCode = @FactoryCode and ICT.ItemTypeCode = @ItemTypeCode and ICT.LineCode = @LineCode and ICT.ItemCheckCode = @ItemCheckCode " & vbCrLf
             Dim cmd As New SqlCommand(sql, cn)
             Dim da As New SqlDataAdapter(cmd)
             cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
@@ -165,22 +113,23 @@ Public Class ClsSPCItemCheckByTypeDB
             Dim Users As New List(Of ClsSPCItemCheckByType)
             If dt.Rows.Count > 0 Then
                 Dim i As Integer = 0
-                Dim User As New ClsSPCItemCheckByType With {
+                Dim BatteryType As New ClsSPCItemCheckByType With {
                     .FactoryCode = dt.Rows(i)("FactoryCode"),
                     .ItemTypeCode = dt.Rows(i)("ItemTypeCode"),
-                    .LineCode = dt.Rows(i)("MachineProcess"),
-                    .ItemCheck = Trim(dt.Rows(i)("ItemCheck")),
-                    .FrequencyCode = Trim(dt.Rows(i)("FrequencyName")),
+                    .LineCode = dt.Rows(i)("LineCode"),
+                    .ItemCheck = Trim(dt.Rows(i)("ItemCheckCode")),
+                    .FrequencyCode = Trim(dt.Rows(i)("FrequencyCode")),
                     .RegistrationNo = Trim(dt.Rows(i)("RegistrationNo")),
                     .SampleSize = Trim(dt.Rows(i)("SampleSize")),
                     .Remark = Trim(dt.Rows(i)("Remark")),
                     .Evaluation = Trim(dt.Rows(i)("Evaluation")),
-                    .CharacteristicItem = Trim(dt.Rows(i)("CharacteristicItem")),
+                    .CharacteristicItem = Trim(dt.Rows(i)("CharacteristicStatus")),
                     .ActiveStatus = Trim(dt.Rows(i)("ActiveStatus")),
                     .UpdateUser = Trim(dt.Rows(i)("UpdateUser")),
-                    .UpdateDate = Trim(dt.Rows(i)("UpdateDate"))
+                    .UpdateDate = Trim(dt.Rows(i)("UpdateDate")),
+                    .ItemTypeName = dt.Rows(i)("ItemTypeName")
                     }
-                Return User
+                Return BatteryType
             Else
                 Return Nothing
             End If
@@ -220,24 +169,38 @@ Public Class ClsSPCItemCheckByTypeDB
             Return Nothing
         End Try
     End Function
-    Public Shared Function GetMachineProccess(Optional ByRef pErr As String = "") As DataTable
+    Public Shared Function GetMachineProccess(UserID As String, FactoryCode As String, ItemTypeCode As String, Optional ByRef pErr As String = "") As List(Of ClsSPCItemCheckByType)
         Try
-            Using conn As New SqlConnection(Sconn.Stringkoneksi)
-                conn.Open()
-                Dim sql As String = ""
-                'If Type = "1" Then
-                '    sql = "SELECT LineCode, LineName FROM MS_Line"
-                'ElseIf Type = "2" Then
-                sql = "SELECT '0' LineCode, 'ALL' LineName UNION SELECT LineCode, LineName = LineCode +  ' - ' + LineName FROM MS_Line"
-                'End If
-
-                Dim cmd As New SqlCommand(sql, conn)
-                cmd.CommandType = CommandType.Text
-                Dim da As New SqlDataAdapter(cmd)
-                Dim dt As New DataTable
-                da.Fill(dt)
-
-                Return dt
+            Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+                Cn.Open()
+                Dim q As String = "SELECT Number = 1, 'ALL' FactoryCode, 'ALL' ProcessCode, 'ALL' LineCode, 'ALL' LineName UNION" & vbCrLf &
+                "select distinct Number = 2, L.FactoryCode, L.ProcessCode, L.LineCode, L.LineCode + ' - ' + L.LineName as LineName  " & vbCrLf &
+                "from MS_Line L inner join spc_ItemCheckByType I " & vbCrLf &
+                "on L.FactoryCode = I.FactoryCode and L.LineCode = I.LineCode " & vbCrLf &
+                "inner join spc_UserLine P on L.LineCode = P.LineCode " & vbCrLf &
+                "where P.UserID = @UserID and P.AllowShow = 1 " & vbCrLf
+                If FactoryCode <> "" Then
+                    q = q & "and L.FactoryCode = @FactoryCode "
+                End If
+                If ItemTypeCode <> "" Then
+                    q = q & "and I.ItemTypeCode = @ItemTypeCode "
+                End If
+                q = q & "order by Number ASC, LineCode"
+                Dim cmd As New SqlCommand(q, Cn)
+                cmd.Parameters.AddWithValue("UserID", UserID)
+                cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
+                cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
+                Dim rd As SqlDataReader = cmd.ExecuteReader
+                Dim FactoryList As New List(Of ClsSPCItemCheckByType)
+                Do While rd.Read
+                    Dim Factory As New ClsSPCItemCheckByType
+                    Factory.FactoryCode = rd("FactoryCode")
+                    Factory.LineCode = rd("LineCode")
+                    Factory.LineName = rd("LineName")
+                    FactoryList.Add(Factory)
+                Loop
+                rd.Close()
+                Return FactoryList
             End Using
         Catch ex As Exception
             pErr = ex.Message
@@ -323,5 +286,30 @@ Public Class ClsSPCItemCheckByTypeDB
             pErr = ex.Message
             Return Nothing
         End Try
+    End Function
+    Public Shared Function ValidationDelete(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String) As ClsSPCItemCheckByType
+        Using cn As New SqlConnection(Sconn.Stringkoneksi)
+            Dim sql As String
+            Dim clsDESEncryption As New clsDESEncryption("TOS")
+            sql = " select top 1 * from spc_Result where FactoryCode = @FactoryCode and ItemTypeCode = @ItemTypeCode and LineCode = @LineCode and ItemCheckCode = @ItemCheckCode " & vbCrLf
+            Dim cmd As New SqlCommand(sql, cn)
+            Dim da As New SqlDataAdapter(cmd)
+            cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
+            cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
+            cmd.Parameters.AddWithValue("LineCode", LineCode)
+            cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
+            Dim dt As New DataTable
+            da.Fill(dt)
+            Dim Users As New List(Of ClsSPCItemCheckByType)
+            If dt.Rows.Count > 0 Then
+                Dim i As Integer = 0
+                Dim User As New ClsSPCItemCheckByType With {
+                    .ItemCheck = dt.Rows(i)("ItemCheckCode")
+                    }
+                Return User
+            Else
+                Return Nothing
+            End If
+        End Using
     End Function
 End Class

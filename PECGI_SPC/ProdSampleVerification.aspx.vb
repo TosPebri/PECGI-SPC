@@ -366,6 +366,7 @@ Public Class ProdSampleVerification
                     End If
                 ElseIf DescIndex = "View" Then
                     e.Cell.ForeColor = Color.Blue
+
                 End If
 
                 If (e.DataColumn.FieldName = ColumnBrowse) Then
@@ -376,14 +377,26 @@ Public Class ProdSampleVerification
                     End If
 
                 End If
-
             End If
+
+            If DescIndex = "GridNothing" Then
+                e.Cell.BackColor = ColorTranslator.FromHtml("#4C4348")
+                e.Cell.BorderStyle = BorderStyle.None
+            End If
+
         Catch ex As Exception
             Throw New Exception("Error_EditingGrid !" & ex.Message)
         End Try
     End Sub
-    Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
 
+#End Region
+
+#Region "GRID EVENT INSERT - UPDATE - DELETE"
+    Private Sub GridMenu_CancelRowEditing(sender As Object, e As ASPxStartRowEditingEventArgs) Handles GridMenu.CancelRowEditing
+        Dim commandColumn = TryCast(GridMenu.Columns(0), GridViewCommandColumn)
+        commandColumn.ShowNewButtonInHeader = True
+    End Sub
+    Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
         If e.Column.FieldName = "FactoryName" Or e.Column.FieldName = "ItemTypeName" Or e.Column.FieldName = "LineName" Or e.Column.FieldName = "ItemCheckName" Or e.Column.FieldName = "ShiftName" Then
             e.Editor.ReadOnly = True
             e.Editor.ForeColor = Color.Silver
@@ -413,7 +426,6 @@ Public Class ProdSampleVerification
             ElseIf e.Column.FieldName = "ProdDate" Then
                 e.Editor.Value = dtProdDate.Value
             End If
-
         ElseIf Not GridMenu.IsNewRowEditing Then
             If e.Column.FieldName = "ProdDate" Then
                 e.Editor.ReadOnly = True
@@ -421,12 +433,48 @@ Public Class ProdSampleVerification
             End If
         End If
     End Sub
-#End Region
+    Protected Sub GridMenu_Validating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs) Handles GridMenu.RowValidating
+        Dim dataCol As New GridViewDataColumn
+        For Each column As GridViewColumn In GridMenu.Columns
+            Dim dataColumn As GridViewDataColumn = TryCast(column, GridViewDataColumn)
+            If dataColumn Is Nothing Then
+                Continue For
+            End If
 
-#Region "GRID EVENT INSERT - UPDATE - DELETE"
+            If dataColumn.FieldName = "ProdDate" Then
+                If IsNothing(e.NewValues("ProdDate")) OrElse e.NewValues("ProdDate").ToString.Trim = "" Then
+                    e.Errors(dataColumn) = "Please Fill Production Date!"
+                End If
+            End If
+
+            If dataColumn.FieldName = "Time" Then
+                If IsNothing(e.NewValues("Time")) OrElse e.NewValues("Time").ToString.Trim = "" Then
+                    e.Errors(dataColumn) = "Please Fill Time!"
+                End If
+            End If
+
+            If dataColumn.FieldName = "PIC" Then
+                If IsNothing(e.NewValues("PIC")) OrElse e.NewValues("PIC").ToString.Trim = "" Then
+                    e.Errors(dataColumn) = "Please Fill PIC!"
+                End If
+            End If
+
+            If dataColumn.FieldName = "Action" Then
+                If IsNothing(e.NewValues("Action")) OrElse e.NewValues("Action").ToString.Trim = "" Then
+                    e.Errors(dataColumn) = "Please Fill Action!"
+                End If
+            End If
+
+            If dataColumn.FieldName = "Result" Then
+                If IsNothing(e.NewValues("Result")) OrElse e.NewValues("Result").ToString.Trim = "" Then
+                    e.Errors(dataColumn) = "Please Fill Result!"
+                End If
+            End If
+        Next
+
+    End Sub
     Protected Sub GridMenu_RowInserting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles GridMenu.RowInserting
         e.Cancel = True
-        Dim a = e.NewValues("Time")
 
         Dim data As New clsProdSampleVerification With {
             .FactoryCode = e.NewValues("FactoryCode") & "",
@@ -442,12 +490,16 @@ Public Class ProdSampleVerification
             .Remark = e.NewValues("Remark") & "",
             .User = pUser}
         Try
-            Dim Insert = clsProdSampleVerificationDB.Activity_Insert("CREATE", data)
-            If Insert = True Then
+            Dim Msg = clsProdSampleVerificationDB.Activity_Insert("CREATE", data)
+            If Msg = "" Then
                 show_error(MsgTypeEnum.Success, "Save data successfully!", 1)
                 GridMenu.CancelEdit()
-                'Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+                Up_GridLoadActivities(data.FactoryCode, data.ItemType_Code, data.LineCode, data.ItemCheck_Code, e.NewValues("ProdDate"), data.ShiftCode, "")
                 Return
+            Else
+                show_error(MsgTypeEnum.Warning, Msg, 1)
+                GridMenu.CancelEdit()
+                Up_GridLoadActivities(data.FactoryCode, data.ItemType_Code, data.LineCode, data.ItemCheck_Code, e.NewValues("ProdDate"), data.ShiftCode, "")
             End If
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
@@ -455,29 +507,31 @@ Public Class ProdSampleVerification
     End Sub
     Protected Sub GridMenu_RowUpdating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataUpdatingEventArgs) Handles GridMenu.RowUpdating
         e.Cancel = True
-        'Dim Factory As String = HideValue.Get("FactoryCode")
-        'Dim Itemtype As String = HideValue.Get("ItemType_Code")
-        'Dim Line As String = HideValue.Get("LineCode")
-        'Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
-        'Dim ProdDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
-        'Dim Shift As String = HideValue.Get("ShiftCode")
-        'Dim Seq As String = HideValue.Get("Seq")
-
         Dim data As New clsProdSampleVerification With {
+             .FactoryCode = e.NewValues("FactoryCode") & "",
+            .ItemType_Code = e.NewValues("ItemTypeCode") & "",
+            .LineCode = e.NewValues("LineCode") & "",
+            .ItemCheck_Code = e.NewValues("ItemCheckCode") & "",
+            .ProdDate = Convert.ToDateTime(e.NewValues("ProdDate")).ToString("yyyy-MM-dd"),
             .Time = Convert.ToDateTime(e.NewValues("Time")).ToString("HH:mm"),
+            .ShiftCode = e.NewValues("ShiftCode") & "",
+            .Action = e.NewValues("Action") & "",
             .PIC = e.NewValues("PIC") & "",
             .ActivityID = e.NewValues("ActivityID") & "",
-            .Action = e.NewValues("Action") & "",
             .Result = e.NewValues("Result") & "",
             .Remark = e.NewValues("Remark") & "",
             .User = pUser}
         Try
-            Dim Update = clsProdSampleVerificationDB.Activity_Insert("UPDATE", data)
-            If Update = True Then
+            Dim Msg = clsProdSampleVerificationDB.Activity_Insert("UPDATE", data)
+            If Msg = "" Then
                 show_error(MsgTypeEnum.Success, "Update data successfully!", 1)
                 GridMenu.CancelEdit()
-                'Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+                Up_GridLoadActivities(data.FactoryCode, data.ItemType_Code, data.LineCode, data.ItemCheck_Code, e.NewValues("ProdDate"), data.ShiftCode, "")
                 Return
+            Else
+                show_error(MsgTypeEnum.Warning, Msg, 1)
+                GridMenu.CancelEdit()
+                Up_GridLoadActivities(data.FactoryCode, data.ItemType_Code, data.LineCode, data.ItemCheck_Code, e.NewValues("ProdDate"), data.ShiftCode, "")
             End If
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
@@ -496,10 +550,16 @@ Public Class ProdSampleVerification
         Dim data As New clsProdSampleVerification With {
             .ActivityID = e.Values("ActivityID")}
         Try
-            Dim Delete = clsProdSampleVerificationDB.Activity_Insert("DELETE", data)
-            show_error(MsgTypeEnum.Success, "Delete data successfully!", 1)
-            GridMenu.CancelEdit()
-            Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+            Dim Msg = clsProdSampleVerificationDB.Activity_Insert("DELETE", data)
+            If Msg = "" Then
+                show_error(MsgTypeEnum.Success, "Delete data successfully!", 1)
+                GridMenu.CancelEdit()
+                Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+            Else
+                show_error(MsgTypeEnum.Warning, Msg, 1)
+                GridMenu.CancelEdit()
+                Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+            End If
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
@@ -1195,10 +1255,6 @@ Public Class ProdSampleVerification
             Throw New Exception(ex.Message)
         End Try
 
-    End Sub
-    Private Sub GridMenu_CancelRowEditing(sender As Object, e As ASPxStartRowEditingEventArgs) Handles GridMenu.CancelRowEditing
-        Dim commandColumn = TryCast(GridMenu.Columns(0), GridViewCommandColumn)
-        commandColumn.ShowNewButtonInHeader = True
     End Sub
 
 #End Region

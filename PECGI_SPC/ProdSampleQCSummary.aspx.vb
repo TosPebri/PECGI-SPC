@@ -122,6 +122,7 @@ Public Class ProdSampleQCSummary
                     Link.ForeColor = Color.Black
                     Link.Text = "NG"
                     Link.NavigateUrl = Split(e.CellValue, "||")(2)
+                    Link.Target = "_blank"
 
                     e.Cell.Controls.Add(Link)
                     e.Cell.BackColor = ColorTranslator.FromHtml(Split(e.CellValue, "||")(1))
@@ -140,6 +141,7 @@ Public Class ProdSampleQCSummary
                 Link.ForeColor = Color.Black
                 Link.Text = "OK"
                 Link.NavigateUrl = Split(e.CellValue, "||")(1)
+                Link.Target = "_blank"
 
                 e.Cell.Controls.Add(Link)
             End If
@@ -175,13 +177,7 @@ Public Class ProdSampleQCSummary
             Dim a As String = ""
             dt = clsProdSampleQCSummaryDB.FillCombo("0")
             With cboFactory
-                .Items.Clear() : .Columns.Clear()
                 .DataSource = dt
-                .Columns.Add("Code") : .Columns(0).Visible = False
-                .Columns.Add("Description") : .Columns(1).Width = 100
-
-                .TextField = "Description"
-                .ValueField = "Code"
                 .DataBind()
                 .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)
 
@@ -200,13 +196,7 @@ Public Class ProdSampleQCSummary
             Dim a As String = ""
             dt = clsProdSampleQCSummaryDB.FillCombo("1")
             With cboType
-                .Items.Clear() : .Columns.Clear()
                 .DataSource = dt
-                .Columns.Add("Code") : .Columns(0).Visible = False
-                .Columns.Add("Description") : .Columns(1).Width = 100
-
-                .TextField = "Description"
-                .ValueField = "Code"
                 .DataBind()
                 .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
 
@@ -225,13 +215,7 @@ Public Class ProdSampleQCSummary
             Dim a As String = ""
             dt = clsProdSampleQCSummaryDB.FillCombo("2", HF.Get("FactoryCode"), pUser)
             With cboMachine
-                .Items.Clear() : .Columns.Clear()
                 .DataSource = dt
-                .Columns.Add("Code") : .Columns(0).Visible = False
-                .Columns.Add("Description") : .Columns(1).Width = 100
-
-                .TextField = "Description"
-                .ValueField = "Code"
                 .DataBind()
                 .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
 
@@ -250,13 +234,7 @@ Public Class ProdSampleQCSummary
             Dim a As String = ""
             dt = clsProdSampleQCSummaryDB.FillCombo("3", HF.Get("FactoryCode"), HF.Get("TypeCode"), HF.Get("MachineCode"), pUser)
             With cboFrequency
-                .Items.Clear() : .Columns.Clear()
                 .DataSource = dt
-                .Columns.Add("Code") : .Columns(0).Visible = False
-                .Columns.Add("Description") : .Columns(1).Width = 100
-
-                .TextField = "Description"
-                .ValueField = "Code"
                 .DataBind()
                 .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
 
@@ -274,13 +252,7 @@ Public Class ProdSampleQCSummary
         If HF.Get("Excel") = "0" Then
             dt = clsProdSampleQCSummaryDB.FillCombo("4", HF.Get("FactoryCode"), HF.Get("FrequencyCode"), HF.Get("TypeCode"), HF.Get("MachineCode"), pUser)
             With cboSequence
-                .Items.Clear() : .Columns.Clear()
                 .DataSource = dt
-                .Columns.Add("Code") : .Columns(0).Visible = False
-                .Columns.Add("Description") : .Columns(1).Width = 100
-
-                .TextField = "Description"
-                .ValueField = "Code"
                 .DataBind()
                 .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)
             End With

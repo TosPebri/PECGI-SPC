@@ -77,6 +77,30 @@
         }
 
         function up_Browse() {
+            var errmsg = '';
+            if (cboFactory.GetText() == '') {
+                cboFactory.Focus();
+                errmsg = 'Please select Factory!';
+            } else if (cboType.GetText() == '') {
+                cboType.Focus();
+                errmsg = 'Please select Type!';
+            } else if (cboLine.GetText() == '') {
+                cboLine.Focus();
+                errmsg = 'Please select Machine Process!';
+            }
+
+            if (errmsg != '') {
+                toastr.warning(errmsg, 'Warning');
+                toastr.options.closeButton = false;
+                toastr.options.debug = false;
+                toastr.options.newestOnTop = false;
+                toastr.options.progressBar = false;
+                toastr.options.preventDuplicates = true;
+                toastr.options.onclick = null;
+                e.processOnServer = false;
+                return;
+            }
+            Grid.CancelEdit();
             Grid.PerformCallback('Load');
         }
     </script>
@@ -87,7 +111,7 @@
         <table>
             <tr style="height: 30px">
                 <td style="width:60px; padding:5px 0px 0px 0px">
-                    &nbsp;<dx:ASPxLabel ID="ASPxLabel1" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Factory">
+                    &nbsp;<dx:ASPxLabel ID="ASPxLabel1" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="Factory">
                     </dx:ASPxLabel>
                 </td>
                 <td style=" width:130px; padding:5px 0px 0px 0px">
@@ -103,7 +127,7 @@
                     </dx:ASPxComboBox>
                 </td>
                 <td style="width:100px; padding:5px 0px 0px 0px">
-                    &nbsp;<dx:ASPxLabel ID="ASPxLabel3" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Machine Proccess">
+                    &nbsp;<dx:ASPxLabel ID="ASPxLabel3" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="Machine Proccess">
                     </dx:ASPxLabel>
                 </td>
                 <td style="width:130px; padding:5px 0px 0px 0px">
@@ -122,7 +146,7 @@
             <tr style="height: 30px">
                 <td style="width:60px; padding:5px 0px 0px 0px">
                     &nbsp;<dx:ASPxLabel ID="ASPxLabel2" runat="server" Font-Names="Segoe UI" 
-                        Font-Size="8pt" Text="Type">
+                        Font-Size="9pt" Text="Type">
                     </dx:ASPxLabel>
                 </td>
                 <td style=" width:130px; padding:5px 0px 0px 0px">
@@ -163,23 +187,23 @@
     
         <asp:SqlDataSource ID="dsFactory" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
-            SelectCommand="Exec sp_ItemCheckByBattery_FillCombo '1' "></asp:SqlDataSource>
+            SelectCommand="Exec sp_SPC_ItemCheckByBattery_FillCombo '1' "></asp:SqlDataSource>
 
         <asp:SqlDataSource ID="dsType" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
-            SelectCommand="Exec sp_ItemCheckByBattery_FillCombo '2' "></asp:SqlDataSource>
+            SelectCommand="Exec sp_SPC_ItemCheckByBattery_FillCombo '2' "></asp:SqlDataSource>
 
         <asp:SqlDataSource ID="dsMachine" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
-            SelectCommand="Exec sp_ItemCheckByBattery_FillCombo '3' "></asp:SqlDataSource>
+            SelectCommand="Exec sp_SPC_ItemCheckByBattery_FillCombo '3' "></asp:SqlDataSource>
 
         <asp:SqlDataSource ID="dsFrequency" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
-            SelectCommand="Exec sp_ItemCheckByBattery_FillCombo '4' "></asp:SqlDataSource>
+            SelectCommand="Exec sp_SPC_ItemCheckByBattery_FillCombo '4' "></asp:SqlDataSource>
 
         <asp:SqlDataSource ID="dsItemCheck" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
-            SelectCommand="Exec sp_ItemCheckByBattery_FillCombo '5' "></asp:SqlDataSource>
+            SelectCommand="Exec sp_SPC_ItemCheckByBattery_FillCombo '5' "></asp:SqlDataSource>
 
 
     <div style="padding: 20px 5px 5px 5px">
@@ -599,6 +623,8 @@
             </Templates>
 
         </dx:ASPxGridView>
-        <dx:ASPxHiddenField ID="HF" runat="server" ClientInstanceName="HF"></dx:ASPxHiddenField>
+        <input type="hidden" runat="server" id="hdUserLogin" value="<%=hdUserLogin %>" />  
+        <input type="hidden" runat="server" id="hdFactoryCode" value="<%=hdFactoryCode %>" />  
+        <input type="hidden" runat="server" id="hdItemTypeCode" value="<%=hdItemTypeCode %>" />  
     </div>
 </asp:Content>

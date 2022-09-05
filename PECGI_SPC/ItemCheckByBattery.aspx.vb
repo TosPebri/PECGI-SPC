@@ -64,12 +64,16 @@ Public Class ItemCheckByBattery
     Protected Sub Grid_RowInserting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles Grid.RowInserting
         e.Cancel = True
         Dim pErr As String = ""
+        Dim LineCode As String = ""
+        Dim ItemCheck As String = ""
+        LineCode = e.NewValues("LineName")
+        ItemCheck = e.NewValues("ItemCheck")
         Dim BatteryType As New ClsSPCItemCheckByType With {
             .FactoryCode = e.NewValues("FactoryCode"),
             .FactoryName = cboFactory.Text,
             .ItemTypeCode = e.NewValues("ItemTypeCode"),
-            .LineCode = e.NewValues("LineName"),
-            .ItemCheck = e.NewValues("ItemCheck"),
+            .LineCode = LineCode.Substring(0, LineCode.IndexOf(" -")),
+            .ItemCheck = ItemCheck.Substring(0, ItemCheck.IndexOf(" -")),
             .FrequencyCode = e.NewValues("FrequencyCode"),
             .RegistrationNo = e.NewValues("RegistrationNo"),
             .SampleSize = e.NewValues("SampleSize"),
@@ -81,12 +85,18 @@ Public Class ItemCheckByBattery
             .CreateUser = pUser
         }
         Try
+            If IsNothing(BatteryType.Remark) Then
+                BatteryType.Remark = ""
+            End If
+            If IsNothing(BatteryType.Evaluation) Then
+                BatteryType.Evaluation = ""
+            End If
             Dim CheckDataBattery As ClsSPCItemCheckByType = ClsSPCItemCheckByTypeDB.GetData(BatteryType.FactoryCode, BatteryType.ItemTypeCode, BatteryType.LineCode, BatteryType.ItemCheck)
             If CheckDataBattery IsNot Nothing Then
                 show_error(MsgTypeEnum.ErrorMsg, "Can't insert data, Battery type '" + CheckDataBattery.ItemTypeName + "' for item check '" + BatteryType.ItemCheck + "' on machine '" + BatteryType.LineCode + "' in factory '" + BatteryType.FactoryName + "' is already registered", 1)
                 Return
             End If
-            ClsSPCItemCheckByTypeDB.Insert(User)
+            ClsSPCItemCheckByTypeDB.Insert(BatteryType)
             Grid.CancelEdit()
             up_GridLoad(cboFactory.Value, cboType.Text, cboLine.Text)
             show_error(MsgTypeEnum.Success, "Save data successfully!", 1)
@@ -102,7 +112,7 @@ Public Class ItemCheckByBattery
         Dim ItemCheck As String = ""
         LineCode = e.NewValues("LineName")
         ItemCheck = e.NewValues("ItemCheck")
-        Dim User As New ClsSPCItemCheckByType With {
+        Dim BatteryType As New ClsSPCItemCheckByType With {
             .FactoryCode = e.NewValues("FactoryCode"),
             .ItemTypeCode = e.NewValues("ItemTypeCode"),
             .LineCode = LineCode.Substring(0, LineCode.IndexOf(" -")),
@@ -118,7 +128,13 @@ Public Class ItemCheckByBattery
             .CreateUser = pUser
         }
         Try
-            ClsSPCItemCheckByTypeDB.Update(User)
+            If IsNothing(BatteryType.Remark) Then
+                BatteryType.Remark = ""
+            End If
+            If IsNothing(BatteryType.Evaluation) Then
+                BatteryType.Evaluation = ""
+            End If
+            ClsSPCItemCheckByTypeDB.Update(BatteryType)
             Grid.CancelEdit()
             up_GridLoad(cboFactory.Value, cboType.Text, cboLine.Text)
             show_error(MsgTypeEnum.Success, "Update data successfully!", 1)
@@ -168,9 +184,9 @@ Public Class ItemCheckByBattery
         End If
 
         If Grid.IsNewRowEditing Then
-            If e.Column.FieldName = "FactoryCode" Then
-                e.Editor.Value = cboFactory.Value
-            End If
+            'If e.Column.FieldName = "FactoryCode" Then
+            '    e.Editor.Value = cboFactory.Value
+            'End If
             'If e.Column.FieldName = "ItemTypeCode" Then
             '    e.Editor.Visible = True
             '    e.Editor.ForeColor = Color.Silver
@@ -261,12 +277,19 @@ Public Class ItemCheckByBattery
             If MachineProccess Is Nothing Then
                 MachineProccess = ""
             End If
+
             If MachineProccess <> "ALL" AndAlso MachineProccess <> "" Then
                 MachineProccess = MachineProccess.Substring(0, MachineProccess.IndexOf(" -"))
             End If
-            dtItemCheckByType = ClsSPCItemCheckByTypeDB.GetList(FactoryCode, ItemTypeDescription, MachineProccess)
+
+            dtItemCheckByType = ClsSPCItemCheckByTypeDB.GetList(pUser, FactoryCode, ItemTypeDescription, MachineProccess, cboType.Value)
             Grid.DataSource = dtItemCheckByType
             Grid.DataBind()
+
+            hdUserLogin.Value = pUser
+            hdFactoryCode.Value = FactoryCode
+            hdItemTypeCode.Value = cboType.Value
+
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try

@@ -71,19 +71,21 @@ Public Class ClsSPCItemCheckByTypeDB
             Return i
         End Using
     End Function
-    Public Shared Function GetList(FactoryCode As String, ItemTypeDescription As String, MachineProccess As String, Optional ByRef pErr As String = "") As DataTable
+    Public Shared Function GetList(pUser As String, FactoryCode As String, ItemTypeDescription As String, MachineProccess As String, ItemTypeCode As String, Optional ByRef pErr As String = "") As DataTable
         Try
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
                 Dim sql As String = ""
-                sql = "sp_ItemCheckByType_GetList"
+                sql = "sp_SPC_ItemCheckByType_GetList"
 
                 Dim cmd As New SqlCommand(sql, conn)
                 cmd.CommandType = CommandType.StoredProcedure
                 With cmd.Parameters
+                    .AddWithValue("User", pUser)
                     .AddWithValue("FactoryCode", FactoryCode)
                     .AddWithValue("ItemTypeDescription", ItemTypeDescription)
                     .AddWithValue("MachineProccess", MachineProccess)
+                    .AddWithValue("ItemTypeCode", ItemTypeCode)
                 End With
                 Dim da As New SqlDataAdapter(cmd)
                 Dim dt As New DataTable

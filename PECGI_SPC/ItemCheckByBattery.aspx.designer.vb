@@ -140,13 +140,31 @@ Partial Public Class ItemCheckByBattery
     Protected WithEvents Grid As Global.DevExpress.Web.ASPxGridView
 
     '''<summary>
-    '''HF control.
+    '''hdUserLogin control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents HF As Global.DevExpress.Web.ASPxHiddenField
+    Protected WithEvents hdUserLogin As Global.System.Web.UI.HtmlControls.HtmlInputHidden
+
+    '''<summary>
+    '''hdFactoryCode control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdFactoryCode As Global.System.Web.UI.HtmlControls.HtmlInputHidden
+
+    '''<summary>
+    '''hdItemTypeCode control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents hdItemTypeCode As Global.System.Web.UI.HtmlControls.HtmlInputHidden
 
     '''<summary>
     '''Master property.

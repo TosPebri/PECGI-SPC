@@ -94,13 +94,17 @@
         }
 
         function OnBatchEditStartEditing(s, e) {
-            currentColumnName = e.focusedColumn.fieldName;            
-            if (currentColumnName != "Value" & currentColumnName != "Remark" & currentColumnName != "DeleteStatus") {
-                e.cancel = true;
-            } else {
-                rowIndex = e.visibleIndex;
-                columnIndex = e.focusedColumn.index;
+            if(cboSeq.GetValue() == '') {
+                e.cancel = true;                
+                toastr.warning('Please select Sequence!', 'Warning');
+                toastr.options.closeButton = false;
+                toastr.options.debug = false;
+                toastr.options.newestOnTop = false;
+                toastr.options.progressBar = false;
+                toastr.options.preventDuplicates = true;
+                toastr.options.onclick = null;
             }
+            currentColumnName = e.focusedColumn.fieldName;            
             currentEditableVisibleIndex = e.visibleIndex;          
         }      
 
@@ -555,7 +559,7 @@
             Width="100%" 
             Font-Names="Segoe UI" Font-Size="9pt">
             <ClientSideEvents 
-                EndCallback="OnEndCallback" 
+                EndCallback="OnEndCallback" BatchEditStartEditing="OnBatchEditStartEditing" 
              />
             <SettingsDataSecurity AllowDelete="False" />
 

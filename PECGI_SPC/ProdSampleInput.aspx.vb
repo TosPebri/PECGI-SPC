@@ -45,7 +45,7 @@ Public Class ProdSampleInput
 
                     For Each Shift In Shiftlist
                         Dim BandShift As New GridViewBandColumn
-                        BandShift.Caption = Shift.ShiftName
+                        BandShift.Caption = "S-" & Shift.ShiftName
                         BandDay.Columns.Add(BandShift)
 
                         Dim SeqList As List(Of clsSequenceNo) = clsFrequencyDB.GetSequence(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, Shift.ShiftCode, ProdDate)
@@ -125,7 +125,7 @@ Public Class ProdSampleInput
                 GridLoad(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence, 0)
             Else
                 dtDate.Value = Now.Date
-                'InitCombo()
+                InitCombo()
             End If
         End If
     End Sub
@@ -301,8 +301,8 @@ Public Class ProdSampleInput
         Result.ProdDate = dtDate.Value
         Result.ShiftCode = cboShift.Value
         Result.SequenceNo = cboSeq.Value
-        Result.SubLotNo = 0
-        Result.Remark = ""
+        Result.SubLotNo = Val(txtSubLotNo.Text)
+        Result.Remark = txtRemarks.Text
         Result.RegisterUser = Session("user") & ""
         clsSPCResultDB.Insert(Result)
 
@@ -458,14 +458,20 @@ Public Class ProdSampleInput
     End Sub
 
     Private Sub gridX_HtmlRowPrepared(sender As Object, e As ASPxGridViewTableRowEventArgs) Handles gridX.HtmlRowPrepared
-        If e.KeyValue = "-" Then
-            e.Row.BackColor = System.Drawing.Color.Black
-            e.Row.BorderWidth = 30
+        If e.KeyValue = "Min" Or e.KeyValue = "Max" Or e.KeyValue = "Avg" Or e.KeyValue = "R" Then
+            'e.Row.BackColor = System.Drawing.Color.LightGray
+            e.Row.BorderStyle = BorderStyle.Double
+            e.Row.BorderWidth = 50
         End If
     End Sub
 
     Private Sub LoadChartR(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String)
         Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartR(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+        If xr.Count = 0 Then
+            chartR.JSProperties("cpShow") = "0"
+        Else
+            chartR.JSProperties("cpShow") = "1"
+        End If
         With chartR
             .DataSource = xr
             Dim diagram As XYDiagram = CType(.Diagram, XYDiagram)
@@ -522,7 +528,7 @@ Public Class ProdSampleInput
             diagram.AxisX.MinorCount = 1
             diagram.AxisX.GridLines.Visible = False
 
-            diagram.AxisY.NumericScaleOptions.CustomGridAlignment = 0.01
+            diagram.AxisY.NumericScaleOptions.CustomGridAlignment = 0.005
             diagram.AxisY.GridLines.MinorVisible = False
 
 
@@ -556,8 +562,11 @@ Public Class ProdSampleInput
             diagram.AxisY.ConstantLines.Add(USL)
             USL.AxisValue = Setup.SpecUSL
 
-            diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
-            diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
+            'diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
+            'diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
+
+            diagram.AxisY.VisualRange.MinValue = Setup.SpecLSL
+            diagram.AxisY.VisualRange.MaxValue = Setup.SpecUSL
             .DataBind()
         End With
     End Sub
@@ -584,7 +593,7 @@ Public Class ProdSampleInput
         Dim USL As Double
 
         If Not IsDBNull(e.CellValue) AndAlso (e.DataColumn.FieldName.StartsWith("1") Or e.DataColumn.FieldName.StartsWith("2")) _
-            And e.GetValue("Seq") = "1" Then
+            And (e.GetValue("Seq") = "1" Or e.GetValue("Seq") = "3" Or e.GetValue("Seq") = "4" Or e.GetValue("Seq") = "5") Then
             If (e.DataColumn.FieldName.StartsWith("1")) Then
                 LCL = e.GetValue("XBarLCL1")
                 UCL = e.GetValue("XBarUCL1")

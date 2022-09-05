@@ -108,6 +108,17 @@
             columnIndex = null;            
         }
 
+        function ChartREndCallBack(s, e) {
+            var i = s.cpShow;
+            var x = document.getElementById("chartRdiv");
+            if (i=='1') {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+            
+        }
+
         function OnEndCallback(s, e) {
             if (s.cp_message != "" && s.cp_val == 1) {
                 if (s.cp_type == "Success" && s.cp_val == 1) {
@@ -850,8 +861,9 @@
             <td>
                 <div style="height:10px"></div>
                 
-    <dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
-        Height="290px" Width="1080px" CrosshairEnabled="True" SeriesDataMember="Description">
+<div id="chartXdiv">
+<dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
+        Height="434px" Width="1080px" CrosshairEnabled="True" SeriesDataMember="Description">
     
         <SeriesSerializable>
             <cc1:Series ArgumentDataMember="Seq" Name="Average" ValueDataMembersSerializable="AvgValue">
@@ -878,20 +890,28 @@
                     <GridLines MinorVisible="True">
                     </GridLines>
                 </AxisX>
-                <AxisY VisibleInPanesSerializable="-1">
+                <AxisY VisibleInPanesSerializable="-1" MinorCount="1">
                     <Tickmarks MinorVisible="False" />
-                    <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0" MaxValueSerializable="2.73" MinValueSerializable="2.6" StartSideMargin="0" />
-                    <WholeRange AlwaysShowZeroLevel="False" Auto="False" AutoSideMargins="False" EndSideMargin="0.1" MaxValueSerializable="2.7" MinValueSerializable="0.1" StartSideMargin="0.1" />
-                    <NumericScaleOptions AutoGrid="False" CustomGridAlignment="0.01" GridAlignment="Custom" />
+                    <Label TextPattern="{V:0.000}" Font="Tahoma, 7pt">
+                        <ResolveOverlappingOptions AllowHide="False" />
+                    </Label>
+                    <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0.015" MaxValueSerializable="2.715" MinValueSerializable="2.645" StartSideMargin="0.025" />
+                    <WholeRange AlwaysShowZeroLevel="False" Auto="False" AutoSideMargins="False" EndSideMargin="0.1" MaxValueSerializable="2.73" MinValueSerializable="2.62" StartSideMargin="0" />
+                    <GridLines>
+                        <LineStyle DashStyle="Dot" />
+                    </GridLines>
+                    <NumericScaleOptions AutoGrid="False" CustomGridAlignment="0.005" GridAlignment="Custom" />
                 </AxisY>
             </cc1:XYDiagram>
         </DiagramSerializable>
         <titles>
-            <cc1:ChartTitle Font="Segoe UI, 12pt, style=Bold" Text="X bar Control Chart" />
+            <cc1:ChartTitle Font="Segoe UI, 12pt, style=Bold" Text="Graph Monitoring" />
         </titles>
         <legend alignmenthorizontal="Left" alignmentvertical="BottomOutside" 
             direction="LeftToRight"></legend> 
     </dx:WebChartControl>
+</div>
+    
 
 
             </td>
@@ -901,8 +921,9 @@
             <td>
                 <div style="height:10px"></div>
                 
+<div id="chartRdiv">
     <dx:WebChartControl ID="chartR" runat="server" ClientInstanceName="chartR"
-        Height="290px" Width="1080px" CrosshairEnabled="True">
+        Height="450px" Width="1080px" CrosshairEnabled="True">
         <SeriesSerializable>
             <cc1:Series ArgumentDataMember="Seq" Name="R" ValueDataMembersSerializable="RValue">
                 <ViewSerializable>
@@ -927,10 +948,14 @@
                 </AxisX>
                 <AxisY VisibleInPanesSerializable="-1" MinorCount="1">
                     <Tickmarks MinorLength="1" MinorVisible="False" />
-                    <Label TextAlignment="Near">
+                    <Label TextAlignment="Near" TextPattern="{V:0.000}">
+                        <ResolveOverlappingOptions AllowHide="False" />
                     </Label>
                     <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0.001" MaxValueSerializable="0.027" MinValueSerializable="0" StartSideMargin="0" />
                     <WholeRange Auto="False" MaxValueSerializable="0.027" MinValueSerializable="0" AutoSideMargins="False" EndSideMargin="1" StartSideMargin="1" />
+                    <GridLines>
+                        <LineStyle DashStyle="Dot" />
+                    </GridLines>
                     <NumericScaleOptions AutoGrid="False" CustomGridAlignment="0.001" GridAlignment="Custom" GridOffset="1" />
                 </AxisY>
             </cc1:XYDiagram>
@@ -940,8 +965,9 @@
         </titles>
         <legend alignmenthorizontal="Left" alignmentvertical="BottomOutside" 
             direction="LeftToRight"></legend> 
+        <ClientSideEvents EndCallback="ChartREndCallBack" />
     </dx:WebChartControl>
-
+</div>
 
             </td>
         </tr>

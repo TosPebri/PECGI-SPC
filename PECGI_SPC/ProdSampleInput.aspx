@@ -86,10 +86,11 @@
 
         function cboItemCheckChanged(s, e) {
             cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());            
+            cboSeq.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + cboShift.GetValue() + '|' + dtDate.GetText());
         }
 
         function cboShiftChanged(s, e) {            
-            cboSeq.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + cboShift.GetValue() + '|' + dtDate.GetText());            
+            
         }
 
         function OnBatchEditStartEditing(s, e) {
@@ -201,14 +202,17 @@
                 document.getElementById('C').style.backgroundColor = 'White';
             }      
 
-            if (s.cpMin < s.cpLSL) {
-                document.getElementById('Min').style.backgroundColor = 'Red';
-            } else if (s.cpMin < s.cpLCL) {
-                document.getElementById('Min').style.backgroundColor = 'Pink';
+            if(s.cpMin != '') {
+                if (s.cpMin < s.cpLSL) {
+                    document.getElementById('Min').style.backgroundColor = 'Red';
+                } else if (s.cpMin < s.cpLCL) {
+                    document.getElementById('Min').style.backgroundColor = 'Pink';
+                } else {
+                    document.getElementById('Min').style.backgroundColor = 'White';
+                }
             } else {
                 document.getElementById('Min').style.backgroundColor = 'White';
             }
-
             if (s.cpMax > s.cpUSL) {
                 document.getElementById('Max').style.backgroundColor = 'Red';
             } else if (s.cpMax > s.cpUCL) {
@@ -301,7 +305,6 @@
                             <ButtonStyle Font-Size="9pt" Paddings-Padding="10px"><Paddings Padding="10px"></Paddings>
                             </ButtonStyle>
                         </CalendarProperties>                        
-                                    <ClientSideEvents DateChanged="cboShiftChanged" />
                         <ButtonStyle Width="5px" Paddings-Padding="4px" >
 <Paddings Padding="4px"></Paddings>
                         </ButtonStyle>
@@ -796,14 +799,14 @@
                     <td class="body" align="center" rowspan="2" style="width:50px" id="NG"><dx:ASPxLabel ID="lblNG" runat="server" Text="" Font-Names="Segoe UI" Font-Size="Medium" ClientInstanceName="lblNG" Font-Bold="True" ForeColor="Black"></dx:ASPxLabel></td>
                 </tr>
                 <tr>
-                    <td class="body" align="right"><dx:ASPxLabel ID="lblUSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUSL"></dx:ASPxLabel>&nbsp;</td>
-                    <td class="body" align="right"><dx:ASPxLabel ID="lblLSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLSL"></dx:ASPxLabel></td>
-                    <td class="body" align="right"><dx:ASPxLabel ID="lblUCL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUCL"></dx:ASPxLabel></td>
-                    <td class="body" align="right"><dx:ASPxLabel ID="lblLCL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLCL"></dx:ASPxLabel></td>
-                    <td class="body" align="right" id="Min"><dx:ASPxLabel ID="lblMin" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblMin"></dx:ASPxLabel></td>
-                    <td class="body" align="right" id="Max"><dx:ASPxLabel ID="lblMax" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblMax"></dx:ASPxLabel></td>
-                    <td class="body" align="right" id="Ave"><dx:ASPxLabel ID="lblAve" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblAve"></dx:ASPxLabel></td>
-                    <td class="body" align="right" id="R"><dx:ASPxLabel ID="lblR" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblR"></dx:ASPxLabel></td>                    
+                    <td class="body" align="right"><dx:ASPxLabel ID="lblUSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUSL" ForeColor="Black"></dx:ASPxLabel>&nbsp;</td>
+                    <td class="body" align="right"><dx:ASPxLabel ID="lblLSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLSL" ForeColor="Black"></dx:ASPxLabel></td>
+                    <td class="body" align="right"><dx:ASPxLabel ID="lblUCL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUCL" ForeColor="Black"></dx:ASPxLabel></td>
+                    <td class="body" align="right"><dx:ASPxLabel ID="lblLCL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLCL" ForeColor="Black"></dx:ASPxLabel></td>
+                    <td class="body" align="right" id="Min"><dx:ASPxLabel ID="lblMin" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblMin" ForeColor="Black"></dx:ASPxLabel></td>
+                    <td class="body" align="right" id="Max"><dx:ASPxLabel ID="lblMax" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblMax" ForeColor="Black"></dx:ASPxLabel></td>
+                    <td class="body" align="right" id="Ave"><dx:ASPxLabel ID="lblAve" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblAve" ForeColor="Black"></dx:ASPxLabel></td>
+                    <td class="body" align="right" id="R"><dx:ASPxLabel ID="lblR" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblR" ForeColor="Black"></dx:ASPxLabel></td>                    
                 </tr>
             </table>
         </td>

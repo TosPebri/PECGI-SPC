@@ -15,6 +15,27 @@ Public Class clsSPCResult
 End Class
 
 Public Class clsSPCResultDB
+
+    Public Shared Function ADbl(ByVal value As Object) As Double
+        If value Is Nothing Then
+            Return 0
+        ElseIf IsDBNull(value) Then
+            Return 0
+        ElseIf IsNumeric(value) Then
+            Return CDbl(value)
+        Else
+            Return 0
+        End If
+    End Function
+
+    Public Shared Function ADecimal(value As String) As Double
+        Dim PointChar As String = Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator
+        If PointChar = "," Then
+            value = Replace(value, ".", ",")
+        End If
+        ADecimal = ADbl(value)
+    End Function
+
     Public Shared Function GetTable() As DataTable
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()

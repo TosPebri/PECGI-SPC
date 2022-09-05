@@ -150,7 +150,7 @@ Public Class ProdSampleInput
         cboShift.Value = "SH001"
 
         cboSeq.Value = "1"
-        cboSeq.DataSource = clsFrequencyDB.GetSequence(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value, cboShift.Value, Format(dtDate.Value, "yyyy-MM-dd"))
+        cboSeq.DataSource = clsFrequencyDB.GetSequence(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value)
         cboSeq.DataBind()
     End Sub
 
@@ -161,6 +161,11 @@ Public Class ProdSampleInput
 
     Protected Sub grid_RowInserting(sender As Object, e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles grid.RowInserting
         e.Cancel = True
+        If cboSeq.Value = "" Then
+            show_error(MsgTypeEnum.ErrorMsg, "Please select Sequcene", 1)
+            Return
+        End If
+
         Dim Result As New clsSPCResult
         Result.FactoryCode = cboFactory.Value
         Result.ItemCheckCode = cboItemCheck.Value
@@ -197,18 +202,18 @@ Public Class ProdSampleInput
         grid.JSProperties("cpLSL") = " "
         grid.JSProperties("cpUCL") = " "
         grid.JSProperties("cpLCL") = " "
-        grid.JSProperties("cpMin") = " "
-        grid.JSProperties("cpMax") = " "
-        grid.JSProperties("cpAve") = " "
-        grid.JSProperties("cpR") = " "
+        grid.JSProperties("cpMin") = ""
+        grid.JSProperties("cpMax") = ""
+        grid.JSProperties("cpAve") = ""
+        grid.JSProperties("cpR") = ""
         grid.JSProperties("cpC") = " "
         grid.JSProperties("cpNG") = " "
         grid.JSProperties("cpMKUser") = " "
         grid.JSProperties("cpMKDate") = " "
         grid.JSProperties("cpQCUser") = " "
         grid.JSProperties("cpQCDate") = " "
-        grid.JSProperties("cpSubLine") = " "
-        grid.JSProperties("cpRemarks") = " "
+        grid.JSProperties("cpSubLotNo") = ""
+        grid.JSProperties("cpRemarks") = ""
         grid.JSProperties("cpRefresh") = ""
     End Sub
 
@@ -428,7 +433,7 @@ Public Class ProdSampleInput
 
         If e.GetValue("DeleteStatus") IsNot Nothing AndAlso e.GetValue("DeleteStatus").ToString = "1" Then
             e.Row.BackColor = System.Drawing.Color.Silver
-        ElseIf e.GetValue("JudgementColor") IsNot Nothing Then
+        ElseIf e.GetValue("JudgementColor") IsNot Nothing AndAlso Not IsDBNull(e.GetValue("JudgementColor")) Then
             If e.GetValue("JudgementColor") = "1" Then
                 e.Row.BackColor = System.Drawing.Color.Pink
             ElseIf e.GetValue("JudgementColor") = "2" Then
@@ -444,7 +449,7 @@ Public Class ProdSampleInput
         Dim ItemCheckCode As String = Split(e.Parameter, "|")(3)
         Dim ShiftCode As String = Split(e.Parameter, "|")(4)
         Dim ProdDate As String = Split(e.Parameter, "|")(5)
-        cboSeq.DataSource = clsFrequencyDB.GetSequence(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ShiftCode, ProdDate)
+        cboSeq.DataSource = clsFrequencyDB.GetSequence(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode)
         cboSeq.DataBind()
     End Sub
 
@@ -605,9 +610,10 @@ Public Class ProdSampleInput
                 LSL = e.GetValue("SpecLSL2")
                 USL = e.GetValue("SpecUSL2")
             End If
-            If e.CellValue < LSL Or e.CellValue > USL Then
+            Dim Value As Double = clsSPCResultDB.ADecimal(e.CellValue)
+            If Value < LSL Or Value > USL Then
                 e.Cell.BackColor = Color.Red
-            ElseIf e.CellValue < LCL Or e.CellValue > UCL Then
+            ElseIf Value < LCL Or Value > UCL Then
                 e.Cell.BackColor = Color.Pink
             End If
         End If

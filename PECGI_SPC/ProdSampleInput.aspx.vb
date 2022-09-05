@@ -56,7 +56,7 @@ Public Class ProdSampleInput
                             colTime.Caption = Seq.StartTime
                             colTime.FieldName = iDay.ToString + "_" + Shift.ShiftName.ToString + "_" + Seq.SequenceNo.ToString
                             colTime.Caption = colTime.FieldName
-                            colTime.Width = 55
+                            colTime.Width = 90
                             colTime.CellStyle.HorizontalAlign = HorizontalAlign.Center
 
                             BandShift.Columns.Add(colTime)

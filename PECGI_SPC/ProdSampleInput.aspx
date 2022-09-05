@@ -836,7 +836,7 @@
                     </SettingsPager>
 
 
-                    <Settings HorizontalScrollBarMode="Auto" VerticalScrollableHeight="340" VerticalScrollBarMode="Auto" />
+                    <Settings HorizontalScrollBarMode="Auto" VerticalScrollableHeight="360" VerticalScrollBarMode="Auto" />
                     <SettingsDataSecurity AllowDelete="False" AllowEdit="False" AllowInsert="False" />
 
 

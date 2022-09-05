@@ -79,7 +79,7 @@ Public Class ItemCheckByBattery
             .SampleSize = e.NewValues("SampleSize"),
             .Remark = e.NewValues("Remark"),
             .Evaluation = e.NewValues("Evaluation"),
-            .CharacteristicItem = e.NewValues("CharacteristicItem"),
+            .CharacteristicItem = e.NewValues("CharacteristicStatus"),
             .ActiveStatus = e.NewValues("ActiveStatus"),
             .UpdateUser = pUser,
             .CreateUser = pUser

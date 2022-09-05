@@ -66,7 +66,7 @@ Public Class ProductionSampleVerificationList
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
-            If Request.QueryString("prm") IsNot Nothing Then
+            If Request.QueryString("menu") IsNot Nothing Then
                 sFactoryCode = Session("sFactoryCode")
                 sItemType = Session("sItemType")
                 sLineCode = Session("sLineCode")

@@ -10,6 +10,8 @@ Imports DevExpress.Web.Data
 Imports OfficeOpenXml
 Imports DevExpress.Web
 Imports OfficeOpenXml.Style
+Imports DevExpress.XtraCharts
+Imports DevExpress.XtraCharts.Web
 
 Public Class ProdSampleVerification
     Inherits System.Web.UI.Page
@@ -73,7 +75,7 @@ Public Class ProdSampleVerification
 
 #End Region
 #Region "LOAD FORM"
-    Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         pUser = Session("user")
         AuthAccess = sGlobal.Auth_UserAccess(pUser, "B040")
         If AuthAccess = False Then
@@ -81,37 +83,15 @@ Public Class ProdSampleVerification
         End If
         sGlobal.getMenu("B040")
         Master.SiteTitle = sGlobal.menuName
-    End Sub
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
         If Not Page.IsPostBack Then
-            If Request.QueryString("prm") IsNot Nothing Then
-                Dim data = Request.QueryString("prm").ToString()
-                prmFactoryCode = Session("prmFactoryCode")
-                prmItemType = Session("prmItemType")
-                prmLineCode = Session("prmLineCode")
-                prmItemCheck = Session("prmItemCheck")
-                prmProdDate = Session("prmProdDate")
-                prmShifCode = Session("prmShiftCode")
-                prmSeqNo = Session("prmSeqNo")
-
-                dtProdDate.Value = Convert.ToDateTime(prmProdDate)
-                dtProdDate.Enabled = False
-
-                btnBrowse.Enabled = False
-                btnClear.Enabled = False
-
-                UpFillCombo()
-
-                Up_GridLoad(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd"), prmShifCode, prmSeqNo)
-                Up_GridLoadActivities(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd"), prmShifCode, prmSeqNo)
-                Grid.JSProperties("cp_Verify") = VerifyStatus
+            If Request.QueryString("menu") IsNot Nothing Then
+                LoadForm_ByAnotherform()
             Else
-                dtProdDate.Value = DateTime.Now
-                UpFillCombo()
-                Grid.JSProperties("cp_Verify") = VerifyStatus
-                btnBack.Visible = False
+                LoadForm()
             End If
-
+            Dim a = "1"
+            HideValue.Set("TEST", a)
         End If
     End Sub
 #End Region
@@ -225,37 +205,32 @@ Public Class ProdSampleVerification
     Private Sub Grid_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles Grid.CustomCallback
         Try
             Dim cls As New clsProdSampleVerification
+            Dim SpcResultID As String = ""
             Dim msgErr As String = ""
             Dim pAction As String = Split(e.Parameters, "|")(0)
 
             If pAction = "Load" Then
-                Dim Factory As String = HideValue.Get("FactoryCode")
-                Dim Itemtype As String = HideValue.Get("ItemType_Code")
-                Dim Line As String = HideValue.Get("LineCode")
-                Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
+                Up_GridLoad(cboFactory.Value, cboItemType.Value, cboLineID.Value, cboItemCheck.Value, Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd"), cboShift.Value, cboSeq.Value)
                 Dim ProdDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
-                Dim Shift As String = HideValue.Get("ShiftCode")
-                Dim Seq As String = HideValue.Get("Seq")
-
-                Up_GridLoad(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
+                HideValue.Set("ProdDate", ProdDate)
                 Grid.JSProperties("cp_Verify") = VerifyStatus
             ElseIf pAction = "Verify" Then
-                Dim SpcResultID As String
-                Dim Factory As String = HideValue.Get("FactoryCode")
-                Dim Itemtype As String = HideValue.Get("ItemType_Code")
-                Dim Line As String = HideValue.Get("LineCode")
-                Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
-                Dim ProdDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
-                Dim Shift As String = HideValue.Get("ShiftCode")
-                Dim Seq As String = HideValue.Get("Seq")
 
-                cls.FactoryCode = Factory
-                cls.ItemType_Code = Itemtype
-                cls.LineCode = Line
-                cls.ItemCheck_Code = ItemCheck
-                cls.ProdDate = ProdDate
-                cls.ShiftCode = Shift
-                cls.Seq = Seq
+                'Dim Factory As String = HideValue.Get("FactoryCode")
+                'Dim Itemtype As String = HideValue.Get("ItemType_Code")
+                'Dim Line As String = HideValue.Get("LineCode")
+                'Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
+                'Dim ProdDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
+                'Dim Shift As String = HideValue.Get("ShiftCode")
+                'Dim Seq As String = HideValue.Get("Seq")
+
+                cls.FactoryCode = cboFactory.Value
+                cls.ItemType_Code = cboItemType.Value
+                cls.LineCode = cboLineID.Value
+                cls.ItemCheck_Code = cboItemCheck.Value
+                cls.ProdDate = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
+                cls.ShiftCode = cboShift.Value
+                cls.Seq = cboSeq.Value
 
                 ds = clsProdSampleVerificationDB.GridLoad(GetCharSetup, cls)
                 Dim dtColBrowse As DataTable = ds.Tables(0)
@@ -264,8 +239,8 @@ Public Class ProdSampleVerification
                 End If
                 Verify(SpcResultID)
                 Grid.JSProperties("cp_Verify") = VerifyStatus
-            ElseIf pAction = "Clear" Then
 
+            ElseIf pAction = "Clear" Then
                 ds = clsProdSampleVerificationDB.GridLoad(GetGridData, cls)
                 Dim dt = ds.Tables(0)
 
@@ -289,14 +264,21 @@ Public Class ProdSampleVerification
                     .DataSource = dt
                     .DataBind()
                 End With
-
+            ElseIf pAction = "SPCsample" Then
+                Session("prmFactoryCode") = cboFactory.Value
+                Session("prmItemType") = cboItemType.Value
+                Session("prmLineCode") = cboLineID.Value
+                Session("prmItemCheck") = cboItemCheck.Value
+                Session("prmProdDate") = dtProdDate.Value
+                Session("prmShiftCode") = cboShift.Value
+                Session("prmSeqNo") = cboSeq.Value
             End If
 
         Catch ex As Exception
             show_errorGrid(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
-    Private Sub GridMenu_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles GridMenu.CustomCallback
+    Private Sub GridActivity_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles GridActivity.CustomCallback
         Try
             Dim cls As New clsProdSampleVerification
             Dim msgErr As String = ""
@@ -315,7 +297,7 @@ Public Class ProdSampleVerification
             ElseIf pAction = "Clear" Then
                 ds = clsProdSampleVerificationDB.GridLoad(GetGridData_Activity, cls)
                 dt = ds.Tables(0)
-                With GridMenu
+                With GridActivity
                     .DataSource = dt
                     .DataBind()
                 End With
@@ -326,9 +308,9 @@ Public Class ProdSampleVerification
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
-    Private Sub GridMenu_BeforeGetCallbackResult(ByVal sender As Object, ByVal e As System.EventArgs) Handles GridMenu.BeforeGetCallbackResult
-        If GridMenu.IsNewRowEditing Then
-            GridMenu.SettingsCommandButton.UpdateButton.Text = "Save"
+    Private Sub GridActivity_BeforeGetCallbackResult(ByVal sender As Object, ByVal e As System.EventArgs) Handles GridActivity.BeforeGetCallbackResult
+        If GridActivity.IsNewRowEditing Then
+            GridActivity.SettingsCommandButton.UpdateButton.Text = "Save"
         End If
     End Sub
     Private Sub Grid_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles Grid.HtmlDataCellPrepared
@@ -365,7 +347,15 @@ Public Class ProdSampleVerification
                         End If
                     End If
                 ElseIf DescIndex = "View" Then
+                    Dim Link As New HyperLink()
+                    e.Cell.Text = ""
+
                     e.Cell.ForeColor = Color.Blue
+                    Link.Text = "View"
+                    Link.NavigateUrl = e.CellValue
+                    Link.Target = "_blank"
+
+                    e.Cell.Controls.Add(Link)
 
                 End If
 
@@ -380,7 +370,7 @@ Public Class ProdSampleVerification
             End If
 
             If DescIndex = "GridNothing" Then
-                e.Cell.BackColor = ColorTranslator.FromHtml("#4C4348")
+                e.Cell.BackColor = ColorTranslator.FromHtml("#878787")
                 e.Cell.BorderStyle = BorderStyle.None
             End If
 
@@ -388,21 +378,47 @@ Public Class ProdSampleVerification
             Throw New Exception("Error_EditingGrid !" & ex.Message)
         End Try
     End Sub
+    Private Sub chartX_CustomCallback(sender As Object, e As CustomCallbackEventArgs) Handles chartX.CustomCallback
+
+        Dim Prm As String = e.Parameter
+        If Prm = "" Then
+            Prm = "F001|TPMSBR011|015|IC021|03 Aug 2022"
+        End If
+        Dim FactoryCode As String = Split(Prm, "|")(0)
+        Dim ItemTypeCode As String = Split(Prm, "|")(1)
+        Dim LineCode As String = Split(Prm, "|")(2)
+        Dim ItemCheckCode As String = Split(Prm, "|")(3)
+        Dim ProdDate As String = Split(Prm, "|")(4)
+
+        LoadChartX(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
+    End Sub
+    Private Sub chartR_CustomCallback(sender As Object, e As CustomCallbackEventArgs) Handles chartR.CustomCallback
+        Dim Prm As String = e.Parameter
+        If Prm = "" Then
+            Prm = "F001|TPMSBR011|015|IC021|03 Aug 2022"
+        End If
+        Dim FactoryCode As String = Split(Prm, "|")(0)
+        Dim ItemTypeCode As String = Split(Prm, "|")(1)
+        Dim LineCode As String = Split(Prm, "|")(2)
+        Dim ItemCheckCode As String = Split(Prm, "|")(3)
+        Dim ProdDate As String = Split(Prm, "|")(4)
+        LoadChartR(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
+    End Sub
 
 #End Region
 
 #Region "GRID EVENT INSERT - UPDATE - DELETE"
-    Private Sub GridMenu_CancelRowEditing(sender As Object, e As ASPxStartRowEditingEventArgs) Handles GridMenu.CancelRowEditing
-        Dim commandColumn = TryCast(GridMenu.Columns(0), GridViewCommandColumn)
+    Private Sub GridActivity_CancelRowEditing(sender As Object, e As ASPxStartRowEditingEventArgs) Handles GridActivity.CancelRowEditing
+        Dim commandColumn = TryCast(GridActivity.Columns(0), GridViewCommandColumn)
         commandColumn.ShowNewButtonInHeader = True
     End Sub
-    Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles GridMenu.CellEditorInitialize
+    Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles GridActivity.CellEditorInitialize
         If e.Column.FieldName = "FactoryName" Or e.Column.FieldName = "ItemTypeName" Or e.Column.FieldName = "LineName" Or e.Column.FieldName = "ItemCheckName" Or e.Column.FieldName = "ShiftName" Then
             e.Editor.ReadOnly = True
             e.Editor.ForeColor = Color.Silver
         End If
 
-        If GridMenu.IsNewRowEditing Then
+        If GridActivity.IsNewRowEditing Then
             If e.Column.FieldName = "FactoryCode" Then
                 e.Editor.Value = cboFactory.Value
             ElseIf e.Column.FieldName = "FactoryName" Then
@@ -426,16 +442,16 @@ Public Class ProdSampleVerification
             ElseIf e.Column.FieldName = "ProdDate" Then
                 e.Editor.Value = dtProdDate.Value
             End If
-        ElseIf Not GridMenu.IsNewRowEditing Then
+        ElseIf Not GridActivity.IsNewRowEditing Then
             If e.Column.FieldName = "ProdDate" Then
                 e.Editor.ReadOnly = True
                 e.Editor.ForeColor = Color.Silver
             End If
         End If
     End Sub
-    Protected Sub GridMenu_Validating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs) Handles GridMenu.RowValidating
+    Protected Sub GridActivity_Validating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs) Handles GridActivity.RowValidating
         Dim dataCol As New GridViewDataColumn
-        For Each column As GridViewColumn In GridMenu.Columns
+        For Each column As GridViewColumn In GridActivity.Columns
             Dim dataColumn As GridViewDataColumn = TryCast(column, GridViewDataColumn)
             If dataColumn Is Nothing Then
                 Continue For
@@ -473,7 +489,7 @@ Public Class ProdSampleVerification
         Next
 
     End Sub
-    Protected Sub GridMenu_RowInserting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles GridMenu.RowInserting
+    Protected Sub GridActivity_RowInserting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles GridActivity.RowInserting
         e.Cancel = True
 
         Dim data As New clsProdSampleVerification With {
@@ -493,19 +509,19 @@ Public Class ProdSampleVerification
             Dim Msg = clsProdSampleVerificationDB.Activity_Insert("CREATE", data)
             If Msg = "" Then
                 show_error(MsgTypeEnum.Success, "Save data successfully!", 1)
-                GridMenu.CancelEdit()
+                GridActivity.CancelEdit()
                 Up_GridLoadActivities(data.FactoryCode, data.ItemType_Code, data.LineCode, data.ItemCheck_Code, e.NewValues("ProdDate"), data.ShiftCode, "")
                 Return
             Else
                 show_error(MsgTypeEnum.Warning, Msg, 1)
-                GridMenu.CancelEdit()
+                GridActivity.CancelEdit()
                 Up_GridLoadActivities(data.FactoryCode, data.ItemType_Code, data.LineCode, data.ItemCheck_Code, e.NewValues("ProdDate"), data.ShiftCode, "")
             End If
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
-    Protected Sub GridMenu_RowUpdating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataUpdatingEventArgs) Handles GridMenu.RowUpdating
+    Protected Sub GridActivity_RowUpdating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataUpdatingEventArgs) Handles GridActivity.RowUpdating
         e.Cancel = True
         Dim data As New clsProdSampleVerification With {
              .FactoryCode = e.NewValues("FactoryCode") & "",
@@ -525,19 +541,19 @@ Public Class ProdSampleVerification
             Dim Msg = clsProdSampleVerificationDB.Activity_Insert("UPDATE", data)
             If Msg = "" Then
                 show_error(MsgTypeEnum.Success, "Update data successfully!", 1)
-                GridMenu.CancelEdit()
+                GridActivity.CancelEdit()
                 Up_GridLoadActivities(data.FactoryCode, data.ItemType_Code, data.LineCode, data.ItemCheck_Code, e.NewValues("ProdDate"), data.ShiftCode, "")
                 Return
             Else
                 show_error(MsgTypeEnum.Warning, Msg, 1)
-                GridMenu.CancelEdit()
+                GridActivity.CancelEdit()
                 Up_GridLoadActivities(data.FactoryCode, data.ItemType_Code, data.LineCode, data.ItemCheck_Code, e.NewValues("ProdDate"), data.ShiftCode, "")
             End If
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
-    Protected Sub GridMenu_RowDeleting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataDeletingEventArgs) Handles GridMenu.RowDeleting
+    Protected Sub GridActivity_RowDeleting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataDeletingEventArgs) Handles GridActivity.RowDeleting
         e.Cancel = True
         Dim Factory As String = HideValue.Get("FactoryCode")
         Dim Itemtype As String = HideValue.Get("ItemType_Code")
@@ -553,11 +569,11 @@ Public Class ProdSampleVerification
             Dim Msg = clsProdSampleVerificationDB.Activity_Insert("DELETE", data)
             If Msg = "" Then
                 show_error(MsgTypeEnum.Success, "Delete data successfully!", 1)
-                GridMenu.CancelEdit()
+                GridActivity.CancelEdit()
                 Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
             Else
                 show_error(MsgTypeEnum.Warning, Msg, 1)
-                GridMenu.CancelEdit()
+                GridActivity.CancelEdit()
                 Up_GridLoadActivities(Factory, Itemtype, Line, ItemCheck, ProdDate, Shift, Seq)
             End If
         Catch ex As Exception
@@ -568,9 +584,9 @@ Public Class ProdSampleVerification
 
 #Region "FUNCTION"
     Private Sub show_error(ByVal msgType As MsgTypeEnum, ByVal ErrMsg As String, ByVal pVal As Integer)
-        GridMenu.JSProperties("cp_message") = ErrMsg
-        GridMenu.JSProperties("cp_type") = msgType
-        GridMenu.JSProperties("cp_val") = pVal
+        GridActivity.JSProperties("cp_message") = ErrMsg
+        GridActivity.JSProperties("cp_type") = msgType
+        GridActivity.JSProperties("cp_val") = pVal
     End Sub
     Private Sub show_errorGrid(ByVal msgType As MsgTypeEnum, ByVal ErrMsg As String, ByVal pVal As Integer)
         Grid.JSProperties("cp_message") = ErrMsg
@@ -800,7 +816,7 @@ Public Class ProdSampleVerification
                             If dtSeq.Rows.Count > 0 Then
                                 For r = 0 To dtSeq.Rows.Count - 1
                                     Dim Col_Seq As New GridViewDataTextColumn
-                                    Col_Seq.Width = 70
+                                    Col_Seq.Width = 100
                                     Col_Seq.HeaderStyle.HorizontalAlign = HorizontalAlign.Center
                                     Col_Seq.CellStyle.HorizontalAlign = HorizontalAlign.Center
                                     Col_Seq.FieldName = dtSeq.Rows(r)("nTime")
@@ -854,13 +870,13 @@ Public Class ProdSampleVerification
         cls.ShiftCode = Shift
         cls.Seq = Seq
 
-        Dim commandColumn = TryCast(GridMenu.Columns(0), GridViewCommandColumn)
+        Dim commandColumn = TryCast(GridActivity.Columns(0), GridViewCommandColumn)
         commandColumn.ShowNewButtonInHeader = True
 
-        With GridMenu
+        With GridActivity
             ds = clsProdSampleVerificationDB.GridLoad(GetGridData_Activity, cls)
-            Dim dtGridMenu As DataTable = ds.Tables(0)
-            .DataSource = dtGridMenu
+            Dim dtGridActivity As DataTable = ds.Tables(0)
+            .DataSource = dtGridActivity
             .DataBind()
         End With
     End Sub
@@ -904,6 +920,111 @@ Public Class ProdSampleVerification
                 Exit For
             End If
         Next
+    End Sub
+    Private Sub LoadChartR(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String)
+        Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartR(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+        If xr.Count = 0 Then
+            chartR.JSProperties("cpShow") = "0"
+        Else
+            chartR.JSProperties("cpShow") = "1"
+        End If
+        With chartR
+            .DataSource = xr
+            Dim diagram As XYDiagram = CType(.Diagram, XYDiagram)
+            diagram.AxisX.WholeRange.MinValue = 0
+            diagram.AxisX.WholeRange.MaxValue = 12
+
+            diagram.AxisX.GridLines.LineStyle.DashStyle = DashStyle.Solid
+            diagram.AxisX.GridLines.MinorVisible = True
+            diagram.AxisX.MinorCount = 1
+            diagram.AxisX.GridLines.Visible = False
+
+
+
+            Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+            diagram.AxisY.ConstantLines.Clear()
+            Dim RCL As New ConstantLine("CL R")
+            RCL.Color = Drawing.Color.Purple
+            RCL.LineStyle.Thickness = 2
+            RCL.LineStyle.DashStyle = DashStyle.DashDot
+            diagram.AxisY.ConstantLines.Add(RCL)
+            RCL.AxisValue = Setup.RCL
+
+            Dim RUCL As New ConstantLine("UCL R")
+            RUCL.Color = Drawing.Color.Purple
+            RUCL.LineStyle.Thickness = 2
+            RUCL.LineStyle.DashStyle = DashStyle.DashDot
+            diagram.AxisY.ConstantLines.Add(RUCL)
+            RUCL.AxisValue = Setup.RUCL
+
+            Dim MaxValue As Double
+            If xr.Count > 0 Then
+                If xr(0).MaxValue > Setup.RUCL Then
+                    MaxValue = xr(0).MaxValue
+                Else
+                    MaxValue = Setup.RUCL
+                End If
+            End If
+            diagram.AxisY.WholeRange.MaxValue = MaxValue
+
+            .DataBind()
+        End With
+    End Sub
+
+    Private Sub LoadChartX(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String)
+        Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartXR(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+        With chartX
+            .DataSource = xr
+            Dim diagram As XYDiagram = CType(.Diagram, XYDiagram)
+            diagram.AxisX.WholeRange.MinValue = 0
+            diagram.AxisX.WholeRange.MaxValue = 12
+
+            diagram.AxisX.GridLines.LineStyle.DashStyle = DashStyle.Solid
+            diagram.AxisX.GridLines.MinorVisible = True
+            diagram.AxisX.MinorCount = 1
+            diagram.AxisX.GridLines.Visible = False
+
+            diagram.AxisY.NumericScaleOptions.CustomGridAlignment = 0.005
+            diagram.AxisY.GridLines.MinorVisible = False
+
+
+            Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+            diagram.AxisY.ConstantLines.Clear()
+            Dim LCL As New ConstantLine("LCL")
+            LCL.Color = Drawing.Color.Purple
+            LCL.LineStyle.Thickness = 2
+            LCL.LineStyle.DashStyle = DashStyle.DashDot
+            diagram.AxisY.ConstantLines.Add(LCL)
+            LCL.AxisValue = Setup.XBarLCL
+
+            Dim UCL As New ConstantLine("UCL")
+            UCL.Color = Drawing.Color.Purple
+            UCL.LineStyle.Thickness = 2
+            UCL.LineStyle.DashStyle = DashStyle.DashDot
+            diagram.AxisY.ConstantLines.Add(UCL)
+            UCL.AxisValue = Setup.XBarUCL
+
+            Dim LSL As New ConstantLine("LSL")
+            LSL.Color = Drawing.Color.Red
+            LSL.LineStyle.Thickness = 2
+            LSL.LineStyle.DashStyle = DashStyle.Solid
+            diagram.AxisY.ConstantLines.Add(LSL)
+            LSL.AxisValue = Setup.SpecLSL
+
+            Dim USL As New ConstantLine("USL")
+            USL.Color = Drawing.Color.Red
+            USL.LineStyle.Thickness = 2
+            USL.LineStyle.DashStyle = DashStyle.Solid
+            diagram.AxisY.ConstantLines.Add(USL)
+            USL.AxisValue = Setup.SpecUSL
+
+            'diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
+            'diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
+
+            diagram.AxisY.VisualRange.MinValue = Setup.SpecLSL
+            diagram.AxisY.VisualRange.MaxValue = Setup.SpecUSL
+            .DataBind()
+        End With
     End Sub
 #End Region
 
@@ -1208,33 +1329,33 @@ Public Class ProdSampleVerification
             Dim irow = row_HeaderActivity + 1
             With pExl
                 ds = clsProdSampleVerificationDB.GridLoad(GetGridData_Activity, cls)
-                Dim dtGridMenu As DataTable = ds.Tables(0)
-                Dim nRow = dtGridMenu.Rows.Count
-                If dtGridMenu.Rows.Count > 0 Then
-                    For i = 0 To dtGridMenu.Rows.Count - 1
-                        .Cells(irow + i, 1).Value = dtGridMenu.Rows(0)("ProdDate")
+                Dim dtGridActivity As DataTable = ds.Tables(0)
+                Dim nRow = dtGridActivity.Rows.Count
+                If dtGridActivity.Rows.Count > 0 Then
+                    For i = 0 To dtGridActivity.Rows.Count - 1
+                        .Cells(irow + i, 1).Value = dtGridActivity.Rows(0)("ProdDate")
                         .Cells(irow + i, 1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center
 
-                        .Cells(irow + i, 2).Value = dtGridMenu.Rows(0)("PIC")
+                        .Cells(irow + i, 2).Value = dtGridActivity.Rows(0)("PIC")
                         .Cells(irow + i, 2).Style.HorizontalAlignment = ExcelHorizontalAlignment.Left
 
-                        .Cells(irow + i, 3, irow + i, 4).Value = dtGridMenu.Rows(0)("Action")
+                        .Cells(irow + i, 3, irow + i, 4).Value = dtGridActivity.Rows(0)("Action")
                         .Cells(irow + i, 3, irow + i, 4).Style.HorizontalAlignment = ExcelHorizontalAlignment.Left
                         .Cells(irow + i, 3, irow + i, 4).Merge = True
                         .Cells(irow + i, 3, irow + i, 4).Style.WrapText = True
 
-                        .Cells(irow + i, 5).Value = If(dtGridMenu.Rows(0)("Result") = 0, "OK", "NG")
+                        .Cells(irow + i, 5).Value = If(dtGridActivity.Rows(0)("Result") = 0, "OK", "NG")
                         .Cells(irow + i, 5).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center
 
-                        .Cells(irow + i, 6, irow + i, 7).Value = dtGridMenu.Rows(0)("Remark")
+                        .Cells(irow + i, 6, irow + i, 7).Value = dtGridActivity.Rows(0)("Remark")
                         .Cells(irow + i, 6, irow + i, 7).Style.HorizontalAlignment = ExcelHorizontalAlignment.Left
                         .Cells(irow + i, 6, irow + i, 7).Merge = True
                         .Cells(irow + i, 6, irow + i, 7).Style.WrapText = True
 
-                        .Cells(irow + i, 8).Value = dtGridMenu.Rows(0)("LastUser")
+                        .Cells(irow + i, 8).Value = dtGridActivity.Rows(0)("LastUser")
                         .Cells(irow + i, 8).Style.HorizontalAlignment = ExcelHorizontalAlignment.Left
 
-                        .Cells(irow + i, 9).Value = dtGridMenu.Rows(0)("LastDate")
+                        .Cells(irow + i, 9).Value = dtGridActivity.Rows(0)("LastDate")
                         .Cells(irow + i, 9).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center
                     Next
                 End If
@@ -1256,6 +1377,30 @@ Public Class ProdSampleVerification
         End Try
 
     End Sub
+    Private Sub LoadForm_ByAnotherform()
+        prmFactoryCode = Session("prmFactoryCode")
+        prmItemType = Session("prmItemType")
+        prmLineCode = Session("prmLineCode")
+        prmItemCheck = Session("prmItemCheck")
+        prmProdDate = Session("prmProdDate")
+        prmShifCode = Session("prmShiftCode")
+        prmSeqNo = Session("prmSeqNo")
 
+        dtProdDate.Value = Convert.ToDateTime(prmProdDate)
+        dtProdDate.Enabled = False
+        btnBrowse.Enabled = False
+        btnClear.Enabled = False
+
+        UpFillCombo()
+        Up_GridLoad(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd"), prmShifCode, prmSeqNo)
+        Up_GridLoadActivities(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd"), prmShifCode, prmSeqNo)
+        Grid.JSProperties("cp_Verify") = VerifyStatus 'parameter to authorization verify
+    End Sub
+    Private Sub LoadForm()
+        dtProdDate.Value = DateTime.Now
+        UpFillCombo()
+        Grid.JSProperties("cp_Verify") = VerifyStatus 'parameter to authorization verify
+        btnBack.Visible = False
+    End Sub
 #End Region
 End Class

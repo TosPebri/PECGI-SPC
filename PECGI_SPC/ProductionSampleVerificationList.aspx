@@ -178,7 +178,7 @@
             millisecondsToWait = 100;
             setTimeout(function () {
                 console.log(Content_SelectData);
-                window.open('ProdSampleVerification.aspx?prm=Verify', '_self');
+                window.open('ProdSampleVerification.aspx?menu=productionSampleVerificationList.aspx', '_self');
             }, millisecondsToWait);               
         }
 

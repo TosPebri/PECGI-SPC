@@ -221,13 +221,31 @@ Partial Public Class ProdSampleVerification
     Protected WithEvents Grid As Global.DevExpress.Web.ASPxGridView
 
     '''<summary>
-    '''lblGridMenu control.
+    '''chartX control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents lblGridMenu As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents chartX As Global.DevExpress.XtraCharts.Web.WebChartControl
+
+    '''<summary>
+    '''chartR control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents chartR As Global.DevExpress.XtraCharts.Web.WebChartControl
+
+    '''<summary>
+    '''lblGridActivity control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents lblGridActivity As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
     '''dsUserSetup control.
@@ -239,13 +257,13 @@ Partial Public Class ProdSampleVerification
     Protected WithEvents dsUserSetup As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
-    '''GridMenu control.
+    '''GridActivity control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents GridMenu As Global.DevExpress.Web.ASPxGridView
+    Protected WithEvents GridActivity As Global.DevExpress.Web.ASPxGridView
 
     '''<summary>
     '''HideValue control.

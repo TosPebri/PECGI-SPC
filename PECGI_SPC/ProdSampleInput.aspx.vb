@@ -37,23 +37,25 @@ Public Class ProdSampleInput
             Dim SelDay As Object = clsSPCResultDB.GetPrevDate(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
             For iDay = 1 To 2
                 If Not IsDBNull(SelDay) Then
+                    Dim dDay As String = Format(CDate(SelDay), "yyyy-MM-dd")
                     Dim BandDay As New GridViewBandColumn
                     BandDay.Caption = Format(SelDay, "dd MMM yyyy")
                     .Columns.Add(BandDay)
 
-                    Dim Shiftlist As List(Of clsShift) = clsFrequencyDB.GetShift(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode)
+                    Dim Shiftlist As List(Of clsShift) = clsFrequencyDB.GetShift(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, dDay)
 
                     For Each Shift In Shiftlist
                         Dim BandShift As New GridViewBandColumn
                         BandShift.Caption = "S-" & Shift.ShiftName
                         BandDay.Columns.Add(BandShift)
 
-                        Dim SeqList As List(Of clsSequenceNo) = clsFrequencyDB.GetSequence(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, Shift.ShiftCode, ProdDate)
+                        Dim SeqList As List(Of clsSequenceNo) = clsFrequencyDB.GetSequence(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, Shift.ShiftCode, dDay)
                         Dim ColIndex As Integer = 1
                         For Each Seq In SeqList
                             Dim colTime As New GridViewDataTextColumn
                             colTime.Caption = Seq.StartTime
                             colTime.FieldName = iDay.ToString + "_" + Shift.ShiftName.ToString + "_" + Seq.SequenceNo.ToString
+                            colTime.Caption = colTime.FieldName
                             colTime.Width = 55
                             colTime.CellStyle.HorizontalAlign = HorizontalAlign.Center
 
@@ -161,11 +163,6 @@ Public Class ProdSampleInput
 
     Protected Sub grid_RowInserting(sender As Object, e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles grid.RowInserting
         e.Cancel = True
-        If cboSeq.Value = "" Then
-            show_error(MsgTypeEnum.ErrorMsg, "Please select Sequcene", 1)
-            Return
-        End If
-
         Dim Result As New clsSPCResult
         Result.FactoryCode = cboFactory.Value
         Result.ItemCheckCode = cboItemCheck.Value
@@ -236,7 +233,7 @@ Public Class ProdSampleInput
         grid.DataBind()
         If dt.Rows.Count = 0 Then
             up_ClearJS()
-
+            grid.JSProperties("cpRefresh") = "1"
             Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
             If Setup IsNot Nothing Then
                 grid.JSProperties("cpUSL") = Setup.SpecUSL
@@ -292,7 +289,6 @@ Public Class ProdSampleInput
                 Dim pVerified As String = Split(e.Parameters, "|")(8)
                 pSeq = Val(pSeq)
                 GridLoad(pFactory, pItemType, pLine, pItemCheck, pDate, pShift, pSeq, pVerified)
-                GridXLoad(pFactory, pItemType, pLine, pItemCheck, pDate)
         End Select
     End Sub
 

@@ -900,7 +900,7 @@
                 <AxisY VisibleInPanesSerializable="-1" MinorCount="1">
                     <Tickmarks MinorVisible="False" />
                     <Label TextPattern="{V:0.000}" Font="Tahoma, 7pt">
-                        <ResolveOverlappingOptions AllowHide="False" />
+                        <ResolveOverlappingOptions AllowHide="True" />
                     </Label>
                     <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0.015" MaxValueSerializable="2.715" MinValueSerializable="2.645" StartSideMargin="0.025" />
                     <WholeRange AlwaysShowZeroLevel="False" Auto="False" AutoSideMargins="False" EndSideMargin="0.1" MaxValueSerializable="2.73" MinValueSerializable="2.62" StartSideMargin="0" />
@@ -956,7 +956,7 @@
                 <AxisY VisibleInPanesSerializable="-1" MinorCount="1">
                     <Tickmarks MinorLength="1" MinorVisible="False" />
                     <Label TextAlignment="Near" TextPattern="{V:0.000}">
-                        <ResolveOverlappingOptions AllowHide="False" />
+                        <ResolveOverlappingOptions AllowHide="True" />
                     </Label>
                     <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0.001" MaxValueSerializable="0.027" MinValueSerializable="0" StartSideMargin="0" />
                     <WholeRange Auto="False" MaxValueSerializable="0.027" MinValueSerializable="0" AutoSideMargins="False" EndSideMargin="1" StartSideMargin="1" />

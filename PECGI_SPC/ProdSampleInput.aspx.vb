@@ -55,7 +55,6 @@ Public Class ProdSampleInput
                             Dim colTime As New GridViewDataTextColumn
                             colTime.Caption = Seq.StartTime
                             colTime.FieldName = iDay.ToString + "_" + Shift.ShiftName.ToString + "_" + Seq.SequenceNo.ToString
-                            colTime.Caption = colTime.FieldName
                             colTime.Width = 90
                             colTime.CellStyle.HorizontalAlign = HorizontalAlign.Center
 
@@ -563,8 +562,8 @@ Public Class ProdSampleInput
             diagram.AxisY.ConstantLines.Add(USL)
             USL.AxisValue = Setup.SpecUSL
 
-            'diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
-            'diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
+            diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
+            diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
 
             diagram.AxisY.VisualRange.MinValue = Setup.SpecLSL
             diagram.AxisY.VisualRange.MaxValue = Setup.SpecUSL

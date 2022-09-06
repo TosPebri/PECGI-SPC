@@ -64,11 +64,7 @@
             } else {
                 btnExcel.SetEnabled(false);
             }
-            //var today = new Date();
-            //dtFromDate.SetDate(today);
-            //dtToDate.SetDate(today);
-            btnVerification.SetEnabled(false);
-            
+            btnVerification.SetEnabled(false);         
         }
 
         function Browse() {
@@ -98,7 +94,7 @@
             //    toastr.options.preventDuplicates = true;
             //}
             else {
-                GridMenu.PerformCallback('Load|' + FactoryCode + '|' + ItemType_Code + '|' + LineCode + '|' + ItemCheck_Code + '|' + ProdDate_From + '|' + ProdDate_To + '|' + MK + '|' + QC);
+                Grid.PerformCallback('Load|' + FactoryCode + '|' + ItemType_Code + '|' + LineCode + '|' + ItemCheck_Code + '|' + ProdDate_From + '|' + ProdDate_To + '|' + MK + '|' + QC);
             }
         }
 
@@ -113,7 +109,7 @@
             cboMK.SetValue('');
             cboQC.SetValue('');
 
-            GridMenu.PerformCallback('Clear|');
+            Grid.PerformCallback('Clear|');
             e.cancel = true;
         }
 
@@ -149,7 +145,7 @@
             }
          
             Content_SelectData = result;
-            console.log(Content_SelectData);
+          /*  console.log(Content_SelectData);*/
             if (values.length == 0) {
                 btnVerification.SetEnabled(false);
             }
@@ -173,13 +169,35 @@
         }
 
         function Verification() {
-            console.log(Content_SelectData);
-            GridMenu.PerformCallback('Verify|' + Content_SelectData);
-            millisecondsToWait = 100;
-            setTimeout(function () {
-                console.log(Content_SelectData);
-                window.open('ProdSampleVerification.aspx?menu=productionSampleVerificationList.aspx', '_self');
-            }, millisecondsToWait);               
+         /*   console.log(Content_SelectData);*/
+            let text = Content_SelectData;
+            const myArray = text.split("|");
+            var Factory = myArray[1];
+            var ItemType = myArray[2];
+            var Line = myArray[3];
+            var ItemCheck = myArray[4];
+            var ProdDate = myArray[5];
+            var Shift = myArray[6];
+            var Seq = myArray[7];
+
+            var prmLine = cboLineID.GetValue();
+            var prmItemCheck = cboItemCheck.GetValue();
+            var prmFromDate = dtFromDate.GetText();
+            var prmToDate = dtToDate.GetText();
+            var prmMK = cboMK.GetValue();
+            var prmQC = cboMK.GetValue();
+
+            window.open('ProdSampleVerification.aspx?menu=ProductionSampleVerificationList.aspx' + '&FactoryCode=' + Factory + '&ItemTypeCode=' + ItemType
+                + '&Line=' + Line + '&ItemCheckCode=' + ItemCheck + '&ProdDate=' + ProdDate + '&Shift=' + Shift + '&Sequence=' + Seq
+                + '&cboLine=' + prmLine + '&cboItemCheck=' + prmItemCheck + '&FromDate=' + prmFromDate + '&ToDate='+ prmToDate + '&MK=' +prmMK + '&QC=' +prmQC + '', '_self');
+
+
+            //Grid.PerformCallback('Verify|' + Content_SelectData);
+            //millisecondsToWait = 100;
+            //setTimeout(function () {
+            //    console.log(Content_SelectData);
+            //    window.open('ProdSampleVerification.aspx?menu=productionSampleVerificationList.aspx', '_self');
+            //}, millisecondsToWait);               
         }
 
 
@@ -372,14 +390,14 @@
                     </dx:ASPxButton>
                 </td>
                 <td>
-                    <dx:ASPxGridViewExporter ID="GridExport" runat="server" GridViewID="GridMenu">
+                    <dx:ASPxGridViewExporter ID="GridExport" runat="server" GridViewID="Grid">
                     </dx:ASPxGridViewExporter>
                 </td>
             </tr>
         </table>
     </div>
     <div style="padding: 5px 5px 5px 5px">
-        <dx:ASPxGridView ID="GridMenu" runat="server" AutoGenerateColumns="False" ClientInstanceName="GridMenu"
+        <dx:ASPxGridView ID="Grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="Grid"
             EnableTheming="True" KeyFieldName="SPCResultID" Theme="Office2010Black"
             Width="100%" Font-Names="Segoe UI" Font-Size="9pt">
             <ClientSideEvents EndCallback="OnEndCallback" Init="OnInit" SelectionChanged="SelectionChanged" />

@@ -19,6 +19,14 @@ Public Class ProductionSampleVerificationList
 
 #Region "Declaration"
     Dim pUser As String = ""
+    Private dt As DataTable
+
+    ' AUTHORIZATION
+    Public AuthUpdate As Boolean = False
+    Public AuthDelete As Boolean = False
+    Public AuthAccess As Boolean = False
+
+    ' FILL COMBO BOX FILTER
     Dim Factory_Sel As String = "1"
     Dim ItemType_Sel As String = "2"
     Dim Line_Sel As String = "3"
@@ -26,6 +34,7 @@ Public Class ProductionSampleVerificationList
     Dim MK_Sel As String = "5"
     Dim QC_Sel As String = "6"
 
+    ' PARAMETER GRID COLOR
     Dim nMinColor As String = ""
     Dim nMaxColor As String = ""
     Dim nAvgColor As String = ""
@@ -34,6 +43,7 @@ Public Class ProductionSampleVerificationList
     Dim MKColor As String = ""
     Dim QCColor As String = ""
 
+    ' PARAMETER SESSION
     Dim sFactoryCode = ""
     Dim sItemType = ""
     Dim sLineCode = ""
@@ -43,106 +53,27 @@ Public Class ProductionSampleVerificationList
     Dim sProdDateTo = ""
     Dim sProdDateFrom = ""
 
-    Private dt As DataTable
-
-    Public AuthUpdate As Boolean = False
-    Public AuthDelete As Boolean = False
-    Public AuthAccess As Boolean = False
-
 #End Region
 
 #Region "Event"
-    Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         pUser = Session("user")
         AuthAccess = sGlobal.Auth_UserAccess(pUser, "B030")
         If AuthAccess = False Then
             Response.Redirect("~/Main.aspx")
         End If
-
         sGlobal.getMenu("B030")
         Master.SiteTitle = sGlobal.menuName
         show_error(MsgTypeEnum.Info, "", 0)
-    End Sub
 
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             If Request.QueryString("menu") IsNot Nothing Then
-                sFactoryCode = Session("sFactoryCode")
-                sItemType = Session("sItemType")
-                sLineCode = Session("sLineCode")
-                sItemCheck = Session("sItemCheck")
-                sMKVerification = Session("sMKVerification")
-                sQCVerification = Session("sQCVerification")
-                sProdDateFrom = Session("sProdDateFrom")
-                sProdDateTo = Session("sProdDateTo")
-                dtFromDate.Value = Convert.ToDateTime(sProdDateFrom)
-                dtToDate.Value = Convert.ToDateTime(sProdDateTo)
-
-                Dim cls As New clsProductionSampleVerificationList
-                cls.FactoryCode = sFactoryCode
-                cls.ItemType_Code = sItemType
-                cls.LineCode = sLineCode
-                cls.ItemCheck_Code = sItemCheck
-                cls.ProdDateFrom = Convert.ToDateTime(sProdDateFrom).ToString("yyyy-MM-dd")
-                cls.ProdDateTo = Convert.ToDateTime(sProdDateTo).ToString("yyyy-MM-dd")
-                cls.MKVerification = sMKVerification
-                cls.QCVerification = sQCVerification
-
-                up_Fillcombo()
-                UpGridLoad(cls)
-
+                LoadForm_ByAnotherform()
             Else
-                Dim ProdDate = DateTime.Now
-                dtFromDate.Value = ProdDate
-                dtToDate.Value = ProdDate
-
-                up_Fillcombo()
-                GridMenu.JSProperties("cp_GridTot") = 0
+                LoadForm()
             End If
-
         End If
     End Sub
-
-    Private Sub GridMenu_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles GridMenu.CustomCallback
-        Try
-            Dim cls As New clsProductionSampleVerificationList
-            Dim msgErr As String = ""
-            Dim pAction As String = Split(e.Parameters, "|")(0)
-
-            If pAction = "Load" Then
-                Dim Factory As String = Split(e.Parameters, "|")(1)
-                Dim Itemtype As String = Split(e.Parameters, "|")(2)
-                Dim Line As String = Split(e.Parameters, "|")(3)
-                Dim ItemCheck As String = Split(e.Parameters, "|")(4)
-                Dim ProdDateFrom As String = Convert.ToDateTime(Split(e.Parameters, "|")(5)).ToString("yyyy-MM-dd")
-                Dim ProdDateTo As String = Convert.ToDateTime(Split(e.Parameters, "|")(6)).ToString("yyyy-MM-dd")
-                Dim MKVerification As String = Split(e.Parameters, "|")(7)
-                Dim QCVerification As String = Split(e.Parameters, "|")(8)
-
-                cls.FactoryCode = Factory
-                cls.ItemType_Code = Itemtype
-                cls.LineCode = Line
-                cls.ItemCheck_Code = ItemCheck
-                cls.ProdDateFrom = ProdDateFrom
-                cls.ProdDateTo = ProdDateTo
-                cls.MKVerification = MKVerification
-                cls.QCVerification = QCVerification
-
-                UpGridLoad(cls)
-
-            ElseIf pAction = "Clear" Then
-                dt = clsProductionSampleVerificationListDB.LoadGrid(cls)
-                GridMenu.DataSource = dt
-                GridMenu.DataBind()
-            Else pAction = "Verify"
-                SessionData(e.Parameters)
-            End If
-
-        Catch ex As Exception
-            show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
-        End Try
-    End Sub
-
     Private Sub cboLineID_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboLineID.Callback
         Try
             Dim data As New clsProductionSampleVerificationList()
@@ -161,7 +92,6 @@ Public Class ProductionSampleVerificationList
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 0)
         End Try
     End Sub
-
     Private Sub cboItemCheck_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboItemCheck.Callback
         Try
             Dim data As New clsProductionSampleVerificationList()
@@ -181,7 +111,6 @@ Public Class ProductionSampleVerificationList
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 0)
         End Try
     End Sub
-
     Protected Sub btnExcel_Click(sender As Object, e As EventArgs) Handles btnExcel.Click
         Dim cls As New clsProductionSampleVerificationList
         Dim Factory As String = cboFactory.Value
@@ -218,7 +147,38 @@ Public Class ProductionSampleVerificationList
 
         up_Excel(cls)
     End Sub
-    Private Sub GridMenu_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles GridMenu.HtmlDataCellPrepared
+    Private Sub Grid_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles Grid.CustomCallback
+        Try
+            Dim cls As New clsProductionSampleVerificationList
+            Dim msgErr As String = ""
+            Dim pAction As String = Split(e.Parameters, "|")(0)
+
+            If pAction = "Load" Then
+
+                cls.FactoryCode = Split(e.Parameters, "|")(1)
+                cls.ItemType_Code = Split(e.Parameters, "|")(2)
+                cls.LineCode = Split(e.Parameters, "|")(3)
+                cls.ItemCheck_Code = Split(e.Parameters, "|")(4)
+                cls.ProdDateFrom = Convert.ToDateTime(Split(e.Parameters, "|")(5)).ToString("yyyy-MM-dd")
+                cls.ProdDateTo = Convert.ToDateTime(Split(e.Parameters, "|")(6)).ToString("yyyy-MM-dd")
+                cls.MKVerification = Split(e.Parameters, "|")(7)
+                cls.QCVerification = Split(e.Parameters, "|")(8)
+
+                UpGridLoad(cls)
+
+            ElseIf pAction = "Clear" Then
+                dt = clsProductionSampleVerificationListDB.LoadGrid(cls)
+                Grid.DataSource = dt
+                Grid.DataBind()
+            Else pAction = "Verify"
+                SessionData(e.Parameters)
+            End If
+
+        Catch ex As Exception
+            show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
+        End Try
+    End Sub
+    Private Sub Grid_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles Grid.HtmlDataCellPrepared
         Try
 
             If e.DataColumn.FieldName = "nMinColor" Then
@@ -258,21 +218,56 @@ Public Class ProductionSampleVerificationList
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 0)
         End Try
     End Sub
+    Private Sub SessionData(Data As String)
+
+        Dim prmFactoryCode = Split(Data, "|")(2)
+        Dim prmItemType = Split(Data, "|")(3)
+        Dim prmLineCode = Split(Data, "|")(4)
+        Dim prmItemCheck = Split(Data, "|")(5)
+        Dim prmProdDate = Split(Data, "|")(6)
+        Dim prmShifCode = Split(Data, "|")(7)
+        Dim prmSeqNo = Split(Data, "|")(8)
+
+        sFactoryCode = cboFactory.Value
+        sItemType = cboItemType.Value
+        sLineCode = cboLineID.Value
+        sItemCheck = cboItemCheck.Value
+        sMKVerification = cboMK.Value
+        sQCVerification = cboQC.Value
+        sProdDateTo = dtToDate.Value
+        sProdDateFrom = dtFromDate.Value
+
+        Session("prmFactoryCode") = prmFactoryCode
+        Session("prmItemType") = prmItemType
+        Session("prmLineCode") = prmLineCode
+        Session("prmItemCheck") = prmItemCheck
+        Session("prmProdDate") = prmProdDate
+        Session("prmShiftCode") = prmShifCode
+        Session("prmSeqNo") = prmSeqNo
+
+        Session("sFactoryCode") = sFactoryCode
+        Session("sItemType") = sItemType
+        Session("sLineCode") = sLineCode
+        Session("sItemCheck") = sItemCheck
+        Session("sMKVerification") = sMKVerification
+        Session("sQCVerification") = sQCVerification
+        Session("sProdDateFrom") = sProdDateFrom
+        Session("sProdDateTo") = sProdDateTo
+    End Sub
 
 #End Region
-
 #Region "Procedure"
     Private Sub show_error(ByVal msgType As MsgTypeEnum, ByVal ErrMsg As String, ByVal pVal As Integer)
-        GridMenu.JSProperties("cp_message") = ErrMsg
-        GridMenu.JSProperties("cp_type") = msgType
-        GridMenu.JSProperties("cp_val") = pVal
+        Grid.JSProperties("cp_message") = ErrMsg
+        Grid.JSProperties("cp_type") = msgType
+        Grid.JSProperties("cp_val") = pVal
     End Sub
 
     Private Sub up_Fillcombo()
         Try
             Dim data As New clsProductionSampleVerificationList()
-            Dim ErrMsg As String = ""
             data.UserID = pUser
+            Dim ErrMsg As String = ""
             Dim a As String
 
             '============ FILL COMBO FACTORY CODE ================'
@@ -427,11 +422,11 @@ Public Class ProductionSampleVerificationList
     Private Sub UpGridLoad(cls As clsProductionSampleVerificationList)
         Try
             dt = clsProductionSampleVerificationListDB.LoadGrid(cls)
-            GridMenu.DataSource = dt
-            GridMenu.DataBind()
+            Grid.DataSource = dt
+            Grid.DataBind()
 
             If dt.Rows.Count > 0 Then
-                GridMenu.JSProperties("cp_GridTot") = dt.Rows.Count
+                Grid.JSProperties("cp_GridTot") = dt.Rows.Count
             Else
                 show_error(MsgTypeEnum.Warning, "Data Not Found !", 1)
             End If
@@ -440,7 +435,45 @@ Public Class ProductionSampleVerificationList
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
+    Private Sub LoadForm_ByAnotherform()
+        sFactoryCode = Request.QueryString("FactoryCode")
+        sItemType = Request.QueryString("ItemTypeCode")
+        sLineCode = Request.QueryString("Line")
+        sItemCheck = Request.QueryString("ItemCheckCode")
+        sMKVerification = Request.QueryString("MK")
+        sQCVerification = Request.QueryString("QC")
+        sProdDateFrom = Request.QueryString("FromDate")
+        sProdDateTo = Request.QueryString("ToDate")
 
+        Dim cls As New clsProductionSampleVerificationList
+        cls.FactoryCode = sFactoryCode
+        cls.ItemType_Code = sItemType
+        cls.LineCode = sLineCode
+        cls.ItemCheck_Code = sItemCheck
+        cls.ProdDateFrom = Convert.ToDateTime(sProdDateFrom).ToString("yyyy-MM-dd")
+        cls.ProdDateTo = Convert.ToDateTime(sProdDateTo).ToString("yyyy-MM-dd")
+        cls.MKVerification = sMKVerification
+        cls.QCVerification = sQCVerification
+        cls.UserID = pUser
+
+        up_Fillcombo()
+        UpGridLoad(cls)
+
+        dtFromDate.Value = Convert.ToDateTime(sProdDateFrom)
+        dtToDate.Value = Convert.ToDateTime(sProdDateTo)
+    End Sub
+    Private Sub LoadForm()
+        up_Fillcombo()
+
+        Dim ProdDate = DateTime.Now
+        dtFromDate.Value = ProdDate
+        dtToDate.Value = ProdDate
+
+        'for disabled button Verify and Download Excel
+        Grid.JSProperties("cp_GridTot") = 0
+    End Sub
+
+#End Region
 #Region "Download To Excel"
     Private Sub up_Excel(cls As clsProductionSampleVerificationList)
         Try
@@ -638,7 +671,6 @@ Public Class ProductionSampleVerificationList
         Catch ex As Exception
         End Try
     End Sub
-
     Private Sub InsertHeader(ByVal pExl As ExcelWorksheet, cls As clsProductionSampleVerificationList)
         With pExl
             .Cells(1, 1).Value = "Product Sample Verification List"
@@ -684,71 +716,7 @@ Public Class ProductionSampleVerificationList
 
         End With
     End Sub
-
-    Private Sub SessionData(Data As String)
-
-        Dim prmFactoryCode = Split(Data, "|")(2)
-        Dim prmItemType = Split(Data, "|")(3)
-        Dim prmLineCode = Split(Data, "|")(4)
-        Dim prmItemCheck = Split(Data, "|")(5)
-        Dim prmProdDate = Split(Data, "|")(6)
-        Dim prmShifCode = Split(Data, "|")(7)
-        Dim prmSeqNo = Split(Data, "|")(8)
-
-        sFactoryCode = cboFactory.Value
-        sItemType = cboItemType.Value
-        sLineCode = cboLineID.Value
-        sItemCheck = cboItemCheck.Value
-        sMKVerification = cboMK.Value
-        sQCVerification = cboQC.Value
-        sProdDateTo = dtToDate.Value
-        sProdDateFrom = dtFromDate.Value
-
-        Session("prmFactoryCode") = prmFactoryCode
-        Session("prmItemType") = prmItemType
-        Session("prmLineCode") = prmLineCode
-        Session("prmItemCheck") = prmItemCheck
-        Session("prmProdDate") = prmProdDate
-        Session("prmShiftCode") = prmShifCode
-        Session("prmSeqNo") = prmSeqNo
-
-        Session("sFactoryCode") = sFactoryCode
-        Session("sItemType") = sItemType
-        Session("sLineCode") = sLineCode
-        Session("sItemCheck") = sItemCheck
-        Session("sMKVerification") = sMKVerification
-        Session("sQCVerification") = sQCVerification
-        Session("sProdDateFrom") = sProdDateFrom
-        Session("sProdDateTo") = sProdDateTo
-    End Sub
-
-    Private Sub GridMenu_SelectionChanged(sender As Object, e As EventArgs) Handles GridMenu.SelectionChanged
-
-    End Sub
-
-    Public Event SelectionChanged As SelectionChangedEventHandler
-
-    Private lockSelection As Boolean = False
-    Private Sub gridView1_SelectionChanged(ByVal sender As Object, ByVal e As DevExpress.Data.SelectionChangedEventArgs)
-        'If lockSelection Then
-        '    Return
-        'End If
-        'Dim view As GridView = TryCast(sender, GridView)
-        'Dim selectedRows() As Integer = view.GetSelectedRows()
-        'lockSelection = True
-        'For Each selectedRow As Integer In selectedRows
-        '    If selectedRow <> e.ControllerRow Then
-        '        view.UnselectRow(selectedRow)
-        '    End If
-        'Next selectedRow
-        'lockSelection = False
-    End Sub
-
-
-
-
 #End Region
 
-#End Region
 
 End Class

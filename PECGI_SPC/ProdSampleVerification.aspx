@@ -2,71 +2,113 @@
 
 <%@ Register Assembly="DevExpress.XtraCharts.v20.2.Web, Version=20.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.XtraCharts.Web" TagPrefix="dx" %>
 <%@ Register Assembly="DevExpress.XtraCharts.v20.2, Version=20.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.XtraCharts" TagPrefix="cc1" %>
-<%@ MasterType VirtualPath="~/Site.Master" %>
 <%@ Register Assembly="DevExpress.Web.v20.2, Version=20.2.11.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Namespace="DevExpress.Web" TagPrefix="dx" %>
+<%@ MasterType VirtualPath="~/Site.Master" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script type="text/javascript">
-        function OnEndCallback(s, e) {
-            if (s.cp_message != "" && s.cp_val == 1) {
-                if (s.cp_type == "Success" && s.cp_val == 1) {
-                    toastr.success(s.cp_message, 'Success');
-                    toastr.options.closeButton = false;
-                    toastr.options.debug = false;
-                    toastr.options.newestOnTop = false;
-                    toastr.options.progressBar = false;
-                    toastr.options.preventDuplicates = true;
-                    toastr.options.onclick = null;
-                    s.cp_val = 0;
-                    s.cp_message = "";
-                }
-                else if (s.cp_type == "ErrorMsg" && s.cp_val == 1) {
-                    toastr.error(s.cp_message, 'Error');
-                    toastr.options.closeButton = false;
-                    toastr.options.debug = false;
-                    toastr.options.newestOnTop = false;
-                    toastr.options.progressBar = false;
-                    toastr.options.preventDuplicates = true;
-                    toastr.options.onclick = null;
-                    s.cp_val = 0;
-                    s.cp_message = "";
 
-                }
-                else if (s.cp_type == "Warning" && s.cp_val == 1) {
-                    toastr.warning(s.cp_message, 'Warning');
-                    toastr.options.closeButton = false;
-                    toastr.options.debug = false;
-                    toastr.options.newestOnTop = false;
-                    toastr.options.progressBar = false;
-                    toastr.options.preventDuplicates = true;
-                    toastr.options.onclick = null;
-                    s.cp_val = 0;
-                    s.cp_message = "";
-                }
-                else if (s.cp_message == "" && s.cp_val == 0) {
-                    toastr.options.closeButton = false;
-                    toastr.options.debug = false;
-                    toastr.options.newestOnTop = false;
-                    toastr.options.progressBar = false;
-                    toastr.options.preventDuplicates = true;
-                    toastr.options.onclick = null;
-                }
-
+        function InitRBar(s, e) {
+            var i = s.cpShow;
+            var x = document.getElementById("chartRdiv");
+            if (i == '1') {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
             }
         }
 
-        function OnInit(s, e) {
+        function InitGrid(s, e) {
+            lblUSL.SetText(s.cpUSL);
+            lblLSL.SetText(s.cpLSL);
+            lblUCL.SetText(s.cpUCL);
+            lblLCL.SetText(s.cpLCL);
+
             if (s.cp_Verify == "1") {
                 btnVerification.SetEnabled(true);
-
             }
             else {
                 btnVerification.SetEnabled(false);
             }
+
+            if (s.cp_GridTot > 1) {
+                btnExcel.SetEnabled(true);
+                btnSPCSample.SetEnabled(true)
+            } else {
+                btnExcel.SetEnabled(false);
+                btnSPCSample.SetEnabled(false)
+            }
         }
 
-        function GridOnEndCallback(s, e) {
-            console.log(s.cp_message);
+
+        function ChangeFactory() {
+            var FactoryCode = cboFactory.GetValue();
+            var ItemType_Code = cboItemType.GetValue();
+            var LineCode = cboLineID.GetValue();
+            HideValue.Set('FactoryCode', FactoryCode);
+            HideValue.Set('ItemType_Code', ItemType_Code);
+            HideValue.Set('LineCode', LineCode);
+            cboLineID.PerformCallback(FactoryCode);
+            cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode);
+        }
+
+        function ChangeItemType() {
+            var FactoryCode = cboFactory.GetValue();
+            var ItemType_Code = cboItemType.GetValue();
+            var LineCode = cboLineID.GetValue();
+            HideValue.Set('FactoryCode', FactoryCode);
+            HideValue.Set('ItemType_Code', ItemType_Code);
+            HideValue.Set('LineCode', LineCode);
+            cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode);
+        }
+
+        function ChangeLine() {
+            var FactoryCode = cboFactory.GetValue();
+            var LineCode = cboLineID.GetValue();
+            var ItemType_Code = cboItemType.GetValue();
+            HideValue.Set('FactoryCode', FactoryCode);
+            HideValue.Set('ItemType_Code', ItemType_Code);
+            HideValue.Set('LineCode', LineCode);
+            cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode);
+        }
+
+        function ChangeItemCheck() {
+            var FactoryCode = cboFactory.GetValue();
+            var LineCode = cboLineID.GetValue();
+            var ItemType_Code = cboItemType.GetValue();
+            var ItemCheck_Code = cboItemCheck.GetValue();
+            HideValue.Set('FactoryCode', FactoryCode);
+            HideValue.Set('ItemType_Code', ItemType_Code);
+            HideValue.Set('LineCode', LineCode);
+            HideValue.Set('ItemCheck_Code', ItemCheck_Code);
+            cboShift.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode + '|' + ItemCheck_Code);
+        }
+
+        function ChangeShift() {
+            var FactoryCode = cboFactory.GetValue();
+            var LineCode = cboLineID.GetValue();
+            var ItemType_Code = cboItemType.GetValue();
+            var ItemCheck_Code = cboItemCheck.GetValue();
+            var ShiftCode = cboShift.GetValue();
+            HideValue.Set('FactoryCode', FactoryCode);
+            HideValue.Set('ItemType_Code', ItemType_Code);
+            HideValue.Set('LineCode', LineCode);
+            HideValue.Set('ItemCheck_Code', ItemCheck_Code);
+            HideValue.Set('ShiftCode', ShiftCode);
+            cboSeq.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode + '|' + ItemCheck_Code + '|' + ShiftCode);
+        }
+
+        function ChangeSeq() {
+            var Seq = cboSeq.GetValue();
+            HideValue.Set('Seq', Seq);
+        }
+
+        function ProdDateChange() {
+            var ProdDate = dtProdDate.GetText();
+            HideValue.Set('ProdDate', ProdDate);
+        }
+
+        function EndCallback_Grid(s, e) {
             if (s.cp_message != "" && s.cp_val == 1) {
                 if (s.cp_type == "Success" && s.cp_val == 1) {
                     toastr.success(s.cp_message, 'Success');
@@ -89,7 +131,6 @@
                     toastr.options.onclick = null;
                     s.cp_val = 0;
                     s.cp_message = "";
-
                 }
                 else if (s.cp_type == "Warning" && s.cp_val == 1) {
                     toastr.warning(s.cp_message, 'Warning');
@@ -111,10 +152,80 @@
                     toastr.options.onclick = null;
                 }
             }
+
+            lblUSL.SetText(s.cpUSL);
+            lblLSL.SetText(s.cpLSL);
+            lblUCL.SetText(s.cpUCL);
+            lblLCL.SetText(s.cpLCL);
+
             if (s.cp_Verify == "1") {
                 btnVerification.SetEnabled(true);
             } else {
                 btnVerification.SetEnabled(false);
+            }
+
+            if (s.cp_GridTot > 1) {
+                btnExcel.SetEnabled(true);
+                btnSPCSample.SetEnabled(true)
+            } else {
+                btnExcel.SetEnabled(false);
+                btnSPCSample.SetEnabled(false)
+            }
+        }
+
+        function EndCallback_GridActivity(s, e) {
+            if (s.cp_message != "" && s.cp_val == 1) {
+                if (s.cp_type == "Success" && s.cp_val == 1) {
+                    toastr.success(s.cp_message, 'Success');
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                    s.cp_val = 0;
+                    s.cp_message = "";
+                }
+                else if (s.cp_type == "ErrorMsg" && s.cp_val == 1) {
+                    toastr.error(s.cp_message, 'Error');
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                    s.cp_val = 0;
+                    s.cp_message = "";
+                }
+                else if (s.cp_type == "Warning" && s.cp_val == 1) {
+                    toastr.warning(s.cp_message, 'Warning');
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                    s.cp_val = 0;
+                    s.cp_message = "";
+                }
+                else if (s.cp_message == "" && s.cp_val == 0) {
+                    toastr.options.closeButton = false;
+                    toastr.options.debug = false;
+                    toastr.options.newestOnTop = false;
+                    toastr.options.progressBar = false;
+                    toastr.options.preventDuplicates = true;
+                    toastr.options.onclick = null;
+                }
+            }         
+        }
+
+        function ChartREndCallBack(s, e) {
+            var i = s.cpShow;
+            var x = document.getElementById("chartRdiv");
+            if (i == '1') {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
             }
         }
 
@@ -134,7 +245,7 @@
             cboItemCheck.SetValue('');
             cboShift.SetValue('');
             cboSeq.SetValue('');
-
+            HideValue.Set('ProdDate', today);
             Grid.PerformCallback('Clear|');
             GridActivity.PerformCallback('Clear|');
             e.cancel = true;
@@ -144,115 +255,54 @@
             Grid.PerformCallback('Verify');
         }
 
-        function ChangeFactory() {
-            var FactoryCode = cboFactory.GetValue();
-            var ItemType_Code = cboItemType.GetValue();
-            var LineCode = cboLineID.GetValue();
-            HideValue.Set('FactoryCode', FactoryCode);
-            HideValue.Set('ItemType_Code', ItemType_Code);
-            HideValue.Set('LineCode', LineCode);
-            cboLineID.PerformCallback(FactoryCode);
-            cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode);
-            GridActivity.PerformCallback('Kosong');
-        }
-
-        function ChangeItemType() {
-            var FactoryCode = cboFactory.GetValue();
-            var ItemType_Code = cboItemType.GetValue();
-            var LineCode = cboLineID.GetValue();
-            HideValue.Set('FactoryCode', FactoryCode);
-            HideValue.Set('ItemType_Code', ItemType_Code);
-            HideValue.Set('LineCode', LineCode);
-            cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode);
-            GridActivity.PerformCallback('Kosong');
-        }
-
-        function ChangeLine() {
-            var FactoryCode = cboFactory.GetValue();
-            var LineCode = cboLineID.GetValue();
-            var ItemType_Code = cboItemType.GetValue();
-            HideValue.Set('FactoryCode', FactoryCode);
-            HideValue.Set('ItemType_Code', ItemType_Code);
-            HideValue.Set('LineCode', LineCode);
-            cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode);
-            GridActivity.PerformCallback('Kosong');
-        }
-
-        function ChangeItemCheck() {
-            var FactoryCode = cboFactory.GetValue();
-            var LineCode = cboLineID.GetValue();
-            var ItemType_Code = cboItemType.GetValue();
-            var ItemCheck_Code = cboItemCheck.GetValue();
-            HideValue.Set('FactoryCode', FactoryCode);
-            HideValue.Set('ItemType_Code', ItemType_Code);
-            HideValue.Set('LineCode', LineCode);
-            HideValue.Set('ItemCheck_Code', ItemCheck_Code);
-            cboShift.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode + '|' + ItemCheck_Code);
-            GridActivity.PerformCallback('Kosong');
-        }
-
-        function ChangeShift() {
-            var FactoryCode = cboFactory.GetValue();
-            var LineCode = cboLineID.GetValue();
-            var ItemType_Code = cboItemType.GetValue();
-            var ItemCheck_Code = cboItemCheck.GetValue();
-            var ShiftCode = cboShift.GetValue();
-            HideValue.Set('FactoryCode', FactoryCode);
-            HideValue.Set('ItemType_Code', ItemType_Code);
-            HideValue.Set('LineCode', LineCode);
-            HideValue.Set('ItemCheck_Code', ItemCheck_Code);
-            HideValue.Set('ShiftCode', ShiftCode);
-            cboSeq.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode + '|' + ItemCheck_Code + '|' + ShiftCode);
-            GridActivity.PerformCallback('Kosong');
-        }
-
-        function ChangeSeq() {
-            var Seq = cboSeq.GetValue();
-            HideValue.Set('Seq', Seq);
-            GridActivity.PerformCallback('Kosong');
-        }
-
         function Back() {
-            window.open('ProductionSampleVerificationList.aspx?menu=prodSampleVerification.aspx', '_self');
+            var Factory  = HideValue.Get("prm_factory");
+            var ItemType = HideValue.Get("prm_ItemType");
+            var Line = HideValue.Get("prm_Line");
+            var ItemCheck = HideValue.Get("prm_ItemCheck");
+            var FromDate = HideValue.Get("prm_FromDate");
+            var ToDate = HideValue.Get("prm_ToDate");
+            var MK = HideValue.Get("prm_MK");
+            var QC = HideValue.Get("prm_QC");
+
+            window.open('ProductionSampleVerificationList.aspx?menu=prodSampleVerification.aspx' + '&FactoryCode=' + Factory + '&ItemTypeCode=' + ItemType
+                + '&Line=' + Line + '&ItemCheckCode=' + ItemCheck + '&FromDate=' + FromDate + '&ToDate=' + ToDate + '&MK=' + MK + '&QC=' + QC + '', '_self');
         }
 
-        function OnBatchEditStartEditing(s, e) {
-            var rowIndex = e.visibleIndex;
-            var levelno = Grid.batchEditApi.GetCellValue(rowIndex, 'View');
-            if (levelno == 'View') {
-                window.open('ProdSampleVerification.aspx?', '_self');
-            }
-            e.cancel = true;
-        }
-
-        function ChartREndCallBack(s, e) {
-            var i = s.cpShow;
-            var x = document.getElementById("chartRdiv");
-            if (i == '1') {
-                x.style.display = "block";
-            } else {
-                x.style.display = "none";
-            }
-
-        }
         function SPCSample() {
 
             var Factory = HideValue.Get('FactoryCode');
             var ItemType = HideValue.Get('ItemType_Code');
             var Line = HideValue.Get('LineCode');
             var ItemCheck = HideValue.Get('ItemCheck_Code');
-            var ProdDate = dtProdDate.GetValue();
+            var ProdDate = HideValue.Get('ProdDate');
+            /*var ProdDate = dtProdDate.GetText();*/
             var Shift = HideValue.Get('ShiftCode');
             var Seq = HideValue.Get('Seq');
 
             console.log(ProdDate);
 
-            //window.open('ProdSampleInput.aspx?menu=prodSampleVerification.aspx' + '&FactoryCode=' + Factory + '&ItemTypeCode=' + ItemType
-            //    + '&Line=' + Line + '&ItemCheckCode=' + ItemCheck + '&ProdDate=' + ProdDate + '&Shift=' + Shift + '&Sequence' + Seq
-            //    + '', '_self');
+            window.open('ProdSampleInput.aspx?menu=prodSampleVerification.aspx' + '&FactoryCode=' + Factory + '&ItemTypeCode=' + ItemType
+                + '&Line=' + Line + '&ItemCheckCode=' + ItemCheck + '&ProdDate=' + ProdDate + '&Shift=' + Shift + '&Sequence' + Seq
+                + '', '_self');
         }
 
     </script>
+    <style type="text/css">
+        .header {
+            border: 1px solid silver;
+            background-color: #F0F0F0;
+            text-align: center;
+        }
+
+        .body {
+            border: 1px solid silver;
+        }
+
+        .auto-style1 {
+            height: 12px;
+        }
+    </style>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
@@ -274,7 +324,6 @@
                         </ButtonStyle>
                     </dx:ASPxComboBox>
                 </td>
-
                 <td style="width: 10px">&nbsp;</td>
                 <td>
                     <dx:ASPxLabel ID="lblLineID" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="Machine Process">
@@ -291,7 +340,6 @@
                         </ButtonStyle>
                     </dx:ASPxComboBox>
                 </td>
-
                 <td style="width: 10px">&nbsp;</td>
                 <td>
                     <dx:ASPxLabel ID="lblFromDate" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="Date">
@@ -302,6 +350,7 @@
                     <dx:ASPxDateEdit ID="dtProdDate" runat="server" Theme="Office2010Black" AutoPostBack="false" Width="155px"
                         ClientInstanceName="dtProdDate" EditFormatString="dd MMM yyyy" DisplayFormatString="dd MMM yyyy"
                         Font-Names="Segoe UI" Font-Size="9pt" Height="25px" TabIndex="5">
+                        <ClientSideEvents ValueChanged="ProdDateChange"/>
                         <CalendarProperties>
                             <HeaderStyle Font-Size="9pt" Paddings-Padding="5px" />
                             <DayStyle Font-Size="9pt" Paddings-Padding="5px" />
@@ -412,7 +461,7 @@
                 <td>
                     <dx:ASPxButton ID="btnVerification" runat="server" AutoPostBack="False" ClientInstanceName="btnVerification"
                         Font-Names="Segoe UI" Font-Size="9pt" Text="Verify" Theme="Office2010Silver" Width="100px">
-                        <ClientSideEvents Click="Verify" Init="OnInit" />
+                        <ClientSideEvents Click="Verify" />
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 10px">&nbsp;</td>
@@ -442,14 +491,56 @@
                         Font-Names="Segoe UI" Font-Size="9pt" Text="Excel" Theme="Office2010Silver" Width="100px">
                     </dx:ASPxButton>
                 </td>
+                <td style="width: 500px">&nbsp;</td>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td colspan="2" class="header">
+                                <dx:ASPxLabel ID="ASPxLabel22" runat="server" Text="Specification" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
+                            </td>
+                            <td colspan="2" class="header">
+                                <dx:ASPxLabel ID="ASPxLabel23" runat="server" Text="X Bar Control" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="header" style="width: 80px">
+                                <dx:ASPxLabel ID="ASPxLabel13" runat="server" Text="USL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
+                            </td>
+                            <td class="header" style="width: 80px">
+                                <dx:ASPxLabel ID="ASPxLabel7" runat="server" Text="LSL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
+                            </td>
+                            <td class="header" style="width: 80px">
+                                <dx:ASPxLabel ID="ASPxLabel14" runat="server" Text="UCL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
+                            </td>
+                            <td class="header" style="width: 80px">
+                                <dx:ASPxLabel ID="ASPxLabel15" runat="server" Text="LCL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="body" align="right">
+                                <dx:ASPxLabel ID="lblUSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUSL" ForeColor="Black"></dx:ASPxLabel>
+                                &nbsp;</td>
+                            <td class="body" align="right">
+                                <dx:ASPxLabel ID="lblLSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLSL" ForeColor="Black"></dx:ASPxLabel>
+                            </td>
+                            <td class="body" align="right">
+                                <dx:ASPxLabel ID="lblUCL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUCL" ForeColor="Black"></dx:ASPxLabel>
+                            </td>
+                            <td class="body" align="right">
+                                <dx:ASPxLabel ID="lblLCL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLCL" ForeColor="Black"></dx:ASPxLabel>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
             </tr>
         </table>
     </div>
+
     <div style="padding: 5px 5px 5px 5px;">
         <dx:ASPxGridView ID="Grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="Grid"
             EnableTheming="True" KeyFieldName="nDesc" Theme="Office2010Black"
             Width="100%" Font-Names="Segoe UI" Font-Size="9pt">
-            <ClientSideEvents EndCallback="GridOnEndCallback" Init="OnInit" BatchEditStartEditing="OnBatchEditStartEditing" />
+            <ClientSideEvents EndCallback="EndCallback_Grid" Init="InitGrid"/>
             <Columns>
                 <dx:GridViewBandColumn Caption="Date" VisibleIndex="0">
                     <Columns>
@@ -478,7 +569,6 @@
         <div id="chartXdiv">
             <dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
                 Height="434px" Width="1080px" CrosshairEnabled="True" SeriesDataMember="Description">
-
                 <SeriesSerializable>
                     <cc1:Series ArgumentDataMember="Seq" Name="Average" ValueDataMembersSerializable="AvgValue">
                         <ViewSerializable>
@@ -571,7 +661,7 @@
                 </Titles>
                 <Legend AlignmentHorizontal="Left" AlignmentVertical="BottomOutside"
                     Direction="LeftToRight"></Legend>
-                <ClientSideEvents EndCallback="ChartREndCallBack" />
+                <ClientSideEvents EndCallback="ChartREndCallBack" Init="InitRBar"/>
             </dx:WebChartControl>
         </div>
     </div>
@@ -588,7 +678,7 @@
 
         <dx:ASPxGridView ID="GridActivity" runat="server" AutoGenerateColumns="False" ClientInstanceName="GridActivity" OnRowValidating="GridActivity_Validating"
             EnableTheming="True" KeyFieldName="ActivityID" Theme="Office2010Black" Width="100%" Font-Names="Segoe UI" Font-Size="9pt">
-            <ClientSideEvents EndCallback="OnEndCallback" />
+            <ClientSideEvents EndCallback="EndCallback_GridActivity" />
             <Columns>
                 <dx:GridViewCommandColumn FixedStyle="Left"
                     VisibleIndex="0" ShowEditButton="true" ShowDeleteButton="true"
@@ -769,7 +859,6 @@
                 </dx:GridViewDataTextColumn>
 
             </Columns>
-
             <SettingsBehavior ConfirmDelete="True" ColumnResizeMode="Control" />
             <SettingsEditing EditFormColumnCount="1" Mode="PopupEditForm" />
             <SettingsPager Mode="ShowPager" PageSize="20" AlwaysShowPager="true">
@@ -788,7 +877,6 @@
                 </Header>
                 <Cell Wrap="true">
                 </Cell>
-
                 <EditFormColumnCaption Font-Size="9pt" Font-Names="Segoe UI">
                     <Paddings PaddingLeft="5px" PaddingTop="5px" PaddingBottom="5px"></Paddings>
                 </EditFormColumnCaption>
@@ -812,7 +900,6 @@
                                             runat="server" ColumnID="FactoryCode"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
                                 </tr>
-
                                 <tr style="height: 30px">
                                     <td>Item Type</td>
                                     <td>
@@ -824,7 +911,6 @@
                                             runat="server" ColumnID="ItemTypeCode"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
                                 </tr>
-
                                 <tr style="height: 30px">
                                     <td>Line</td>
                                     <td>
@@ -836,7 +922,6 @@
                                             runat="server" ColumnID="LineCode"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
                                 </tr>
-
                                 <tr style="height: 30px">
                                     <td>Item Check</td>
                                     <td>
@@ -848,7 +933,6 @@
                                             runat="server" ColumnID="ItemCheckCode"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
                                 </tr>
-
                                 <tr style="height: 30px">
                                     <td>Shift</td>
                                     <td>
@@ -860,7 +944,6 @@
                                             runat="server" ColumnID="ShiftCode"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
                                 </tr>
-
                                 <tr style="height: 30px">
                                     <td>Prod Date</td>
                                     <td>
@@ -868,7 +951,6 @@
                                             runat="server" ColumnID="ProdDate"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
                                 </tr>
-
                                 <tr style="height: 30px">
                                     <td>Time</td>
                                     <td>
@@ -876,7 +958,6 @@
                                             runat="server" ColumnID="Time"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
                                 </tr>
-
                                 <tr style="height: 30px">
                                     <td>PIC </td>
                                     <td>
@@ -884,7 +965,6 @@
                                             runat="server" ColumnID="PIC"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
                                 </tr>
-
                                 <tr style="height: 30px">
                                     <td>Action</td>
                                     <td>
@@ -896,7 +976,6 @@
                                             runat="server" ColumnID="ActivityID"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
                                 </tr>
-
                                 <tr style="height: 30px">
                                     <td>Remark</td>
                                     <td>
@@ -904,7 +983,6 @@
                                             runat="server" ColumnID="Remark"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
                                 </tr>
-
                                 <tr style="height: 30px">
                                     <td>Result</td>
                                     <td>
@@ -925,6 +1003,5 @@
             </Templates>
         </dx:ASPxGridView>
     </div>
-
     <dx:ASPxHiddenField ID="HideValue" runat="server" ClientInstanceName="HideValue"></dx:ASPxHiddenField>
 </asp:Content>

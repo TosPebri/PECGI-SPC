@@ -248,10 +248,7 @@
                     IncrementalFilteringMode="Contains" 
                     Width="100px" TabIndex="6" EnableCallbackMode="True">
                     <ClientSideEvents SelectedIndexChanged="cboFactoryChanged" />
-                    <Columns>
-                        <dx:ListBoxColumn Caption="Factory Code" FieldName="FactoryCode" Width="90px" Visible="false" />
-                        <dx:ListBoxColumn Caption="Factory Name" FieldName="FactoryName" Width="200px" />
-                    </Columns>
+
                     <ItemStyle Height="10px" Paddings-Padding="4px" >
 <Paddings Padding="4px"></Paddings>
                     </ItemStyle>
@@ -271,10 +268,6 @@
                     Font-Size="9pt" Height="25px" 
                     Width="190px" TabIndex="4" NullValueItemDisplayText="{1}">
                     <ClientSideEvents SelectedIndexChanged="cboLineChanged" EndCallback="function(s, e) {cboLine.SetEnabled(true);}"/>
-                    <Columns>
-                        <dx:ListBoxColumn Caption="Line Code" FieldName="LineCode" Width="70px" Visible="False" />
-                        <dx:ListBoxColumn Caption="Line Name" FieldName="LineName" Width="250px" />
-                    </Columns>
                     <ItemStyle Height="10px" Paddings-Padding="4px">
 <Paddings Padding="4px"></Paddings>
                     </ItemStyle>
@@ -356,10 +349,6 @@
                     Font-Size="9pt" Height="25px" 
                     Width="100px" TabIndex="6" EnableCallbackMode="True">                    
                     <ClientSideEvents SelectedIndexChanged="cboTypeChanged" EndCallback="function(s, e) {cboType.SetEnabled(true);}"/>
-                    <Columns>
-                        <dx:ListBoxColumn Caption="Item Type" FieldName="ItemTypeCode" Width="90px" Visible="false" />
-                        <dx:ListBoxColumn Caption="Description" FieldName="Description" Width="200px" />
-                    </Columns>
                     <ItemStyle Height="10px" Paddings-Padding="4px" >
 <Paddings Padding="4px"></Paddings>
                     </ItemStyle>
@@ -377,18 +366,14 @@
                 
                     
                 <dx:ASPxComboBox ID="cboItemCheck" runat="server" Theme="Office2010Black" 
-                    ClientInstanceName="cboItemCheck" ValueField="ItemCheckCode" Font-Names="Segoe UI" 
+                    ClientInstanceName="cboItemCheck" ValueField="ItemCheckCode" TextField="ItemCheck" Font-Names="Segoe UI" 
                     Font-Size="9pt" Height="25px" 
                     Width="190px" TabIndex="5" >
                     <ClientSideEvents EndCallback="function(s, e) {
                             cboItemCheck.SetEnabled(true);                            
                        }"
                         SelectedIndexChanged="cboItemCheckChanged"/>
-                    <Columns>
-                        <dx:ListBoxColumn Caption="Code" FieldName="ItemCheckCode" Width="70px" Visible="false"/>
-                        <dx:ListBoxColumn Caption="Item Check" FieldName="ItemCheck" Width="250px">
-                        </dx:ListBoxColumn>
-                    </Columns>
+
                     <ItemStyle Height="10px" Paddings-Padding="4px">
 <Paddings Padding="4px"></Paddings>
                     </ItemStyle>
@@ -415,12 +400,6 @@
                     <ClientSideEvents SelectedIndexChanged="cboShiftChanged" 
                         EndCallback="function(s, e) {cboShift.SetEnabled(true);}"
                         />
-                    <Columns>
-                        <dx:ListBoxColumn Caption="ShiftCode" FieldName="ShiftCode" Visible="False">
-                        </dx:ListBoxColumn>
-                        <dx:ListBoxColumn Caption="Shift" FieldName="ShiftName">
-                        </dx:ListBoxColumn>
-                    </Columns>
                     <ButtonStyle Paddings-Padding="4px" Width="5px">
 <Paddings Padding="4px"></Paddings>
                     </ButtonStyle>
@@ -434,14 +413,11 @@
             <td style="width:60px; padding:3px 0px 0px 0px">
                 
                 <dx:ASPxComboBox ID="cboSeq" runat="server" Theme="Office2010Black" 
-                    ClientInstanceName="cboSeq" ValueField="SequenceNo" Font-Names="Segoe UI" 
+                    ClientInstanceName="cboSeq" ValueField="SequenceNo" TextField="SequenceNo" Font-Names="Segoe UI" 
                     Font-Size="9pt" Height="25px" 
                     Width="60px" TabIndex="3">
                     <ClientSideEvents SelectedIndexChanged="ClearGrid" EndCallback="function(s, e) {cboSeq.SetEnabled(true);}"/>
-                    <Columns>
-                        <dx:ListBoxColumn Caption="Seq" FieldName="SequenceNo" Width="60px">
-                        </dx:ListBoxColumn>
-                    </Columns>
+
                     <ButtonStyle Paddings-Padding="4px" Width="5px">
 <Paddings Padding="4px"></Paddings>
                     </ButtonStyle>

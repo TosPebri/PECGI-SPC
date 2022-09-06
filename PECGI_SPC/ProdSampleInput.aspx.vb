@@ -104,10 +104,10 @@ Public Class ProdSampleInput
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         GlobalPrm = Request.QueryString("Date") & ""
-        sGlobal.getMenu("B020")
+        sGlobal.getMenu("B020 ")
         Master.SiteTitle = sGlobal.menuName
         pUser = Session("user") & ""
-        AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "B020")
+        AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "B020 ")
         grid.SettingsDataSecurity.AllowInsert = AuthUpdate
         grid.SettingsDataSecurity.AllowEdit = AuthUpdate
         show_error(MsgTypeEnum.Info, "", 0)
@@ -425,7 +425,6 @@ Public Class ProdSampleInput
     End Sub
 
     Private Sub grid_HtmlRowPrepared(sender As Object, e As ASPxGridViewTableRowEventArgs) Handles grid.HtmlRowPrepared
-
         If e.GetValue("DeleteStatus") IsNot Nothing AndAlso e.GetValue("DeleteStatus").ToString = "1" Then
             e.Row.BackColor = System.Drawing.Color.Silver
         ElseIf e.GetValue("JudgementColor") IsNot Nothing AndAlso Not IsDBNull(e.GetValue("JudgementColor")) Then
@@ -462,6 +461,10 @@ Public Class ProdSampleInput
             'e.Row.BackColor = System.Drawing.Color.LightGray
             e.Row.BorderStyle = BorderStyle.Double
             e.Row.BorderWidth = 50
+        End If
+        If e.KeyValue = "-" Or e.KeyValue = "--" Then
+            e.Row.BackColor = System.Drawing.Color.FromArgb(112, 112, 112)
+            e.Row.Height = 5
         End If
     End Sub
 
@@ -611,6 +614,9 @@ Public Class ProdSampleInput
             ElseIf Value < LCL Or Value > UCL Then
                 e.Cell.BackColor = Color.Pink
             End If
+        End If
+        If e.KeyValue = "-" Or e.KeyValue = "--" Then
+            e.Cell.Text = ""
         End If
     End Sub
 

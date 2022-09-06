@@ -65,6 +65,25 @@ Public Class clsSPCResultDB
         End Using
     End Function
 
+    Public Shared Function IsProdDate(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String) As Boolean
+        Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+            Cn.Open()
+            Dim q As String = "select R.* from spc_Result R inner join spc_ResultDetail D on R.SPCResultID = D.SPCResultID " & vbCrLf &
+                "where FactoryCode = @FactoryCode and ItemTypeCode = @ItemTypeCode and LineCode = @LineCode and ProdDate = @ProdDate "
+            Dim cmd As New SqlCommand(q, Cn)
+            cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
+            cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
+            cmd.Parameters.AddWithValue("LineCode", LineCode)
+            cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
+            cmd.Parameters.AddWithValue("ProdDate", ProdDate)
+            cmd.CommandType = CommandType.StoredProcedure
+            Dim da As New SqlDataAdapter(cmd)
+            Dim dt As New DataTable
+            da.Fill(dt)
+            Return dt.Rows.Count > 0
+        End Using
+    End Function
+
     Public Shared Function Insert(Result As clsSPCResult) As Integer
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()

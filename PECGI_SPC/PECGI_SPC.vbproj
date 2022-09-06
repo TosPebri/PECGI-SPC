@@ -161,6 +161,7 @@
     <Content Include="ProdSampleQCSummary.aspx" />
     <Content Include="ProdSampleVerification.aspx" />
     <Content Include="ProductionSampleVerificationList.aspx" />
+    <Content Include="SampleControlQuality.aspx" />
     <Content Include="StretchSession.aspx" />
     <Content Include="Styles\images\dashboard.png" />
     <Content Include="Styles\images\favicon_pecgi.ico" />
@@ -955,6 +956,13 @@
     </Compile>
     <Compile Include="ProductionSampleVerificationList.aspx.vb">
       <DependentUpon>ProductionSampleVerificationList.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="SampleControlQuality.aspx.designer.vb">
+      <DependentUpon>SampleControlQuality.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SampleControlQuality.aspx.vb">
+      <DependentUpon>SampleControlQuality.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
     <Compile Include="SiteHome.Master.designer.vb">

@@ -103,7 +103,7 @@ Public Class ProdSampleInput
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        GlobalPrm = Request.QueryString("Date") & ""
+        GlobalPrm = Request.QueryString("FactoryCode") & ""
         sGlobal.getMenu("B020 ")
         Master.SiteTitle = sGlobal.menuName
         pUser = Session("user") & ""
@@ -114,7 +114,7 @@ Public Class ProdSampleInput
         If Not IsPostBack And Not IsCallback Then
             up_FillCombo()
             If GlobalPrm <> "" Then
-                dtDate.Value = CDate(Request.QueryString("Date"))
+                dtDate.Value = CDate(Request.QueryString("ProdDate"))
                 Dim FactoryCode As String = Request.QueryString("FactoryCode")
                 Dim ItemTypeCode As String = Request.QueryString("ItemTypeCode")
                 Dim Line As String = Request.QueryString("Line")
@@ -122,37 +122,38 @@ Public Class ProdSampleInput
                 Dim ProdDate As String = Request.QueryString("ProdDate")
                 Dim Shift As String = Request.QueryString("Shift")
                 Dim Sequence As String = Request.QueryString("Sequence")
-
+                InitCombo(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence)
                 GridLoad(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence, 0)
             Else
                 dtDate.Value = Now.Date
-                InitCombo()
+                InitCombo("F001", "TPMSBR011", "015", "IC021", "2022-08-03", "SH001", 1)
             End If
         End If
     End Sub
 
-    Private Sub InitCombo()
-        dtDate.Value = CDate("2022-08-03")
-        cboFactory.Value = "F001"
+    Private Sub InitCombo(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, ShiftCode As String, Sequence As String)
+        dtDate.Value = CDate(ProdDate)
+        cboFactory.Value = FactoryCode
+
         cboType.DataSource = clsItemTypeDB.GetList(cboFactory.Value)
         cboType.DataBind()
-        cboType.Value = "TPMSBR011"
+        cboType.Value = ItemTypeCode
 
         cboLine.DataSource = ClsLineDB.GetList("admin", cboFactory.Value, cboType.Value)
         cboLine.DataBind()
-        cboLine.Value = "015"
+        cboLine.Value = Line
 
         cboItemCheck.DataSource = clsItemCheckDB.GetList(cboFactory.Value, cboType.Value, cboLine.Value)
         cboItemCheck.DataBind()
-        cboItemCheck.Value = "IC021"
+        cboItemCheck.Value = ItemCheckCode
 
         cboShift.DataSource = clsFrequencyDB.GetShift(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value)
         cboShift.DataBind()
-        cboShift.Value = "SH001"
+        cboShift.Value = ShiftCode
 
-        cboSeq.Value = "1"
         cboSeq.DataSource = clsFrequencyDB.GetSequence(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value)
         cboSeq.DataBind()
+        cboSeq.Value = Sequence
     End Sub
 
     Private Sub up_FillCombo()

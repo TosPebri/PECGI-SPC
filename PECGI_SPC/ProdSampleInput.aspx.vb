@@ -122,8 +122,10 @@ Public Class ProdSampleInput
                 Dim ProdDate As String = Request.QueryString("ProdDate")
                 Dim Shift As String = Request.QueryString("Shift")
                 Dim Sequence As String = Request.QueryString("Sequence")
+
                 InitCombo(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence)
-                GridLoad(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence, 0)
+                ScriptManager.RegisterStartupScript(Me, Page.GetType, "Script", "GridLoad();", True)
+                'GridLoad(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence, 0)
             Else
                 dtDate.Value = Now.Date
                 InitCombo("F001", "TPMSBR011", "015", "IC021", "2022-08-03", "SH001", 1)

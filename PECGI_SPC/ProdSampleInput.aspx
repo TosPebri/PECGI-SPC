@@ -124,6 +124,10 @@
             
         }
 
+        function GridLoad(s, e) {
+            grid.PerformCallback('load' + '|' + cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + cboShift.GetValue() + '|' + cboSeq.GetValue() + '|' + cboShow.GetValue());
+        }
+
         function OnEndCallback(s, e) {
             if (s.cp_message != "" && s.cp_val == 1) {
                 if (s.cp_type == "Success" && s.cp_val == 1) {

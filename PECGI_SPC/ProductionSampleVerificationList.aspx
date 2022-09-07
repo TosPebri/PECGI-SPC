@@ -154,9 +154,6 @@
             }
         };
 
-        //function SelectionChanged(s, e) {
-        //    s.GetSelectedFieldValues("SPCResultID;FactoryCode;ItemTypeCode;LineCode;ItemCheckCode;ProdDate;Shift;SequenceNo", GetSelectedFieldValuesCallback);
-        //}
 
         function SelectionChanged(s, e) {
             if (e.isSelected) {
@@ -189,15 +186,7 @@
 
             window.open('ProdSampleVerification.aspx?menu=ProductionSampleVerificationList.aspx' + '&FactoryCode=' + Factory + '&ItemTypeCode=' + ItemType
                 + '&Line=' + Line + '&ItemCheckCode=' + ItemCheck + '&ProdDate=' + ProdDate + '&Shift=' + Shift + '&Sequence=' + Seq
-                + '&cboLine=' + prmLine + '&cboItemCheck=' + prmItemCheck + '&FromDate=' + prmFromDate + '&ToDate='+ prmToDate + '&MK=' +prmMK + '&QC=' +prmQC + '', '_self');
-
-
-            //Grid.PerformCallback('Verify|' + Content_SelectData);
-            //millisecondsToWait = 100;
-            //setTimeout(function () {
-            //    console.log(Content_SelectData);
-            //    window.open('ProdSampleVerification.aspx?menu=productionSampleVerificationList.aspx', '_self');
-            //}, millisecondsToWait);               
+                + '&cboLine=' + prmLine + '&cboItemCheck=' + prmItemCheck + '&FromDate=' + prmFromDate + '&ToDate='+ prmToDate + '&MK=' +prmMK + '&QC=' +prmQC + '', '_self');           
         }
 
 

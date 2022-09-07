@@ -12,6 +12,9 @@ Imports DevExpress.Web
 Imports OfficeOpenXml.Style
 Imports DevExpress.XtraCharts
 Imports DevExpress.XtraCharts.Web
+Imports DevExpress.XtraPrinting
+Imports DevExpress.XtraPrintingLinks
+Imports DevExpress.XtraCharts.Native
 
 Public Class ProdSampleVerification
     Inherits System.Web.UI.Page
@@ -44,6 +47,7 @@ Public Class ProdSampleVerification
     Dim GetGridData_Activity As String = "5"
     Dim GetCharSetup As String = "6"
     Dim GetVerifyPrivilege As String = "7"
+    Dim GetVerifyChartSetup As String = "8"
 
     'SPECIFICATION CHART
     Dim UCL As Decimal = 0
@@ -60,6 +64,7 @@ Public Class ProdSampleVerification
     Dim row_HeaderResult = 0
     Dim row_HeaderActivity = 0
     Dim row_CellResult = 0
+    Dim row_CellChart = 0
     Dim row_CellActivity = 0
     Dim col_HeaderResult = 0
     Dim col_HeaderActivity = 0
@@ -237,14 +242,6 @@ Public Class ProdSampleVerification
 
             ElseIf pAction = "Verify" Then
                 'GET SPCRESULT ID
-                ds = clsProdSampleVerificationDB.GridLoad(GetCharSetup, cls)
-                Dim dtColBrowse As DataTable = ds.Tables(0)
-                If dtColBrowse.Rows.Count > 0 Then
-                    SpcResultID = dtColBrowse.Rows(0)("SPCResultID")
-                End If
-
-                'VERIFY
-                cls.SPCResultID = SpcResultID
                 Verify(cls)
                 Grid.JSProperties("cp_Verify") = VerifyStatus
 
@@ -299,7 +296,7 @@ Public Class ProdSampleVerification
 
             ElseIf pAction = "Clear" Then
                 Dim data As New clsProdSampleVerification
-                ds = clsProdSampleVerificationDB.GridLoad(GetGridData_Activity, Data)
+                ds = clsProdSampleVerificationDB.GridLoad(GetGridData_Activity, data)
                 dt = ds.Tables(0)
                 With GridActivity
                     .DataSource = dt
@@ -322,52 +319,25 @@ Public Class ProdSampleVerification
             If e.DataColumn.FieldName = "nDescIndex" Then
                 DescIndex = e.CellValue
             ElseIf e.DataColumn.FieldName <> "nDesc" Then
-                If DescIndex = "EachData" Then
-                    If Not IsDBNull(e.CellValue) Then
-                        If e.CellValue < LSL Or e.CellValue > USL Then
-                            e.Cell.BackColor = Color.Red
-                        ElseIf e.CellValue < LSL Or e.CellValue > UCL Then
-                            e.Cell.BackColor = Color.Pink
-                        End If
+                If DescIndex = "EachData" Or DescIndex = "XBar" Or DescIndex = "Judgement" Or DescIndex = "Correction" Or DescIndex = "Verification" Then
+                    Dim a = e.CellValue
+                    If IsDBNull(a) Then
+                        e.Cell.BackColor = Color.White
+                    Else
+                        Dim val = Split(a, "|")(0)
+                        Dim color = Split(a, "|")(1)
+                        e.Cell.Text = val
+                        e.Cell.BackColor = ColorTranslator.FromHtml(color)
                     End If
-                ElseIf DescIndex = "XBar" Then
-                    If Not IsDBNull(e.CellValue) Then
-                        If e.CellValue < LSL Or e.CellValue > USL Then
-                            e.Cell.BackColor = Color.Red
-                        ElseIf e.CellValue < LSL Or e.CellValue > UCL Then
-                            e.Cell.BackColor = Color.Yellow
-                        End If
-                    End If
-                ElseIf DescIndex = "Judgement" Then
-                    If Not IsDBNull(e.CellValue) Then
-                        If e.CellValue = "NG" Then
-                            e.Cell.BackColor = Color.Red
-                        End If
-                    End If
-                ElseIf DescIndex = "Correction" Then
-                    If Not IsDBNull(e.CellValue) Then
-                        If e.CellValue = "C" Then
-                            e.Cell.BackColor = Color.Orange
-                        End If
-                    End If
-                ElseIf DescIndex = "View" Then
-                    Dim Link As New HyperLink()
-                    e.Cell.Text = ""
 
+                ElseIf DescIndex = "View" Then
+                    e.Cell.Text = ""
                     e.Cell.ForeColor = Color.Blue
+                    Dim Link As New HyperLink()
                     Link.Text = "View"
                     Link.NavigateUrl = e.CellValue
-                    Link.Target = "_blank"
-
+                    Link.Target = "_self"
                     e.Cell.Controls.Add(Link)
-                End If
-
-                If (e.DataColumn.FieldName = ColumnBrowse) Then
-                    If DescIndex = "Verification" Then
-                        If IsDBNull(e.CellValue) Then
-                            e.Cell.BackColor = Color.Yellow
-                        End If
-                    End If
                 End If
             End If
 
@@ -778,73 +748,82 @@ Public Class ProdSampleVerification
             ColDesc.CellStyle.HorizontalAlign = HorizontalAlign.Center
             Band2.Columns.Add(ColDesc)
 
-            ds = clsProdSampleVerificationDB.GridLoad(GetHeader_ProdDate, cls)
-            Dim dtDate As DataTable = ds.Tables(0)
-            If dtDate.Rows.Count > 0 Then
-                For i = 0 To dtDate.Rows.Count - 1
-                    Dim Col_ProdDate As New GridViewBandColumn
-                    Dim nProdDate = dtDate.Rows(i)("ProdDate")
-                    Col_ProdDate.Caption = nProdDate
-                    .Columns.Add(Col_ProdDate)
 
-                    cls.ProdDate_Grid = Convert.ToDateTime(nProdDate).ToString("yyyy-MM-dd")
-                    ds = clsProdSampleVerificationDB.GridLoad(GetHeader_ShifCode, cls)
-                    Dim dtShift As DataTable = ds.Tables(0)
-                    If dtShift.Rows.Count > 0 Then
-                        For n = 0 To dtShift.Rows.Count - 1
+            ds = clsProdSampleVerificationDB.GridLoad(GetVerifyChartSetup, cls)
+            Dim dt = ds.Tables(0)
+            Dim RespChartSetUp = dt.Rows(0)("Response")
 
-                            Dim Col_Shift As New GridViewBandColumn
-                            Dim nShiftCode = dtShift.Rows(n)("ShiftCode")
-                            If nShiftCode = "SH001" Then
-                                nShiftCode = "Shift 1"
-                            ElseIf nShiftCode = "SH002" Then
-                                nShiftCode = "Shift 2"
-                            End If
+            If RespChartSetUp = "" Then
+                ds = clsProdSampleVerificationDB.GridLoad(GetHeader_ProdDate, cls)
+                Dim dtDate As DataTable = ds.Tables(0)
+                If dtDate.Rows.Count > 0 Then
+                    For i = 0 To dtDate.Rows.Count - 1
+                        Dim Col_ProdDate As New GridViewBandColumn
+                        Dim nProdDate = dtDate.Rows(i)("ProdDate")
+                        Col_ProdDate.Caption = nProdDate
+                        .Columns.Add(Col_ProdDate)
 
-                            Col_Shift.Caption = nShiftCode
-                            Col_ProdDate.Columns.Add(Col_Shift)
+                        cls.ProdDate_Grid = Convert.ToDateTime(nProdDate).ToString("yyyy-MM-dd")
+                        ds = clsProdSampleVerificationDB.GridLoad(GetHeader_ShifCode, cls)
+                        Dim dtShift As DataTable = ds.Tables(0)
+                        If dtShift.Rows.Count > 0 Then
+                            For n = 0 To dtShift.Rows.Count - 1
 
-                            cls.Shiftcode_Grid = dtShift.Rows(n)("ShiftCode")
-                            ds = clsProdSampleVerificationDB.GridLoad(GetHeader_Time, cls)
-                            Dim dtSeq As DataTable = ds.Tables(0)
-                            If dtSeq.Rows.Count > 0 Then
-                                For r = 0 To dtSeq.Rows.Count - 1
-                                    Dim Col_Seq As New GridViewDataTextColumn
-                                    Col_Seq.Width = 100
-                                    Col_Seq.HeaderStyle.HorizontalAlign = HorizontalAlign.Center
-                                    Col_Seq.CellStyle.HorizontalAlign = HorizontalAlign.Center
-                                    Col_Seq.FieldName = dtSeq.Rows(r)("nTime")
-                                    Col_Seq.Caption = dtSeq.Rows(r)("nTimeDesc")
-                                    Col_Shift.Columns.Add(Col_Seq)
-                                Next
-                            End If
+                                Dim Col_Shift As New GridViewBandColumn
+                                Dim nShiftCode = dtShift.Rows(n)("ShiftCode")
+                                If nShiftCode = "SH001" Then
+                                    nShiftCode = "Shift 1"
+                                ElseIf nShiftCode = "SH002" Then
+                                    nShiftCode = "Shift 2"
+                                End If
+
+                                Col_Shift.Caption = nShiftCode
+                                Col_ProdDate.Columns.Add(Col_Shift)
+
+                                cls.Shiftcode_Grid = dtShift.Rows(n)("ShiftCode")
+                                ds = clsProdSampleVerificationDB.GridLoad(GetHeader_Time, cls)
+                                Dim dtSeq As DataTable = ds.Tables(0)
+                                If dtSeq.Rows.Count > 0 Then
+                                    For r = 0 To dtSeq.Rows.Count - 1
+                                        Dim Col_Seq As New GridViewDataTextColumn
+                                        Col_Seq.Width = 100
+                                        Col_Seq.HeaderStyle.HorizontalAlign = HorizontalAlign.Center
+                                        Col_Seq.CellStyle.HorizontalAlign = HorizontalAlign.Center
+                                        Col_Seq.FieldName = dtSeq.Rows(r)("nTime")
+                                        Col_Seq.Caption = dtSeq.Rows(r)("nTimeDesc")
+                                        Col_Shift.Columns.Add(Col_Seq)
+                                    Next
+                                End If
+                            Next
+                        End If
+                    Next
+
+                    ds = clsProdSampleVerificationDB.GridLoad(GetCharSetup, cls)
+                    Dim dtChartSetup As DataTable = ds.Tables(0)
+                    Grid.JSProperties("cpChartSetup") = dtChartSetup.Rows.Count
+
+                    If dtChartSetup.Rows.Count > 0 Then
+                        For i = 1 To dtChartSetup.Rows.Count
+                            Grid.JSProperties("cpPeriod" & i) = dtChartSetup.Rows(i - 1)("Period")
+                            Grid.JSProperties("cpUSL" & i) = AFormat(dtChartSetup.Rows(i - 1)("USL"))
+                            Grid.JSProperties("cpLSL" & i) = AFormat(dtChartSetup.Rows(i - 1)("LSL"))
+                            Grid.JSProperties("cpUCL" & i) = AFormat(dtChartSetup.Rows(i - 1)("UCL"))
+                            Grid.JSProperties("cpLCL" & i) = AFormat(dtChartSetup.Rows(i - 1)("LCL"))
                         Next
                     End If
-                Next
 
-                ds = clsProdSampleVerificationDB.GridLoad(GetCharSetup, cls)
-                Dim dtColBrowse As DataTable = ds.Tables(0)
-                If dtColBrowse.Rows.Count > 0 Then
-                    UCL = dtColBrowse.Rows(0)("UCL")
-                    LCL = dtColBrowse.Rows(0)("LCL")
-                    USL = dtColBrowse.Rows(0)("USL")
-                    LSL = dtColBrowse.Rows(0)("LSL")
-
-                    Grid.JSProperties("cpUSL") = AFormat(USL)
-                    Grid.JSProperties("cpLSL") = AFormat(LSL)
-                    Grid.JSProperties("cpUCL") = AFormat(UCL)
-                    Grid.JSProperties("cpLCL") = AFormat(LCL)
+                    ColumnBrowse = Convert.ToDateTime(cls.ProdDate).ToString("yyyyMMdd") & "_" & cls.ShiftCode & "_" & cls.Seq
+                    ds = clsProdSampleVerificationDB.GridLoad(GetVerifyPrivilege, cls)
+                    Dim dtVerifyPrivilege As DataTable = ds.Tables(0)
+                    If dtVerifyPrivilege.Rows.Count > 0 Then
+                        VerifyStatus = dtVerifyPrivilege.Rows(0)("VerifyPrivilege")
+                    End If
+                    Grid.JSProperties("cp_Verify") = VerifyStatus 'parameter to authorization verify
+                Else
+                    show_errorGrid(MsgTypeEnum.Warning, "Data Not Found", 1)
                 End If
-
-                ColumnBrowse = Convert.ToDateTime(cls.ProdDate).ToString("yyyyMMdd") & "_" & cls.ShiftCode & "_" & cls.Seq
-                ds = clsProdSampleVerificationDB.GridLoad(GetVerifyPrivilege, cls)
-                Dim dtVerifyPrivilege As DataTable = ds.Tables(0)
-                If dtVerifyPrivilege.Rows.Count > 0 Then
-                    VerifyStatus = dtVerifyPrivilege.Rows(0)("VerifyPrivilege")
-                End If
-                Grid.JSProperties("cp_Verify") = VerifyStatus 'parameter to authorization verify
             Else
-                show_errorGrid(MsgTypeEnum.Warning, "Data Not Found", 1)
+                show_errorGrid(MsgTypeEnum.Warning, RespChartSetUp, 1)
             End If
 
             ds = clsProdSampleVerificationDB.GridLoad(GetGridData, cls)
@@ -857,6 +836,7 @@ Public Class ProdSampleVerification
                 .Styles.CommandColumn.ForeColor = Color.Black
             End If
             Grid.JSProperties("cp_GridTot") = dtGrid.Rows.Count
+
         End With
     End Sub
     Private Sub Up_GridLoadActivities(cls As clsProdSampleVerification)
@@ -1027,6 +1007,7 @@ Public Class ProdSampleVerification
 
         Grid.JSProperties("cp_GridTot") = 0  'for disabled button Verify and Download Excel
         Grid.JSProperties("cp_Verify") = VerifyStatus 'for authorization verify
+        Grid.JSProperties("cpChartSetup") = 0
     End Sub
     Private Function AFormat(v As Object) As String
         If v Is Nothing OrElse IsDBNull(v) Then
@@ -1056,16 +1037,46 @@ Public Class ProdSampleVerification
 #Region "DOWNLOAD EXCEl"
     Private Sub up_Excel(cls As clsProdSampleVerification)
         Try
+            Dim ps As New PrintingSystem()
+
+            LoadChartR(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
+            Dim linkR As New PrintableComponentLink(ps)
+            linkR.Component = (CType(chartR, IChartContainer)).Chart
+
+            LoadChartX(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
+            Dim linkX As New PrintableComponentLink(ps)
+            linkX.Component = (CType(chartX, IChartContainer)).Chart
+
+            Dim compositeLink As New CompositeLink(ps)
+            compositeLink.Links.AddRange(New Object() {linkX, linkR})
+            compositeLink.CreateDocument()
+            Dim Path As String = Server.MapPath("Download")
+            Dim streamImg As New MemoryStream
+            compositeLink.ExportToImage(streamImg)
+
             Using excel As New ExcelPackage
                 Dim ws As ExcelWorksheet
                 ws = excel.Workbook.Worksheets.Add("BO4 - Prod Sample Verifiaction")
 
                 With ws
                     GridTitle(ws, cls)
+
+                    'ADD GRID RESULT
                     HeaderResult(ws, cls)
                     CellResult(ws, cls)
+
+                    ' ADD CHART
+                    row_CellChart = row_CellResult + 45
+                    .InsertRow(row_CellResult, row_CellChart)
+                    Dim fi As New FileInfo(Path & "\chart.png")
+                    Dim Picture As OfficeOpenXml.Drawing.ExcelPicture
+                    Picture = .Drawings.AddPicture("chart", Image.FromStream(streamImg))
+                    Picture.SetPosition(row_CellResult, 0, 0, 0)
+
+                    ' ADD GRID ACTIVITY
                     HeaderActivity(ws, cls)
                     CellActivity(ws, cls)
+
                 End With
 
                 Response.Clear()
@@ -1222,14 +1233,14 @@ Public Class ProdSampleVerification
         With pExl
             Try
                 Dim irow = row_HeaderResult + 1
-                ds = clsProdSampleVerificationDB.GridLoad(GetCharSetup, cls)
-                Dim dtColBrowse As DataTable = ds.Tables(0)
-                If dtColBrowse.Rows.Count > 0 Then
-                    UCL = dtColBrowse.Rows(0)("UCL")
-                    LCL = dtColBrowse.Rows(0)("LCL")
-                    USL = dtColBrowse.Rows(0)("USL")
-                    LSL = dtColBrowse.Rows(0)("LSL")
-                End If
+                'ds = clsProdSampleVerificationDB.GridLoad(GetCharSetup, cls)
+                'Dim dtColBrowse As DataTable = ds.Tables(0)
+                'If dtColBrowse.Rows.Count > 0 Then
+                '    UCL = dtColBrowse.Rows(0)("UCL")
+                '    LCL = dtColBrowse.Rows(0)("LCL")
+                '    USL = dtColBrowse.Rows(0)("USL")
+                '    LSL = dtColBrowse.Rows(0)("LSL")
+                'End If
 
                 ds = clsProdSampleVerificationDB.GridLoad(GetGridData, cls)
                 Dim dtGrid As DataTable = ds.Tables(0)
@@ -1237,40 +1248,28 @@ Public Class ProdSampleVerification
                     For i = 0 To dtGrid.Rows.Count - 2
                         For n = 1 To dtGrid.Columns.Count - 1
                             Try
-
                                 Dim data = dtGrid.Rows(i)(n)
-                                .Cells(irow + i, n).Value = dtGrid.Rows(i)(n)
-
-                                If n > 2 Then
-                                    Dim Color = "#FFFFFF"
-                                    Dim RowIndex = Trim(dtGrid.Rows(i)(0))
-
-                                    If RowIndex = "EachData" Then
-                                        If data < LSL Or data > USL Then
-                                            Color = "#ff0000"
-                                        ElseIf data < LSL Or data > UCL Then
-                                            Color = "#ffc0cb"
+                                Dim RowIndex = Trim(dtGrid.Rows(i)(0))
+                                If n > 1 Then
+                                    If RowIndex = "EachData" Or RowIndex = "XBar" Or RowIndex = "Judgement" Or RowIndex = "Correction" Or RowIndex = "Correction" Or RowIndex = "Verification" Then
+                                        If IsDBNull(data) Then
+                                            .Cells(irow + i, n).Value = data
+                                        Else
+                                            Dim value = Split(data, "|")(0)
+                                            Dim color = Split(data, "|")(1)
+                                            .Cells(irow + i, n).Value = value
+                                            .Cells(irow + i, n).Style.Fill.PatternType = ExcelFillStyle.Solid
+                                            .Cells(irow + i, n).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(color))
                                         End If
-                                    ElseIf RowIndex = "XBar" Then
-                                        If data < LSL Or data > USL Then
-                                            Color = "#ff0000"
-                                        ElseIf data < LSL Or data > UCL Then
-                                            Color = "#fffb00"
-                                        End If
-                                    ElseIf RowIndex = "Judgement" Then
-                                        If data = "NG" Then
-                                            Color = "#ff0000"
-                                        End If
-                                    ElseIf RowIndex = "Correction" Then
-                                        If data = "C" Then
-                                            Color = "#FFA500"
-                                        End If
-                                    ElseIf RowIndex = "GridNothing" Then
-                                        Color = "#878787"
+                                    Else
+                                        .Cells(irow + i, n).Value = data
                                     End If
-
+                                Else
+                                    .Cells(irow + i, n).Value = data
+                                End If
+                                If RowIndex = "GridNothing" Then
                                     .Cells(irow + i, n).Style.Fill.PatternType = ExcelFillStyle.Solid
-                                    .Cells(irow + i, n).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(Color))
+                                    .Cells(irow + i, n).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#878787"))
                                 End If
 
                             Catch ex As Exception
@@ -1298,7 +1297,7 @@ Public Class ProdSampleVerification
     End Sub
     Private Sub HeaderActivity(ByVal pExl As ExcelWorksheet, cls As clsProdSampleVerification)
         Try
-            Dim irow = row_CellResult + 2
+            Dim irow = row_CellChart + 2
             With pExl
                 .Cells(irow, 1, irow, 7).Value = "ACTIVITY MONITORING"
                 .Cells(irow, 1, irow, 7).Merge = True
@@ -1402,7 +1401,6 @@ Public Class ProdSampleVerification
         Catch ex As Exception
             Throw New Exception(ex.Message)
         End Try
-
     End Sub
 #End Region
 End Class

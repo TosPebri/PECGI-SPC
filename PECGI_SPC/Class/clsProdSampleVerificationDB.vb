@@ -95,7 +95,14 @@ Public Class clsProdSampleVerificationDB
                 Dim Sql = "SP_SPC_ProdSampleVerification_Verify"
                 Dim cmd As New SqlCommand(Sql, conn)
                 cmd.CommandType = CommandType.StoredProcedure
-                cmd.Parameters.AddWithValue("SPCResultID", If(data.SPCResultID, ""))
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.Parameters.AddWithValue("FactoryCode", If(data.FactoryCode, ""))
+                cmd.Parameters.AddWithValue("LineCode", If(data.LineCode, ""))
+                cmd.Parameters.AddWithValue("ItemTypeCode", If(data.ItemType_Code, ""))
+                cmd.Parameters.AddWithValue("ItemCheckCode", If(data.ItemCheck_Code, ""))
+                cmd.Parameters.AddWithValue("ProdDate", If(data.ProdDate, ""))
+                cmd.Parameters.AddWithValue("ShiftCode", If(data.ShiftCode, ""))
+                cmd.Parameters.AddWithValue("Seq", If(data.Seq, ""))
                 cmd.Parameters.AddWithValue("User", If(data.User, ""))
 
                 Dim da As New SqlDataAdapter(cmd)

@@ -15,14 +15,21 @@
                 x.style.display = "block";
             } else {
                 x.style.display = "none";
-            }
+            }                    
         }
 
         function InitGrid(s, e) {
-            lblUSL.SetText(s.cpUSL);
-            lblLSL.SetText(s.cpLSL);
-            lblUCL.SetText(s.cpUCL);
-            lblLCL.SetText(s.cpLCL);
+            lblPeriod_1.SetText(s.cpPeriod1);
+            lblUSL_1.SetText(s.cpUSL1);
+            lblLSL_1.SetText(s.cpLSL1);
+            lblUCL_1.SetText(s.cpUCL1);
+            lblLCL_1.SetText(s.cpLCL1);
+
+            lblPeriod_2.SetText(s.cpPeriod2);
+            lblUSL_2.SetText(s.cpUSL2);
+            lblLSL_2.SetText(s.cpLSL2);
+            lblUCL_2.SetText(s.cpUCL2);
+            lblLCL_2.SetText(s.cpLCL2);
 
             if (s.cp_Verify == "1") {
                 btnVerification.SetEnabled(true);
@@ -38,8 +45,15 @@
                 btnExcel.SetEnabled(false);
                 btnSPCSample.SetEnabled(false)
             }
-        }
 
+            var nChart = s.cpChartSetup;
+            var tblChart = document.getElementById("tblChartSetup_2");
+            if (nChart > 1) {
+                tblChart.style.display = "block";
+            } else {
+                tblChart.style.display = "none";
+            }
+        }
 
         function ChangeFactory() {
             var FactoryCode = cboFactory.GetValue();
@@ -153,10 +167,17 @@
                 }
             }
 
-            lblUSL.SetText(s.cpUSL);
-            lblLSL.SetText(s.cpLSL);
-            lblUCL.SetText(s.cpUCL);
-            lblLCL.SetText(s.cpLCL);
+            lblPeriod_1.SetText(s.cpPeriod1);
+            lblUSL_1.SetText(s.cpUSL1);
+            lblLSL_1.SetText(s.cpLSL1);
+            lblUCL_1.SetText(s.cpUCL1);
+            lblLCL_1.SetText(s.cpLCL1);
+
+            lblPeriod_2.SetText(s.cpPeriod2);
+            lblUSL_2.SetText(s.cpUSL2);
+            lblLSL_2.SetText(s.cpLSL2);
+            lblUCL_2.SetText(s.cpUCL2);
+            lblLCL_2.SetText(s.cpLCL2);
 
             if (s.cp_Verify == "1") {
                 btnVerification.SetEnabled(true);
@@ -170,6 +191,16 @@
             } else {
                 btnExcel.SetEnabled(false);
                 btnSPCSample.SetEnabled(false)
+            }
+
+            var nChart = s.cpChartSetup;
+
+            console.log(nChart);
+            var tblChart = document.getElementById("tblChartSetup_2");
+            if (nChart > 1) {
+                tblChart.style.display = "block";
+            } else {
+                tblChart.style.display = "none";
             }
         }
 
@@ -306,7 +337,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
-    <div style="padding: 5px 5px 5px 5px; padding-bottom: 20px; border-bottom: groove">
+    <div style="padding: 5px 5px 5px 5px; padding-bottom: 10px; border-bottom: groove">
         <table class="auto-style3">
             <tr style="height: 40px">
                 <td>
@@ -455,7 +486,7 @@
             </tr>
         </table>
     </div>
-    <div style="padding: 5px 5px 5px 5px; padding-top: 20px; padding-bottom: 10px">
+    <div style="padding: 5px 5px 5px 5px; padding-top: 10px; padding-bottom: 5px">
         <table>
             <tr>
                 <td>
@@ -491,10 +522,13 @@
                         Font-Names="Segoe UI" Font-Size="9pt" Text="Excel" Theme="Office2010Silver" Width="100px">
                     </dx:ASPxButton>
                 </td>
-                <td style="width: 500px">&nbsp;</td>
+                <td style="width: 400px">&nbsp;</td>
                 <td>
                     <table style="width: 100%">
                         <tr>
+                            <td rowspan="2" class="header" style="width: 180px">
+                                <dx:ASPxLabel ID="ASPxLabel1" runat="server" Text="Period" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
+                            </td>
                             <td colspan="2" class="header">
                                 <dx:ASPxLabel ID="ASPxLabel22" runat="server" Text="Specification" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
                             </td>
@@ -503,31 +537,51 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="header" style="width: 80px">
+                            <td class="header" style="width: 50px">
                                 <dx:ASPxLabel ID="ASPxLabel13" runat="server" Text="USL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
                             </td>
-                            <td class="header" style="width: 80px">
+                            <td class="header" style="width: 50px">
                                 <dx:ASPxLabel ID="ASPxLabel7" runat="server" Text="LSL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
                             </td>
-                            <td class="header" style="width: 80px">
+                            <td class="header" style="width: 50px">
                                 <dx:ASPxLabel ID="ASPxLabel14" runat="server" Text="UCL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
                             </td>
-                            <td class="header" style="width: 80px">
+                            <td class="header" style="width: 50px">
                                 <dx:ASPxLabel ID="ASPxLabel15" runat="server" Text="LCL" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
                             </td>
                         </tr>
                         <tr>
-                            <td class="body" align="right">
-                                <dx:ASPxLabel ID="lblUSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUSL" ForeColor="Black"></dx:ASPxLabel>
+                            <td class="body" align="center">
+                                <dx:ASPxLabel ID="lblPeriod" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblPeriod_1" ForeColor="Black"></dx:ASPxLabel>
                                 &nbsp;</td>
                             <td class="body" align="right">
-                                <dx:ASPxLabel ID="lblLSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLSL" ForeColor="Black"></dx:ASPxLabel>
+                                <dx:ASPxLabel ID="lblUSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUSL_1" ForeColor="Black"></dx:ASPxLabel>
+                                &nbsp;</td>
+                            <td class="body" align="right">
+                                <dx:ASPxLabel ID="lblLSL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLSL_1" ForeColor="Black"></dx:ASPxLabel>
                             </td>
                             <td class="body" align="right">
-                                <dx:ASPxLabel ID="lblUCL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUCL" ForeColor="Black"></dx:ASPxLabel>
+                                <dx:ASPxLabel ID="lblUCL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUCL_1" ForeColor="Black"></dx:ASPxLabel>
                             </td>
                             <td class="body" align="right">
-                                <dx:ASPxLabel ID="lblLCL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLCL" ForeColor="Black"></dx:ASPxLabel>
+                                <dx:ASPxLabel ID="lblLCL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLCL_1" ForeColor="Black"></dx:ASPxLabel>
+                            </td>
+                        </tr>
+                         <tr id="tblChartSetup_2">
+                            <td class="body" align="center">
+                                <dx:ASPxLabel ID="ASPxLabel2" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblPeriod_2" ForeColor="Black"></dx:ASPxLabel>
+                                &nbsp;</td>
+                            <td class="body" align="right">
+                                <dx:ASPxLabel ID="ASPxLabel3" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUSL_2" ForeColor="Black"></dx:ASPxLabel>
+                                &nbsp;</td>
+                            <td class="body" align="right">
+                                <dx:ASPxLabel ID="ASPxLabel4" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLSL_2" ForeColor="Black"></dx:ASPxLabel>
+                            </td>
+                            <td class="body" align="right">
+                                <dx:ASPxLabel ID="ASPxLabel5" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblUCL_2" ForeColor="Black"></dx:ASPxLabel>
+                            </td>
+                            <td class="body" align="right">
+                                <dx:ASPxLabel ID="ASPxLabel6" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLCL_2" ForeColor="Black"></dx:ASPxLabel>
                             </td>
                         </tr>
                     </table>
@@ -556,7 +610,7 @@
             <SettingsBehavior ColumnResizeMode="Control" />
             <SettingsPager AlwaysShowPager="true" Mode="ShowAllRecords" PageSize="30">
             </SettingsPager>
-            <Settings HorizontalScrollBarMode="Auto" VerticalScrollableHeight="480"
+            <Settings HorizontalScrollBarMode="Auto" VerticalScrollableHeight="450"
                 VerticalScrollBarMode="Auto" ShowStatusBar="Hidden" />
             <Styles Header-Paddings-Padding="5px">
                 <Header HorizontalAlign="Center" Wrap="True">

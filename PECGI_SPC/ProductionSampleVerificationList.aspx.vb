@@ -170,8 +170,6 @@ Public Class ProductionSampleVerificationList
                 dt = clsProductionSampleVerificationListDB.LoadGrid(cls)
                 Grid.DataSource = dt
                 Grid.DataBind()
-            Else pAction = "Verify"
-                SessionData(e.Parameters)
             End If
 
         Catch ex As Exception
@@ -217,42 +215,6 @@ Public Class ProductionSampleVerificationList
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 0)
         End Try
-    End Sub
-    Private Sub SessionData(Data As String)
-
-        Dim prmFactoryCode = Split(Data, "|")(2)
-        Dim prmItemType = Split(Data, "|")(3)
-        Dim prmLineCode = Split(Data, "|")(4)
-        Dim prmItemCheck = Split(Data, "|")(5)
-        Dim prmProdDate = Split(Data, "|")(6)
-        Dim prmShifCode = Split(Data, "|")(7)
-        Dim prmSeqNo = Split(Data, "|")(8)
-
-        sFactoryCode = cboFactory.Value
-        sItemType = cboItemType.Value
-        sLineCode = cboLineID.Value
-        sItemCheck = cboItemCheck.Value
-        sMKVerification = cboMK.Value
-        sQCVerification = cboQC.Value
-        sProdDateTo = dtToDate.Value
-        sProdDateFrom = dtFromDate.Value
-
-        Session("prmFactoryCode") = prmFactoryCode
-        Session("prmItemType") = prmItemType
-        Session("prmLineCode") = prmLineCode
-        Session("prmItemCheck") = prmItemCheck
-        Session("prmProdDate") = prmProdDate
-        Session("prmShiftCode") = prmShifCode
-        Session("prmSeqNo") = prmSeqNo
-
-        Session("sFactoryCode") = sFactoryCode
-        Session("sItemType") = sItemType
-        Session("sLineCode") = sLineCode
-        Session("sItemCheck") = sItemCheck
-        Session("sMKVerification") = sMKVerification
-        Session("sQCVerification") = sQCVerification
-        Session("sProdDateFrom") = sProdDateFrom
-        Session("sProdDateTo") = sProdDateTo
     End Sub
 
 #End Region

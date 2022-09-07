@@ -8,7 +8,9 @@ Public Class clsControlChartSetup
     Public Property ItemType As String
     Public Property ItemCheck As String
     Public Property StartTime As String
+    Public Property StartTimeOld As String
     Public Property EndTime As String
+    Public Property EndTimeOld As String
     Public Property SpecUSL As String
     Public Property SpecLSL As String
     Public Property XBarCL As String
@@ -58,7 +60,7 @@ Public Class clsControlChartSetupDB
         End Using
     End Function
 
-    Public Shared Function InsertUpdate(cls As clsControlChartSetup) As Boolean
+    Public Shared Function InsertUpdate(cls As clsControlChartSetup, Type As String) As Boolean
         Try
             Using cn As New SqlConnection(Sconn.Stringkoneksi)
                 cn.Open()
@@ -71,6 +73,9 @@ Public Class clsControlChartSetupDB
                 cmd.Parameters.AddWithValue("Line", cls.Machine)
                 cmd.Parameters.AddWithValue("ItemCheck", cls.ItemCheck)
                 cmd.Parameters.AddWithValue("Start", cls.StartTime)
+                cmd.Parameters.AddWithValue("StartOld", cls.StartTimeOld)
+                cmd.Parameters.AddWithValue("End", cls.EndTime)
+                cmd.Parameters.AddWithValue("EndOld", cls.EndTimeOld)
                 cmd.Parameters.AddWithValue("SpecUSL", CDbl(cls.SpecUSL))
                 cmd.Parameters.AddWithValue("SpecLSL", CDbl(cls.SpecLSL))
                 cmd.Parameters.AddWithValue("XBarCL", CDbl(cls.XBarCL))
@@ -80,6 +85,7 @@ Public Class clsControlChartSetupDB
                 cmd.Parameters.AddWithValue("RLCL", CDbl(cls.RLCL))
                 cmd.Parameters.AddWithValue("RUCL", CDbl(cls.RUCL))
                 cmd.Parameters.AddWithValue("User", cls.User)
+                cmd.Parameters.AddWithValue("Type", Type)
 
                 cmd.ExecuteNonQuery()
             End Using

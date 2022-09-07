@@ -147,8 +147,8 @@ Public Class ControlChartSetup
                 e.NewValues("TypeEditGrid"), _
                 e.NewValues("MachineEditGrid"), _
                 e.NewValues("ItemCheckEditGrid"), _
-                StTime.ToString("yyyy-MM-dd"),
-                EnTime.ToString("yyyy-MM-dd"),
+                StTime.ToString("yyyy-MM-dd"), StTime.ToString("yyyy-MM-dd"), _
+                EnTime.ToString("yyyy-MM-dd"), EnTime.ToString("yyyy-MM-dd"), _
                 e.NewValues("SpecUSL"), e.NewValues("SpecLSL"), _
                 e.NewValues("XCL"), e.NewValues("XUCL"), e.NewValues("XLCL"), _
                 e.NewValues("RCL"), e.NewValues("RLCL"), e.NewValues("RUCL"), _
@@ -163,16 +163,16 @@ Public Class ControlChartSetup
     Protected Sub Grid_RowUpdating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataUpdatingEventArgs) Handles Grid.RowUpdating
         e.Cancel = True
         Try
-            Dim StTime As DateTime = Convert.ToDateTime(e.NewValues("Start"))
-            Dim EnTime As DateTime = Convert.ToDateTime(e.NewValues("End"))
+            Dim StTime As DateTime = Convert.ToDateTime(e.NewValues("Start")) : Dim StTimeOld As DateTime = Convert.ToDateTime(e.OldValues("Start"))
+            Dim EnTime As DateTime = Convert.ToDateTime(e.NewValues("End")) : Dim EnTimeOld As DateTime = Convert.ToDateTime(e.OldValues("End"))
 
             Call up_InsUpd("1", _
                 e.NewValues("Factory"), _
                 e.NewValues("TypeEditGrid"), _
                 e.NewValues("MachineEditGrid"), _
                 e.NewValues("ItemCheckEditGrid"), _
-                StTime.ToString("yyyy-MM-dd"),
-                EnTime.ToString("yyyy-MM-dd"),
+                StTime.ToString("yyyy-MM-dd"), StTimeOld.ToString("yyyy-MM-dd"), _
+                EnTime.ToString("yyyy-MM-dd"), EnTimeOld.ToString("yyyy-MM-dd"), _
                 e.NewValues("SpecUSL"), e.NewValues("SpecLSL"), _
                 e.NewValues("XCL"), e.NewValues("XUCL"), e.NewValues("XLCL"), _
                 e.NewValues("RCL"), e.NewValues("RLCL"), e.NewValues("RUCL"), _
@@ -475,7 +475,9 @@ Public Class ControlChartSetup
         End Try
     End Sub
 
-    Private Function up_InsUpd(Type As String, Factory As String, ItemType As String, Machine As String, ItemCheck As String, Start As String, EndTime As String, _
+    Private Function up_InsUpd(Type As String, Factory As String, ItemType As String, Machine As String, ItemCheck As String, _
+                               Start As String, StartOld As String, _
+                               EndTime As String, EndTimeOld As String, _
                                SpecUSL As String, SpecLSL As String, _
                                XBarCL As String, XBarUCL As String, XBarLCL As String, _
                                RCL As String, RLCL As String, RUCL As String, User As String) As Boolean
@@ -487,14 +489,14 @@ Public Class ControlChartSetup
                 .ItemType = ItemType,
                 .ItemCheck = ItemCheck,
                 .Machine = Machine,
-                .StartTime = Start,
-                .EndTime = EndTime,
+                .StartTime = Start, .StartTimeOld = StartOld,
+                .EndTime = EndTime, .EndTimeOld = EndTimeOld,
                 .SpecUSL = SpecUSL, .SpecLSL = SpecLSL,
                 .XBarCL = XBarCL, .XBarUCL = XBarUCL, .XBarLCL = XBarLCL,
                 .RCL = RCL, .RLCL = RLCL, .RUCL = RUCL,
                 .User = User
             }
-            clsControlChartSetupDB.InsertUpdate(cls)
+            clsControlChartSetupDB.InsertUpdate(cls, Type)
             show_error(MsgTypeEnum.Success, message, 1)
         Catch ex As Exception
             Throw New Exception(ex.Message)

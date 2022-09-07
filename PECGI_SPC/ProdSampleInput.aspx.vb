@@ -128,7 +128,7 @@ Public Class ProdSampleInput
                 'GridLoad(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence, 0)
             Else
                 dtDate.Value = Now.Date
-                InitCombo("F001", "TPMSBR011", "015", "IC021", "2022-08-03", "SH001", 1)
+                InitCombo("F001", "TPMSBR011", "015", "IC021", "2022-08-04", "SH001", 1)
             End If
         End If
     End Sub
@@ -555,6 +555,13 @@ Public Class ProdSampleInput
                 UCL.LineStyle.DashStyle = DashStyle.DashDot
                 diagram.AxisY.ConstantLines.Add(UCL)
                 UCL.AxisValue = Setup.XBarUCL
+
+                Dim CL As New ConstantLine("CL")
+                CL.Color = Drawing.Color.Black
+                CL.LineStyle.Thickness = 2
+                CL.LineStyle.DashStyle = DashStyle.Solid
+                diagram.AxisY.ConstantLines.Add(CL)
+                CL.AxisValue = Setup.XBarCL
 
                 Dim LSL As New ConstantLine("LSL")
                 LSL.Color = Drawing.Color.Red

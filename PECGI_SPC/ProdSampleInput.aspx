@@ -864,7 +864,7 @@
             </cc1:Series>
             <cc1:Series ArgumentDataMember="Seq" Name="Rule" ValueDataMembersSerializable="RuleValue">
                 <ViewSerializable>
-                    <cc1:FullStackedBarSeriesView BarWidth="0.9">
+                    <cc1:FullStackedBarSeriesView BarWidth="1">
                     </cc1:FullStackedBarSeriesView>
                 </ViewSerializable>
             </cc1:Series>
@@ -889,7 +889,7 @@
                         <ResolveOverlappingOptions AllowHide="True" />
                     </Label>
                     <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0.015" MaxValueSerializable="2.715" MinValueSerializable="2.645" StartSideMargin="0.025" />
-                    <WholeRange AlwaysShowZeroLevel="False" Auto="False" AutoSideMargins="False" EndSideMargin="0.1" MaxValueSerializable="2.73" MinValueSerializable="2.62" StartSideMargin="0" />
+                    <WholeRange AlwaysShowZeroLevel="False" Auto="False" AutoSideMargins="False" EndSideMargin="0.015" MaxValueSerializable="2.73" MinValueSerializable="2.62" StartSideMargin="0.025" />
                     <GridLines>
                         <LineStyle DashStyle="Dot" />
                     </GridLines>

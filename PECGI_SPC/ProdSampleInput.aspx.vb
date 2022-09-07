@@ -578,6 +578,7 @@ Public Class ProdSampleInput
 
                 CType(.Diagram, XYDiagram).SecondaryAxesY.Clear()
                 Dim myAxisY As New SecondaryAxisY("my Y-Axis")
+                myAxisY.Visibility = DevExpress.Utils.DefaultBoolean.False
                 CType(.Diagram, XYDiagram).SecondaryAxesY.Add(myAxisY)
                 CType(.Series("Rule").View, XYDiagramSeriesViewBase).AxisY = myAxisY
             End If
@@ -607,26 +608,33 @@ Public Class ProdSampleInput
         Dim UCL As Double
         Dim LSL As Double
         Dim USL As Double
-
+        Dim SetupFound As Boolean = False
         If Not IsDBNull(e.CellValue) AndAlso (e.DataColumn.FieldName.StartsWith("1") Or e.DataColumn.FieldName.StartsWith("2")) _
-            And (e.GetValue("Seq") = "1" Or e.GetValue("Seq") = "3" Or e.GetValue("Seq") = "4" Or e.GetValue("Seq") = "5") AndAlso
-            Not IsDBNull(e.GetValue("XBarLCL1")) Then
+            And (e.GetValue("Seq") = "1" Or e.GetValue("Seq") = "3" Or e.GetValue("Seq") = "4" Or e.GetValue("Seq") = "5") Then
             If (e.DataColumn.FieldName.StartsWith("1")) Then
-                LCL = e.GetValue("XBarLCL1")
-                UCL = e.GetValue("XBarUCL1")
-                LSL = e.GetValue("SpecLSL1")
-                USL = e.GetValue("SpecUSL1")
+                If Not IsDBNull(e.GetValue("XBarLCL1")) Then
+                    SetupFound = True
+                    LCL = e.GetValue("XBarLCL1")
+                    UCL = e.GetValue("XBarUCL1")
+                    LSL = e.GetValue("SpecLSL1")
+                    USL = e.GetValue("SpecUSL1")
+                End If
             ElseIf (e.DataColumn.FieldName.StartsWith("2")) Then
-                LCL = e.GetValue("XBarLCL2")
-                UCL = e.GetValue("XBarUCL2")
-                LSL = e.GetValue("SpecLSL2")
-                USL = e.GetValue("SpecUSL2")
+                If Not IsDBNull(e.GetValue("XBarLCL2")) Then
+                    SetupFound = True
+                    LCL = e.GetValue("XBarLCL2")
+                    UCL = e.GetValue("XBarUCL2")
+                    LSL = e.GetValue("SpecLSL2")
+                    USL = e.GetValue("SpecUSL2")
+                End If
             End If
-            Dim Value As Double = clsSPCResultDB.ADecimal(e.CellValue)
-            If Value < LSL Or Value > USL Then
-                e.Cell.BackColor = Color.Red
-            ElseIf Value < LCL Or Value > UCL Then
-                e.Cell.BackColor = Color.Pink
+            If SetupFound Then
+                Dim Value As Double = clsSPCResultDB.ADecimal(e.CellValue)
+                If Value < LSL Or Value > USL Then
+                    e.Cell.BackColor = Color.Red
+                ElseIf Value < LCL Or Value > UCL Then
+                    e.Cell.BackColor = Color.Pink
+                End If
             End If
         End If
         If e.KeyValue = "-" Or e.KeyValue = "--" Then

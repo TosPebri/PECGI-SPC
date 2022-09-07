@@ -493,30 +493,31 @@ Public Class ProdSampleInput
 
             Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
             diagram.AxisY.ConstantLines.Clear()
-            Dim RCL As New ConstantLine("CL R")
-            RCL.Color = Drawing.Color.Purple
-            RCL.LineStyle.Thickness = 2
-            RCL.LineStyle.DashStyle = DashStyle.DashDot
-            diagram.AxisY.ConstantLines.Add(RCL)
-            RCL.AxisValue = Setup.RCL
+            If Setup IsNot Nothing Then
+                Dim RCL As New ConstantLine("CL R")
+                RCL.Color = Drawing.Color.Purple
+                RCL.LineStyle.Thickness = 2
+                RCL.LineStyle.DashStyle = DashStyle.DashDot
+                diagram.AxisY.ConstantLines.Add(RCL)
+                RCL.AxisValue = Setup.RCL
 
-            Dim RUCL As New ConstantLine("UCL R")
-            RUCL.Color = Drawing.Color.Purple
-            RUCL.LineStyle.Thickness = 2
-            RUCL.LineStyle.DashStyle = DashStyle.DashDot
-            diagram.AxisY.ConstantLines.Add(RUCL)
-            RUCL.AxisValue = Setup.RUCL
+                Dim RUCL As New ConstantLine("UCL R")
+                RUCL.Color = Drawing.Color.Purple
+                RUCL.LineStyle.Thickness = 2
+                RUCL.LineStyle.DashStyle = DashStyle.DashDot
+                diagram.AxisY.ConstantLines.Add(RUCL)
+                RUCL.AxisValue = Setup.RUCL
 
-            Dim MaxValue As Double
-            If xr.Count > 0 Then
-                If xr(0).MaxValue > Setup.RUCL Then
-                    MaxValue = xr(0).MaxValue
-                Else
-                    MaxValue = Setup.RUCL
+                Dim MaxValue As Double
+                If xr.Count > 0 Then
+                    If xr(0).MaxValue > Setup.RUCL Then
+                        MaxValue = xr(0).MaxValue
+                    Else
+                        MaxValue = Setup.RUCL
+                    End If
                 End If
+                diagram.AxisY.WholeRange.MaxValue = MaxValue
             End If
-            diagram.AxisY.WholeRange.MaxValue = MaxValue
-
             .DataBind()
         End With
     End Sub
@@ -540,39 +541,48 @@ Public Class ProdSampleInput
 
             Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
             diagram.AxisY.ConstantLines.Clear()
-            Dim LCL As New ConstantLine("LCL")
-            LCL.Color = Drawing.Color.Purple
-            LCL.LineStyle.Thickness = 2
-            LCL.LineStyle.DashStyle = DashStyle.DashDot
-            diagram.AxisY.ConstantLines.Add(LCL)
-            LCL.AxisValue = Setup.XBarLCL
+            If Setup IsNot Nothing Then
+                Dim LCL As New ConstantLine("LCL")
+                LCL.Color = Drawing.Color.Purple
+                LCL.LineStyle.Thickness = 2
+                LCL.LineStyle.DashStyle = DashStyle.DashDot
+                diagram.AxisY.ConstantLines.Add(LCL)
+                LCL.AxisValue = Setup.XBarLCL
 
-            Dim UCL As New ConstantLine("UCL")
-            UCL.Color = Drawing.Color.Purple
-            UCL.LineStyle.Thickness = 2
-            UCL.LineStyle.DashStyle = DashStyle.DashDot
-            diagram.AxisY.ConstantLines.Add(UCL)
-            UCL.AxisValue = Setup.XBarUCL
+                Dim UCL As New ConstantLine("UCL")
+                UCL.Color = Drawing.Color.Purple
+                UCL.LineStyle.Thickness = 2
+                UCL.LineStyle.DashStyle = DashStyle.DashDot
+                diagram.AxisY.ConstantLines.Add(UCL)
+                UCL.AxisValue = Setup.XBarUCL
 
-            Dim LSL As New ConstantLine("LSL")
-            LSL.Color = Drawing.Color.Red
-            LSL.LineStyle.Thickness = 2
-            LSL.LineStyle.DashStyle = DashStyle.Solid
-            diagram.AxisY.ConstantLines.Add(LSL)
-            LSL.AxisValue = Setup.SpecLSL
+                Dim LSL As New ConstantLine("LSL")
+                LSL.Color = Drawing.Color.Red
+                LSL.LineStyle.Thickness = 2
+                LSL.LineStyle.DashStyle = DashStyle.Solid
+                diagram.AxisY.ConstantLines.Add(LSL)
+                LSL.AxisValue = Setup.SpecLSL
 
-            Dim USL As New ConstantLine("USL")
-            USL.Color = Drawing.Color.Red
-            USL.LineStyle.Thickness = 2
-            USL.LineStyle.DashStyle = DashStyle.Solid
-            diagram.AxisY.ConstantLines.Add(USL)
-            USL.AxisValue = Setup.SpecUSL
+                Dim USL As New ConstantLine("USL")
+                USL.Color = Drawing.Color.Red
+                USL.LineStyle.Thickness = 2
+                USL.LineStyle.DashStyle = DashStyle.Solid
+                diagram.AxisY.ConstantLines.Add(USL)
+                USL.AxisValue = Setup.SpecUSL
 
-            diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
-            diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
+                diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
+                diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
 
-            diagram.AxisY.VisualRange.MinValue = Setup.SpecLSL
-            diagram.AxisY.VisualRange.MaxValue = Setup.SpecUSL
+                diagram.AxisY.VisualRange.MinValue = Setup.SpecLSL
+                diagram.AxisY.VisualRange.MaxValue = Setup.SpecUSL
+
+                CType(.Diagram, XYDiagram).SecondaryAxesY.Clear()
+                Dim myAxisY As New SecondaryAxisY("my Y-Axis")
+                CType(.Diagram, XYDiagram).SecondaryAxesY.Add(myAxisY)
+                CType(.Series("Rule").View, XYDiagramSeriesViewBase).AxisY = myAxisY
+            End If
+
+
             .DataBind()
         End With
     End Sub
@@ -599,7 +609,8 @@ Public Class ProdSampleInput
         Dim USL As Double
 
         If Not IsDBNull(e.CellValue) AndAlso (e.DataColumn.FieldName.StartsWith("1") Or e.DataColumn.FieldName.StartsWith("2")) _
-            And (e.GetValue("Seq") = "1" Or e.GetValue("Seq") = "3" Or e.GetValue("Seq") = "4" Or e.GetValue("Seq") = "5") Then
+            And (e.GetValue("Seq") = "1" Or e.GetValue("Seq") = "3" Or e.GetValue("Seq") = "4" Or e.GetValue("Seq") = "5") AndAlso
+            Not IsDBNull(e.GetValue("XBarLCL1")) Then
             If (e.DataColumn.FieldName.StartsWith("1")) Then
                 LCL = e.GetValue("XBarLCL1")
                 UCL = e.GetValue("XBarUCL1")
@@ -634,5 +645,14 @@ Public Class ProdSampleInput
         Dim ItemCheckCode As String = Split(Prm, "|")(3)
         Dim ProdDate As String = Split(Prm, "|")(4)
         LoadChartR(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
+    End Sub
+
+    Private Sub chartX_BoundDataChanged(sender As Object, e As EventArgs) Handles chartX.BoundDataChanged
+        With chartX
+            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Color = Color.Red
+            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).FillStyle.FillMode = FillMode.Solid
+            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Transparency = 180
+            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Border.Thickness = 1
+        End With
     End Sub
 End Class

@@ -862,6 +862,12 @@
                     </cc1:LineSeriesView>
                 </ViewSerializable>
             </cc1:Series>
+            <cc1:Series ArgumentDataMember="Seq" Name="Rule" ValueDataMembersSerializable="RuleValue">
+                <ViewSerializable>
+                    <cc1:FullStackedBarSeriesView BarWidth="0.9">
+                    </cc1:FullStackedBarSeriesView>
+                </ViewSerializable>
+            </cc1:Series>
         </SeriesSerializable>
     
         <seriestemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">

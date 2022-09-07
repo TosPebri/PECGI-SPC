@@ -8,6 +8,7 @@ Public Class clsXRChart
     Public Property MinValue As Double
     Public Property MaxValue As Double
     Public Property RValue As Double
+    Public Property RuleValue As Double?
 End Class
 
 Public Class clsXRChartDB
@@ -39,6 +40,10 @@ Public Class clsXRChartDB
                     xr.MinValue = .Item("MinValue")
                     xr.MaxValue = .Item("MaxValue")
                     xr.RValue = .Item("RValue")
+                    If Not IsDBNull(.Item("RuleValue")) Then
+                        value = .Item("RuleValue")
+                        xr.RuleValue = value
+                    End If
                 End With
                 XRList.Add(xr)
             Next

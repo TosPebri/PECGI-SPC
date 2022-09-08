@@ -163,7 +163,7 @@ Public Class UserPrivilege
         Dim pAction As String = Split(e.Parameter, "|")(0)
         Dim FromUserID As String = Split(e.Parameter, "|")(1)
         Dim TouserID As String = Split(e.Parameter, "|")(2)
-        If If(FromUserID, "") <> "" Then
+        If FromUserID = "null" Then
             Cls_ss_UserPrivilegeDB.Copy(FromUserID, TouserID, RegisterUser)
         End If
     End Sub

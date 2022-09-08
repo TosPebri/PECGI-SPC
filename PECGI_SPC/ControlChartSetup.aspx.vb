@@ -156,6 +156,7 @@ Public Class ControlChartSetup
             Grid.CancelEdit()
             up_GridLoad()
         Catch ex As Exception
+			Grid.CancelEdit()
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
@@ -180,6 +181,7 @@ Public Class ControlChartSetup
             Grid.CancelEdit()
             up_GridLoad()
         Catch ex As Exception
+			Grid.CancelEdit()
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub
@@ -203,6 +205,7 @@ Public Class ControlChartSetup
             up_GridLoad()
             show_error(MsgTypeEnum.Success, "Delete data successfully!", 1)
         Catch ex As Exception
+			Grid.CancelEdit()
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
     End Sub

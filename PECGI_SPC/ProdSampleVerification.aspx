@@ -261,10 +261,10 @@
         }
 
         function Browse() {
-            chartX.PerformCallback(cboFactory.GetValue() + '|' + cboItemType.GetValue() + '|' + cboLineID.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtProdDate.GetText());
-            chartR.PerformCallback(cboFactory.GetValue() + '|' + cboItemType.GetValue() + '|' + cboLineID.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtProdDate.GetText());
-            Grid.PerformCallback('Load');
-            GridActivity.PerformCallback('Load');
+            chartX.PerformCallback();
+            chartR.PerformCallback();
+            Grid.PerformCallback('Load|');
+            GridActivity.PerformCallback('Load|');
         }
 
         function Clear() {

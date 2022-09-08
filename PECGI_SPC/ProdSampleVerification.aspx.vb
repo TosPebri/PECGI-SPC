@@ -50,14 +50,8 @@ Public Class ProdSampleVerification
     Dim GetVerifyChartSetup As String = "8"
 
     'SPECIFICATION CHART
-    Dim UCL As Decimal = 0
-    Dim LCL As Decimal = 0
-    Dim USL As Decimal = 0
-    Dim LSL As Decimal = 0
-    Dim ColumnBrowse As String = ""
     Dim VerifyStatus As String = "0"
     Dim DescIndex As String = ""
-
 
     'EXCEL PARAMETER
     Dim row_GridTitle = 0
@@ -71,6 +65,7 @@ Public Class ProdSampleVerification
     Dim col_CellResult = 0
     Dim col_CellActivity = 0
     Dim RowIndexName As String = ""
+    Dim CharacteristicSts As String = ""
 
     'FORM LOAD PARAMETER
     Dim menu = ""
@@ -178,33 +173,20 @@ Public Class ProdSampleVerification
     End Sub
     Private Sub btnExcel_Click(sender As Object, e As EventArgs) Handles btnExcel.Click
         Dim cls As New clsProdSampleVerification
-        Dim Factory As String = cboFactory.Value
-        Dim FactoryName As String = cboFactory.Text
-        Dim Itemtype As String = cboItemType.Value
-        Dim Itemtype_Name As String = cboItemType.Text
-        Dim Line As String = cboLineID.Value
-        Dim LineName As String = cboLineID.Text
-        Dim ItemCheck As String = cboItemCheck.Value
-        Dim ItemCheck_Name As String = cboItemCheck.Text
-        Dim prodDate As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
-        Dim Period As String = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy MMM dd")
-        Dim Shift As String = cboShift.Value
-        Dim ShiftName As String = cboShift.Text
-        Dim Seq As String = cboSeq.Value
+        cls.FactoryCode = cboFactory.Value
+        cls.FactoryName = cboFactory.Text
+        cls.ItemType_Code = cboItemType.Value
+        cls.ItemType_Name = cboItemType.Text
+        cls.LineCode = cboLineID.Value
+        cls.LineName = cboLineID.Text
+        cls.ItemCheck_Code = cboItemCheck.Value
+        cls.ItemCheck_Name = cboItemCheck.Value
+        cls.ProdDate = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy-MM-dd")
+        cls.Period = Convert.ToDateTime(dtProdDate.Value).ToString("yyyy MMM dd")
+        cls.ShiftCode = cboShift.Value
+        cls.ShiftName = cboShift.Text
+        cls.Seq = cboSeq.Value
 
-        cls.FactoryCode = Factory
-        cls.FactoryName = FactoryName
-        cls.ItemType_Code = Itemtype
-        cls.ItemType_Name = Itemtype_Name
-        cls.LineCode = Line
-        cls.LineName = LineName
-        cls.ItemCheck_Code = ItemCheck
-        cls.ItemCheck_Name = ItemCheck_Name
-        cls.ProdDate = prodDate
-        cls.Period = Period
-        cls.ShiftCode = Shift
-        cls.ShiftName = ShiftName
-        cls.Seq = Seq
 
         up_Excel(cls)
     End Sub
@@ -218,26 +200,24 @@ Public Class ProdSampleVerification
             Dim msgErr As String = ""
             Dim pAction As String = Split(e.Parameters, "|")(0)
 
-            Dim Factory As String = HideValue.Get("FactoryCode")
-            Dim Itemtype As String = HideValue.Get("ItemType_Code")
-            Dim Line As String = HideValue.Get("LineCode")
-            Dim ItemCheck As String = HideValue.Get("ItemCheck_Code")
-            Dim ProdDate As String = HideValue.Get("ProdDate")
-            Dim Shift As String = HideValue.Get("ShiftCode")
-            Dim Seq As String = HideValue.Get("Seq")
-
             Dim cls As New clsProdSampleVerification
-            cls.FactoryCode = Factory
-            cls.ItemType_Code = Itemtype
-            cls.LineCode = Line
-            cls.ItemCheck_Code = ItemCheck
-            cls.ProdDate = Convert.ToDateTime(ProdDate).ToString("yyyy-MM-dd")
-            cls.ShiftCode = Shift
-            cls.Seq = Seq
+            cls.FactoryCode = HideValue.Get("FactoryCode")
+            cls.ItemType_Code = HideValue.Get("ItemType_Code")
+            cls.LineCode = HideValue.Get("LineCode")
+            cls.ItemCheck_Code = HideValue.Get("ItemCheck_Code")
+            cls.ProdDate = Convert.ToDateTime(HideValue.Get("ProdDate")).ToString("yyyy-MM-dd")
+            cls.ShiftCode = HideValue.Get("ShiftCode")
+            cls.Seq = HideValue.Get("Seq")
             cls.User = pUser
 
             If pAction = "Load" Then
+
+                ds = clsProdSampleVerificationDB.GridLoad(GetVerifyChartSetup, cls)
+                Dim dt = ds.Tables(0)
+                Dim RespChartSetUp = dt.Rows(0)("Response")
+
                 Up_GridLoad(cls)
+
                 Grid.JSProperties("cp_Verify") = VerifyStatus
 
             ElseIf pAction = "Verify" Then
@@ -292,6 +272,7 @@ Public Class ProdSampleVerification
             }
 
             If pAction = "Load" Then
+
                 Up_GridLoadActivities(cls)
 
             ElseIf pAction = "Clear" Then
@@ -353,29 +334,49 @@ Public Class ProdSampleVerification
     End Sub
     Private Sub chartX_CustomCallback(sender As Object, e As CustomCallbackEventArgs) Handles chartX.CustomCallback
 
-        Dim Prm As String = e.Parameter
-        If Prm = "" Then
-            Prm = "F001|TPMSBR011|015|IC021|03 Aug 2022"
-        End If
-        Dim FactoryCode As String = Split(Prm, "|")(0)
-        Dim ItemTypeCode As String = Split(Prm, "|")(1)
-        Dim LineCode As String = Split(Prm, "|")(2)
-        Dim ItemCheckCode As String = Split(Prm, "|")(3)
-        Dim ProdDate As String = Split(Prm, "|")(4)
+        Dim cls As New clsProdSampleVerification
+        cls.FactoryCode = HideValue.Get("FactoryCode")
+        cls.ItemType_Code = HideValue.Get("ItemType_Code")
+        cls.LineCode = HideValue.Get("LineCode")
+        cls.ItemCheck_Code = HideValue.Get("ItemCheck_Code")
+        cls.ProdDate = Convert.ToDateTime(HideValue.Get("ProdDate")).ToString("yyyy-MM-dd")
+        cls.ShiftCode = HideValue.Get("ShiftCode")
+        cls.Seq = HideValue.Get("Seq")
+        cls.User = pUser
 
-        LoadChartX(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
+        ds = clsProdSampleVerificationDB.GridLoad(GetVerifyChartSetup, cls)
+        Dim dt = ds.Tables(0)
+        Dim RespChartSetUp = dt.Rows(0)("Response")
+
+        If RespChartSetUp = "" Then
+            LoadChartX(cls)
+        Else
+            show_errorGrid(MsgTypeEnum.Warning, RespChartSetUp, 1)
+        End If
+
+
     End Sub
     Private Sub chartR_CustomCallback(sender As Object, e As CustomCallbackEventArgs) Handles chartR.CustomCallback
-        Dim Prm As String = e.Parameter
-        If Prm = "" Then
-            Prm = "F001|TPMSBR011|015|IC021|03 Aug 2022"
+        Dim cls As New clsProdSampleVerification
+        cls.FactoryCode = HideValue.Get("FactoryCode")
+        cls.ItemType_Code = HideValue.Get("ItemType_Code")
+        cls.LineCode = HideValue.Get("LineCode")
+        cls.ItemCheck_Code = HideValue.Get("ItemCheck_Code")
+        cls.ProdDate = Convert.ToDateTime(HideValue.Get("ProdDate")).ToString("yyyy-MM-dd")
+        cls.ShiftCode = HideValue.Get("ShiftCode")
+        cls.Seq = HideValue.Get("Seq")
+        cls.User = pUser
+
+        ds = clsProdSampleVerificationDB.GridLoad(GetVerifyChartSetup, cls)
+        Dim dt = ds.Tables(0)
+        Dim RespChartSetUp = dt.Rows(0)("Response")
+
+        If RespChartSetUp = "" Then
+            LoadChartR(cls)
+        Else
+            show_errorGrid(MsgTypeEnum.Warning, RespChartSetUp, 1)
         End If
-        Dim FactoryCode As String = Split(Prm, "|")(0)
-        Dim ItemTypeCode As String = Split(Prm, "|")(1)
-        Dim LineCode As String = Split(Prm, "|")(2)
-        Dim ItemCheckCode As String = Split(Prm, "|")(3)
-        Dim ProdDate As String = Split(Prm, "|")(4)
-        LoadChartR(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
+
     End Sub
 
 #End Region
@@ -748,82 +749,72 @@ Public Class ProdSampleVerification
             ColDesc.CellStyle.HorizontalAlign = HorizontalAlign.Center
             Band2.Columns.Add(ColDesc)
 
+            ds = clsProdSampleVerificationDB.GridLoad(GetHeader_ProdDate, cls)
+            Dim dtDate As DataTable = ds.Tables(0)
+            If dtDate.Rows.Count > 0 Then
+                For i = 0 To dtDate.Rows.Count - 1
+                    Dim Col_ProdDate As New GridViewBandColumn
+                    Dim nProdDate = dtDate.Rows(i)("ProdDate")
+                    Col_ProdDate.Caption = nProdDate
+                    .Columns.Add(Col_ProdDate)
 
-            ds = clsProdSampleVerificationDB.GridLoad(GetVerifyChartSetup, cls)
-            Dim dt = ds.Tables(0)
-            Dim RespChartSetUp = dt.Rows(0)("Response")
+                    cls.ProdDate_Grid = Convert.ToDateTime(nProdDate).ToString("yyyy-MM-dd")
+                    ds = clsProdSampleVerificationDB.GridLoad(GetHeader_ShifCode, cls)
+                    Dim dtShift As DataTable = ds.Tables(0)
+                    If dtShift.Rows.Count > 0 Then
+                        For n = 0 To dtShift.Rows.Count - 1
 
-            If RespChartSetUp = "" Then
-                ds = clsProdSampleVerificationDB.GridLoad(GetHeader_ProdDate, cls)
-                Dim dtDate As DataTable = ds.Tables(0)
-                If dtDate.Rows.Count > 0 Then
-                    For i = 0 To dtDate.Rows.Count - 1
-                        Dim Col_ProdDate As New GridViewBandColumn
-                        Dim nProdDate = dtDate.Rows(i)("ProdDate")
-                        Col_ProdDate.Caption = nProdDate
-                        .Columns.Add(Col_ProdDate)
+                            Dim Col_Shift As New GridViewBandColumn
+                            Dim nShiftCode = dtShift.Rows(n)("ShiftCode")
+                            If nShiftCode = "SH001" Then
+                                nShiftCode = "Shift 1"
+                            ElseIf nShiftCode = "SH002" Then
+                                nShiftCode = "Shift 2"
+                            End If
 
-                        cls.ProdDate_Grid = Convert.ToDateTime(nProdDate).ToString("yyyy-MM-dd")
-                        ds = clsProdSampleVerificationDB.GridLoad(GetHeader_ShifCode, cls)
-                        Dim dtShift As DataTable = ds.Tables(0)
-                        If dtShift.Rows.Count > 0 Then
-                            For n = 0 To dtShift.Rows.Count - 1
+                            Col_Shift.Caption = nShiftCode
+                            Col_ProdDate.Columns.Add(Col_Shift)
 
-                                Dim Col_Shift As New GridViewBandColumn
-                                Dim nShiftCode = dtShift.Rows(n)("ShiftCode")
-                                If nShiftCode = "SH001" Then
-                                    nShiftCode = "Shift 1"
-                                ElseIf nShiftCode = "SH002" Then
-                                    nShiftCode = "Shift 2"
-                                End If
-
-                                Col_Shift.Caption = nShiftCode
-                                Col_ProdDate.Columns.Add(Col_Shift)
-
-                                cls.Shiftcode_Grid = dtShift.Rows(n)("ShiftCode")
-                                ds = clsProdSampleVerificationDB.GridLoad(GetHeader_Time, cls)
-                                Dim dtSeq As DataTable = ds.Tables(0)
-                                If dtSeq.Rows.Count > 0 Then
-                                    For r = 0 To dtSeq.Rows.Count - 1
-                                        Dim Col_Seq As New GridViewDataTextColumn
-                                        Col_Seq.Width = 100
-                                        Col_Seq.HeaderStyle.HorizontalAlign = HorizontalAlign.Center
-                                        Col_Seq.CellStyle.HorizontalAlign = HorizontalAlign.Center
-                                        Col_Seq.FieldName = dtSeq.Rows(r)("nTime")
-                                        Col_Seq.Caption = dtSeq.Rows(r)("nTimeDesc")
-                                        Col_Shift.Columns.Add(Col_Seq)
-                                    Next
-                                End If
-                            Next
-                        End If
-                    Next
-
-                    ds = clsProdSampleVerificationDB.GridLoad(GetCharSetup, cls)
-                    Dim dtChartSetup As DataTable = ds.Tables(0)
-                    Grid.JSProperties("cpChartSetup") = dtChartSetup.Rows.Count
-
-                    If dtChartSetup.Rows.Count > 0 Then
-                        For i = 1 To dtChartSetup.Rows.Count
-                            Grid.JSProperties("cpPeriod" & i) = dtChartSetup.Rows(i - 1)("Period")
-                            Grid.JSProperties("cpUSL" & i) = AFormat(dtChartSetup.Rows(i - 1)("USL"))
-                            Grid.JSProperties("cpLSL" & i) = AFormat(dtChartSetup.Rows(i - 1)("LSL"))
-                            Grid.JSProperties("cpUCL" & i) = AFormat(dtChartSetup.Rows(i - 1)("UCL"))
-                            Grid.JSProperties("cpLCL" & i) = AFormat(dtChartSetup.Rows(i - 1)("LCL"))
+                            cls.Shiftcode_Grid = dtShift.Rows(n)("ShiftCode")
+                            ds = clsProdSampleVerificationDB.GridLoad(GetHeader_Time, cls)
+                            Dim dtSeq As DataTable = ds.Tables(0)
+                            If dtSeq.Rows.Count > 0 Then
+                                For r = 0 To dtSeq.Rows.Count - 1
+                                    Dim Col_Seq As New GridViewDataTextColumn
+                                    Col_Seq.Width = 100
+                                    Col_Seq.HeaderStyle.HorizontalAlign = HorizontalAlign.Center
+                                    Col_Seq.CellStyle.HorizontalAlign = HorizontalAlign.Center
+                                    Col_Seq.FieldName = dtSeq.Rows(r)("nTime")
+                                    Col_Seq.Caption = dtSeq.Rows(r)("nTimeDesc")
+                                    Col_Shift.Columns.Add(Col_Seq)
+                                Next
+                            End If
                         Next
                     End If
+                Next
 
-                    ColumnBrowse = Convert.ToDateTime(cls.ProdDate).ToString("yyyyMMdd") & "_" & cls.ShiftCode & "_" & cls.Seq
-                    ds = clsProdSampleVerificationDB.GridLoad(GetVerifyPrivilege, cls)
-                    Dim dtVerifyPrivilege As DataTable = ds.Tables(0)
-                    If dtVerifyPrivilege.Rows.Count > 0 Then
-                        VerifyStatus = dtVerifyPrivilege.Rows(0)("VerifyPrivilege")
-                    End If
-                    Grid.JSProperties("cp_Verify") = VerifyStatus 'parameter to authorization verify
-                Else
-                    show_errorGrid(MsgTypeEnum.Warning, "Data Not Found", 1)
+                ds = clsProdSampleVerificationDB.GridLoad(GetCharSetup, cls)
+                Dim dtChartSetup As DataTable = ds.Tables(0)
+                Grid.JSProperties("cpChartSetup") = dtChartSetup.Rows.Count
+
+                If dtChartSetup.Rows.Count > 0 Then
+                    For i = 1 To dtChartSetup.Rows.Count
+                        Grid.JSProperties("cpPeriod" & i) = dtChartSetup.Rows(i - 1)("Period")
+                        Grid.JSProperties("cpUSL" & i) = AFormat(dtChartSetup.Rows(i - 1)("USL"))
+                        Grid.JSProperties("cpLSL" & i) = AFormat(dtChartSetup.Rows(i - 1)("LSL"))
+                        Grid.JSProperties("cpUCL" & i) = AFormat(dtChartSetup.Rows(i - 1)("UCL"))
+                        Grid.JSProperties("cpLCL" & i) = AFormat(dtChartSetup.Rows(i - 1)("LCL"))
+                    Next
                 End If
+
+                ds = clsProdSampleVerificationDB.GridLoad(GetVerifyPrivilege, cls)
+                Dim dtVerifyPrivilege As DataTable = ds.Tables(0)
+                If dtVerifyPrivilege.Rows.Count > 0 Then
+                    VerifyStatus = dtVerifyPrivilege.Rows(0)("VerifyPrivilege")
+                End If
+                Grid.JSProperties("cp_Verify") = VerifyStatus 'parameter to authorization verify
             Else
-                show_errorGrid(MsgTypeEnum.Warning, RespChartSetUp, 1)
+                show_errorGrid(MsgTypeEnum.Warning, "Data Not Found", 1)
             End If
 
             ds = clsProdSampleVerificationDB.GridLoad(GetGridData, cls)
@@ -850,12 +841,14 @@ Public Class ProdSampleVerification
             .DataBind()
         End With
     End Sub
-    Private Sub LoadChartR(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String)
-        Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartR(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+    Private Sub LoadChartR(cls As clsProdSampleVerification)
+        Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartR(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
         If xr.Count = 0 Then
             chartR.JSProperties("cpShow") = "0"
+            CharacteristicSts = "0"
         Else
             chartR.JSProperties("cpShow") = "1"
+            CharacteristicSts = "1"
         End If
         With chartR
             .DataSource = xr
@@ -868,9 +861,7 @@ Public Class ProdSampleVerification
             diagram.AxisX.MinorCount = 1
             diagram.AxisX.GridLines.Visible = False
 
-
-
-            Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+            Dim Setup As clsChartSetup = clsChartSetupDB.GetData(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
             diagram.AxisY.ConstantLines.Clear()
             Dim RCL As New ConstantLine("CL R")
             RCL.Color = Drawing.Color.Purple
@@ -899,8 +890,8 @@ Public Class ProdSampleVerification
             .DataBind()
         End With
     End Sub
-    Private Sub LoadChartX(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String)
-        Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartXR(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+    Private Sub LoadChartX(cls As clsProdSampleVerification)
+        Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartXR(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
         With chartX
             .DataSource = xr
             Dim diagram As XYDiagram = CType(.Diagram, XYDiagram)
@@ -916,7 +907,7 @@ Public Class ProdSampleVerification
             diagram.AxisY.GridLines.MinorVisible = False
 
 
-            Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+            Dim Setup As clsChartSetup = clsChartSetupDB.GetData(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
             diagram.AxisY.ConstantLines.Clear()
             Dim LCL As New ConstantLine("LCL")
             LCL.Color = Drawing.Color.Purple
@@ -974,10 +965,20 @@ Public Class ProdSampleVerification
         cls.User = pUser
 
         UpFillCombo()
+
+        ds = clsProdSampleVerificationDB.GridLoad(GetVerifyChartSetup, cls)
+        Dim dt = ds.Tables(0)
+        Dim RespChartSetUp = dt.Rows(0)("Response")
+
         Up_GridLoad(cls)
         Up_GridLoadActivities(cls)
-        LoadChartR(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, prmProdDate)
-        LoadChartX(prmFactoryCode, prmItemType, prmLineCode, prmItemCheck, prmProdDate)
+
+        If RespChartSetUp = "" Then
+            LoadChartX(cls)
+            LoadChartR(cls)
+        Else
+            show_errorGrid(MsgTypeEnum.Warning, RespChartSetUp, 1)
+        End If
 
         dtProdDate.Value = Convert.ToDateTime(prmProdDate)
         HideValue.Set("ProdDate", prmProdDate)
@@ -1039,16 +1040,21 @@ Public Class ProdSampleVerification
         Try
             Dim ps As New PrintingSystem()
 
-            LoadChartR(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
+            LoadChartR(cls)
             Dim linkR As New PrintableComponentLink(ps)
             linkR.Component = (CType(chartR, IChartContainer)).Chart
 
-            LoadChartX(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
+            LoadChartX(cls)
             Dim linkX As New PrintableComponentLink(ps)
             linkX.Component = (CType(chartX, IChartContainer)).Chart
 
             Dim compositeLink As New CompositeLink(ps)
-            compositeLink.Links.AddRange(New Object() {linkX, linkR})
+            If CharacteristicSts = "1" Then
+                compositeLink.Links.AddRange(New Object() {linkX, linkR})
+            Else
+                compositeLink.Links.AddRange(New Object() {linkX})
+            End If
+
             compositeLink.CreateDocument()
             Dim Path As String = Server.MapPath("Download")
             Dim streamImg As New MemoryStream
@@ -1066,7 +1072,11 @@ Public Class ProdSampleVerification
                     CellResult(ws, cls)
 
                     ' ADD CHART
-                    row_CellChart = row_CellResult + 45
+                    If CharacteristicSts = "1" Then
+                        row_CellChart = row_CellResult + 45
+                    Else
+                        row_CellChart = row_CellResult + 23
+                    End If
                     .InsertRow(row_CellResult, row_CellChart)
                     Dim fi As New FileInfo(Path & "\chart.png")
                     Dim Picture As OfficeOpenXml.Drawing.ExcelPicture
@@ -1233,14 +1243,6 @@ Public Class ProdSampleVerification
         With pExl
             Try
                 Dim irow = row_HeaderResult + 1
-                'ds = clsProdSampleVerificationDB.GridLoad(GetCharSetup, cls)
-                'Dim dtColBrowse As DataTable = ds.Tables(0)
-                'If dtColBrowse.Rows.Count > 0 Then
-                '    UCL = dtColBrowse.Rows(0)("UCL")
-                '    LCL = dtColBrowse.Rows(0)("LCL")
-                '    USL = dtColBrowse.Rows(0)("USL")
-                '    LSL = dtColBrowse.Rows(0)("LSL")
-                'End If
 
                 ds = clsProdSampleVerificationDB.GridLoad(GetGridData, cls)
                 Dim dtGrid As DataTable = ds.Tables(0)
@@ -1320,7 +1322,6 @@ Public Class ProdSampleVerification
                 .Cells(irow, 6, irow, 7).Merge = True
                 .Cells(irow, 6, irow, 7).Style.WrapText = True
 
-
                 .Cells(irow, 8).Value = "Last User"
                 .Cells(irow, 9).Value = "Last Update"
 
@@ -1352,12 +1353,15 @@ Public Class ProdSampleVerification
     End Sub
     Private Sub CellActivity(ByVal pExl As ExcelWorksheet, cls As clsProdSampleVerification)
         Try
-            Dim irow = row_HeaderActivity + 1
+            Dim irow = row_HeaderActivity
+            Dim nRow = 0
             With pExl
                 ds = clsProdSampleVerificationDB.GridLoad(GetGridData_Activity, cls)
                 Dim dtGridActivity As DataTable = ds.Tables(0)
-                Dim nRow = dtGridActivity.Rows.Count
                 If dtGridActivity.Rows.Count > 0 Then
+                    nRow = dtGridActivity.Rows.Count - 1
+                    irow = irow + 1
+
                     For i = 0 To dtGridActivity.Rows.Count - 1
                         .Cells(irow + i, 1).Value = dtGridActivity.Rows(0)("ProdDate")
                         .Cells(irow + i, 1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center
@@ -1389,7 +1393,7 @@ Public Class ProdSampleVerification
                 col_CellActivity = 9
                 row_CellActivity = irow + nRow
 
-                Dim Border As ExcelRange = .Cells(irow, 1, row_CellActivity - 1, col_CellActivity)
+                Dim Border As ExcelRange = .Cells(irow, 1, row_CellActivity, col_CellActivity)
                 Border.Style.Border.Top.Style = ExcelBorderStyle.Thin
                 Border.Style.Border.Bottom.Style = ExcelBorderStyle.Thin
                 Border.Style.Border.Right.Style = ExcelBorderStyle.Thin

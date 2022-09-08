@@ -205,6 +205,20 @@
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
             SelectCommand="Exec sp_SPC_ItemCheckByBattery_FillCombo '5' "></asp:SqlDataSource>
 
+        <asp:SqlDataSource ID="dsRegNo" runat="server"
+            ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
+            SelectCommand="Exec sp_SPC_ItemCheckByBattery_FillCombo @Type, @FactoryCode1">
+            <SelectParameters>
+                <asp:Parameter Name="Type"  />
+                <asp:Parameter Name="FactoryCode1"  />
+            </SelectParameters>
+           <%-- <SelectParameters>
+                <asp:ControlParameter ControlID="cboFactory"
+                    PropertyName="Value"
+                    Name="FactoryCode1"/>
+            </SelectParameters>--%>
+        </asp:SqlDataSource>
+
 
     <div style="padding: 20px 5px 5px 5px">
 
@@ -373,7 +387,29 @@
                     <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
                 </dx:GridViewDataComboBoxColumn>
 
-                <dx:GridViewDataTextColumn Caption="Registratrion No" FieldName="RegistrationNo"
+                <dx:GridViewDataComboBoxColumn Caption="Registration No" FieldName="RegistrationNo" VisibleIndex="5"
+                    Width="70px" Settings-AutoFilterCondition="Contains">
+                    <PropertiesComboBox DataSourceID="dsRegNo" DropDownStyle="DropDownList" TextFormatString="{0}"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="70px"
+                        TextField="Description" ValueField="RegistrationNo" ClientInstanceName="RegistrationNo">
+                        <ItemStyle Height="10px" Paddings-Padding="4px">
+                            <Paddings Padding="4px"></Paddings>
+                        </ItemStyle>
+                        <ButtonStyle Width="5px" Paddings-Padding="2px">
+                            <Paddings Padding="2px"></Paddings>
+                        </ButtonStyle>
+                    </PropertiesComboBox>
+                    <Settings AutoFilterCondition="Contains"></Settings>
+                    <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                    </FilterCellStyle>
+                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                    </HeaderStyle>
+                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                </dx:GridViewDataComboBoxColumn>
+
+                <%--<dx:GridViewDataTextColumn Caption="Registration No" FieldName="RegistrationNo"
                     VisibleIndex="5" Width="80px" Settings-AutoFilterCondition="Contains">
                     <PropertiesTextEdit MaxLength="25" Width="70px">
                         <Style HorizontalAlign="Left"></Style>
@@ -386,7 +422,7 @@
                     <Paddings PaddingLeft="5px"></Paddings>
                     </HeaderStyle>
                     <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"></CellStyle>
-                </dx:GridViewDataTextColumn>
+                </dx:GridViewDataTextColumn>--%>
                 
                 <dx:GridViewDataSpinEditColumn Caption="Sample Size" FieldName="SampleSize" VisibleIndex="6" Width="80px" Settings-AutoFilterCondition="Contains">
                     <PropertiesSpinEdit MaxValue="999" MinValue="0" Width="70px" Style-HorizontalAlign="Right">

@@ -21,9 +21,13 @@ Public Class ItemCheckByBattery
 #Region "Events"
     Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
         If Not Page.IsPostBack Then
-            If Not Page.IsPostBack Then
-                GetFactoryCode()
-            End If
+            GetFactoryCode()
+            dsRegNo.SelectParameters("Type").DefaultValue = "6"
+            dsRegNo.SelectParameters("FactoryCode1").DefaultValue = "F001"
+            'FillCBRegNoGrid()
+        Else
+            dsRegNo.SelectParameters("Type").DefaultValue = "6"
+            dsRegNo.SelectParameters("FactoryCode1").DefaultValue = cboFactory.Value
         End If
     End Sub
 
@@ -49,6 +53,7 @@ Public Class ItemCheckByBattery
             Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
             commandColumn.ShowDeleteButton = False
         End If
+
     End Sub
 
     Protected Sub Grid_AfterPerformCallback(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles Grid.AfterPerformCallback
@@ -59,6 +64,20 @@ Public Class ItemCheckByBattery
     Private Sub GetFactoryCode()
         cboFactory.DataSource = clsFactoryDB.GetList
         cboFactory.DataBind()
+    End Sub
+    Private Sub FillCBRegNoGrid()
+        Dim DT As New DataTable
+        DT = ClsSPCItemCheckByTypeDB.GetRegNo(cboFactory.Value)
+        'Dim myCombo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
+        'CType(TryCast(sender, ASPxGridView).Columns("RegistrationNo"), GridViewDataComboBoxColumn).PropertiesComboBox.DataSource = DT
+        'myCombo.DataSource = DT
+        'myCombo.DataBindItems()
+
+        Dim comboColumn = CType(Grid.Columns("RegistrationNo"), GridViewDataComboBoxColumn)
+        comboColumn.PropertiesComboBox.DataSource = DT
+        comboColumn.PropertiesComboBox.TextField = "Description"
+        comboColumn.PropertiesComboBox.ValueField = "RegistrationNo"
+        comboColumn.PropertiesComboBox.ValueType = GetType(String)
 
     End Sub
     Protected Sub Grid_RowInserting(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataInsertingEventArgs) Handles Grid.RowInserting
@@ -175,6 +194,14 @@ Public Class ItemCheckByBattery
     End Sub
 
     Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles Grid.CellEditorInitialize
+        If (e.Column.FieldName = "RegistrationNo") Then
+            Dim DT As New DataTable
+            DT = ClsSPCItemCheckByTypeDB.GetRegNo(cboFactory.Value)
+            Dim myCombo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
+            CType(TryCast(sender, ASPxGridView).Columns("RegistrationNo"), GridViewDataComboBoxColumn).PropertiesComboBox.DataSource = DT
+            myCombo.DataSource = DT
+            myCombo.DataBindItems()
+        End If
         If Not Grid.IsNewRowEditing Then
             If e.Column.FieldName = "ItemCheckCode" Or e.Column.FieldName = "FactoryCode" Or e.Column.FieldName = "ItemTypeCode" Or e.Column.FieldName = "LineName" Or e.Column.FieldName = "ItemTypeCode" Or e.Column.FieldName = "ItemCheck" Then
                 e.Editor.ReadOnly = True
@@ -310,6 +337,8 @@ Public Class ItemCheckByBattery
         Dim FactoryCode As String = Split(e.Parameter, "|")(0)
         cboType.DataSource = clsItemTypeDB.GetList(FactoryCode)
         cboType.DataBind()
+        'FillCBRegNoGrid()
+        dsRegNo.SelectParameters("FactoryCode1").DefaultValue = cboFactory.Value
     End Sub
     Private Sub cboLine_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboLine.Callback
         Dim FactoryCode As String = Split(e.Parameter, "|")(0)

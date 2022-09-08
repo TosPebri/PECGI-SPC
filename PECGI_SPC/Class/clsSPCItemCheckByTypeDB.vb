@@ -229,66 +229,6 @@ Public Class ClsSPCItemCheckByTypeDB
             Return Nothing
         End Try
     End Function
-    Public Shared Function GetFrequencyCode(Optional ByRef pErr As String = "") As DataTable
-        Try
-            Using conn As New SqlConnection(Sconn.Stringkoneksi)
-                conn.Open()
-                Dim sql As String = ""
-                sql = "SELECT 'ALL' FrequencyCode, 'ALL' FrequencyName UNION SELECT FrequencyCode, FrequencyName from spc_MS_FrequencySetting"
-
-                Dim cmd As New SqlCommand(sql, conn)
-                cmd.CommandType = CommandType.Text
-                Dim da As New SqlDataAdapter(cmd)
-                Dim dt As New DataTable
-                da.Fill(dt)
-
-                Return dt
-            End Using
-        Catch ex As Exception
-            pErr = ex.Message
-            Return Nothing
-        End Try
-    End Function
-    Public Shared Function GetItemTypeCode(Optional ByRef pErr As String = "") As DataTable
-        Try
-            Using conn As New SqlConnection(Sconn.Stringkoneksi)
-                conn.Open()
-                Dim sql As String = ""
-                sql = "SELECT ItemTypeCode, ItemTypeName = Description from MS_ItemType"
-
-                Dim cmd As New SqlCommand(sql, conn)
-                cmd.CommandType = CommandType.Text
-                Dim da As New SqlDataAdapter(cmd)
-                Dim dt As New DataTable
-                da.Fill(dt)
-
-                Return dt
-            End Using
-        Catch ex As Exception
-            pErr = ex.Message
-            Return Nothing
-        End Try
-    End Function
-    Public Shared Function GetFactoryCode(Optional ByRef pErr As String = "") As DataTable
-        Try
-            Using conn As New SqlConnection(Sconn.Stringkoneksi)
-                conn.Open()
-                Dim sql As String = ""
-                sql = "SELECT FactoryCode, FactoryName from MS_Factory"
-
-                Dim cmd As New SqlCommand(sql, conn)
-                cmd.CommandType = CommandType.Text
-                Dim da As New SqlDataAdapter(cmd)
-                Dim dt As New DataTable
-                da.Fill(dt)
-
-                Return dt
-            End Using
-        Catch ex As Exception
-            pErr = ex.Message
-            Return Nothing
-        End Try
-    End Function
     Public Shared Function ValidationDelete(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String) As ClsSPCItemCheckByType
         Using cn As New SqlConnection(Sconn.Stringkoneksi)
             Dim sql As String
@@ -313,5 +253,29 @@ Public Class ClsSPCItemCheckByTypeDB
                 Return Nothing
             End If
         End Using
+    End Function
+    Public Shared Function GetRegNo(FactoryCode As String, Optional ByRef pErr As String = "") As DataTable
+        Try
+            Using conn As New SqlConnection(Sconn.Stringkoneksi)
+                conn.Open()
+                Dim sql As String = ""
+                sql = "sp_SPC_ItemCheckByBattery_FillCombo"
+
+                Dim cmd As New SqlCommand(sql, conn)
+                cmd.CommandType = CommandType.StoredProcedure
+                With cmd.Parameters
+                    .AddWithValue("Type", "6")
+                    .AddWithValue("FactoryCode", FactoryCode)
+                End With
+                Dim da As New SqlDataAdapter(cmd)
+                Dim dt As New DataTable
+                da.Fill(dt)
+
+                Return dt
+            End Using
+        Catch ex As Exception
+            pErr = ex.Message
+            Return Nothing
+        End Try
     End Function
 End Class

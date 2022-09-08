@@ -244,4 +244,21 @@ Public Class clsUserSetupDB
             Return Nothing
         End Try
     End Function
+
+    Public Shared Function GetUserID() As DataTable
+        Try
+            Using conn As New SqlConnection(Sconn.Stringkoneksi)
+                conn.Open()
+                Dim sql As String = ""
+                sql = "SELECT UserID, FullName FROM dbo.spc_UserSetup"
+                Dim cmd As New SqlCommand(sql, conn)
+                Dim da As New SqlDataAdapter(cmd)
+                Dim dt As New DataTable
+                da.Fill(dt)
+                Return dt
+            End Using
+        Catch ex As Exception
+            Throw New Exception("Query Error! " & ex.Message)
+        End Try
+    End Function
 End Class

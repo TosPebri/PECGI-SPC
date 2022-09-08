@@ -18,6 +18,8 @@ Public Class UserLine
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
     Public AuthAccess As Boolean = False
+
+    Dim dt As New DataTable
 #End Region
 
 #Region "Procedure"
@@ -32,6 +34,33 @@ Public Class UserLine
         gridMenu.JSProperties("cp_message") = ErrMsg
         gridMenu.JSProperties("cp_type") = msgType
         gridMenu.JSProperties("cp_val") = pVal
+    End Sub
+
+    Private Sub Up_FillCombo(UserID As String)
+        Dim a As String = ""
+
+        dt = clsUserSetupDB.GetUserID()
+        With cboUserID
+            .DataSource = dt
+            .DataBind()
+        End With
+
+        If UserID <> "" Then
+            For i = 0 To dt.Rows.Count - 1
+                If dt.Rows(i)("UserID").ToString.ToLower = UserID.ToLower Then
+                    cboUserID.SelectedIndex = i
+                    Exit For
+                End If
+            Next
+        Else
+            cboUserID.SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+        End If
+        If cboUserID.SelectedIndex < 0 Then
+            a = ""
+        Else
+            a = cboUserID.SelectedItem.GetFieldValue("UserID")
+        End If
+        HideValue.Set("UserID", a)
     End Sub
 #End Region
 
@@ -54,27 +83,25 @@ Public Class UserLine
 
         If Request.QueryString("prm") Is Nothing Then
             UserID = RegisterUser
+            Up_FillCombo(RegisterUser)
             btnCancel.Visible = False
             Exit Sub
         Else
             btnCancel.Visible = True
             UserID = Request.QueryString("prm").ToString()
-        End If
-
-        If Request.QueryString("prm") Is Nothing Then
-            Exit Sub
+            Up_FillCombo(UserID)
         End If
     End Sub
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             up_GridLoad(UserID)
         End If
-        txtUser.Text = UserID
     End Sub
 #End Region
 
 #Region "Control Event"
     Private Sub gridMenu_BatchUpdate(sender As Object, e As DevExpress.Web.Data.ASPxDataBatchUpdateEventArgs) Handles gridMenu.BatchUpdate
+
         Dim ls_AllowShow As String = ""
         Dim ls_AllowUpdate As String = ""
         Dim ls_AllowVerify As String = ""
@@ -88,7 +115,7 @@ Public Class UserLine
 
             LineID = Trim(e.UpdateValues(iLoop).NewValues("LineID").ToString())
             Dim UserLine As New clsUserLine With {
-                .UserID = UserID,
+                .UserID = cboUserID.Value,
                 .LineID = LineID,
                 .AllowShow = ls_AllowShow,
                 .AllowUpdate = ls_AllowUpdate,
@@ -104,22 +131,28 @@ Public Class UserLine
         gridMenu.EndUpdate()
     End Sub
 
+
+
     Private Sub gridMenu_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridViewCustomCallbackEventArgs) Handles gridMenu.CustomCallback
         Dim pAction As String = Split(e.Parameters, "|")(0)
         Dim pUserID As String = Split(e.Parameters, "|")(1)
-        up_GridLoad(pUserID)
         If pAction = "save" Then
             show_error(MsgTypeEnum.Success, "Update data successful", 1)
         End If
+        up_GridLoad(pUserID)
     End Sub
 
     Private Sub cbkValid_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkValid.Callback
-        Dim pAction As String = Split(e.Parameter, "|")(0)
-        Dim FromUserID As String = Split(e.Parameter, "|")(1)
-        Dim TouserID As String = Split(e.Parameter, "|")(2)
-        If FromUserID <> "" Then
+        Dim pAction = Split(e.Parameter, "|")(0)
+        Dim FromUserID = Split(e.Parameter, "|")(1)
+        Dim TouserID = Split(e.Parameter, "|")(2)
+        If FromUserID <> "null" Then
             clsUserLineDB.Copy(FromUserID, TouserID, RegisterUser)
         End If
+    End Sub
+
+    Private Sub gridMenu_RowUpdating(sender As Object, e As ASPxDataUpdatingEventArgs) Handles gridMenu.RowUpdating
+        e.Cancel = True
     End Sub
 #End Region
 End Class

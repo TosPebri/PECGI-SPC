@@ -102,14 +102,14 @@
         }
 
         function SaveData(s, e) {        
-            cbkValid.PerformCallback('save|' + cboUser.GetText() + '|' + txtUser.GetText());
+            cbkValid.PerformCallback('save|' + cboUserReplace.GetValue() + '|' + HideValue.Get('UserID'));
         }
 
         function SavePrivilege(s, e) {
             gridMenu.UpdateEdit();
             millisecondsToWait = 1000;
             setTimeout(function () {
-                gridMenu.PerformCallback('save|' + txtUser.GetText());
+                gridMenu.PerformCallback('save|' + HideValue.Get('UserID'));
             }, millisecondsToWait);
         }
     </script>
@@ -128,25 +128,19 @@
                                     </dx:ASPxLabel>
                             </td>
                             <td>
-                                <%--<dx:ASPxComboBox ID="txtUser" runat="server" Font-Names="Segoe UI"
-                                    Font-Size="8pt" Theme="Office2010Black" DataSourceID="dsUser"
-                                    EnableTheming="True" TextField="UserID" TextFormatString="{0}"
-                                    ValueField="UserID" ClientInstanceName="txtUser">
+                                <dx:ASPxComboBox ID="cboUserID" runat="server" Font-Names="Segoe UI"
+                                    Font-Size="8pt" Theme="Office2010Black" EnableTheming="True" TextField="UserID" TextFormatString="{0}"
+                                    ValueField="UserID" ClientInstanceName="cboUserID">
                                     <ClientSideEvents SelectedIndexChanged="function(s, e) {
-	                                              gridMenu.PerformCallback('load|' + txtUser.GetText());
+                                                  var UserID = cboUserID.GetValue();
+                                                  HideValue.Set('UserID', UserID);
+	                                              gridMenu.PerformCallback('load|' + UserID);
                                              }" />
                                     <Columns>
                                         <dx:ListBoxColumn Caption="User ID" FieldName="UserID" Width="60px" />
                                         <dx:ListBoxColumn Caption="Full Name" FieldName="FullName" Width="120px" />
                                     </Columns>
-                                </dx:ASPxComboBox>--%>
-
-                                <dx:ASPxTextBox ID="txtUser" runat="server" ClientInstanceName="txtUser"
-                                    Width="170px" ReadOnly="True" Font-Names="Segoe UI" Font-Size="8pt">
-                                    <ReadOnlyStyle BackColor="WhiteSmoke">
-                                    </ReadOnlyStyle>
-                                </dx:ASPxTextBox>
-
+                                </dx:ASPxComboBox>
                             </td>
                         </tr>
                         <tr style="height: 30px">
@@ -155,12 +149,12 @@
                                     </dx:ASPxLabel>
                             </td>
                             <td>
-                                <dx:ASPxComboBox ID="cboUser" runat="server" Font-Names="Segoe UI"
+                                <dx:ASPxComboBox ID="cboUserReplace" runat="server" Font-Names="Segoe UI"
                                     Font-Size="8pt" Theme="Office2010Black" DataSourceID="dsUser"
                                     EnableTheming="True" TextField="UserID" TextFormatString="{0}"
-                                    ValueField="UserID" ClientInstanceName="cboUser">
+                                    ValueField="UserID" ClientInstanceName="cboUserReplace">
                                     <ClientSideEvents SelectedIndexChanged="function(s, e) {
-	                                                                gridMenu.PerformCallback('load|' + cboUser.GetText());
+	                                                                gridMenu.PerformCallback('load|' + cboUserReplace.GetValue());
                                                                 }" />
                                     <Columns>
                                         <dx:ListBoxColumn Caption="User ID" FieldName="UserID" Width="60px" />
@@ -182,7 +176,7 @@
                     <ClientSideEvents
                         BatchEditStartEditing="OnBatchEditStartEditing"
                         EndCallback="OnEndCallback" CallbackError="function(s, e) {
-	                                        e.Cancel=True;
+	                                        e.Cancel=True
                                         }" />
                     <Columns>
                         <dx:GridViewDataTextColumn Caption="Menu Group" FieldName="GroupID" Name="GroupID"
@@ -288,6 +282,7 @@
             </div>
         </div>
     </div>
+      <dx:ASPxHiddenField ID="HideValue" runat="server" ClientInstanceName="HideValue"></dx:ASPxHiddenField>
 </asp:Content>
 
 

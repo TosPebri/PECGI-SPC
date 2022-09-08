@@ -23,13 +23,13 @@ Partial Public Class UserPrivilege
     Protected WithEvents ASPxLabel3 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
-    '''txtUser control.
+    '''cboUserID control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents txtUser As Global.DevExpress.Web.ASPxTextBox
+    Protected WithEvents cboUserID As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''ASPxLabel4 control.
@@ -41,13 +41,13 @@ Partial Public Class UserPrivilege
     Protected WithEvents ASPxLabel4 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
-    '''cboUser control.
+    '''cboUserReplace control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cboUser As Global.DevExpress.Web.ASPxComboBox
+    Protected WithEvents cboUserReplace As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
     '''dsUser control.
@@ -93,6 +93,15 @@ Partial Public Class UserPrivilege
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents cbkValid As Global.DevExpress.Web.ASPxCallback
+
+    '''<summary>
+    '''HideValue control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents HideValue As Global.DevExpress.Web.ASPxHiddenField
 
     '''<summary>
     '''Master property.

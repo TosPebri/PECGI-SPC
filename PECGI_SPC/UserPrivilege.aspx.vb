@@ -17,6 +17,8 @@ Public Class UserPrivilege
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
     Public AuthAccess As Boolean = False
+
+    Dim dt As New DataTable
 #End Region
 
 #Region "Procedure"
@@ -40,6 +42,34 @@ Public Class UserPrivilege
         gridMenu.JSProperties("cp_type") = msgType
         gridMenu.JSProperties("cp_val") = pVal
     End Sub
+
+    Private Sub Up_FillCombo(UserID As String)
+        Dim a As String = ""
+
+        dt = clsUserSetupDB.GetUserID()
+        With cboUserID
+            .DataSource = dt
+            .DataBind()
+        End With
+
+        If UserID <> "" Then
+            For i = 0 To dt.Rows.Count - 1
+                If dt.Rows(i)("UserID").ToString.ToLower = UserID.ToLower Then
+                    cboUserID.SelectedIndex = i
+                    Exit For
+                End If
+            Next
+        Else
+            cboUserID.SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
+        End If
+        If cboUserID.SelectedIndex < 0 Then
+            a = ""
+        Else
+            a = cboUserID.SelectedItem.GetFieldValue("UserID")
+        End If
+        HideValue.Set("UserID", a)
+    End Sub
+
 #End Region
 
 #Region "Initialization"
@@ -61,11 +91,13 @@ Public Class UserPrivilege
 
         If Request.QueryString("prm") Is Nothing Then
             UserID = RegisterUser
+            Up_FillCombo(UserID)
             btnCancel.Visible = False
-            Exit Sub
         Else
             btnCancel.Visible = True
             UserID = Request.QueryString("prm").ToString()
+            cboUserID.Enabled = False
+            Up_FillCombo(UserID)
         End If
     End Sub
 
@@ -73,7 +105,6 @@ Public Class UserPrivilege
         If Not Page.IsPostBack Then
             up_GridLoad(UserID)
         End If
-        txtUser.Text = UserID
     End Sub
 #End Region
 
@@ -96,7 +127,7 @@ Public Class UserPrivilege
                 MenuID = Trim(e.UpdateValues(iLoop).NewValues("MenuID").ToString())
                 Dim UserPrevilege As New Cls_ss_UserPrivilege With {
                     .AppID = "SPC",
-                    .UserID = UserID,
+                    .UserID = cboUserID.Value,
                     .MenuID = MenuID,
                     .AllowAccess = ls_AllowAccess,
                     .AllowUpdate = ls_AllowUpdate,
@@ -113,37 +144,26 @@ Public Class UserPrivilege
             End Try
         Next iLoop
         gridMenu.EndUpdate()
+        up_GridLoad(cboUserID.Value)
     End Sub
 
     Private Sub gridMenu_CustomCallback(sender As Object, e As DevExpress.Web.ASPxGridViewCustomCallbackEventArgs) Handles gridMenu.CustomCallback
+
         Dim pAction As String = Split(e.Parameters, "|")(0)
         Dim sUserID As String = Split(e.Parameters, "|")(1)
-        'Dim pAction As String = e.Parameters
-        'Dim stxtUser As String = txtUser.Text
-        'Dim scboUser As String = cboUser.Text
 
         up_GridLoad(sUserID)
         If pAction = "save" Then
             show_error(MsgTypeEnum.Success, "Update data successful", 1)
         End If
 
-        'If pAction = "save" Then
-        '    show_error(MsgTypeEnum.Success, "Update data successful", 1)
-        'ElseIf pAction = "loadtxtUser" Then
-        '    up_GridLoad(stxtUser)
-        'ElseIf pAction = "loadcboUser" Then
-        '    up_GridLoad(scboUser)
-        'End If
     End Sub
 
     Private Sub cbkValid_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkValid.Callback
         Dim pAction As String = Split(e.Parameter, "|")(0)
         Dim FromUserID As String = Split(e.Parameter, "|")(1)
         Dim TouserID As String = Split(e.Parameter, "|")(2)
-        'Dim pAction As String = e.Parameter
-        'Dim FromUserID As String = cboUser.Text
-        'Dim TouserID As String = txtUser.Text
-        If FromUserID <> "" Then
+        If If(FromUserID, "") <> "" Then
             Cls_ss_UserPrivilegeDB.Copy(FromUserID, TouserID, RegisterUser)
         End If
     End Sub

@@ -222,6 +222,9 @@ Public Class AlertDashboard
         Try
             Dim dtLoadGridDelay As DataTable
             dtLoadGridDelay = clsSPCAlertDashboardDB.GetList(FactoryCode)
+
+            'If dtLoadGridDelay.Rows.Count > 0 Then
+            'End If
             Grid.DataSource = dtLoadGridDelay
             Grid.DataBind()
         Catch ex As Exception
@@ -296,6 +299,21 @@ Public Class AlertDashboard
     'End Sub
     Private Sub Grid_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles Grid.HtmlDataCellPrepared
         Dim Delay As String = ""
+        Dim Link As New HyperLink()
+        If e.CellValue Is Nothing Then
+            Dim Ab As String = "Test"
+        Else
+            If e.CellValue.ToString.Contains("Edit") AndAlso e.CellValue.ToString IsNot Nothing Then
+                e.Cell.Text = ""
+
+                Link.ForeColor = Color.Blue
+                Link.Text = "<label class='fa fa-edit'></label>"
+                Link.NavigateUrl = Split(e.CellValue, "||")(1)
+                Link.Target = "_blank"
+
+                e.Cell.Controls.Add(Link)
+            End If
+        End If
         If e.DataColumn.FieldName = "Delay" Then
             Delay = (e.CellValue)
             If Delay <= 60 Then
@@ -306,6 +324,21 @@ Public Class AlertDashboard
         End If
     End Sub
     Private Sub GridNG_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles GridNG.HtmlDataCellPrepared
+        Dim Link As New HyperLink()
+        If e.CellValue Is Nothing Then
+            Dim Ab As String = "Test"
+        Else
+            If e.CellValue.ToString.Contains("Edit") AndAlso e.CellValue.ToString IsNot Nothing Then
+                e.Cell.Text = ""
+
+                Link.ForeColor = Color.Blue
+                Link.Text = "<label class='fa fa-edit'></label>"
+                Link.NavigateUrl = Split(e.CellValue, "||")(1)
+                Link.Target = "_blank"
+
+                e.Cell.Controls.Add(Link)
+            End If
+        End If
         If e.DataColumn.FieldName = "LSL" Then
             LSL = (e.CellValue)
         ElseIf e.DataColumn.FieldName = "USL" Then

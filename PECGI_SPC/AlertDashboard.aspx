@@ -108,7 +108,7 @@
                     <table>
                         <tr>
                             <td style="width:60px; padding:1px 0px 0px 0px">
-                                &nbsp;<dx:ASPxLabel ID="ASPxLabel3" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Factory">
+                                &nbsp;<dx:ASPxLabel ID="ASPxLabel3" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="Factory">
                                 </dx:ASPxLabel>
                             </td>
                             <td style=" width:130px; padding:1px 0px 0px 0px">
@@ -143,20 +143,20 @@
                     <table style="width: 100%; height: 50px">
                         <tr>
                             <td style="width: 10%;" align="left">
-                                <dx:ASPxLabel ID="ASPxLabel9" runat="server" Text="Date" CssClass="text" />
+                                <dx:ASPxLabel ID="ASPxLabel9" runat="server" Text="Date" CssClass="text" Font-Names="Segoe UI" Font-Size="9pt" />
                             </td>
                             <td style="width: 10%;" align="left">
                                 <dx:ASPxLabel ID="ASPxLabel11" runat="server" Text=":" CssClass="text" />
                                 &nbsp
-                                <dx:ASPxLabel ID="lblDateNow" ClientInstanceName="lblOK" runat="server" Text="" CssClass="text" />
+                                <dx:ASPxLabel ID="lblDateNow" ClientInstanceName="lblOK" runat="server" Text="" CssClass="text" Font-Names="Segoe UI" Font-Size="9pt" />
                             </td>
                         </tr>
                         <tr>
                             <td style="width: 10%;" align="left">
-                                <dx:ASPxLabel ID="ASPxLabel1" runat="server" Text="Time" CssClass="text" />
+                                <dx:ASPxLabel ID="ASPxLabel1" runat="server" Text="Time" CssClass="text" Font-Names="Segoe UI" Font-Size="9pt" />
                             </td>
                             <td style="width: 10%;" align="left">
-                                <dx:ASPxLabel ID="ASPxLabel2" runat="server" Text=":" CssClass="text" />
+                                <dx:ASPxLabel ID="ASPxLabel2" runat="server" Text=":" CssClass="text" Font-Names="Segoe UI" Font-Size="9pt" />
                                 &nbsp
                                 <%--<dx:ASPxLabel ID="lblTimeNow" runat="server" Text="" CssClass="text" />--%>
                                 <label id="lblTimeNow"></label>
@@ -201,7 +201,7 @@
             </center>
         </div>
 
-        <div id="ScrollList" style="height: 150px; overflow: auto">
+        <div id="ScrollList2" style="height: 150px; overflow: auto">
             <dx:ASPxGridView ID="Grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="Grid"
                 EnableTheming="True" KeyFieldName="ItemTypeName;LineCode;ItemCheck" Theme="Office2010Black" Width="100%"
                 Font-Names="Segoe UI" Font-Size="9pt"
@@ -218,19 +218,32 @@
                         </HeaderStyle>
                     </dx:GridViewCommandColumn>--%>
                 
-                    <dx:GridViewDataTextColumn Caption="Action" VisibleIndex="0" FixedStyle="Left" Width="80px" Settings-AutoFilterCondition="Contains">
+                    <%--<dx:GridViewDataTextColumn Caption="Action" VisibleIndex="0" FixedStyle="Left" Width="80px" Settings-AutoFilterCondition="Contains">
                         <HeaderStyle Paddings-PaddingLeft="3px" HorizontalAlign="Center" 
                             VerticalAlign="Middle" >
                             <Paddings PaddingLeft="3px"></Paddings>
                         </HeaderStyle>
                         <DataItemTemplate>
                             <center>
-                                <a href="https://www.google.com" >
-                                    <label class="fa fa-edit" id="lblEdit2"></label>
-                                    <%--<dx:ASPxLabel ID="lblEdit" runat="server" CssClass="fa fa-edit"></dx:ASPxLabel>--%>
-                                </a>
+                                <asp:HyperLink runat="server" ID="hpLink" CssClass="fa fa-edit " ></asp:HyperLink>
                             </center>
                         </DataItemTemplate>
+                    </dx:GridViewDataTextColumn>--%>
+                    
+                    <dx:GridViewDataTextColumn Caption="Action" FieldName="Edit"
+                        VisibleIndex="0" Width="100px" Settings-AutoFilterCondition="Contains" 
+                        FixedStyle="Left" >
+                        <PropertiesTextEdit MaxLength="15" Width="120px">
+                            <Style HorizontalAlign="Left"></Style>
+                        </PropertiesTextEdit>
+                        <Settings AllowAutoFilter="False" AllowFilterBySearchPanel="False" ShowInFilterControl="False" AllowHeaderFilter="False" />
+                        <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                        </FilterCellStyle>
+                        <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                        </HeaderStyle>
+                        <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"></CellStyle>
                     </dx:GridViewDataTextColumn>
 
                     <dx:GridViewDataComboBoxColumn Caption="Factory Code" FieldName="FactoryCode" VisibleIndex="0"
@@ -498,11 +511,11 @@
             </dx:ASPxGridView>
             
             <br />
-            <button disabled="disabled" style="background-color:yellow;width: 30px;height:20px"></button> <label> Delay < 60 Minutes</label>
-            <button disabled="disabled" style="background-color:red;width: 30px;height:20px"></button> <label> Delay > 60 Minutes</label>
         </div>
     </div>
     <br />
+            <button disabled="disabled" style="background-color:yellow;width: 20px;height:10px"></button> <label> Delay < 60 Minutes</label>
+            <button disabled="disabled" style="background-color:red;width: 20px;height:10px"></button> <label> Delay > 60 Minutes</label>
     <div style="padding: 20px 5px 5px 5px">
 
         
@@ -522,7 +535,7 @@
                 <ClientSideEvents EndCallback="OnEndCallback" />
                 <Columns>               
                 
-                    <dx:GridViewDataTextColumn Caption="Action" VisibleIndex="0" Width="80px" Settings-AutoFilterCondition="Contains">
+                    <%--<dx:GridViewDataTextColumn Caption="Action" VisibleIndex="0" Width="80px" Settings-AutoFilterCondition="Contains">
                         <HeaderStyle Paddings-PaddingLeft="3px" HorizontalAlign="Center" 
                             VerticalAlign="Middle" >
                             <Paddings PaddingLeft="3px"></Paddings>
@@ -534,6 +547,22 @@
                                 </a>
                             </center>
                         </DataItemTemplate>
+                    </dx:GridViewDataTextColumn>--%>
+                    
+                    <dx:GridViewDataTextColumn Caption="Action" FieldName="Edit"
+                        VisibleIndex="0" Width="100px" Settings-AutoFilterCondition="Contains" 
+                        FixedStyle="Left" >
+                        <PropertiesTextEdit MaxLength="15" Width="120px">
+                            <Style HorizontalAlign="Left"></Style>
+                        </PropertiesTextEdit>
+                        <Settings AllowAutoFilter="False" AllowFilterBySearchPanel="False" ShowInFilterControl="False" AllowHeaderFilter="False" />
+                        <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                        </FilterCellStyle>
+                        <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                        </HeaderStyle>
+                        <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"></CellStyle>
                     </dx:GridViewDataTextColumn>
 
                     <dx:GridViewDataComboBoxColumn Caption="Factory Code" FieldName="FactoryCode" VisibleIndex="0"
@@ -888,10 +917,10 @@
                 </Styles>
 
             </dx:ASPxGridView>
-            <br />
-            <button disabled="disabled" style="background-color:yellow;width: 30px;height:20px"></button> <label> Out Of Control Value</label>
-            <button disabled="disabled" style="background-color:red;width: 30px;height:20px"></button> <label> Out Of Specification Value</label>
         </div>
+            <br />
+            <button disabled="disabled" style="background-color:yellow;width: 20px;height:10px"></button> <label> Out Of Control Value</label>
+            <button disabled="disabled" style="background-color:red;width: 20px;height:10px"></button> <label> Out Of Specification Value</label>
         
     </div>
     <div style="height:10px">

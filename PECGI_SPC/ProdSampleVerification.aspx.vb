@@ -22,6 +22,7 @@ Public Class ProdSampleVerification
 #Region "Declaration"
 
     Dim pUser As String = ""
+    Dim MenuID As String = ""
     Dim dt As DataTable
     Dim ds As DataSet
 
@@ -46,8 +47,10 @@ Public Class ProdSampleVerification
     Dim GetGridData As String = "4"
     Dim GetGridData_Activity As String = "5"
     Dim GetCharSetup As String = "6"
-    Dim GetVerifyPrivilege As String = "7"
-    Dim GetVerifyChartSetup As String = "8"
+
+    'GET VALIDATION
+    Dim GetVerifyPrivilege As String = "1"
+    Dim GetVerifyChartSetup As String = "2"
 
     'SPECIFICATION CHART
     Dim VerifyStatus As String = "0"
@@ -82,11 +85,12 @@ Public Class ProdSampleVerification
 #Region "LOAD FORM"
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         pUser = Session("user")
-        AuthAccess = sGlobal.Auth_UserAccess(pUser, "B040")
+        MenuID = "B040"
+        AuthAccess = sGlobal.Auth_UserAccess(pUser, MenuID)
         If AuthAccess = False Then
             Response.Redirect("~/Main.aspx")
         End If
-        sGlobal.getMenu("B040")
+        sGlobal.getMenu(MenuID)
         Master.SiteTitle = sGlobal.menuName
 
         If Not Page.IsPostBack Then
@@ -95,8 +99,6 @@ Public Class ProdSampleVerification
             Else
                 LoadForm()
             End If
-            Dim a = "1"
-            HideValue.Set("TEST", a)
         End If
     End Sub
 #End Region
@@ -212,44 +214,21 @@ Public Class ProdSampleVerification
 
             If pAction = "Load" Then
 
-                ds = clsProdSampleVerificationDB.GridLoad(GetVerifyChartSetup, cls)
-                Dim dt = ds.Tables(0)
-                Dim RespChartSetUp = dt.Rows(0)("Response")
-
                 Up_GridLoad(cls)
-
-                Grid.JSProperties("cp_Verify") = VerifyStatus
+                Up_GridChartSetup(cls)
+                Validation_Verify(cls)
+                IOTconnection(cls)
 
             ElseIf pAction = "Verify" Then
-                'GET SPCRESULT ID
+
                 Verify(cls)
-                Grid.JSProperties("cp_Verify") = VerifyStatus
+                Up_GridLoad(cls)
+                Validation_Verify(cls)
 
             ElseIf pAction = "Clear" Then
                 Dim data As New clsProdSampleVerification
-                ds = clsProdSampleVerificationDB.GridLoad(GetGridData, data)
-                Dim dt = ds.Tables(0)
-                With Grid
-                    .Columns.Clear()
-                    Dim Band1 As New GridViewBandColumn
-                    Band1.Caption = "Date"
-                    .Columns.Add(Band1)
-
-                    Dim Band2 As New GridViewBandColumn
-                    Band2.Caption = "Shift"
-                    Band1.Columns.Add(Band2)
-
-                    Dim ColDesc As New GridViewDataTextColumn
-                    ColDesc.FieldName = "nDesc"
-                    ColDesc.Caption = "Time"
-                    ColDesc.Width = 80
-                    ColDesc.CellStyle.HorizontalAlign = HorizontalAlign.Center
-                    Band2.Columns.Add(ColDesc)
-
-                    .DataSource = dt
-                    .DataBind()
-                End With
-
+                Up_GridLoad(data)
+                Up_GridChartSetup(data)
             End If
 
         Catch ex As Exception
@@ -277,13 +256,7 @@ Public Class ProdSampleVerification
 
             ElseIf pAction = "Clear" Then
                 Dim data As New clsProdSampleVerification
-                ds = clsProdSampleVerificationDB.GridLoad(GetGridData_Activity, data)
-                dt = ds.Tables(0)
-                With GridActivity
-                    .DataSource = dt
-                    .DataBind()
-                End With
-
+                Up_GridLoadActivities(data)
             End If
 
         Catch ex As Exception
@@ -344,9 +317,7 @@ Public Class ProdSampleVerification
         cls.Seq = HideValue.Get("Seq")
         cls.User = pUser
 
-        ds = clsProdSampleVerificationDB.GridLoad(GetVerifyChartSetup, cls)
-        Dim dt = ds.Tables(0)
-        Dim RespChartSetUp = dt.Rows(0)("Response")
+        Dim RespChartSetUp = clsProdSampleVerificationDB.Validation(GetVerifyChartSetup, cls)
 
         If RespChartSetUp = "" Then
             LoadChartX(cls)
@@ -367,9 +338,7 @@ Public Class ProdSampleVerification
         cls.Seq = HideValue.Get("Seq")
         cls.User = pUser
 
-        ds = clsProdSampleVerificationDB.GridLoad(GetVerifyChartSetup, cls)
-        Dim dt = ds.Tables(0)
-        Dim RespChartSetUp = dt.Rows(0)("Response")
+        Dim RespChartSetUp = clsProdSampleVerificationDB.Validation(GetVerifyChartSetup, cls)
 
         If RespChartSetUp = "" Then
             LoadChartR(cls)
@@ -377,6 +346,14 @@ Public Class ProdSampleVerification
             show_errorGrid(MsgTypeEnum.Warning, RespChartSetUp, 1)
         End If
 
+    End Sub
+    Private Sub chartX_BoundDataChanged(sender As Object, e As EventArgs) Handles chartX.BoundDataChanged
+        With chartX
+            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Color = Color.Red
+            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).FillStyle.FillMode = FillMode.Solid
+            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Transparency = 180
+            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Border.Thickness = 1
+        End With
     End Sub
 
 #End Region
@@ -580,7 +557,7 @@ Public Class ProdSampleVerification
                 .DataSource = dt
                 .DataBind()
             End With
-            If prmFactoryCode <> "" Then
+            If Request.QueryString("FactoryCode") IsNot Nothing Then
                 For i = 0 To dt.Rows.Count - 1
                     If dt.Rows(i)("CODE") = prmFactoryCode Then
                         cboFactory.SelectedIndex = i
@@ -604,7 +581,7 @@ Public Class ProdSampleVerification
                 .DataSource = dt
                 .DataBind()
             End With
-            If prmItemType <> "" Then
+            If Request.QueryString("ItemTypeCode") IsNot Nothing Then
                 For i = 0 To dt.Rows.Count - 1
                     If dt.Rows(i)("CODE") = prmItemType Then
                         cboItemType.SelectedIndex = i
@@ -628,7 +605,7 @@ Public Class ProdSampleVerification
                 .DataSource = dt
                 .DataBind()
             End With
-            If prmLineCode <> "" Then
+            If Request.QueryString("Line") IsNot Nothing Then
                 For i = 0 To dt.Rows.Count - 1
                     If dt.Rows(i)("CODE") = prmLineCode Then
                         cboLineID.SelectedIndex = i
@@ -653,7 +630,7 @@ Public Class ProdSampleVerification
                 .DataSource = dt
                 .DataBind()
             End With
-            If prmItemCheck <> "" Then
+            If Request.QueryString("ItemCheckCode") IsNot Nothing Then
                 For i = 0 To dt.Rows.Count - 1
                     If dt.Rows(i)("CODE") = prmItemCheck Then
                         cboItemCheck.SelectedIndex = i
@@ -677,7 +654,7 @@ Public Class ProdSampleVerification
                 .DataSource = dt
                 .DataBind()
             End With
-            If prmShifCode <> "" Then
+            If Request.QueryString("Shift") IsNot Nothing Then
                 For i = 0 To dt.Rows.Count - 1
                     If dt.Rows(i)("CODE") = prmShifCode Then
                         cboShift.SelectedIndex = i
@@ -701,7 +678,7 @@ Public Class ProdSampleVerification
                 .DataSource = dt
                 .DataBind()
             End With
-            If prmSeqNo <> "" Then
+            If Request.QueryString("Sequence") IsNot Nothing Then
                 For i = 0 To dt.Rows.Count - 1
                     If dt.Rows(i)("CODE") = prmSeqNo Then
                         cboSeq.SelectedIndex = i
@@ -792,27 +769,6 @@ Public Class ProdSampleVerification
                         Next
                     End If
                 Next
-
-                ds = clsProdSampleVerificationDB.GridLoad(GetCharSetup, cls)
-                Dim dtChartSetup As DataTable = ds.Tables(0)
-                Grid.JSProperties("cpChartSetup") = dtChartSetup.Rows.Count
-
-                If dtChartSetup.Rows.Count > 0 Then
-                    For i = 1 To dtChartSetup.Rows.Count
-                        Grid.JSProperties("cpPeriod" & i) = dtChartSetup.Rows(i - 1)("Period")
-                        Grid.JSProperties("cpUSL" & i) = AFormat(dtChartSetup.Rows(i - 1)("USL"))
-                        Grid.JSProperties("cpLSL" & i) = AFormat(dtChartSetup.Rows(i - 1)("LSL"))
-                        Grid.JSProperties("cpUCL" & i) = AFormat(dtChartSetup.Rows(i - 1)("UCL"))
-                        Grid.JSProperties("cpLCL" & i) = AFormat(dtChartSetup.Rows(i - 1)("LCL"))
-                    Next
-                End If
-
-                ds = clsProdSampleVerificationDB.GridLoad(GetVerifyPrivilege, cls)
-                Dim dtVerifyPrivilege As DataTable = ds.Tables(0)
-                If dtVerifyPrivilege.Rows.Count > 0 Then
-                    VerifyStatus = dtVerifyPrivilege.Rows(0)("VerifyPrivilege")
-                End If
-                Grid.JSProperties("cp_Verify") = VerifyStatus 'parameter to authorization verify
             Else
                 show_errorGrid(MsgTypeEnum.Warning, "Data Not Found", 1)
             End If
@@ -827,8 +783,22 @@ Public Class ProdSampleVerification
                 .Styles.CommandColumn.ForeColor = Color.Black
             End If
             Grid.JSProperties("cp_GridTot") = dtGrid.Rows.Count
-
         End With
+    End Sub
+    Private Sub Up_GridChartSetup(cls As clsProdSampleVerification)
+        ds = clsProdSampleVerificationDB.GridLoad(GetCharSetup, cls)
+        Dim dtChartSetup As DataTable = ds.Tables(0)
+        Grid.JSProperties("cpChartSetup") = dtChartSetup.Rows.Count
+
+        If dtChartSetup.Rows.Count > 0 Then
+            For i = 1 To dtChartSetup.Rows.Count
+                Grid.JSProperties("cpPeriod" & i) = dtChartSetup.Rows(i - 1)("Period")
+                Grid.JSProperties("cpUSL" & i) = AFormat(dtChartSetup.Rows(i - 1)("USL"))
+                Grid.JSProperties("cpLSL" & i) = AFormat(dtChartSetup.Rows(i - 1)("LSL"))
+                Grid.JSProperties("cpUCL" & i) = AFormat(dtChartSetup.Rows(i - 1)("UCL"))
+                Grid.JSProperties("cpLCL" & i) = AFormat(dtChartSetup.Rows(i - 1)("LCL"))
+            Next
+        End If
     End Sub
     Private Sub Up_GridLoadActivities(cls As clsProdSampleVerification)
         Dim commandColumn = TryCast(GridActivity.Columns(0), GridViewCommandColumn)
@@ -861,32 +831,35 @@ Public Class ProdSampleVerification
             diagram.AxisX.MinorCount = 1
             diagram.AxisX.GridLines.Visible = False
 
+
+
             Dim Setup As clsChartSetup = clsChartSetupDB.GetData(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
             diagram.AxisY.ConstantLines.Clear()
-            Dim RCL As New ConstantLine("CL R")
-            RCL.Color = Drawing.Color.Purple
-            RCL.LineStyle.Thickness = 2
-            RCL.LineStyle.DashStyle = DashStyle.DashDot
-            diagram.AxisY.ConstantLines.Add(RCL)
-            RCL.AxisValue = Setup.RCL
+            If Setup IsNot Nothing Then
+                Dim RCL As New ConstantLine("CL R")
+                RCL.Color = Drawing.Color.Purple
+                RCL.LineStyle.Thickness = 2
+                RCL.LineStyle.DashStyle = DashStyle.DashDot
+                diagram.AxisY.ConstantLines.Add(RCL)
+                RCL.AxisValue = Setup.RCL
 
-            Dim RUCL As New ConstantLine("UCL R")
-            RUCL.Color = Drawing.Color.Purple
-            RUCL.LineStyle.Thickness = 2
-            RUCL.LineStyle.DashStyle = DashStyle.DashDot
-            diagram.AxisY.ConstantLines.Add(RUCL)
-            RUCL.AxisValue = Setup.RUCL
+                Dim RUCL As New ConstantLine("UCL R")
+                RUCL.Color = Drawing.Color.Purple
+                RUCL.LineStyle.Thickness = 2
+                RUCL.LineStyle.DashStyle = DashStyle.DashDot
+                diagram.AxisY.ConstantLines.Add(RUCL)
+                RUCL.AxisValue = Setup.RUCL
 
-            Dim MaxValue As Double
-            If xr.Count > 0 Then
-                If xr(0).MaxValue > Setup.RUCL Then
-                    MaxValue = xr(0).MaxValue
-                Else
-                    MaxValue = Setup.RUCL
+                Dim MaxValue As Double
+                If xr.Count > 0 Then
+                    If xr(0).MaxValue > Setup.RUCL Then
+                        MaxValue = xr(0).MaxValue
+                    Else
+                        MaxValue = Setup.RUCL
+                    End If
                 End If
+                diagram.AxisY.WholeRange.MaxValue = MaxValue
             End If
-            diagram.AxisY.WholeRange.MaxValue = MaxValue
-
             .DataBind()
         End With
     End Sub
@@ -909,79 +882,83 @@ Public Class ProdSampleVerification
 
             Dim Setup As clsChartSetup = clsChartSetupDB.GetData(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
             diagram.AxisY.ConstantLines.Clear()
-            Dim LCL As New ConstantLine("LCL")
-            LCL.Color = Drawing.Color.Purple
-            LCL.LineStyle.Thickness = 2
-            LCL.LineStyle.DashStyle = DashStyle.DashDot
-            diagram.AxisY.ConstantLines.Add(LCL)
-            LCL.AxisValue = Setup.XBarLCL
+            If Setup IsNot Nothing Then
+                Dim LCL As New ConstantLine("LCL")
+                LCL.Color = Drawing.Color.Purple
+                LCL.LineStyle.Thickness = 2
+                LCL.LineStyle.DashStyle = DashStyle.DashDot
+                diagram.AxisY.ConstantLines.Add(LCL)
+                LCL.AxisValue = Setup.XBarLCL
 
-            Dim UCL As New ConstantLine("UCL")
-            UCL.Color = Drawing.Color.Purple
-            UCL.LineStyle.Thickness = 2
-            UCL.LineStyle.DashStyle = DashStyle.DashDot
-            diagram.AxisY.ConstantLines.Add(UCL)
-            UCL.AxisValue = Setup.XBarUCL
+                Dim UCL As New ConstantLine("UCL")
+                UCL.Color = Drawing.Color.Purple
+                UCL.LineStyle.Thickness = 2
+                UCL.LineStyle.DashStyle = DashStyle.DashDot
+                diagram.AxisY.ConstantLines.Add(UCL)
+                UCL.AxisValue = Setup.XBarUCL
 
-            Dim LSL As New ConstantLine("LSL")
-            LSL.Color = Drawing.Color.Red
-            LSL.LineStyle.Thickness = 2
-            LSL.LineStyle.DashStyle = DashStyle.Solid
-            diagram.AxisY.ConstantLines.Add(LSL)
-            LSL.AxisValue = Setup.SpecLSL
+                Dim CL As New ConstantLine("CL")
+                CL.Color = Drawing.Color.Black
+                CL.LineStyle.Thickness = 2
+                CL.LineStyle.DashStyle = DashStyle.Solid
+                diagram.AxisY.ConstantLines.Add(CL)
+                CL.AxisValue = Setup.XBarCL
 
-            Dim USL As New ConstantLine("USL")
-            USL.Color = Drawing.Color.Red
-            USL.LineStyle.Thickness = 2
-            USL.LineStyle.DashStyle = DashStyle.Solid
-            diagram.AxisY.ConstantLines.Add(USL)
-            USL.AxisValue = Setup.SpecUSL
+                Dim LSL As New ConstantLine("LSL")
+                LSL.Color = Drawing.Color.Red
+                LSL.LineStyle.Thickness = 2
+                LSL.LineStyle.DashStyle = DashStyle.Solid
+                diagram.AxisY.ConstantLines.Add(LSL)
+                LSL.AxisValue = Setup.SpecLSL
 
-            diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
-            diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
+                Dim USL As New ConstantLine("USL")
+                USL.Color = Drawing.Color.Red
+                USL.LineStyle.Thickness = 2
+                USL.LineStyle.DashStyle = DashStyle.Solid
+                diagram.AxisY.ConstantLines.Add(USL)
+                USL.AxisValue = Setup.SpecUSL
 
-            diagram.AxisY.VisualRange.MinValue = Setup.SpecLSL
-            diagram.AxisY.VisualRange.MaxValue = Setup.SpecUSL
+                diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
+                diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
+
+                diagram.AxisY.VisualRange.MinValue = Setup.SpecLSL
+                diagram.AxisY.VisualRange.MaxValue = Setup.SpecUSL
+
+                CType(.Diagram, XYDiagram).SecondaryAxesY.Clear()
+                Dim myAxisY As New SecondaryAxisY("my Y-Axis")
+                myAxisY.Visibility = DevExpress.Utils.DefaultBoolean.False
+                CType(.Diagram, XYDiagram).SecondaryAxesY.Add(myAxisY)
+                CType(.Series("Rule").View, XYDiagramSeriesViewBase).AxisY = myAxisY
+            End If
             .DataBind()
         End With
     End Sub
     Private Sub LoadForm_ByAnotherform()
-        prmFactoryCode = Request.QueryString("FactoryCode")
-        prmItemType = Request.QueryString("ItemTypeCode")
-        prmLineCode = Request.QueryString("Line")
-        prmItemCheck = Request.QueryString("ItemCheckCode")
-        prmProdDate = Request.QueryString("ProdDate")
-        prmShifCode = Request.QueryString("Shift")
-        prmSeqNo = Request.QueryString("Sequence")
 
         Dim cls As New clsProdSampleVerification
-        cls.FactoryCode = prmFactoryCode
-        cls.ItemType_Code = prmItemType
-        cls.LineCode = prmLineCode
-        cls.ItemCheck_Code = prmItemCheck
-        cls.ProdDate = Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd")
-        cls.ShiftCode = prmShifCode
-        cls.Seq = prmSeqNo
+        cls.FactoryCode = Request.QueryString("FactoryCode")
+        cls.ItemType_Code = Request.QueryString("ItemTypeCode")
+        cls.LineCode = Request.QueryString("Line")
+        cls.ItemCheck_Code = Request.QueryString("ItemCheckCode")
+        cls.ProdDate = Convert.ToDateTime(Request.QueryString("ProdDate")).ToString("yyyy-MM-dd")
+        cls.ShiftCode = Request.QueryString("Shift")
+        cls.Seq = Request.QueryString("Sequence")
         cls.User = pUser
 
         UpFillCombo()
-
-        ds = clsProdSampleVerificationDB.GridLoad(GetVerifyChartSetup, cls)
-        Dim dt = ds.Tables(0)
-        Dim RespChartSetUp = dt.Rows(0)("Response")
-
         Up_GridLoad(cls)
         Up_GridLoadActivities(cls)
+        Up_GridChartSetup(cls)
+        Validation_Verify(cls)
+        IOTconnection(cls)
 
+        Dim RespChartSetUp = clsProdSampleVerificationDB.Validation(GetVerifyChartSetup, cls)
         If RespChartSetUp = "" Then
             LoadChartX(cls)
             LoadChartR(cls)
         Else
             show_errorGrid(MsgTypeEnum.Warning, RespChartSetUp, 1)
         End If
-
-        dtProdDate.Value = Convert.ToDateTime(prmProdDate)
-        HideValue.Set("ProdDate", prmProdDate)
 
         If Request.QueryString("menu") = "ProductionSampleVerificationList.aspx" Then
             HideValue.Set("prm_factory", prmFactoryCode)
@@ -997,6 +974,10 @@ Public Class ProdSampleVerification
             btnBrowse.Enabled = False
             btnClear.Enabled = False
         End If
+
+        dtProdDate.Value = Convert.ToDateTime(prmProdDate)
+        HideValue.Set("ProdDate", prmProdDate)
+
     End Sub
     Private Sub LoadForm()
         UpFillCombo()
@@ -1022,16 +1003,28 @@ Public Class ProdSampleVerification
             Dim Verify = clsProdSampleVerificationDB.Verify(cls)
             If Verify = "" Then
                 show_errorGrid(MsgTypeEnum.Success, "Verify data successfully!", 1)
-                Up_GridLoad(cls)
                 Return
             Else
                 show_errorGrid(MsgTypeEnum.Warning, Verify, 1)
-                Up_GridLoad(cls)
                 Return
             End If
         Catch ex As Exception
             show_errorGrid(MsgTypeEnum.ErrorMsg, ex.Message, 1)
         End Try
+    End Sub
+    Private Sub Validation_Verify(cls As clsProdSampleVerification)
+        VerifyStatus = clsProdSampleVerificationDB.Validation(GetVerifyPrivilege, cls)
+        Grid.JSProperties("cp_Verify") = VerifyStatus 'parameter to authorization verify
+    End Sub
+    Private Sub IOTconnection(cls As clsProdSampleVerification)
+        dt = clsProdSampleVerificationDB.IOTconnection(MenuID, cls)
+        If dt.Rows.Count > 0 Then
+            For i = 0 To dt.Rows.Count - 1
+                Dim Action = "cp_" & dt.Rows(i)("Action").ToString()
+                Dim URL = dt.Rows(i)("URL").ToString()
+                Grid.JSProperties(Action) = URL
+            Next
+        End If
     End Sub
 #End Region
 

@@ -15,7 +15,7 @@
                 x.style.display = "block";
             } else {
                 x.style.display = "none";
-            }                    
+            }
         }
 
         function InitGrid(s, e) {
@@ -40,10 +40,14 @@
 
             if (s.cp_GridTot > 1) {
                 btnExcel.SetEnabled(true);
-                btnSPCSample.SetEnabled(true)
+                btnSPCSample.SetEnabled(true);
+                btnIOTProcess.SetEnabled(true);
+                btnIOTTraceability.SetEnabled(true);
             } else {
                 btnExcel.SetEnabled(false);
-                btnSPCSample.SetEnabled(false)
+                btnSPCSample.SetEnabled(false);
+                btnIOTProcess.SetEnabled(false);
+                btnIOTTraceability.SetEnabled(false);
             }
 
             var nChart = s.cpChartSetup;
@@ -53,6 +57,9 @@
             } else {
                 tblChart.style.display = "none";
             }
+
+            HideValue.Set('IOTProcessTable', s.cp_IOTProcessTable);
+            HideValue.Set('IOTTraceability', s.cp_IOTTraceability);
         }
 
         function ChangeFactory() {
@@ -187,14 +194,17 @@
 
             if (s.cp_GridTot > 1) {
                 btnExcel.SetEnabled(true);
-                btnSPCSample.SetEnabled(true)
+                btnSPCSample.SetEnabled(true);
+                btnIOTProcess.SetEnabled(true);
+                btnIOTTraceability.SetEnabled(true);
             } else {
                 btnExcel.SetEnabled(false);
-                btnSPCSample.SetEnabled(false)
+                btnSPCSample.SetEnabled(false);
+                btnIOTProcess.SetEnabled(false);
+                btnIOTTraceability.SetEnabled(false);
             }
 
             var nChart = s.cpChartSetup;
-
             console.log(nChart);
             var tblChart = document.getElementById("tblChartSetup_2");
             if (nChart > 1) {
@@ -202,6 +212,9 @@
             } else {
                 tblChart.style.display = "none";
             }
+
+            HideValue.Set('IOTProcessTable', s.cp_IOTProcessTable);
+            HideValue.Set('IOTTraceability', s.cp_IOTTraceability);
         }
 
         function EndCallback_GridActivity(s, e) {
@@ -247,7 +260,7 @@
                     toastr.options.preventDuplicates = true;
                     toastr.options.onclick = null;
                 }
-            }         
+            }
         }
 
         function ChartREndCallBack(s, e) {
@@ -287,7 +300,7 @@
         }
 
         function Back() {
-            var Factory  = HideValue.Get("prm_factory");
+            var Factory = HideValue.Get("prm_factory");
             var ItemType = HideValue.Get("prm_ItemType");
             var Line = HideValue.Get("prm_Line");
             var ItemCheck = HideValue.Get("prm_ItemCheck");
@@ -307,7 +320,6 @@
             var Line = HideValue.Get('LineCode');
             var ItemCheck = HideValue.Get('ItemCheck_Code');
             var ProdDate = HideValue.Get('ProdDate');
-            /*var ProdDate = dtProdDate.GetText();*/
             var Shift = HideValue.Get('ShiftCode');
             var Seq = HideValue.Get('Seq');
 
@@ -316,6 +328,34 @@
             window.open('ProdSampleInput.aspx?menu=prodSampleVerification.aspx' + '&FactoryCode=' + Factory + '&ItemTypeCode=' + ItemType
                 + '&Line=' + Line + '&ItemCheckCode=' + ItemCheck + '&ProdDate=' + ProdDate + '&Shift=' + Shift + '&Sequence' + Seq
                 + '', '_self');
+        }
+
+
+        function IOTProcess() {
+            var URL = HideValue.Get('IOTProcessTable');
+            console.log(URL);
+            window.open('' + URL + '', '_blank');
+
+                //var dataObject = JSON.stringify(
+                //    {
+                //        UserID: 'AdminTos',
+                //        Password: 'Pecgi21'
+                //    });
+
+                //$.ajax({
+                //    url: 'http://192.168.0.190:81/Home/Login',
+                //    type: 'POST',
+                //    data: dataObject
+                //});
+            
+        }
+
+
+
+        function IOTTraceability() {
+            var URL = HideValue.Get('IOTTraceability');
+            console.log(URL);
+           /* window.open('' + URL + '', '_blank');*/
         }
 
     </script>
@@ -381,7 +421,7 @@
                     <dx:ASPxDateEdit ID="dtProdDate" runat="server" Theme="Office2010Black" AutoPostBack="false" Width="155px"
                         ClientInstanceName="dtProdDate" EditFormatString="dd MMM yyyy" DisplayFormatString="dd MMM yyyy"
                         Font-Names="Segoe UI" Font-Size="9pt" Height="25px" TabIndex="5">
-                        <ClientSideEvents ValueChanged="ProdDateChange"/>
+                        <ClientSideEvents ValueChanged="ProdDateChange" />
                         <CalendarProperties>
                             <HeaderStyle Font-Size="9pt" Paddings-Padding="5px" />
                             <DayStyle Font-Size="9pt" Paddings-Padding="5px" />
@@ -506,14 +546,14 @@
                 <td>
                     <dx:ASPxButton ID="btnIOTProcess" runat="server" AutoPostBack="False" ClientInstanceName="btnIOTProcess"
                         Font-Names="Segoe UI" Font-Size="9pt" Text="View IOT Process Table" Theme="Office2010Silver" Width="100px">
-                        <%--    <ClientSideEvents Click="IOTProcess" />--%>
+                        <ClientSideEvents Click="IOTProcess" />
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 10px">&nbsp;</td>
                 <td>
                     <dx:ASPxButton ID="btnIOTTraceability" runat="server" AutoPostBack="False" ClientInstanceName="btnIOTTraceability"
                         Font-Names="Segoe UI" Font-Size="9pt" Text="View IOT Traceability" Theme="Office2010Silver" Width="100px">
-                        <%--  <ClientSideEvents Click="IOTTraceability" />--%>
+                        <ClientSideEvents Click="IOTTraceability" />
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 10px">&nbsp;</td>
@@ -522,9 +562,8 @@
                         Font-Names="Segoe UI" Font-Size="9pt" Text="Excel" Theme="Office2010Silver" Width="100px">
                     </dx:ASPxButton>
                 </td>
-                <td style="width: 400px">&nbsp;</td>
-                <td>
-                    <table style="width: 100%">
+                <td style="width: 100%">
+                    <table style="width: 50%; margin-left:50%">
                         <tr>
                             <td rowspan="2" class="header" style="width: 180px">
                                 <dx:ASPxLabel ID="ASPxLabel1" runat="server" Text="Period" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
@@ -567,7 +606,7 @@
                                 <dx:ASPxLabel ID="lblLCL" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblLCL_1" ForeColor="Black"></dx:ASPxLabel>
                             </td>
                         </tr>
-                         <tr id="tblChartSetup_2">
+                        <tr id="tblChartSetup_2">
                             <td class="body" align="center">
                                 <dx:ASPxLabel ID="ASPxLabel2" runat="server" Text=" " Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblPeriod_2" ForeColor="Black"></dx:ASPxLabel>
                                 &nbsp;</td>
@@ -594,7 +633,7 @@
         <dx:ASPxGridView ID="Grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="Grid"
             EnableTheming="True" KeyFieldName="nDesc" Theme="Office2010Black"
             Width="100%" Font-Names="Segoe UI" Font-Size="9pt">
-            <ClientSideEvents EndCallback="EndCallback_Grid" Init="InitGrid"/>
+            <ClientSideEvents EndCallback="EndCallback_Grid" Init="InitGrid" />
             <Columns>
                 <dx:GridViewBandColumn Caption="Date" VisibleIndex="0">
                     <Columns>
@@ -633,6 +672,12 @@
                             </cc1:LineSeriesView>
                         </ViewSerializable>
                     </cc1:Series>
+                    <cc1:Series ArgumentDataMember="Seq" Name="Rule" ValueDataMembersSerializable="RuleValue">
+                        <ViewSerializable>
+                            <cc1:FullStackedBarSeriesView BarWidth="1">
+                            </cc1:FullStackedBarSeriesView>
+                        </ViewSerializable>
+                    </cc1:Series>
                 </SeriesSerializable>
 
                 <SeriesTemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
@@ -651,10 +696,10 @@
                         <AxisY VisibleInPanesSerializable="-1" MinorCount="1">
                             <Tickmarks MinorVisible="False" />
                             <Label TextPattern="{V:0.000}" Font="Tahoma, 7pt">
-                                <ResolveOverlappingOptions AllowHide="False" />
+                                <ResolveOverlappingOptions AllowHide="True" />
                             </Label>
                             <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0.015" MaxValueSerializable="2.715" MinValueSerializable="2.645" StartSideMargin="0.025" />
-                            <WholeRange AlwaysShowZeroLevel="False" Auto="False" AutoSideMargins="False" EndSideMargin="0.1" MaxValueSerializable="2.73" MinValueSerializable="2.62" StartSideMargin="0" />
+                            <WholeRange AlwaysShowZeroLevel="False" Auto="False" AutoSideMargins="False" EndSideMargin="0.015" MaxValueSerializable="2.73" MinValueSerializable="2.62" StartSideMargin="0.025" />
                             <GridLines>
                                 <LineStyle DashStyle="Dot" />
                             </GridLines>
@@ -699,7 +744,7 @@
                         <AxisY VisibleInPanesSerializable="-1" MinorCount="1">
                             <Tickmarks MinorLength="1" MinorVisible="False" />
                             <Label TextAlignment="Near" TextPattern="{V:0.000}">
-                                <ResolveOverlappingOptions AllowHide="False" />
+                                <ResolveOverlappingOptions AllowHide="True" />
                             </Label>
                             <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0.001" MaxValueSerializable="0.027" MinValueSerializable="0" StartSideMargin="0" />
                             <WholeRange Auto="False" MaxValueSerializable="0.027" MinValueSerializable="0" AutoSideMargins="False" EndSideMargin="1" StartSideMargin="1" />
@@ -715,7 +760,7 @@
                 </Titles>
                 <Legend AlignmentHorizontal="Left" AlignmentVertical="BottomOutside"
                     Direction="LeftToRight"></Legend>
-                <ClientSideEvents EndCallback="ChartREndCallBack" Init="InitRBar"/>
+                <ClientSideEvents EndCallback="ChartREndCallBack" />
             </dx:WebChartControl>
         </div>
     </div>

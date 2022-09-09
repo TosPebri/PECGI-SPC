@@ -18,6 +18,9 @@
         .auto-style1 {
             height: 12px;
         }
+            .auto-style2 {
+                width: 110px;
+            }
     </style>
     <script type="text/javascript" >
         var rowIndex, columnIndex;
@@ -32,6 +35,10 @@
             } else {
                 return !isNaN(parseFloat(n)) && isFinite(n);
             }
+        }
+
+        function GridLoad(s, e) {
+            gridX.PerformCallback('load' + '|' + cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
         }
 
         function ValidateSave(s, e) {
@@ -174,66 +181,7 @@
                 toastr.options.preventDuplicates = true;
                 toastr.options.onclick = null;
             }
-
-            lblMKUser.SetText(s.cpMKUser);
-            lblMKDate.SetText(s.cpMKDate);
-            lblQCUser.SetText(s.cpQCUser);
-            lblQCDate.SetText(s.cpQCDate);
-
-            lblUSL.SetText(s.cpUSL);
-            lblLSL.SetText(s.cpLSL);
-            lblUCL.SetText(s.cpUCL);
-            lblLCL.SetText(s.cpLCL);
-            lblMin.SetText(s.cpMin);
-            lblMax.SetText(s.cpMax);
-            lblAve.SetText(s.cpAve);
-            lblR.SetText(s.cpR);
-            lblC.SetText(s.cpC);            
-            txtRemarks.SetText(s.cpRemarks);
-            txtSubLotNo.SetText(s.cpSubLotNo);
-            
-            if (s.cpNG == '2') {
-                lblNG.SetText('NG');
-                document.getElementById('NG').style.backgroundColor = 'Red';
-            } else if (s.cpNG == '1') {
-                lblNG.SetText('NG');
-                document.getElementById('NG').style.backgroundColor = 'Pink';
-            } else if (s.cpNG == '0') {
-                lblNG.SetText('OK');
-                document.getElementById('NG').style.backgroundColor = 'Green';
-            } else {
-                lblNG.SetText('');
-                document.getElementById('NG').style.backgroundColor = 'White';
-            }
-            if (s.cpC == 'C') {
-                document.getElementById('C').style.backgroundColor = 'Orange';
-            } else {
-                document.getElementById('C').style.backgroundColor = 'White';
-            }      
-
-            if(s.cpMin != '') {
-                if (s.cpMin < s.cpLSL) {
-                    document.getElementById('Min').style.backgroundColor = 'Red';
-                } else if (s.cpMin < s.cpLCL) {
-                    document.getElementById('Min').style.backgroundColor = 'Pink';
-                } else {
-                    document.getElementById('Min').style.backgroundColor = 'White';
-                }
-            } else {
-                document.getElementById('Min').style.backgroundColor = 'White';
-            }
-            if (s.cpMax > s.cpUSL) {
-                document.getElementById('Max').style.backgroundColor = 'Red';
-            } else if (s.cpMax > s.cpUCL) {
-                document.getElementById('Max').style.backgroundColor = 'Pink';
-            } else {
-                document.getElementById('Max').style.backgroundColor = 'White';
-            }
-            if (s.cpRefresh == '1') {
-                gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
-                chartX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
-                chartR.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
-            }            
+            chartX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + dtTo.GetText());
         }
     </script>
 </asp:Content>
@@ -281,7 +229,7 @@
                     </ButtonStyle>
                 </dx:ASPxComboBox>
             </td>
-            <td style=" padding: 5px 0px 0px 10px; width:50px">
+            <td style=" padding: 5px 0px 0px 10px; width:34px">
                 <dx:ASPxLabel ID="ASPxLabel8" runat="server" Text="Date" 
                     Font-Names="Segoe UI" Font-Size="9pt">
                 </dx:ASPxLabel>
@@ -289,7 +237,7 @@
             <td style=" width:10px">
                 &nbsp;
                 </td>
-            <td style="padding: 5px 0px 0px 0px; width: 180px;" colspan="3">                
+            <td style="padding: 5px 0px 0px 0px; width:110px">                
                                 <dx:ASPxDateEdit ID="dtDate" runat="server" Theme="Office2010Black" 
                     Width="100px"
                         ClientInstanceName="dtDate" EditFormatString="dd MMM yyyy" DisplayFormatString="dd MMM yyyy"
@@ -315,30 +263,76 @@
                 
                 </td>            
            
-                <td style=" width:110px">                
-                    <dx:ASPxLabel ID="ASPxLabel9" runat="server" Text="Show Verified Only" 
-                        Font-Names="Segoe UI" Font-Size="9pt" Width="109px">
-                    </dx:ASPxLabel>                
-                </td>            
-            <td colspan="2" style="width: 120px">                
+           
+           
+            <td style="padding: 5px 0px 0px 0px; width:25px">  
+                                <dx:ASPxLabel ID="ASPxLabel10" runat="server" Text="To" 
+                    Font-Names="Segoe UI" Font-Size="9pt">
+                </dx:ASPxLabel></td>            
+           
+            <td style="padding: 5px 0px 0px 0px; width:130px">  
+                                <dx:ASPxDateEdit ID="dtTo" runat="server" ClientInstanceName="dtTo" DisplayFormatString="dd MMM yyyy" EditFormat="Custom" EditFormatString="dd MMM yyyy" Font-Names="Segoe UI" Font-Size="9pt" Height="25px" TabIndex="2" Theme="Office2010Black" Width="100px">
+                                    <CalendarProperties ShowWeekNumbers="False">
+                                        <HeaderStyle Font-Size="12pt" Paddings-Padding="5px">
+                                        <Paddings Padding="5px" />
+                                        </HeaderStyle>
+                                        <DayStyle Font-Size="9pt" Paddings-Padding="5px">
+                                        <Paddings Padding="5px" />
+                                        </DayStyle>
+                                        <WeekNumberStyle Font-Size="9pt" Paddings-Padding="5px">
+                                            <Paddings Padding="5px" />
+                                        </WeekNumberStyle>
+                                        <FooterStyle Font-Size="9pt" Paddings-Padding="10px">
+                                        <Paddings Padding="10px" />
+                                        </FooterStyle>
+                                        <ButtonStyle Font-Size="9pt" Paddings-Padding="10px">
+                                            <Paddings Padding="10px" />
+                                        </ButtonStyle>
+                                    </CalendarProperties>
+                                    <ButtonStyle Paddings-Padding="4px" Width="5px">
+                                        <Paddings Padding="4px" />
+                                    </ButtonStyle>
+                                </dx:ASPxDateEdit>
+            </td>            
+            <td style="padding: 5px 0px 0px 0px">
+
+<dx:ASPxButton ID="btnSearch" runat="server" AutoPostBack="False" 
+                    ClientInstanceName="btnSearch" Font-Names="Segoe UI" Font-Size="9pt" 
+                    Height="25px" Text="Browse" Theme="Office2010Silver" UseSubmitBehavior="False" 
+                    Width="90px" TabIndex="10">
+                    <ClientSideEvents Click="function(s, e) {
+                        var errmsg = '';
+                        if(cboFactory.GetText() == '') {
+                            cboFactory.Focus();
+                            errmsg = 'Please select Factory!';                                                                
+	                    } else if(cboType.GetText() == '') {
+                            cboType.Focus();
+                            errmsg = 'Please select Type!';
+	                    } else if(cboLine.GetText() == '') {
+                            cboLine.Focus();
+                            errmsg = 'Please select Machine Process!';
+	                    } else if(cboItemCheck.GetText() == '') {
+                            cboItemCheck.Focus();
+                            errmsg = 'Please select Item Check!';
+	                    }
+
+                        if(errmsg != '') {
+                            toastr.warning(errmsg, 'Warning');
+                            toastr.options.closeButton = false;
+                            toastr.options.debug = false;
+                            toastr.options.newestOnTop = false;
+                            toastr.options.progressBar = false;
+                            toastr.options.preventDuplicates = true;
+                            toastr.options.onclick = null;		
+		                    e.processOnServer = false;
+		                    return;
+                        }
+                         gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + dtTo.GetText());                        
+                    }" />
+                    <Paddings Padding="2px" />
+                </dx:ASPxButton>
                 
-                <dx:ASPxComboBox ID="cboShow" runat="server" Theme="Office2010Black" 
-                    ClientInstanceName="cboShow" Font-Names="Segoe UI" 
-                    Font-Size="9pt" Height="25px" 
-                    Width="58px" TabIndex="9" SelectedIndex="0">
-                    <Items>                        
-                        <dx:ListEditItem Text="No" Value="0" Selected="true"/>
-                        <dx:ListEditItem Text="Yes" Value="1" />
-                    </Items>
-                    <ItemStyle Height="10px" Paddings-Padding="4px">
-<Paddings Padding="4px"></Paddings>
-                    </ItemStyle>
-                    <ButtonStyle Paddings-Padding="4px" Width="5px">
-<Paddings Padding="4px"></Paddings>
-                    </ButtonStyle>
-                </dx:ASPxComboBox>
-                
-            </td>                        
+            </td>
         </tr>
 
         <tr>
@@ -390,105 +384,19 @@
                     
             </td>
             <td style=" padding: 3px 0px 0px 10px; ">
-                <dx:ASPxLabel ID="lblqeleader0" runat="server" Text="Shift" 
-                    Font-Names="Segoe UI" Font-Size="9pt">
-                </dx:ASPxLabel>
-            </td>
+                
+                &nbsp;</td>
             <td style=" width:10px">
                 &nbsp;</td>
-            <td style="width:100px; padding:3px 0px 0px 0px">
+            <td style="padding:3px 0px 0px 0px">
                 
-                <dx:ASPxComboBox ID="cboShift" runat="server" Theme="Office2010Black" 
-                    ClientInstanceName="cboShift" ValueField="ShiftCode" TextField="ShiftName" Font-Names="Segoe UI" 
-                    Font-Size="9pt" Height="25px" 
-                    Width="100px" TabIndex="3">
-                    <ClientSideEvents SelectedIndexChanged="cboShiftChanged" 
-                        EndCallback="function(s, e) {cboShift.SetEnabled(true);}"
-                        />
-                    <ButtonStyle Paddings-Padding="4px" Width="5px">
-<Paddings Padding="4px"></Paddings>
-                    </ButtonStyle>
-                </dx:ASPxComboBox>                
+                                
+                
+                
             </td>
-            <td style="width:30px; padding:3px 0px 0px 5px">
-                <dx:ASPxLabel ID="lblqeleader2" runat="server" Text="Seq" 
-                    Font-Names="Segoe UI" Font-Size="9pt">
-                </dx:ASPxLabel>
-            </td>            
-            <td style="width:60px; padding:3px 0px 0px 0px">
-                
-                <dx:ASPxComboBox ID="cboSeq" runat="server" Theme="Office2010Black" 
-                    ClientInstanceName="cboSeq" ValueField="SequenceNo" TextField="SequenceNo" Font-Names="Segoe UI" 
-                    Font-Size="9pt" Height="25px" 
-                    Width="60px" TabIndex="3">
-                    <ClientSideEvents SelectedIndexChanged="ClearGrid" EndCallback="function(s, e) {cboSeq.SetEnabled(true);}"/>
-
-                    <ButtonStyle Paddings-Padding="4px" Width="5px">
-<Paddings Padding="4px"></Paddings>
-                    </ButtonStyle>
-                </dx:ASPxComboBox>
-                
-            </td>            
-            <td>
-                
-                <dx:ASPxButton ID="btnOpen" runat="server" AutoPostBack="False" 
-                    ClientInstanceName="btnOpen" Font-Names="Segoe UI" Font-Size="9pt" 
-                    Height="25px" Text="Prod Sample Input" Theme="Office2010Silver" UseSubmitBehavior="False" 
-                    Width="90px" TabIndex="10">
-                    <ClientSideEvents Click="OpenWindow" />
-                    <Paddings Padding="2px" />
-                </dx:ASPxButton>
-                
-            </td>            
-            <td align="left" style="width: 60px">
-                
-                <dx:ASPxButton ID="btnSearch" runat="server" AutoPostBack="False" 
-                    ClientInstanceName="btnSearch" Font-Names="Segoe UI" Font-Size="9pt" 
-                    Height="25px" Text="Browse" Theme="Office2010Silver" UseSubmitBehavior="False" 
-                    Width="90px" TabIndex="10">
-                    <ClientSideEvents Click="function(s, e) {
-                        var errmsg = '';
-                        if(cboFactory.GetText() == '') {
-                            cboFactory.Focus();
-                            errmsg = 'Please select Factory!';                                                                
-	                    } else if(cboType.GetText() == '') {
-                            cboType.Focus();
-                            errmsg = 'Please select Type!';
-	                    } else if(cboLine.GetText() == '') {
-                            cboLine.Focus();
-                            errmsg = 'Please select Machine Process!';
-	                    } else if(cboItemCheck.GetText() == '') {
-                            cboItemCheck.Focus();
-                            errmsg = 'Please select Item Check!';
-	                    } else if(cboShift.GetText() == '') {
-                            cboShift.Focus();
-                            errmsg = 'Please select Shift!';
-	                    } else if(cboSeq.GetText() == '') {
-                            cboSeq.Focus();
-                            errmsg = 'Please select Sequence!';
-	                    }
-
-                        if(errmsg != '') {
-                            toastr.warning(errmsg, 'Warning');
-                            toastr.options.closeButton = false;
-                            toastr.options.debug = false;
-                            toastr.options.newestOnTop = false;
-                            toastr.options.progressBar = false;
-                            toastr.options.preventDuplicates = true;
-                            toastr.options.onclick = null;		
-		                    e.processOnServer = false;
-		                    return;
-                        }
-                        grid.CancelEdit();
- 	                    grid.PerformCallback('load' + '|' + cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + cboShift.GetValue() + '|' + cboSeq.GetValue() + '|' + cboShow.GetValue());
-                    }" />
-                    <Paddings Padding="2px" />
-                </dx:ASPxButton>
-                
-            </td>   
-            <td align="left">
-                &nbsp;</td>   
-                     
+            <td></td>
+            <td></td>
+            <td>&nbsp;</td>
         </tr>
     </table>
     </div>
@@ -506,11 +414,16 @@
                                 Font-Names="Segoe UI" Font-Size="9pt">
 
 
+                    <ClientSideEvents EndCallback="OnEndCallback" />
+
+
                     <SettingsPager Mode="ShowAllRecords">
                     </SettingsPager>
 
 
-                    <Settings HorizontalScrollBarMode="Auto" VerticalScrollableHeight="360" VerticalScrollBarMode="Auto" />
+                    <Settings HorizontalScrollBarMode="Auto" VerticalScrollableHeight="260" VerticalScrollBarMode="Auto" />
+                    <SettingsBehavior AllowSort="False" />
+                    <SettingsResizing ColumnResizeMode="Control" />
                     <SettingsDataSecurity AllowDelete="False" AllowEdit="False" AllowInsert="False" />
 
 
@@ -536,6 +449,64 @@
 
 
                             </dx:ASPxGridView>    
+</div>
+    <div style="height:10px"></div>
+<div>
+<dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
+        Height="434px" Width="1600px" CrosshairEnabled="True" SeriesDataMember="Description">
+        <seriestemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
+            <viewserializable>
+                <cc1:PointSeriesView>                    
+                    <PointMarkerOptions kind="Circle" BorderColor="255, 255, 255"></PointMarkerOptions>
+                </cc1:PointSeriesView>
+            </viewserializable>
+        </seriestemplate>    
+        <SeriesSerializable>
+            <cc1:Series ArgumentDataMember="Seq" Name="Rule" ValueDataMembersSerializable="RuleValue" LabelsVisibility="False" ShowInLegend="False">
+                <ViewSerializable>
+                    <cc1:FullStackedBarSeriesView BarWidth="1">
+                    </cc1:FullStackedBarSeriesView>
+                </ViewSerializable>
+            </cc1:Series>
+            <cc1:Series ArgumentDataMember="Seq" Name="Average" ValueDataMembersSerializable="AvgValue">
+                <ViewSerializable>
+                    <cc1:LineSeriesView Color="Blue">
+                        <LineStyle Thickness="1" />
+                        <LineMarkerOptions Color="Blue" Size="3">
+                        </LineMarkerOptions>
+                    </cc1:LineSeriesView>
+                </ViewSerializable>
+            </cc1:Series>
+        </SeriesSerializable>     
+        <DiagramSerializable>
+            <cc1:XYDiagram>
+                <AxisX VisibleInPanesSerializable="-1" MinorCount="1">
+                    <Label Alignment="Center">
+                        <ResolveOverlappingOptions AllowHide="False" />
+                    </Label>
+                    <GridLines MinorVisible="True">
+                    </GridLines>
+                </AxisX>
+                <AxisY VisibleInPanesSerializable="-1" MinorCount="1">
+                    <Tickmarks MinorVisible="False" />
+                    <Label TextPattern="{V:0.000}" Font="Tahoma, 7pt">
+                        <ResolveOverlappingOptions AllowHide="True" />
+                    </Label>
+                    <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0.015" MaxValueSerializable="2.715" MinValueSerializable="2.645" StartSideMargin="0.025" />
+                    <WholeRange AlwaysShowZeroLevel="False" Auto="False" AutoSideMargins="False" EndSideMargin="0.015" MaxValueSerializable="2.73" MinValueSerializable="2.62" StartSideMargin="0.025" />
+                    <GridLines>
+                        <LineStyle DashStyle="Dot" />
+                    </GridLines>
+                    <NumericScaleOptions AutoGrid="False" CustomGridAlignment="0.005" GridAlignment="Custom" />
+                </AxisY>
+            </cc1:XYDiagram>
+        </DiagramSerializable>
+        <titles>
+            <cc1:ChartTitle Font="Segoe UI, 12pt, style=Bold" Text="Graph Monitoring" />
+        </titles>
+        <legend alignmenthorizontal="Left" alignmentvertical="BottomOutside" 
+            direction="LeftToRight"></legend> 
+    </dx:WebChartControl>
 </div>
 
 </asp:Content>

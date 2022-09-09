@@ -85,4 +85,23 @@ Public Class clsSPCResultDetailDB
             Return dt
         End Using
     End Function
+
+    Public Shared Function GetSampleByPeriod(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, ProdDate2 As String) As DataSet
+        Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+            Cn.Open()
+            Dim q As String = "sp_SPC_SampleControl"
+            Dim cmd As New SqlCommand(q, Cn)
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
+            cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
+            cmd.Parameters.AddWithValue("Line", Line)
+            cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
+            cmd.Parameters.AddWithValue("ProdDate", ProdDate)
+            cmd.Parameters.AddWithValue("ProdDate2", ProdDate2)
+            Dim da As New SqlDataAdapter(cmd)
+            Dim ds As New DataSet
+            da.Fill(ds)
+            Return ds
+        End Using
+    End Function
 End Class

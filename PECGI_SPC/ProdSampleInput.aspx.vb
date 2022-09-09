@@ -579,6 +579,7 @@ Public Class ProdSampleInput
 
                 diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
                 diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
+                diagram.AxisY.WholeRange.EndSideMargin = Setup.SpecUSL + 1
 
                 diagram.AxisY.VisualRange.MinValue = Setup.SpecLSL
                 diagram.AxisY.VisualRange.MaxValue = Setup.SpecUSL
@@ -666,7 +667,7 @@ Public Class ProdSampleInput
         With chartX
             DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Color = Color.Red
             DirectCast(.Series("Rule").View, FullStackedBarSeriesView).FillStyle.FillMode = FillMode.Solid
-            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Transparency = 180
+            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Transparency = 120
             DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Border.Thickness = 1
         End With
     End Sub

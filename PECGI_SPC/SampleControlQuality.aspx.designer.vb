@@ -68,22 +68,31 @@ Partial Public Class SampleControlQuality
     Protected WithEvents dtDate As Global.DevExpress.Web.ASPxDateEdit
 
     '''<summary>
-    '''ASPxLabel9 control.
+    '''ASPxLabel10 control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ASPxLabel9 As Global.DevExpress.Web.ASPxLabel
+    Protected WithEvents ASPxLabel10 As Global.DevExpress.Web.ASPxLabel
 
     '''<summary>
-    '''cboShow control.
+    '''dtTo control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents cboShow As Global.DevExpress.Web.ASPxComboBox
+    Protected WithEvents dtTo As Global.DevExpress.Web.ASPxDateEdit
+
+    '''<summary>
+    '''btnSearch control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnSearch As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''ASPxLabel2 control.
@@ -122,60 +131,6 @@ Partial Public Class SampleControlQuality
     Protected WithEvents cboItemCheck As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
-    '''lblqeleader0 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents lblqeleader0 As Global.DevExpress.Web.ASPxLabel
-
-    '''<summary>
-    '''cboShift control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents cboShift As Global.DevExpress.Web.ASPxComboBox
-
-    '''<summary>
-    '''lblqeleader2 control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents lblqeleader2 As Global.DevExpress.Web.ASPxLabel
-
-    '''<summary>
-    '''cboSeq control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents cboSeq As Global.DevExpress.Web.ASPxComboBox
-
-    '''<summary>
-    '''btnOpen control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnOpen As Global.DevExpress.Web.ASPxButton
-
-    '''<summary>
-    '''btnSearch control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnSearch As Global.DevExpress.Web.ASPxButton
-
-    '''<summary>
     '''hfRevNo control.
     '''</summary>
     '''<remarks>
@@ -192,6 +147,15 @@ Partial Public Class SampleControlQuality
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents gridX As Global.DevExpress.Web.ASPxGridView
+
+    '''<summary>
+    '''chartX control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents chartX As Global.DevExpress.XtraCharts.Web.WebChartControl
 
     '''<summary>
     '''Master property.

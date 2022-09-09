@@ -52,9 +52,11 @@ Public Class AlertDashboard
 
         AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "X010")
         If AuthUpdate = False Then
-            Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
-            commandColumn.ShowEditButton = False
-            commandColumn.ShowNewButtonInHeader = False
+            Dim commandColumn = TryCast(Grid.Columns(0), GridViewDataTextColumn)
+            commandColumn.Visible = False
+
+            Dim commandColumn2 = TryCast(GridNG.Columns(0), GridViewDataTextColumn)
+            commandColumn2.Visible = False
         End If
 
         AuthDelete = sGlobal.Auth_UserDelete(pUser, "X010")

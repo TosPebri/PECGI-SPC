@@ -856,7 +856,7 @@
         <seriestemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
             <viewserializable>
                 <cc1:PointSeriesView>                    
-                    <PointMarkerOptions kind="Circle" BorderColor="255, 255, 255"></PointMarkerOptions>
+                    <PointMarkerOptions kind="Circle" BorderColor="255, 255, 255" Size="12" FillStyle-FillMode="Empty"></PointMarkerOptions>
                 </cc1:PointSeriesView>
             </viewserializable>
         </seriestemplate>    
@@ -870,7 +870,7 @@
             <cc1:Series ArgumentDataMember="Seq" Name="Average" ValueDataMembersSerializable="AvgValue">
                 <ViewSerializable>
                     <cc1:LineSeriesView Color="Blue">
-                        <LineStyle Thickness="1" />
+                        <LineStyle Thickness="2" />
                         <LineMarkerOptions Color="Blue" Size="3">
                         </LineMarkerOptions>
                     </cc1:LineSeriesView>

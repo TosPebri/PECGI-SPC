@@ -645,6 +645,19 @@ Public Class ProdSampleInput
                 End If
             End If
         End If
+        If e.DataColumn.FieldName = "Des" Then
+            If e.CellValue = "1" Then
+                e.Cell.BackColor = Color.Red
+            ElseIf e.CellValue = "2" Then
+                e.Cell.BackColor = Color.Orange
+            ElseIf e.CellValue = "3" Then
+                e.Cell.BackColor = Color.LightGreen
+            ElseIf e.CellValue = "4" Then
+                e.Cell.BackColor = Color.DarkGreen
+            ElseIf e.CellValue = "5" Then
+                e.Cell.BackColor = Color.LightBlue
+            End If
+        End If
         If e.KeyValue = "-" Or e.KeyValue = "--" Then
             e.Cell.Text = ""
         End If
@@ -667,8 +680,42 @@ Public Class ProdSampleInput
         With chartX
             DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Color = Color.Red
             DirectCast(.Series("Rule").View, FullStackedBarSeriesView).FillStyle.FillMode = FillMode.Solid
-            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Transparency = 120
+            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Transparency = 100
             DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Border.Thickness = 1
         End With
+    End Sub
+
+    Private Sub chartX_CustomDrawSeries(sender As Object, e As CustomDrawSeriesEventArgs) Handles chartX.CustomDrawSeries
+        Dim s As String = e.Series.Name
+        If s = "#1" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.Red
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
+            e.LegendDrawOptions.Color = Color.Red
+        ElseIf s = "#2" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Diamond
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Orange
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.Orange
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Empty
+            e.LegendDrawOptions.Color = Color.Orange
+        ElseIf s = "#3" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Triangle
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Green
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightGreen
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
+            e.LegendDrawOptions.Color = Color.Green
+        ElseIf s = "#4" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Square
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.DarkGreen
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.DarkGreen
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Empty
+            e.LegendDrawOptions.Color = Color.DarkGreen
+        ElseIf s = "#5" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Blue
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightBlue
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Empty
+            e.LegendDrawOptions.Color = Color.LightBlue
+        End If
     End Sub
 End Class

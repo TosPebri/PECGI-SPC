@@ -188,6 +188,40 @@ Public Class SampleControlQuality
         End If
     End Sub
 
+    Private Sub chartX_CustomDrawSeries(sender As Object, e As CustomDrawSeriesEventArgs) Handles chartX.CustomDrawSeries
+        Dim s As String = e.Series.Name
+        If s = "#1" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.Red
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
+            e.LegendDrawOptions.Color = Color.Red
+        ElseIf s = "#2" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Diamond
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Orange
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.Orange
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Empty
+            e.LegendDrawOptions.Color = Color.Orange
+        ElseIf s = "#3" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Triangle
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Green
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightGreen
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
+            e.LegendDrawOptions.Color = Color.Green
+        ElseIf s = "#4" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Square
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.DarkGreen
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.DarkGreen
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Empty
+            e.LegendDrawOptions.Color = Color.DarkGreen
+        ElseIf s = "#5" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Blue
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightBlue
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Empty
+            e.LegendDrawOptions.Color = Color.LightBlue
+        End If
+    End Sub
+
     Private Sub LoadChartX(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, ProdDate2 As String)
         Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartXRMonthly(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, ProdDate2)
         With chartX

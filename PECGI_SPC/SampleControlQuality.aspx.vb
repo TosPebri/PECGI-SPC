@@ -1,4 +1,9 @@
-﻿Public Class SampleControlQuality
+﻿Imports System.Drawing
+Imports DevExpress.Web
+Imports DevExpress.XtraCharts
+Imports DevExpress.XtraCharts.Web
+
+Public Class SampleControlQuality
     Inherits System.Web.UI.Page
     Dim pUser As String = ""
     Public AuthApprove As Boolean = False
@@ -14,53 +19,52 @@
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        GlobalPrm = Request.QueryString("Date") & ""
+        GlobalPrm = Request.QueryString("FactoryCode") & ""
         sGlobal.getMenu("B060")
         Master.SiteTitle = sGlobal.menuName
         pUser = Session("user") & ""
         AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "B060")
+        gridX.SettingsDataSecurity.AllowInsert = AuthUpdate
+        gridX.SettingsDataSecurity.AllowEdit = AuthUpdate
         show_error(MsgTypeEnum.Info, "", 0)
         If Not IsPostBack And Not IsCallback Then
             up_FillCombo()
             If GlobalPrm <> "" Then
-                dtDate.Value = CDate(Request.QueryString("Date"))
+                dtDate.Value = CDate(Request.QueryString("ProdDate"))
                 Dim FactoryCode As String = Request.QueryString("FactoryCode")
                 Dim ItemTypeCode As String = Request.QueryString("ItemTypeCode")
                 Dim Line As String = Request.QueryString("Line")
                 Dim ItemCheckCode As String = Request.QueryString("ItemCheckCode")
                 Dim ProdDate As String = Request.QueryString("ProdDate")
+                Dim ProdDate2 As String = Request.QueryString("ProdDate2")
                 Dim Shift As String = Request.QueryString("Shift")
                 Dim Sequence As String = Request.QueryString("Sequence")
 
+                InitCombo(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence, ProdDate2)
+                ScriptManager.RegisterStartupScript(Me, Page.GetType, "Script", "GridLoad();", True)
             Else
                 dtDate.Value = Now.Date
-                InitCombo()
+                InitCombo("F001", "TPMSBR011", "015", "IC021", "2022-08-03", "SH001", 1, "2022-09-01")
             End If
         End If
     End Sub
 
-    Private Sub InitCombo()
-        dtDate.Value = CDate("2022-08-03")
-        cboFactory.Value = "F001"
+    Private Sub InitCombo(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, ShiftCode As String, Sequence As String, ProdDate2 As String)
+        dtDate.Value = CDate(ProdDate)
+        dtTo.Value = CDate(ProdDate2)
+        cboFactory.Value = FactoryCode
+
         cboType.DataSource = clsItemTypeDB.GetList(cboFactory.Value)
         cboType.DataBind()
-        cboType.Value = "TPMSBR011"
+        cboType.Value = ItemTypeCode
 
         cboLine.DataSource = ClsLineDB.GetList("admin", cboFactory.Value, cboType.Value)
         cboLine.DataBind()
-        cboLine.Value = "015"
+        cboLine.Value = Line
 
         cboItemCheck.DataSource = clsItemCheckDB.GetList(cboFactory.Value, cboType.Value, cboLine.Value)
         cboItemCheck.DataBind()
-        cboItemCheck.Value = "IC021"
-
-        cboShift.DataSource = clsFrequencyDB.GetShift(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value)
-        cboShift.DataBind()
-        cboShift.Value = "SH001"
-
-        cboSeq.Value = "1"
-        cboSeq.DataSource = clsFrequencyDB.GetSequence(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value)
-        cboSeq.DataBind()
+        cboItemCheck.Value = ItemCheckCode
     End Sub
 
     Private Sub up_FillCombo()
@@ -68,4 +72,216 @@
         cboFactory.DataBind()
     End Sub
 
+    Dim dtXR As DataTable
+    Dim dtLSL As DataTable
+    Dim dtUSL As DataTable
+    Dim dtLCL As DataTable
+    Dim dtUCL As DataTable
+    Dim dtChart As DataTable
+
+    Private Sub GridXLoad(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String, ProdDate2 As String)
+        With gridX
+            .Columns.Clear()
+            Dim Band1 As New GridViewBandColumn
+            Band1.Caption = "DATE"
+            Band1.HeaderStyle.Height = 90
+            .Columns.Add(Band1)
+
+            Dim Band2 As New GridViewBandColumn
+            Band2.Caption = "SHIFT"
+            Band1.HeaderStyle.Height = 40
+            Band1.Columns.Add(Band2)
+
+            Dim Col1 As New GridViewDataTextColumn
+            Col1.FieldName = "Des"
+            Col1.Caption = "TIME"
+            Col1.Width = 90
+            Col1.FixedStyle = GridViewColumnFixedStyle.Left
+            Col1.CellStyle.HorizontalAlign = HorizontalAlign.Center
+            Band2.Columns.Add(Col1)
+
+            Dim ds As DataSet = clsSPCResultDetailDB.GetSampleByPeriod(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate, ProdDate2)
+            Dim dtDay As DataTable = ds.Tables(0)
+
+            Dim PrevDay As String = ""
+            Dim PrevShift As String = ""
+            For iDay = 0 To dtDay.Rows.Count - 1
+                Dim SelDay As Date = dtDay.Rows(iDay)("ProdDate")
+                Dim dDay As String = Format(SelDay, "yyyy-MM-dd")
+
+                Dim BandDay As GridViewBandColumn
+                Dim BandShift As GridViewBandColumn
+
+                If dDay <> PrevDay Then
+                    BandDay = New GridViewBandColumn
+                    BandDay.Caption = Format(SelDay, "dd MMM yyyy")
+                    .Columns.Add(BandDay)
+
+                End If
+
+                Dim SelShift As String = dtDay.Rows(iDay)("ShiftCode")
+                If SelShift <> PrevShift Or dDay <> PrevDay Then
+                    BandShift = New GridViewBandColumn
+                    BandShift.Caption = "S-" & SelShift
+                    BandDay.Columns.Add(BandShift)
+                End If
+
+                Dim colTime As New GridViewDataTextColumn
+                colTime.Caption = dtDay.Rows(iDay)("RegisterDate")
+                colTime.FieldName = dtDay.Rows(iDay)("ColName")
+                colTime.Width = 60
+                colTime.CellStyle.HorizontalAlign = HorizontalAlign.Center
+                BandShift.Columns.Add(colTime)
+
+                PrevDay = dDay
+                PrevShift = SelShift
+            Next
+            dtXR = ds.Tables(1)
+            gridX.DataSource = dtXR
+            gridX.DataBind()
+
+            dtLSL = ds.Tables(2)
+            dtUSL = ds.Tables(3)
+            dtLCL = ds.Tables(4)
+            dtUCL = ds.Tables(5)
+            dtChart = ds.Tables(6)
+        End With
+    End Sub
+
+    Private Sub gridX_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles gridX.CustomCallback
+        Dim FactoryCode As String = Split(e.Parameters, "|")(0)
+        Dim ItemTypeCode As String = Split(e.Parameters, "|")(1)
+        Dim LineCode As String = Split(e.Parameters, "|")(2)
+        Dim ItemCheckCode As String = Split(e.Parameters, "|")(3)
+        Dim ProdDate As String = Split(e.Parameters, "|")(4)
+        Dim ProdDate2 As String = Split(e.Parameters, "|")(5)
+        GridXLoad(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate, ProdDate2)
+    End Sub
+
+    Private Sub gridX_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles gridX.HtmlDataCellPrepared
+        Dim LCL As Double
+        Dim UCL As Double
+        Dim LSL As Double
+        Dim USL As Double
+
+        Dim ColName As String = e.DataColumn.FieldName
+        If Not IsDBNull(e.CellValue) AndAlso ColName <> "Seq" AndAlso ColName <> "Des" AndAlso (e.GetValue("Seq") = "1" Or e.GetValue("Seq") = "3" Or e.GetValue("Seq") = "4" Or e.GetValue("Seq") = "5") Then
+            LSL = dtLSL.Rows(0)(ColName)
+            USL = dtUSL.Rows(0)(ColName)
+            LCL = dtLCL.Rows(0)(ColName)
+            UCL = dtUCL.Rows(0)(ColName)
+            Dim Value As Double = clsSPCResultDB.ADecimal(e.CellValue)
+            If Value < LSL Or Value > USL Then
+                e.Cell.BackColor = Color.Red
+            ElseIf Value < LCL Or Value > UCL Then
+                e.Cell.BackColor = Color.Pink
+            End If
+        End If
+        If e.KeyValue = "-" Or e.KeyValue = "--" Then
+            e.Cell.Text = ""
+        End If
+    End Sub
+
+    Private Sub gridX_HtmlRowPrepared(sender As Object, e As ASPxGridViewTableRowEventArgs) Handles gridX.HtmlRowPrepared
+        If e.KeyValue = "-" Or e.KeyValue = "--" Then
+            e.Row.BackColor = System.Drawing.Color.FromArgb(112, 112, 112)
+        End If
+    End Sub
+
+    Private Sub LoadChartX(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, ProdDate2 As String)
+        Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartXRMonthly(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, ProdDate2)
+        With chartX
+            .DataSource = xr
+            Dim diagram As XYDiagram = CType(.Diagram, XYDiagram)
+            diagram.AxisX.WholeRange.MinValue = 0
+            diagram.AxisX.WholeRange.MaxValue = 12
+
+            diagram.AxisX.GridLines.LineStyle.DashStyle = DashStyle.Solid
+            diagram.AxisX.GridLines.MinorVisible = True
+            diagram.AxisX.MinorCount = 1
+            diagram.AxisX.GridLines.Visible = False
+
+            diagram.AxisY.NumericScaleOptions.CustomGridAlignment = 0.005
+            diagram.AxisY.GridLines.MinorVisible = False
+
+
+            Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+            diagram.AxisY.ConstantLines.Clear()
+            If Setup IsNot Nothing Then
+                Dim LCL As New ConstantLine("LCL")
+                LCL.Color = Drawing.Color.Purple
+                LCL.LineStyle.Thickness = 2
+                LCL.LineStyle.DashStyle = DashStyle.DashDot
+                diagram.AxisY.ConstantLines.Add(LCL)
+                LCL.AxisValue = Setup.XBarLCL
+
+                Dim UCL As New ConstantLine("UCL")
+                UCL.Color = Drawing.Color.Purple
+                UCL.LineStyle.Thickness = 2
+                UCL.LineStyle.DashStyle = DashStyle.DashDot
+                diagram.AxisY.ConstantLines.Add(UCL)
+                UCL.AxisValue = Setup.XBarUCL
+
+                Dim CL As New ConstantLine("CL")
+                CL.Color = Drawing.Color.Black
+                CL.LineStyle.Thickness = 2
+                CL.LineStyle.DashStyle = DashStyle.Solid
+                diagram.AxisY.ConstantLines.Add(CL)
+                CL.AxisValue = Setup.XBarCL
+
+                Dim LSL As New ConstantLine("LSL")
+                LSL.Color = Drawing.Color.Red
+                LSL.LineStyle.Thickness = 2
+                LSL.LineStyle.DashStyle = DashStyle.Solid
+                diagram.AxisY.ConstantLines.Add(LSL)
+                LSL.AxisValue = Setup.SpecLSL
+
+                Dim USL As New ConstantLine("USL")
+                USL.Color = Drawing.Color.Red
+                USL.LineStyle.Thickness = 2
+                USL.LineStyle.DashStyle = DashStyle.Solid
+                diagram.AxisY.ConstantLines.Add(USL)
+                USL.AxisValue = Setup.SpecUSL
+
+                diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
+                diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
+                diagram.AxisY.WholeRange.EndSideMargin = Setup.SpecUSL + 1
+
+                diagram.AxisY.VisualRange.MinValue = Setup.SpecLSL
+                diagram.AxisY.VisualRange.MaxValue = Setup.SpecUSL
+
+                CType(.Diagram, XYDiagram).SecondaryAxesY.Clear()
+                Dim myAxisY As New SecondaryAxisY("my Y-Axis")
+                myAxisY.Visibility = DevExpress.Utils.DefaultBoolean.False
+                CType(.Diagram, XYDiagram).SecondaryAxesY.Add(myAxisY)
+                CType(.Series("Rule").View, XYDiagramSeriesViewBase).AxisY = myAxisY
+            End If
+
+
+            .DataBind()
+        End With
+    End Sub
+
+    Private Sub chartX_CustomCallback(sender As Object, e As CustomCallbackEventArgs) Handles chartX.CustomCallback
+        Dim Prm As String = e.Parameter
+        If Prm = "" Then
+            Prm = "F001|TPMSBR011|015|IC021|03 Aug 2022"
+        End If
+        Dim FactoryCode As String = Split(Prm, "|")(0)
+        Dim ItemTypeCode As String = Split(Prm, "|")(1)
+        Dim LineCode As String = Split(Prm, "|")(2)
+        Dim ItemCheckCode As String = Split(Prm, "|")(3)
+        Dim ProdDate As String = Split(Prm, "|")(4)
+        Dim ProdDate2 As String = Split(Prm, "|")(5)
+        LoadChartX(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate, ProdDate2)
+    End Sub
+
+    Private Sub chartX_BoundDataChanged(sender As Object, e As EventArgs) Handles chartX.BoundDataChanged
+        With chartX
+            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Color = Color.Red
+            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).FillStyle.FillMode = FillMode.Solid
+            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Transparency = 120
+            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Border.Thickness = 1
+        End With
+    End Sub
 End Class

@@ -541,6 +541,7 @@
             <ClientSideEvents 
                 EndCallback="OnEndCallback" BatchEditStartEditing="OnBatchEditStartEditing" 
              />
+            <SettingsResizing ColumnResizeMode="Control" />
             <SettingsDataSecurity AllowDelete="False" />
 
 <SettingsPopup>
@@ -817,6 +818,7 @@
 
 
                     <Settings HorizontalScrollBarMode="Auto" VerticalScrollableHeight="360" VerticalScrollBarMode="Auto" />
+                    <SettingsBehavior AllowSort="False" />
                     <SettingsDataSecurity AllowDelete="False" AllowEdit="False" AllowInsert="False" />
 
 
@@ -851,8 +853,20 @@
 <div id="chartXdiv">
 <dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
         Height="434px" Width="1080px" CrosshairEnabled="True" SeriesDataMember="Description">
-    
+        <seriestemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
+            <viewserializable>
+                <cc1:PointSeriesView>                    
+                    <PointMarkerOptions kind="Circle" BorderColor="255, 255, 255"></PointMarkerOptions>
+                </cc1:PointSeriesView>
+            </viewserializable>
+        </seriestemplate>    
         <SeriesSerializable>
+            <cc1:Series ArgumentDataMember="Seq" Name="Rule" ValueDataMembersSerializable="RuleValue" LabelsVisibility="False" ShowInLegend="False">
+                <ViewSerializable>
+                    <cc1:FullStackedBarSeriesView BarWidth="1">
+                    </cc1:FullStackedBarSeriesView>
+                </ViewSerializable>
+            </cc1:Series>
             <cc1:Series ArgumentDataMember="Seq" Name="Average" ValueDataMembersSerializable="AvgValue">
                 <ViewSerializable>
                     <cc1:LineSeriesView Color="Blue">
@@ -862,21 +876,7 @@
                     </cc1:LineSeriesView>
                 </ViewSerializable>
             </cc1:Series>
-            <cc1:Series ArgumentDataMember="Seq" Name="Rule" ValueDataMembersSerializable="RuleValue">
-                <ViewSerializable>
-                    <cc1:FullStackedBarSeriesView BarWidth="1">
-                    </cc1:FullStackedBarSeriesView>
-                </ViewSerializable>
-            </cc1:Series>
-        </SeriesSerializable>
-    
-        <seriestemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
-            <viewserializable>
-                <cc1:PointSeriesView>                    
-                    <PointMarkerOptions kind="Circle" BorderColor="255, 255, 255"></PointMarkerOptions>
-                </cc1:PointSeriesView>
-            </viewserializable>
-        </seriestemplate>  
+        </SeriesSerializable>     
         <DiagramSerializable>
             <cc1:XYDiagram>
                 <AxisX VisibleInPanesSerializable="-1" MinorCount="1">

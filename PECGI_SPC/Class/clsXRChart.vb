@@ -12,7 +12,6 @@ Public Class clsXRChart
 End Class
 
 Public Class clsXRChartDB
-
     Public Shared Function GetChartXR(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String) As List(Of clsXRChart)
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
@@ -50,6 +49,44 @@ Public Class clsXRChartDB
             Return XRList
         End Using
     End Function
+
+    Public Shared Function GetChartXRMonthly(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, ProdDate2 As String) As List(Of clsXRChart)
+        Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+            Cn.Open()
+            Dim q As String = "sp_SPC_SampleControlChart"
+            Dim cmd As New SqlCommand(q, Cn)
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
+            cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
+            cmd.Parameters.AddWithValue("Line", Line)
+            cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
+            cmd.Parameters.AddWithValue("ProdDate", ProdDate)
+            cmd.Parameters.AddWithValue("ProdDate2", ProdDate2)
+            Dim da As New SqlDataAdapter(cmd)
+            Dim dt As New DataTable
+            da.Fill(dt)
+            Dim XRList As New List(Of clsXRChart)
+            For i = 0 To dt.Rows.Count - 1
+                Dim xr As New clsXRChart
+                With dt.Rows(i)
+                    xr.Seq = .Item("Seq")
+                    xr.Description = .Item("Description")
+                    Dim value As Double = .Item("Value")
+                    xr.Value = value
+                    value = .Item("AvgValue")
+                    xr.AvgValue = value
+                    xr.RValue = .Item("RValue")
+                    If Not IsDBNull(.Item("RuleValue")) Then
+                        value = .Item("RuleValue")
+                        xr.RuleValue = value
+                    End If
+                End With
+                XRList.Add(xr)
+            Next
+            Return XRList
+        End Using
+    End Function
+
 
     Public Shared Function GetChartR(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String) As List(Of clsXRChart)
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)

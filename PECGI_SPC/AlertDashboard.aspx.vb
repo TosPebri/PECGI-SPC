@@ -214,7 +214,7 @@ Public Class AlertDashboard
         Try
             Dim dtLoadNGData As DataTable
             'dtLoadNGData = clsSPCAlertDashboardDB.GetNGDataList(FactoryCode)
-            GridNG.DataSource = clsSPCAlertDashboardDB.GetNGDataList(FactoryCode)
+            GridNG.DataSource = clsSPCAlertDashboardDB.GetNGDataList(pUser, FactoryCode)
             GridNG.DataBind()
         Catch ex As Exception
             show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
@@ -223,7 +223,7 @@ Public Class AlertDashboard
     Private Sub LoadGridDelay(FactoryCode As String)
         Try
             Dim dtLoadGridDelay As DataTable
-            dtLoadGridDelay = clsSPCAlertDashboardDB.GetList(FactoryCode)
+            dtLoadGridDelay = clsSPCAlertDashboardDB.GetList(pUser, FactoryCode)
 
             'If dtLoadGridDelay.Rows.Count > 0 Then
             'End If

@@ -71,7 +71,7 @@ Public Class clsSPCAlertDashboardDB
             Return i
         End Using
     End Function
-    Public Shared Function GetList(FactoryCode As String, Optional ByRef pErr As String = "") As DataTable
+    Public Shared Function GetList(User As String, FactoryCode As String, Optional ByRef pErr As String = "") As DataTable
         Try
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
@@ -81,6 +81,7 @@ Public Class clsSPCAlertDashboardDB
                 Dim cmd As New SqlCommand(sql, conn)
                 cmd.CommandType = CommandType.StoredProcedure
                 With cmd.Parameters
+                    .AddWithValue("User", User)
                     .AddWithValue("FactoryCode", FactoryCode)
                 End With
                 Dim da As New SqlDataAdapter(cmd)
@@ -94,7 +95,7 @@ Public Class clsSPCAlertDashboardDB
             Return Nothing
         End Try
     End Function
-    Public Shared Function GetNGDataList(FactoryCode As String, Optional ByRef pErr As String = "") As DataTable
+    Public Shared Function GetNGDataList(User As String, FactoryCode As String, Optional ByRef pErr As String = "") As DataTable
         Try
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
@@ -104,6 +105,7 @@ Public Class clsSPCAlertDashboardDB
                 Dim cmd As New SqlCommand(sql, conn)
                 cmd.CommandType = CommandType.StoredProcedure
                 With cmd.Parameters
+                    .AddWithValue("User", User)
                     .AddWithValue("FactoryCode", FactoryCode)
                 End With
                 Dim da As New SqlDataAdapter(cmd)

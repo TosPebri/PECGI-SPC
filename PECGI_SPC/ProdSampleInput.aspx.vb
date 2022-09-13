@@ -102,6 +102,8 @@ Public Class ProdSampleInput
         grid.JSProperties("cp_val") = pVal
     End Sub
 
+
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         GlobalPrm = Request.QueryString("FactoryCode") & ""
         sGlobal.getMenu("B020 ")
@@ -581,18 +583,15 @@ Public Class ProdSampleInput
                 diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
                 diagram.AxisY.WholeRange.EndSideMargin = Setup.SpecUSL + 1
 
-                diagram.AxisY.VisualRange.MinValue = Setup.SpecLSL
-                diagram.AxisY.VisualRange.MaxValue = Setup.SpecUSL
-
                 CType(.Diagram, XYDiagram).SecondaryAxesY.Clear()
                 Dim myAxisY As New SecondaryAxisY("my Y-Axis")
                 myAxisY.Visibility = DevExpress.Utils.DefaultBoolean.False
                 CType(.Diagram, XYDiagram).SecondaryAxesY.Add(myAxisY)
                 CType(.Series("Rule").View, XYDiagramSeriesViewBase).AxisY = myAxisY
+                CType(.Series("RuleYellow").View, XYDiagramSeriesViewBase).AxisY = myAxisY
             End If
-
-
             .DataBind()
+            .Width = xr.Count * 20
         End With
     End Sub
 
@@ -676,15 +675,6 @@ Public Class ProdSampleInput
         LoadChartR(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
     End Sub
 
-    Private Sub chartX_BoundDataChanged(sender As Object, e As EventArgs) Handles chartX.BoundDataChanged
-        With chartX
-            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Color = Color.Red
-            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).FillStyle.FillMode = FillMode.Solid
-            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Transparency = 100
-            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Border.Thickness = 1
-        End With
-    End Sub
-
     Private Sub chartX_CustomDrawSeries(sender As Object, e As CustomDrawSeriesEventArgs) Handles chartX.CustomDrawSeries
         Dim s As String = e.Series.Name
         If s = "#1" Then
@@ -703,7 +693,7 @@ Public Class ProdSampleInput
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Green
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightGreen
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
-            e.LegendDrawOptions.Color = Color.Green
+            e.LegendDrawOptions.Color = Color.LightGreen
         ElseIf s = "#4" Then
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Square
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.DarkGreen
@@ -714,7 +704,7 @@ Public Class ProdSampleInput
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Blue
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightBlue
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Empty
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.LightBlue
         End If
     End Sub

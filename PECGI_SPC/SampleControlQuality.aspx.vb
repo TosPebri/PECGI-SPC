@@ -177,6 +177,19 @@ Public Class SampleControlQuality
                 e.Cell.BackColor = Color.Pink
             End If
         End If
+        If e.DataColumn.FieldName = "Des" Then
+            If e.CellValue = "1" Then
+                e.Cell.BackColor = Color.Red
+            ElseIf e.CellValue = "2" Then
+                e.Cell.BackColor = Color.Orange
+            ElseIf e.CellValue = "3" Then
+                e.Cell.BackColor = Color.LightGreen
+            ElseIf e.CellValue = "4" Then
+                e.Cell.BackColor = Color.DarkGreen
+            ElseIf e.CellValue = "5" Then
+                e.Cell.BackColor = Color.LightBlue
+            End If
+        End If
         If e.KeyValue = "-" Or e.KeyValue = "--" Then
             e.Cell.Text = ""
         End If
@@ -206,7 +219,7 @@ Public Class SampleControlQuality
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Green
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightGreen
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
-            e.LegendDrawOptions.Color = Color.Green
+            e.LegendDrawOptions.Color = Color.LightGreen
         ElseIf s = "#4" Then
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Square
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.DarkGreen
@@ -217,7 +230,7 @@ Public Class SampleControlQuality
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Blue
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightBlue
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Empty
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.LightBlue
         End If
     End Sub
@@ -289,10 +302,10 @@ Public Class SampleControlQuality
                 myAxisY.Visibility = DevExpress.Utils.DefaultBoolean.False
                 CType(.Diagram, XYDiagram).SecondaryAxesY.Add(myAxisY)
                 CType(.Series("Rule").View, XYDiagramSeriesViewBase).AxisY = myAxisY
+                CType(.Series("RuleYellow").View, XYDiagramSeriesViewBase).AxisY = myAxisY
             End If
-
-
             .DataBind()
+            .Width = xr.Count * 12
         End With
     End Sub
 
@@ -312,10 +325,20 @@ Public Class SampleControlQuality
 
     Private Sub chartX_BoundDataChanged(sender As Object, e As EventArgs) Handles chartX.BoundDataChanged
         With chartX
-            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Color = Color.Red
-            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).FillStyle.FillMode = FillMode.Solid
-            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Transparency = 120
-            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Border.Thickness = 1
+            Dim view As FullStackedBarSeriesView = TryCast(.Series("Rule").View, FullStackedBarSeriesView)
+            If view IsNot Nothing Then
+                view.Color = Color.Red
+                view.FillStyle.FillMode = FillMode.Solid
+                view.Transparency = 160
+                view.Border.Thickness = 1
+            End If
+            Dim view2 As FullStackedBarSeriesView = TryCast(.Series("RuleYellow").View, FullStackedBarSeriesView)
+            If view2 IsNot Nothing Then
+                view2.Color = Color.Yellow
+                view2.FillStyle.FillMode = FillMode.Solid
+                view2.Transparency = 160
+                view2.Border.Thickness = 1
+            End If
         End With
     End Sub
 End Class

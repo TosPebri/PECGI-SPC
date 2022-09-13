@@ -850,27 +850,33 @@
             <td>
                 <div style="height:10px"></div>
                 
-<div id="chartXdiv">
+<div id="chartXdiv" style="overflow-x:auto; width:100%; border:1px solid black"">
 <dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
-        Height="434px" Width="1080px" CrosshairEnabled="True" SeriesDataMember="Description">
+        Height="434px" Width="800px" CrosshairEnabled="True" SeriesDataMember="Description">
         <seriestemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
             <viewserializable>
                 <cc1:PointSeriesView>                    
-                    <PointMarkerOptions kind="Circle" BorderColor="255, 255, 255" Size="12" FillStyle-FillMode="Empty"></PointMarkerOptions>
+                    <PointMarkerOptions kind="Circle" BorderColor="255, 255, 255"></PointMarkerOptions>
                 </cc1:PointSeriesView>
             </viewserializable>
         </seriestemplate>    
         <SeriesSerializable>
             <cc1:Series ArgumentDataMember="Seq" Name="Rule" ValueDataMembersSerializable="RuleValue" LabelsVisibility="False" ShowInLegend="False">
                 <ViewSerializable>
-                    <cc1:FullStackedBarSeriesView BarWidth="1">
+                    <cc1:FullStackedBarSeriesView BarWidth="1" Color="Red" Transparency="200">
+                    </cc1:FullStackedBarSeriesView>
+                </ViewSerializable>
+            </cc1:Series>
+            <cc1:Series ArgumentDataMember="Seq" Name="RuleYellow" ValueDataMembersSerializable="RuleYellow" LabelsVisibility="False" ShowInLegend="False">
+                <ViewSerializable>
+                    <cc1:FullStackedBarSeriesView BarWidth="1" Color="Yellow" Transparency="200">
                     </cc1:FullStackedBarSeriesView>
                 </ViewSerializable>
             </cc1:Series>
             <cc1:Series ArgumentDataMember="Seq" Name="Average" ValueDataMembersSerializable="AvgValue">
                 <ViewSerializable>
                     <cc1:LineSeriesView Color="Blue">
-                        <LineStyle Thickness="2" />
+                        <LineStyle Thickness="1" />
                         <LineMarkerOptions Color="Blue" Size="3">
                         </LineMarkerOptions>
                     </cc1:LineSeriesView>
@@ -880,8 +886,12 @@
         <DiagramSerializable>
             <cc1:XYDiagram>
                 <AxisX VisibleInPanesSerializable="-1" MinorCount="1">
+                    <Label Alignment="Center">
+                        <ResolveOverlappingOptions AllowHide="False" />
+                    </Label>
                     <GridLines MinorVisible="True">
                     </GridLines>
+                    <NumericScaleOptions AutoGrid="False" />
                 </AxisX>
                 <AxisY VisibleInPanesSerializable="-1" MinorCount="1">
                     <Tickmarks MinorVisible="False" />
@@ -925,7 +935,7 @@
                 </ViewSerializable>
             </cc1:Series>
         </SeriesSerializable>
-        <seriestemplate ValueDataMembersSerializable="Value">
+        <seriestemplate ValueDataMembersSerializable="Value">            
             <viewserializable>
                 <cc1:LineSeriesView>
                     <LineMarkerOptions BorderColor="White" Size="8">
@@ -961,7 +971,6 @@
         <ClientSideEvents EndCallback="ChartREndCallBack" />
     </dx:WebChartControl>
 </div>
-
             </td>
         </tr>
     </table>

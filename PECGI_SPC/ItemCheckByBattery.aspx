@@ -207,11 +207,11 @@
 
         <asp:SqlDataSource ID="dsRegNo" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
-            SelectCommand="Exec sp_SPC_ItemCheckByBattery_FillCombo @Type, @FactoryCode1">
-            <SelectParameters>
+            SelectCommand="Exec sp_SPC_ItemCheckByBattery_FillCombo '6' ">
+            <%--<SelectParameters>
                 <asp:Parameter Name="Type"  />
                 <asp:Parameter Name="FactoryCode1"  />
-            </SelectParameters>
+            </SelectParameters>--%>
            <%-- <SelectParameters>
                 <asp:ControlParameter ControlID="cboFactory"
                     PropertyName="Value"
@@ -391,7 +391,7 @@
                     Width="70px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsRegNo" DropDownStyle="DropDownList" TextFormatString="{0}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="70px"
-                        TextField="Description" ValueField="RegistrationNo" ClientInstanceName="RegistrationNo">
+                        TextField="RegistrationNo" ValueField="RegistrationNo" ClientInstanceName="RegistrationNo">
                         <ItemStyle Height="10px" Paddings-Padding="4px">
                             <Paddings Padding="4px"></Paddings>
                         </ItemStyle>

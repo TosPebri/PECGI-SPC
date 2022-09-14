@@ -451,7 +451,8 @@
                             </dx:ASPxGridView>    
 </div>
     <div style="height:10px"></div>
-<div>
+
+<div style="width:100%; overflow-x: auto; border:1px solid black">
 <dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
         Height="434px" Width="1600px" CrosshairEnabled="True" SeriesDataMember="Description">
         <seriestemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
@@ -464,7 +465,13 @@
         <SeriesSerializable>
             <cc1:Series ArgumentDataMember="Seq" Name="Rule" ValueDataMembersSerializable="RuleValue" LabelsVisibility="False" ShowInLegend="False">
                 <ViewSerializable>
-                    <cc1:FullStackedBarSeriesView BarWidth="1">
+                    <cc1:FullStackedBarSeriesView BarWidth="1" Color="Red" Transparency="160">
+                    </cc1:FullStackedBarSeriesView>
+                </ViewSerializable>
+            </cc1:Series>
+            <cc1:Series ArgumentDataMember="Seq" Name="RuleYellow" ValueDataMembersSerializable="RuleYellow" LabelsVisibility="False" ShowInLegend="False">
+                <ViewSerializable>
+                    <cc1:FullStackedBarSeriesView BarWidth="1" Color="Yellow" Transparency="160">
                     </cc1:FullStackedBarSeriesView>
                 </ViewSerializable>
             </cc1:Series>
@@ -486,6 +493,7 @@
                     </Label>
                     <GridLines MinorVisible="True">
                     </GridLines>
+                    <NumericScaleOptions AutoGrid="False" />
                 </AxisX>
                 <AxisY VisibleInPanesSerializable="-1" MinorCount="1">
                     <Tickmarks MinorVisible="False" />
@@ -502,7 +510,7 @@
             </cc1:XYDiagram>
         </DiagramSerializable>
         <titles>
-            <cc1:ChartTitle Font="Segoe UI, 12pt, style=Bold" Text="Graph Monitoring" />
+            <cc1:ChartTitle Font="Segoe UI, 12pt, style=Bold" Text="Graph Monitoring" Alignment="Near" />
         </titles>
         <legend alignmenthorizontal="Left" alignmentvertical="BottomOutside" 
             direction="LeftToRight"></legend> 

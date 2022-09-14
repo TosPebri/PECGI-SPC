@@ -60,6 +60,7 @@ Public Class UserSetup
         If AuthUpdate = False Then
             Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
             commandColumn.ShowEditButton = False
+            commandColumn.ShowNewButtonInHeader = False
         End If
 
         AuthDelete = sGlobal.Auth_UserDelete(pUser, "Z010")

@@ -20,6 +20,7 @@ Public Class ProductionSampleVerificationList
 #Region "Declaration"
     Dim pUser As String = ""
     Private dt As DataTable
+    Dim MenuID As String = ""
 
     ' AUTHORIZATION
     Public AuthUpdate As Boolean = False
@@ -58,13 +59,16 @@ Public Class ProductionSampleVerificationList
 #Region "Event"
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         pUser = Session("user")
-        AuthAccess = sGlobal.Auth_UserAccess(pUser, "B030")
+        MenuID = "B030"
+
+        sGlobal.getMenu(MenuID)
+        Master.SiteTitle = sGlobal.menuName
+        show_error(MsgTypeEnum.Info, "", 0)
+
+        AuthAccess = sGlobal.Auth_UserAccess(pUser, MenuID)
         If AuthAccess = False Then
             Response.Redirect("~/Main.aspx")
         End If
-        sGlobal.getMenu("B030")
-        Master.SiteTitle = sGlobal.menuName
-        show_error(MsgTypeEnum.Info, "", 0)
 
         If Not Page.IsPostBack Then
             If Request.QueryString("menu") IsNot Nothing Then

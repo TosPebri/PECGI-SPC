@@ -93,6 +93,21 @@ Public Class ProdSampleVerification
         sGlobal.getMenu(MenuID)
         Master.SiteTitle = sGlobal.menuName
 
+        AuthUpdate = sGlobal.Auth_UserUpdate(pUser, MenuID)
+        If AuthUpdate = False Then
+            Dim commandColumn = TryCast(GridActivity.Columns(0), GridViewCommandColumn)
+            commandColumn.ShowEditButton = False
+            commandColumn.ShowNewButtonInHeader = False
+            btnVerification.Enabled = False
+        End If
+
+        AuthDelete = sGlobal.Auth_UserDelete(pUser, MenuID)
+        If AuthDelete = False Then
+            Dim commandColumn = TryCast(GridActivity.Columns(0), GridViewCommandColumn)
+            commandColumn.ShowDeleteButton = False
+            btnVerification.Enabled = False
+        End If
+
         If Not Page.IsPostBack Then
             If Request.QueryString("menu") IsNot Nothing Then
                 LoadForm_ByAnotherform()

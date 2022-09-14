@@ -61,7 +61,7 @@
     </script>
 </asp:Content>
 
-<%--<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolderJavaScriptBody" runat="server">
+<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolderJavaScriptBody" runat="server">
     <script type="text/javascript">
         $(document).ready(function () {
             gridHeight(150);
@@ -91,7 +91,7 @@
             Grid.SetHeight(height - hAll);
         };
     </script>
-</asp:Content>--%>
+</asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
     <div id="divhead" style="padding: 5px 5px 5px 5px;">

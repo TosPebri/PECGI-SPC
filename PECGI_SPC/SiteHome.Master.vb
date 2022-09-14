@@ -43,77 +43,6 @@ Public Class SiteHome
             pUser = Session("user").ToString
         End If
 
-        Dim menu As DataSet
-        'notif QCS Approval
-        'If ClsQCSMasterDB.GetDataQELeader(pUser) = True Then
-        '    menu = ClsQCSApprovalDB.GetDataCountQEApproval(pUser)
-        '    notifQCSA = menu.Tables(0).Rows(0)("ApprovalStatus3").ToString()
-        'ElseIf ClsQCSMasterDB.GetDataForemanLeader(pUser) = True Then
-        '    menu = ClsQCSApprovalDB.GetDataCountForemanApproval(pUser)
-        '    notifQCSA = menu.Tables(0).Rows(0)("ApprovalStatus2").ToString()
-        'ElseIf ClsQCSMasterDB.GetDataLineLeader(pUser) = True Then
-        '    menu = ClsQCSApprovalDB.GetDataCountLineApproval(pUser)
-        '    notifQCSA = menu.Tables(0).Rows(0)("ApprovalStatus1").ToString()
-        'End If
-
-        'notif TCCS Approval
-        'If ClsTCCSApprovalDB.CekStatusSectionHead(pUser) = True Then
-        '    menu = ClsTCCSApprovalDB.GetDataCountApproval(pUser)
-        '    notifTCCSA = menu.Tables(0).Rows(0)("ApprovalStatus").ToString()
-        'End If
-
-        'notif TCCS Result Approval
-        'If ClsTCCSResultApprovalDB.GetDataQESecHead(pUser) = True Then
-        '    menu = ClsTCCSResultApprovalDB.GetDataCount4(pUser)
-        '    notifTCCSRA = menu.Tables(0).Rows(0)("ApprovalStatus4").ToString()
-        'ElseIf ClsTCCSResultApprovalDB.GetDataProdSecHead(pUser) = True Then
-        '    menu = ClsTCCSResultApprovalDB.GetDataCount3(pUser)
-        '    notifTCCSRA = menu.Tables(0).Rows(0)("ApprovalStatus3").ToString()
-        'ElseIf ClsTCCSResultApprovalDB.GetDataLineLeader(pUser) = True Then
-        '    menu = ClsTCCSResultApprovalDB.GetDataCount2(pUser)
-        '    notifTCCSRA = menu.Tables(0).Rows(0)("ApprovalStatus2").ToString()
-        'ElseIf ClsTCCSResultApprovalDB.GetDataQELeader(pUser) = True Then
-        '    menu = ClsTCCSResultApprovalDB.GetDataCount1(pUser)
-        '    notifTCCSRA = menu.Tables(0).Rows(0)("ApprovalStatus1").ToString()
-        'End If
-
-        'If ClsTCCSResultApprovalDB.GetDataQESecHead(pUser) = True Then
-        '    StatusApproval4 = "1"
-        'Else
-        '    StatusApproval4 = "0"
-        'End If
-
-        'If ClsTCCSResultApprovalDB.GetDataProdSecHead(pUser) = True Then
-        '    StatusApproval3 = "1"
-        'Else
-        '    StatusApproval3 = "0"
-        'End If
-
-        'If ClsTCCSResultApprovalDB.GetDataLineLeader(pUser) = True Then
-        '    StatusApproval2 = "1"
-        'Else
-        '    StatusApproval2 = "0"
-        'End If
-
-        'If ClsTCCSResultApprovalDB.GetDataQELeader(pUser) = True Then
-        '    StatusApproval1 = "1"
-        'Else
-        '    StatusApproval1 = "0"
-        'End If
-
-        'menu = ClsTCCSResultApprovalDB.GetDataCount(pUser, StatusApproval1, StatusApproval2, StatusApproval3, StatusApproval4)
-        'notifTCCSRA = menu.Tables(0).Rows(0)("Approved").ToString()
-
-        'If pUser <> "" Then
-        '    Dim User As clsUserSetup = clsUserSetupDB.GetData(pUser)
-        '    If User Is Nothing Then
-        '        notifQCSResult = "''"
-        '    ElseIf User.LineLeaderStatus = "1" Then
-        '        notifQCSResult = clsQCSResultShiftDB.GetApproval(pUser).ToString
-        '    Else
-        '        notifQCSResult = "''"
-        '    End If
-        'End If        
 
         If IsNothing(Session("user")) Then
             If Page.IsCallback Then
@@ -124,17 +53,9 @@ Public Class SiteHome
             Exit Sub
         End If
 
-        'If checkPrivilege() = False Then
-        '    If Page.IsCallback Then
-        '        DevExpress.Web.ASPxWebControl.RedirectOnCallback("~/need_authorization.aspx")
-        '    Else
-        '        Response.Redirect("~/need_authorization.aspx")
-        '    End If
-        '    Exit Sub
-        'End If
-
         With Me
             .BindMenu()
+            .Notification()
             lblUser.Text = Session("user").ToString
             lblAdmin.Text = Session("AdminStatus").ToString
         End With
@@ -142,34 +63,6 @@ Public Class SiteHome
         Session.Timeout = 600 'in minutes
     End Sub
 
-    Public Sub rptMenu_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptMenu.ItemDataBound
-
-        If e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.AlternatingItem Then
-            Dim rptSubMenu As Repeater = TryCast(e.Item.FindControl("rptChildMenu"), Repeater)
-            Dim test As String = DirectCast(e.Item.DataItem, System.Data.DataRowView).Row(0).ToString
-            Dim q As String
-            If Session("AdminStatus").ToString = "1" Then
-                q = "SELECT GroupID, RTRIM(MenuDesc) MenuDesc, MenuName, '' HelpName, MenuIndex," & vbCrLf &
-                "CASE WHEN USM.MenuID = '" & IdMenu & "' THEN 'active' ELSE '' END StatusActiveChild," & vbCrLf &
-                "CASE WHEN MenuIndex = '" & MenuIndex & "' THEN 'active' ELSE '' END StatusActiveParent " & vbCrLf &
-                "FROM dbo.spc_UserMenu USM " & vbCrLf &
-                "WHERE GroupID = '" & test & "' " &
-                "and ActiveStatus = '1' " &
-                "order by GroupIndex, MenuIndex "
-            Else
-                q = "SELECT GroupID,RTRIM(MenuDesc) MenuDesc, MenuName, '' HelpName, MenuIndex, " & vbCrLf &
-                "CASE WHEN USM.MenuID = '" & IdMenu & "' THEN 'active' ELSE '' END StatusActiveChild," & vbCrLf &
-                "CASE WHEN MenuIndex = '" & MenuIndex & "' THEN 'active' ELSE '' END StatusActiveParent " & vbCrLf &
-                "FROM dbo.spc_UserMenu USM LEFT JOIN dbo.spc_UserPrivilege UP ON USM.AppID = UP.AppID AND USM.MenuID = UP.MenuID  " & vbCrLf &
-                "WHERE UP.AllowAccess = '1' AND UP.UserID='" & Session("User").ToString & "' " & vbCrLf &
-                "and GroupID = '" & test & "' " &
-                "and ActiveStatus = '1' AND USM.MenuID <> 'Z01  '" &
-                "order by GroupIndex, MenuIndex "
-            End If
-            rptSubMenu.DataSource = GetData(q)
-            rptSubMenu.DataBind()
-        End If
-    End Sub
 #End Region
 
 #Region "FUNCTION"
@@ -189,28 +82,71 @@ Public Class SiteHome
         Return False
     End Function
 
+
     Private Sub BindMenu()
-        Dim q As String
-        If Session("AdminStatus").ToString = "1" Then
-            q = "select USM.GroupID, USM.GroupIndex, USM.GroupID MenuDesc, USM.GroupID MenuName, " & vbCrLf &
-            "max(GroupIcon) HelpName, 0 MenuIndex,'' StatusActiveChild, '' StatusActiveParent  " & vbCrLf &
-            "FROM dbo.spc_UserMenu USM " & vbCrLf &
-            "where ActiveStatus = '1' " & vbCrLf &
-            "group by USM.GroupID, USM.GroupIndex, USM.GroupID, USM.GroupID " & vbCrLf &
-            "order by USM.GroupIndex "
-        Else
-            q = "select USM.GroupID, USM.GroupIndex, USM.GroupID MenuDesc, USM.GroupID MenuName, " & vbCrLf &
-                "max(GroupIcon) HelpName, 0 MenuIndex,'' StatusActiveChild, '' StatusActiveParent  " & vbCrLf &
-                "FROM dbo.spc_UserMenu USM INNER JOIN dbo.spc_UserPrivilege UP ON USM.AppID = UP.AppID AND USM.MenuID = UP.MenuID  " & vbCrLf &
-                "WHERE UP.AllowAccess = '1' " & vbCrLf &
-                "AND UP.UserID='" & Session("User").ToString & "' " & vbCrLf &
-                "AND USM.MenuID <> 'Z010  ' " & vbCrLf &
-                "and ActiveStatus = '1' " & vbCrLf &
-                "group by USM.GroupID, USM.GroupIndex, USM.GroupID, USM.GroupID " & vbCrLf &
-                "order by USM.GroupIndex "
-        End If
-        Me.rptMenu.DataSource = GetData(q)
+        Dim ds As New DataSet
+        Dim dt As New DataTable
+
+        Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+            Cn.Open()
+            Dim q As String = "SP_SPC_UserMenu"
+            Dim cmd As New SqlCommand(q, Cn)
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.Parameters.AddWithValue("AdminStatus", Session("AdminStatus").ToString)
+            cmd.Parameters.AddWithValue("UserID", pUser)
+            Dim da As New SqlDataAdapter(cmd)
+            da.Fill(ds)
+            dt = ds.Tables(0)
+        End Using
+        Me.rptMenu.DataSource = dt
         Me.rptMenu.DataBind()
+    End Sub
+
+    Public Sub rptMenu_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptMenu.ItemDataBound
+
+        Dim ds As New DataSet
+        Dim dt As New DataTable
+
+        If e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.AlternatingItem Then
+            Dim rptSubMenu As Repeater = TryCast(e.Item.FindControl("rptChildMenu"), Repeater)
+            Dim GroupID As String = DirectCast(e.Item.DataItem, System.Data.DataRowView).Row(0).ToString
+
+            Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+                Cn.Open()
+                Dim q As String = "SP_SPC_SubUserMenu"
+                Dim cmd As New SqlCommand(q, Cn)
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.Parameters.AddWithValue("AdminStatus", Session("AdminStatus").ToString)
+                cmd.Parameters.AddWithValue("UserID", pUser)
+                cmd.Parameters.AddWithValue("MenuID", IdMenu)
+                cmd.Parameters.AddWithValue("MenuIndex", MenuIndex.ToString)
+                cmd.Parameters.AddWithValue("GroupID", GroupID)
+                Dim da As New SqlDataAdapter(cmd)
+                da.Fill(ds)
+                dt = ds.Tables(0)
+            End Using
+            rptSubMenu.DataSource = dt
+            rptSubMenu.DataBind()
+        End If
+    End Sub
+
+    Private Sub Notification()
+        Dim ds As New DataSet
+        Dim dt As New DataTable
+
+        Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+            Cn.Open()
+            Dim q As String = "SP_SPC_Notication"
+            Dim cmd As New SqlCommand(q, Cn)
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.Parameters.AddWithValue("UserID", pUser)
+            Dim da As New SqlDataAdapter(cmd)
+            da.Fill(ds)
+            dt = ds.Tables(0)
+        End Using
+
+        Me.NG.DataSource = dt
+        Me.NG.DataBind()
     End Sub
 
 #End Region

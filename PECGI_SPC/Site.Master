@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title id="PageTitle" runat="server">Statistic Process Control System</title>    
+    <title id="PageTitle" runat="server">Statistic Process Control System</title>
     <link href="Styles/images/favicon_pecgi.ico" rel="SHORTCUT ICON" type="image/icon" />
 
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
@@ -32,110 +32,132 @@
 
     <!-- Toastr -->
     <script src="Scripts/toastr.js"></script>
-    <link rel="Stylesheet" type="text/css" href="content/toastr.css" />
-    <link rel="Stylesheet" href="content/toastr.min.css" />
+    <link rel="Stylesheet" type="text/css" href="content/toastr.css">
+    <link rel="Stylesheet" href="content/toastr.min.css">
     <%--<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />--%>
-
 </head>
 <body class="smart-style fixed-header desktop-detected pace-done minified">
     <!-- HEADER -->
     <header id="header">
-			<%--<div id="logo-group" style="width: 220px; margin-left: 0px; padding:8px 0px 0px 35px;">--%>
-				<!-- PLACE YOUR LOGO HERE -->
-				<%--<span id="logo">--%>
-                 <%--<img src="Styles/images/logohead.png" alt="MUSASHI" width="150px"/>--%>
-                <%--</span>--%>
-				 <%--END LOGO PLACEHOLDER --%>
-		    <%--</div>--%>
 
-			<!-- projects dropdown -->
-			<div class="project-context hidden-xs" >
-				<span></span>
-				<span class="project-selector dropdown-toggle" style="font-family:Tahoma; font-weight:bold; font-size:12pt; margin-top:10px; padding:0px 0px 0px 18px">PANASONIC SPC SYSTEM</span>
-			</div>
-			<!-- end projects dropdown -->
+        <!-- projects dropdown -->
+        <div class="project-context hidden-xs">
+            <span></span>
+            <span class="project-selector dropdown-toggle" style="font-family: Tahoma; font-weight: bold; font-size: 12pt; margin-top: 10px; padding: 0px 0px 0px 18px">PANASONIC SPC SYSTEM</span>
+        </div>
+        <!-- end projects dropdown -->
 
-			<!-- pulled right: nav area -->
-			<div class="pull-right">
+        <div id="logo-group" style="padding-left: 20px">
+            <asp:Repeater ID="NG" runat="server">
+                <ItemTemplate>
+                    <span id="activity" class="activity-dropdown"><i class="fa fa-user"></i><b class="badge"><%# Eval("TotNotif")%> </b></span>
 
-                <!-- collapse menu button -->
-				<div id="hide-menu" class="btn-header pull-right">
-					<span> <a href="javascript:void(0);" data-action="toggleMenu" title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
-				</div>
-				<!-- end collapse menu -->
+                    <div class="ajax-dropdown">
+                        <div class="btn-group btn-group-justified" data-toggle="buttons">
+                            <label class="btn btn-default">
+                                <input type="radio" name="btnDelay">
+                                Delay Input (<%# Eval("TotDelay")%>)
+                            </label>
+                            <label class="btn btn-default">
+                                <input type="radio" name="btnNG">
+                                NG Input (<%# Eval("TotNG")%>)
+                            </label>
+                        </div>
+                        <div class="ajax-notifications custom-scroll">
 
-				<!-- logout button -->
-				<div id="logout" class="btn-header transparent pull-right">
-					<span> <a href="Default.aspx" title="Sign Out" data-action="userLogout" data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i class="fa fa-sign-out"></i></a> </span>
-				</div>
-				<!-- end logout button -->
+                            <div class="alert alert-transparent" id="listdata">
+                            </div>
+                        </div>
+                        <span><%# Eval("Date")%>
+                            <button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Loading..." class="btn btn-xs btn-default pull-right">
+                                <i class="fa fa-refresh"></i>
+                            </button>
+                        </span>
 
-                <!-- fullscreen button -->
-				<div id="fullscreen" class="btn-header transparent pull-right">
-					<span><a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i class="fa fa-arrows-alt"></i></a> </span>
-				</div>
-				<!-- end fullscreen button -->
-				
-			</div>
-			<!-- end pulled right: nav area -->
-            <iframe src="<%=Page.ResolveClientUrl("~/StretchSession.aspx")%>" width="0" height="0" style="display:none;"></iframe>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+        </div>
+
+        <!-- pulled right: nav area -->
+        <div class="pull-right">
+
+            <!-- collapse menu button -->
+            <div id="hide-menu" class="btn-header pull-right">
+                <span><a href="javascript:void(0);" data-action="toggleMenu" title="Collapse Menu"><i class="fa fa-reorder"></i></a></span>
+            </div>
+            <!-- end collapse menu -->
+
+            <!-- logout button -->
+            <div id="logout" class="btn-header transparent pull-right">
+                <span><a href="Default.aspx" title="Sign Out" data-action="userLogout" data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i class="fa fa-sign-out"></i></a></span>
+            </div>
+            <!-- end logout button -->
+
+            <!-- fullscreen button -->
+            <div id="fullscreen" class="btn-header transparent pull-right">
+                <span><a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i class="fa fa-arrows-alt"></i></a></span>
+            </div>
+            <!-- end fullscreen button -->
+
+        </div>
+        <!-- end pulled right: nav area -->
+        <iframe src="<%=Page.ResolveClientUrl("~/StretchSession.aspx")%>" width="0" height="0" style="display: none;"></iframe>
     </header>
     <!-- END HEADER -->
     <!-- Left panel : Navigation area -->
     <!-- Note: This width of the aside area can be adjusted through LESS variables -->
     <aside id="left-panel">
 
-			<!-- User info -->
-			<div class="login-info">
-				<span> <!-- User image size is adjusted inside CSS, it should stay as it --> 
-					
-					<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                        &nbsp <asp:Label ID="lblUser" runat="server" Text="lblUser" Font-Names="Tahoma" Font-Size="14pt" Font-Bold="true"></asp:Label>
-                        <asp:Label ID="lblAdmin" runat="server" Text="lblAdmin" Visible="False"></asp:Label>
-					</a> 
-					
-				</span>
-			</div>
-			<!-- end user info -->
+        <!-- User info -->
+        <div class="login-info">
+            <span>
+                <!-- User image size is adjusted inside CSS, it should stay as it -->
 
-			<!-- NAVIGATION : This navigation is also responsive-->
-			<nav >
-                <ul>
-                    <li>
-						<a href="Main.aspx" title="Home"><i class="fa fa-lg fa-fw fa-home"></i><span class="menu-item-parent">Home</span></a>
-					</li>
-                    <asp:Repeater ID="rptMenu" runat="server" >
-                      <ItemTemplate>
-                          <li class="<%#Eval("StatusActiveParent") %>"><a href='#' title="<%# Eval("MenuDesc")%>"><i class="<%#Eval("HelpName") %>"></i><span class="menu-item-parent"><%# Eval("MenuDesc")%></span></a>
-                              <ul>
-                                  <asp:Repeater ID="rptChildMenu" runat="server">
-                                      <ItemTemplate>
-                                          <li class="<%#Eval("StatusActiveChild") %>">
+                <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    &nbsp
+                    <asp:Label ID="lblUser" runat="server" Text="lblUser" Font-Names="Tahoma" Font-Size="14pt" Font-Bold="true"></asp:Label>
+                    <asp:Label ID="lblAdmin" runat="server" Text="lblAdmin" Visible="False"></asp:Label>
+                </a>
+
+            </span>
+        </div>
+        <!-- end user info -->
+
+        <!-- NAVIGATION : This navigation is also responsive-->
+         <nav>
+            <ul>
+                <li>
+                    <a href="Main.aspx" title="Home"><i class="fa fa-lg fa-fw fa-home"></i><span class="menu-item-parent">Home</span></a>
+                </li>
+                <asp:Repeater ID="rptMenu" runat="server">
+                    <ItemTemplate>
+                        <li class="menu">
+                            <a href='#' title="<%# Eval("MenuDesc")%>"></span><i class="<%#Eval("HelpName") %>"><em><%#Eval("Notif") %></em></i><span class="menu-item-parent"><%# Eval("MenuDesc")%></span></a>
+                            <ul>
+                                <asp:Repeater ID="rptChildMenu" runat="server">
+                                    <ItemTemplate>
+                                        <li>
                                             <a href="<%#Eval("MenuName") %>">
+                                                <span class="badge bg-color-greenLight pull-right inbox-badge"><%#Eval("Notif") %></span>
                                                 <i class="<%#Eval("HelpName") %>"></i>
                                                 <%#Eval("MenuDesc") %>
-<%--                                               <asp:Label ID="labelnotifQCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSA") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Master Approval", true, false)%>'></asp:Label>
-                                                <asp:Label ID="labelnotifTCCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifTCCSA") %>' Visible='<%#if(Eval("MenuDesc") = "TCCS Master Approval", true, false)%>'></asp:Label>
-                                                <asp:Label ID="labelnotifTCCSRA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifTCCSRA") %>' Visible='<%#if(Eval("MenuDesc") = "TCCS Result Approval", true, false)%>'></asp:Label>
-                                                <asp:Label ID="labelnotifQCSResult" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSResult") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Result Input", true, false)%>'></asp:Label>--%>
                                             </a>
-                                           </li>
-                                      </ItemTemplate>
-                                  </asp:Repeater>
-                              </ul>
-                          </li>
-                      </ItemTemplate>
-                    </asp:Repeater>
-                </ul>
-                			<span class="minifyme" data-action="minifyMenu"> 
-				<i class="fa fa-arrow-circle-left hit"></i> 
-			</span>
-			</nav>
+                                        </li>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </ul>
+                        </li>
+                    </ItemTemplate>
+                </asp:Repeater>
+                <li>
+                    <span class="minifyme" data-action="minifyMenu"><i class="fa fa-arrow-circle-left hit"></i></span>
+                </li>
+            </ul>
+        </nav>
 
-
-
-	</aside>
+    </aside>
     <!-- END NAVIGATION -->
 
     <!-- MAIN PANEL -->
@@ -144,30 +166,31 @@
         <div id="content">
             <!-- widget grid -->
             <section id="widget-grid" class="">
-				<!-- START ROW -->
-				<div class="row">
-				    <!-- NEW COL START -->
-					<article class="col-sm-12 col-md-12 col-lg-12">
-				        <!-- Widget ID (each widget will need unique ID)-->
-						<div class="jarviswidget" id="wid-id-0" data-widget-deletebutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-custombutton="false">
+                <!-- START ROW -->
+                <div class="row">
+                    <!-- NEW COL START -->
+                    <article class="col-sm-12 col-md-12 col-lg-12">
+                        <!-- Widget ID (each widget will need unique ID)-->
+                        <div class="jarviswidget" id="wid-id-0" data-widget-deletebutton="false" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-custombutton="false">
                             <header>
-							    <span class="widget-icon"><i class="fa fa-edit"></i> </span>
-								<h2><strong><asp:Label ID="Label1" runat="server" Text=""></asp:Label></strong></h2>
+                                <span class="widget-icon"><i class="fa fa-edit"></i></span>
+                                <h2><strong>
+                                    <asp:Label ID="Label1" runat="server" Text=""></asp:Label></strong></h2>
                             </header>
-								<!-- widget div-->
+                            <!-- widget div-->
                             <div>
-						        <!-- widget content -->
-						        <div class="widget-body">
-                                    <form class="smart-form" id="Form1" runat="server" >
-                                    <%--<asp:ScriptManager ID="ScriptManager" runat="server" />--%>
-                                        <asp:ContentPlaceHolder ID="Content" runat="server"/>
+                                <!-- widget content -->
+                                <div class="widget-body">
+                                    <form class="smart-form" id="Form1" runat="server">
+                                        <%--<asp:ScriptManager ID="ScriptManager" runat="server" />--%>
+                                        <asp:ContentPlaceHolder ID="Content" runat="server" />
                                     </form>
                                 </div>
-							    <!-- end widget content -->
-							</div>
-						<!-- end widget div -->
-						</div>
-					    <!-- end widget -->
+                                <!-- end widget content -->
+                            </div>
+                            <!-- end widget div -->
+                        </div>
+                        <!-- end widget -->
                     </article>
                     <!-- END COL -->
                 </div>
@@ -178,9 +201,9 @@
     </div>
     <!-- END MAIN PANEL -->
     <!-- PAGE FOOTER -->
-     <div class="page-footer">
-        <input type="hidden" id="hdnmenu" name="hdnmenu" value="0"/>
-        <input type="hidden" id="flscr" name="flscr" value="0"/>
+    <div class="page-footer">
+        <input type="hidden" id="hdnmenu" name="hdnmenu" value="0" />
+        <input type="hidden" id="flscr" name="flscr" value="0" />
         <div class="row">
             <div class="col-xs-12 col-sm-6">
                 <span class="txt-color-white">© 2018 - Developed by PT. TOS Information Systems</span>
@@ -829,8 +852,24 @@
     </script>--%>
 
     <!-- For Adaptive Grid -->
+
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $(".menu").each(function () {
+                $(this).find('em').each(function () {
+                    if ($.trim($(this).text()) == "0") {
+                        $(this).hide();
+                    }
+                });
+
+                $(this).find('span').each(function () {
+                    if ($.trim($(this).text()) == "0") {
+                        $(this).hide();
+                    }
+                });
+            });
+
             $("#hide-menu").click(function () {
                 var hiddenVal = $("#hdnmenu").val()
                 if (hiddenVal == "0") {
@@ -858,8 +897,62 @@
                 }
             })
         })
+
+        function GetNotif(Action) {
+
+            var User = $("#lblUser").text();
+            var Factory = "ALL";
+
+            $.ajax({
+                type: "POST",
+                url: "AlertDashboard.aspx/" + Action + "",
+                data: '{ pUser: "' + User + '",pFactory: "' + Factory + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#listdata").html();
+                    var html = "";
+
+                    var sData = data.d.toString();
+
+                    if (sData != "") {
+                        const a = sData.split(";");
+                        for (var i = 0; i < a.length; i++) {
+                            var Label = a[i].split("|")[0];
+                            var nValue = a[i].split("|")[1];
+                            /*console.log(nValue);*/
+                            html += '<label style="border-bottom:groove"><a href=' + nValue + '><span class="fa fa-bell icon-color-bad"></span><span style="font-size:15px; color:black; margin-left:10px">' + Label + '</span></a></label><br/>'
+                        };
+                    } else {
+                        html = '<div class="sa-ajax-notification-container"><div class="alert sa-ajax-notification-alert"><h4>Click a button to show messages here</h4> Data Is Not Found!</div ><span class="fa fa-search fa-4x fa-border"></span></div >'
+                    }
+
+                    $("#listdata").html(html);
+                },
+                failure: function (response) {
+                    alert(response.d);
+                },
+                error: function (response) {
+                    alert(response.d);
+                }
+            });
+        }
+
+        $("#activity").click(function () {
+            GetNotif("DelayInput")
+        });
+
+
+        $(":radio[name='btnDelay']").change(function () {
+            GetNotif("DelayInput");
+        });
+
+        $(":radio[name='btnNG']").change(function () {
+            GetNotif("NGInput")
+        });
+
     </script>
 
-    <asp:ContentPlaceHolder ID="ContentPlaceHolderJavaScriptBody" runat="server"/>
+    <asp:ContentPlaceHolder ID="ContentPlaceHolderJavaScriptBody" runat="server" />
 </body>
 </html>

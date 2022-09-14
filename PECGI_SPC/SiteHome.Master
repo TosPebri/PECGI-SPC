@@ -53,6 +53,47 @@
             <span></span>
             <span class="project-selector dropdown-toggle" style="font-family: Tahoma; font-weight: bold; font-size: 12pt; margin-top: 10px; padding: 8px 0px 0px 18px;">PANASONIC SPC SYSTEM</span>
         </div>
+
+        <div id="logo-group" style="padding-left:20px">
+            <asp:Repeater ID="NG" runat="server">
+                <ItemTemplate>
+                    <span id="activity" class="activity-dropdown"><i class="fa fa-user"></i><b class="badge"><%# Eval("TotNotif")%> </b></span>
+
+                    <!-- AJAX-DROPDOWN : control this dropdown height, look and feel from the LESS variable file -->
+                    <div class="ajax-dropdown">
+
+                        <!-- the ID links are fetched via AJAX to the ajax container "ajax-notifications" -->
+                        <div class="btn-group btn-group-justified" data-toggle="buttons">
+                            <label class="btn btn-default">
+                                <input type="radio" name="btnDelay">
+                                Delay Input (<%# Eval("TotDelay")%>)
+                            </label>
+                            <label class="btn btn-default">
+                                <input type="radio" name="btnNG">
+                                NG Input (<%# Eval("TotNG")%>)
+                            </label>
+                        </div>
+
+                        <!-- notification content -->
+                        <div class="ajax-notifications custom-scroll">
+
+                            <div class="alert alert-transparent" id="listdata">
+                            </div>
+                        </div>
+                        <!-- end notification content -->
+
+                        <!-- footer: refresh area -->
+                        <span><%# Eval("Date")%>
+						<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Loading..." class="btn btn-xs btn-default pull-right">
+                            <i class="fa fa-refresh"></i>
+                        </button>
+                        </span>
+                        <!-- end footer -->
+
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+        </div>
         <!-- end projects dropdown -->
 
         <!-- pulled right: nav area -->
@@ -106,44 +147,18 @@
                 <li>
                     <a href="Main.aspx" title="Home"><i class="fa fa-lg fa-fw fa-home"></i><span class="menu-item-parent">Home</span></a>
                 </li>
-                <asp:Repeater ID="Repeater1" runat="server">
-                    <ItemTemplate>
-                        <li class="<%#Eval("StatusActiveParent") %>">
-                            <a href='#' title="<%# Eval("MenuDesc")%>"><i class="<%#Eval("HelpName") %>"></i><span class="menu-item-parent"><%#Eval("MenuDesc")%></span></a>
-                            <ul>
-                                <asp:Repeater ID="rptChildMenu" runat="server">
-                                    <ItemTemplate>
-                                        <li class="<%#Eval("StatusActiveChild") %>">
-                                            <a href="<%#Eval("MenuName") %>">
-                                                <i class="<%#Eval("HelpName") %>"></i>
-                                                <%#Eval("MenuDesc") %>
-                                                <%-- <asp:Label ID="labelnotifQCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSA") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Master Approval", true, false)%>'></asp:Label>
-                                                <asp:Label ID="labelnotifTCCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifTCCSA") %>' Visible='<%#if(Eval("MenuDesc") = "TCCS Master Approval", true, false)%>'></asp:Label>
-                                                <asp:Label ID="labelnotifTCCSRA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifTCCSRA") %>' Visible='<%#if(Eval("MenuDesc") = "TCCS Result Approval", true, false)%>'></asp:Label>
-                                                <asp:Label ID="labelnotifQCSResult" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSResult") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Result Input", true, false)%>'></asp:Label>--%>
-                                            </a>
-                                        </li>
-                                    </ItemTemplate>
-                                </asp:Repeater>
-                            </ul>
-                        </li>
-                    </ItemTemplate>
-                </asp:Repeater>
                 <asp:Repeater ID="rptMenu" runat="server">
                     <ItemTemplate>
-                        <li class="<%#Eval("StatusActiveParent") %>">
-                            <a href='#' title="<%# Eval("MenuDesc")%>"><i class="<%#Eval("HelpName") %>"></i><span class="menu-item-parent"><%#Eval("MenuDesc")%></span></a>
+                        <li class="menu">
+                            <a href='#' title="<%# Eval("MenuDesc")%>"></span><i class="<%#Eval("HelpName") %>"><em><%#Eval("Notif") %></em></i><span class="menu-item-parent"><%# Eval("MenuDesc")%></span></a>
                             <ul>
                                 <asp:Repeater ID="rptChildMenu" runat="server">
                                     <ItemTemplate>
-                                        <li class="<%#Eval("StatusActiveChild") %>">
+                                        <li>
                                             <a href="<%#Eval("MenuName") %>">
+                                                <span class="badge bg-color-greenLight pull-right inbox-badge"><%#Eval("Notif") %></span>
                                                 <i class="<%#Eval("HelpName") %>"></i>
                                                 <%#Eval("MenuDesc") %>
-                                                <%-- <asp:Label ID="labelnotifQCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSA") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Master Approval", true, false)%>'></asp:Label>
-                                                <asp:Label ID="labelnotifTCCSA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifTCCSA") %>' Visible='<%#if(Eval("MenuDesc") = "TCCS Master Approval", true, false)%>'></asp:Label>
-                                                <asp:Label ID="labelnotifTCCSRA" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifTCCSRA") %>' Visible='<%#if(Eval("MenuDesc") = "TCCS Result Approval", true, false)%>'></asp:Label>
-                                                <asp:Label ID="labelnotifQCSResult" CssClass="badge pull-right inbox-badge margin-right-13" runat="server" Text='<%#Eval("NotifQCSResult") %>' Visible='<%#if(Eval("MenuDesc") = "QCS Result Input", true, false)%>'></asp:Label>--%>
                                             </a>
                                         </li>
                                     </ItemTemplate>
@@ -152,10 +167,10 @@
                         </li>
                     </ItemTemplate>
                 </asp:Repeater>
+                <li>
+                    <span class="minifyme" data-action="minifyMenu"><i class="fa fa-arrow-circle-left hit"></i></span>
+                </li>
             </ul>
-            <span class="minifyme" data-action="minifyMenu">
-                <i class="fa fa-arrow-circle-left hit"></i>
-            </span>
         </nav>
 
     </aside>
@@ -260,10 +275,10 @@
     <script src="js/smart-chat-ui/smart.chat.manager.min.js"></script>
     <!-- PAGE RELATED PLUGIN(S) -->
     <!-- Flot Chart Plugin: Flot Engine, Flot Resizer, Flot Tooltip -->
-    <script src="js/plugin/flot/jquery.flot.cust.min.js"></script>
+<%--    <script src="js/plugin/flot/jquery.flot.cust.min.js"></script>
     <script src="js/plugin/flot/jquery.flot.resize.min.js"></script>
     <script src="js/plugin/flot/jquery.flot.time.min.js"></script>
-    <script src="js/plugin/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="js/plugin/flot/jquery.flot.tooltip.min.js"></script>--%>
     <!-- Vector Maps Plugin: Vectormap engine, Vectormap language -->
     <script src="js/plugin/vectormap/jquery-jvectormap-1.2.2.min.js"></script>
     <script src="js/plugin/vectormap/jquery-jvectormap-world-mill-en.js"></script>
@@ -272,9 +287,23 @@
     <script src="js/plugin/fullcalendar/jquery.fullcalendar.min.js"></script>
 
     <script src="Scripts/toastr.js"></script>
-    <%--<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>--%>>
-    <script>
+    <%--<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>>
+  <%--  <script>
         $(document).ready(function () {
+
+                $(".menu").each(function () {
+                    $(this).find('em').each(function () {
+                        if ($.trim($(this).text()) == "0") {
+                            $(this).hide();
+                        }
+                    });
+
+                    $(this).find('span').each(function () {
+                        if ($.trim($(this).text()) == "0") {
+                            $(this).hide();
+                        }
+                    });
+                });
 
             // DO NOT REMOVE : GLOBAL FUNCTIONS!
             pageSetUp();
@@ -825,9 +854,65 @@
 
         });
 
-    </script>
+        function GetNotif(Action) {
+
+            var User = $("#lblUser").text();
+            var Factory = "ALL";
+
+            $.ajax({
+                type: "POST",
+                url: "AlertDashboard.aspx/" + Action + "",
+                data: '{ pUser: "' + User + '",pFactory: "' + Factory + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#listdata").html();
+                    var html = "";
+
+                    var sData = data.d.toString();
+
+                    if (sData != "") {
+                        const a = sData.split(";");
+                        for (var i = 0; i < a.length; i++) {
+                            var Label = a[i].split("|")[0];
+                            var nValue = a[i].split("|")[1];
+                            /*console.log(nValue);*/
+                            html += '<label style="border-bottom:groove"><a href=' + nValue + '><span class="fa fa-bell icon-color-bad"></span><span style="font-size:15px; color:black; margin-left:10px">' + Label + '</span></a></label><br/>'
+                        };
+                    } else {
+                        html = '<div class="sa-ajax-notification-container"><div class="alert sa-ajax-notification-alert"><h4>Click a button to show messages here</h4> Data Is Not Found!</div ><span class="fa fa-search fa-4x fa-border"></span></div >'
+                    }
+
+                    $("#listdata").html(html);
+                },
+                failure: function (response) {
+                    alert(response.d);
+                },
+                error: function (response) {
+                    alert(response.d);
+                }
+            });
+        }
+
+        $("#activity").click(function () {
+            GetNotif("DelayInput")
+        });
+
+
+        $(":radio[name='btnDelay']").change(function () {
+            GetNotif("DelayInput");
+        });
+
+        $(":radio[name='btnNG']").change(function () {
+            GetNotif("NGInput")
+        });
+
+    </script>--%>
     <!-- Your GOOGLE ANALYTICS CODE Below -->
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
+
+     
+
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-XXXXXXXX-X']);
         _gaq.push(['_trackPageview']);
@@ -841,6 +926,80 @@
             //            s.parentNode.insertBefore(ga, s);
         })();
 
-    </script>
+    </script>--%>
+
+ <script type="text/javascript">
+     $(document).ready(function () {
+         $(".menu").each(function () {
+             $(this).find('em').each(function () {
+                 if ($.trim($(this).text()) == "0") {
+                     $(this).hide();
+                 }
+             });
+
+             $(this).find('span').each(function () {
+                 if ($.trim($(this).text()) == "0") {
+                     $(this).hide();
+                 }
+             });
+         });
+     });
+
+     function GetNotif(Action) {
+
+         var User = $("#lblUser").text();
+         var Factory = "ALL";
+
+         $.ajax({
+             type: "POST",
+             url: "AlertDashboard.aspx/" + Action + "",
+             data: '{ pUser: "' + User + '",pFactory: "' + Factory + '"}',
+             contentType: "application/json; charset=utf-8",
+             dataType: "json",
+             success: function (data) {
+                 $("#listdata").html();
+                 var html = "";
+
+                 var sData = data.d.toString();
+
+                 if (sData != "") {
+                     const a = sData.split(";");
+                     for (var i = 0; i < a.length; i++) {
+                         var Label = a[i].split("|")[0];
+                         var nValue = a[i].split("|")[1];
+                         /*console.log(nValue);*/
+                         html += '<label style="border-bottom:groove"><a href=' + nValue + '><span class="fa fa-bell icon-color-bad"></span><span style="font-size:15px; color:black; margin-left:10px">' + Label + '</span></a></label><br/>'
+                     };
+                 } else {
+                     html = '<div class="sa-ajax-notification-container"><div class="alert sa-ajax-notification-alert"><h4>Click a button to show messages here</h4> Data Is Not Found!</div ><span class="fa fa-search fa-4x fa-border"></span></div >'
+                 }
+
+                 $("#listdata").html(html);
+             },
+             failure: function (response) {
+                 alert(response.d);
+             },
+             error: function (response) {
+                 alert(response.d);
+             }
+         });
+     }
+
+     $("#activity").click(function () {
+         GetNotif("DelayInput")
+     });
+
+
+     $(":radio[name='btnDelay']").change(function () {
+         GetNotif("DelayInput");
+     });
+
+     $(":radio[name='btnNG']").change(function () {
+         GetNotif("NGInput")
+     });
+
+
+ </script>
+
 </body>
 </html>

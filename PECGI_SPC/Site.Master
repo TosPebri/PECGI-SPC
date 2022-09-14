@@ -179,6 +179,8 @@
     <!-- END MAIN PANEL -->
     <!-- PAGE FOOTER -->
      <div class="page-footer">
+        <input type="hidden" id="hdnmenu" name="hdnmenu" value="0"/>
+        <input type="hidden" id="flscr" name="flscr" value="0"/>
         <div class="row">
             <div class="col-xs-12 col-sm-6">
                 <span class="txt-color-white">© 2018 - Developed by PT. TOS Information Systems</span>
@@ -243,10 +245,10 @@
     <script src="js/smart-chat-ui/smart.chat.manager.min.js"></script>
     <!-- PAGE RELATED PLUGIN(S) -->
     <!-- Flot Chart Plugin: Flot Engine, Flot Resizer, Flot Tooltip -->
-    <script src="js/plugin/flot/jquery.flot.cust.min.js"></script>
+    <%--<script src="js/plugin/flot/jquery.flot.cust.min.js"></script>
     <script src="js/plugin/flot/jquery.flot.resize.min.js"></script>
     <script src="js/plugin/flot/jquery.flot.time.min.js"></script>
-    <script src="js/plugin/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="js/plugin/flot/jquery.flot.tooltip.min.js"></script>--%>
     <!-- Vector Maps Plugin: Vectormap engine, Vectormap language -->
     <script src="js/plugin/vectormap/jquery-jvectormap-1.2.2.min.js"></script>
     <script src="js/plugin/vectormap/jquery-jvectormap-world-mill-en.js"></script>
@@ -256,7 +258,7 @@
 
     <script src="Scripts/toastr.js"></script>
     <%--<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>--%>
-    <script>
+    <%--<script>
         $(document).ready(function () {
 
             // DO NOT REMOVE : GLOBAL FUNCTIONS!
@@ -824,6 +826,40 @@
             //            s.parentNode.insertBefore(ga, s);
         })();
 
-    </script>    
+    </script>--%>
+
+    <!-- For Adaptive Grid -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#hide-menu").click(function () {
+                var hiddenVal = $("#hdnmenu").val()
+                if (hiddenVal == "0") {
+                    Grid.PerformCallback("hide-menu");
+                    $("#divDatetime").addClass('col-md-10');
+                    $("#hdnmenu").val("1");
+                }
+                else if (hiddenVal == "1") {
+                    Grid.PerformCallback("hide-menu");
+                    $("#divDatetime").removeClass('col-md-10');
+                    $("#hdnmenu").val("0")
+                }
+            });
+            $(".minifyme").click(function () {
+                var hiddenVal = $("#hdnmenu").val()
+                if (hiddenVal == "0") {
+                    Grid.PerformCallback("hide-menu");
+                    $("#divDatetime").addClass('col-md-10');
+                    $("#hdnmenu").val("1");
+                }
+                else if (hiddenVal == "1") {
+                    Grid.PerformCallback("hide-menu");
+                    $("#divDatetime").removeClass('col-md-10');
+                    $("#hdnmenu").val("0")
+                }
+            })
+        })
+    </script>
+
+    <asp:ContentPlaceHolder ID="ContentPlaceHolderJavaScriptBody" runat="server"/>
 </body>
 </html>

@@ -16,8 +16,8 @@
         function cboFactoryChanged(s, e) {
             cboType.SetEnabled(false);
             cboType.PerformCallback(cboFactory.GetValue());
-            cboLine.SetEnabled(false);
-            cboLine.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue());
+            //cboLine.SetEnabled(false);
+            //cboLine.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue());
         }
         function cboTypeChanged(s, e) {
             cboLine.SetEnabled(false);
@@ -106,8 +106,40 @@
     </script>
 </asp:Content>
 
+<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolderJavaScriptBody" runat="server">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            gridHeight(150);
+
+            $("#fullscreen").click(function () {
+                var fcval = $("#flscr").val();
+                if (fcval == "0") { //toClickFullScreen
+                    gridHeight(50);
+                    $("#flscr").val("1");
+                } else if (fcval == "1") { //toNormalFullScreen
+                    gridHeight(260);
+                    $("#flscr").val("0");
+                }
+            })
+        });
+
+        function gridHeight(pF) {
+            var h1 = 49;
+            var p1 = 10;
+            var h2 = 34;
+            var p2 = 13;
+            var h3 = $("#divhead").height();
+
+            var hAll = h1 + p1 + h2 + p2 + h3 + pF;
+            /* alert(h1 + p1 + h2 + p2 + h3);*/
+            var height = Math.max(0, document.documentElement.clientHeight);
+            Grid.SetHeight(height - hAll);
+        };
+    </script>
+</asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
-    <div style="padding: 0px 5px 5px 5px">
+    <div id="divhead" style="padding: 0px 5px 5px 5px">
         <table>
             <tr style="height: 30px">
                 <td style="width:60px; padding:5px 0px 0px 0px">

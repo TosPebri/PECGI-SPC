@@ -80,8 +80,56 @@
     </script>
 </asp:Content>
 
+<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolderJavaScriptBody" runat="server">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            gridHeight(500);
+            gridHeight2(500);
+
+            $("#fullscreen").click(function () {
+                var fcval = $("#flscr").val();
+                if (fcval == "0") { //toClickFullScreen
+                    gridHeight(500);
+                    gridHeight2(500);
+                    $("#flscr").val("1");
+                } else if (fcval == "1") { //toNormalFullScreen
+                    gridHeight(500);
+                    gridHeight2(500);
+                    $("#flscr").val("0");
+                }
+            })
+        });
+
+        function gridHeight(pF) {
+            var h1 = 49;
+            var p1 = 10;
+            var h2 = 34;
+            var p2 = 13;
+            var h3 = $("#divhead").height();
+
+            var hAll = h1 + p1 + h2 + p2 + h3 + pF;
+            /* alert(h1 + p1 + h2 + p2 + h3);*/
+            var height = Math.max(0, document.documentElement.clientHeight);
+            Grid.SetHeight(height - hAll);
+        };
+
+        function gridHeight2(pF) {
+            var h1 = 49;
+            var p1 = 10;
+            var h2 = 34;
+            var p2 = 13;
+            var h3 = $("#divhead").height();
+
+            var hAll = h1 + p1 + h2 + p2 + h3 + pF;
+            /* alert(h1 + p1 + h2 + p2 + h3);*/
+            var height = Math.max(0, document.documentElement.clientHeight);
+            GridNG.SetHeight(height - hAll);
+        };
+    </script>
+</asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
-    <div style="padding: 0px 5px 5px 5px">
+    <div id="divhead" style="padding: 0px 5px 5px 5px">
         <%--<table>
             <tr style="height: 30px">
                 <td style="width: 120px">
@@ -201,7 +249,7 @@
             </center>
         </div>
 
-        <div id="ScrollList2" style="height: 150px; overflow: auto">
+        <%--<div id="ScrollList2" style="height: 150px; overflow: auto">--%>
             <dx:ASPxGridView ID="Grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="Grid"
                 EnableTheming="True" KeyFieldName="ItemTypeName;LineCode;ItemCheck" Theme="Office2010Black" Width="100%"
                 Font-Names="Segoe UI" Font-Size="9pt"
@@ -511,7 +559,7 @@
             </dx:ASPxGridView>
             
             <br />
-        </div>
+        <%--</div>--%>
     </div>
     <br />
             <button disabled="disabled" style="background-color:yellow;width: 20px;height:10px"></button> <label> Delay < 60 Minutes</label>
@@ -525,7 +573,7 @@
             </center>
         </div>
         
-        <div id="ScrollList" style="height: 150px; overflow: auto">
+        <%--<div id="ScrollList" style="height: 150px; overflow: auto">--%>
             <dx:ASPxGridView ID="GridNG" runat="server" AutoGenerateColumns="False" ClientInstanceName="GridNG"
                 EnableTheming="True" KeyFieldName="ItemTypeName;LineCode;ItemCheck" Theme="Office2010Black" Width="100%"
                 Font-Names="Segoe UI" Font-Size="9pt"
@@ -917,7 +965,7 @@
                 </Styles>
 
             </dx:ASPxGridView>
-        </div>
+        <%--</div>--%>
             <br />
             <button disabled="disabled" style="background-color:yellow;width: 20px;height:10px"></button> <label> Out Of Control Value</label>
             <button disabled="disabled" style="background-color:red;width: 20px;height:10px"></button> <label> Out Of Specification Value</label>

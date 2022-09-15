@@ -129,7 +129,7 @@
                             </td>
                             <td>
                                 <dx:ASPxComboBox ID="cboUserID" runat="server" Font-Names="Segoe UI"
-                                    Font-Size="8pt" Theme="Office2010Black" EnableTheming="True" TextField="UserID" TextFormatString="{0}"
+                                    Font-Size="9pt" Theme="Office2010Black" EnableTheming="True" TextField="UserID" TextFormatString="{0}"
                                     ValueField="UserID" ClientInstanceName="cboUserID">
                                     <ClientSideEvents SelectedIndexChanged="function(s, e) {
                                                   var UserID = cboUserID.GetValue();
@@ -150,7 +150,7 @@
                             </td>
                             <td>
                                 <dx:ASPxComboBox ID="cboUserReplace" runat="server" Font-Names="Segoe UI"
-                                    Font-Size="8pt" Theme="Office2010Black" DataSourceID="dsUser"
+                                    Font-Size="9pt" Theme="Office2010Black" DataSourceID="dsUser"
                                     EnableTheming="True" TextField="UserID" TextFormatString="{0}"
                                     ValueField="UserID" ClientInstanceName="cboUserReplace">
                                     <ClientSideEvents SelectedIndexChanged="function(s, e) {
@@ -171,7 +171,7 @@
                 </div>
 
                 <dx:ASPxGridView ID="gridMenu" runat="server" AutoGenerateColumns="False" ClientInstanceName="gridMenu"
-                    Font-Names="Segoe UI" Font-Size="8pt" KeyFieldName="MenuID" Theme="Office2010Black"
+                    Font-Names="Segoe UI" Font-Size="9pt" KeyFieldName="MenuID" Theme="Office2010Black"
                     Width="100%">
                     <ClientSideEvents
                         BatchEditStartEditing="OnBatchEditStartEditing"

@@ -339,7 +339,7 @@ Public Class MeasurementDevice
                 End If
             End With
             
-            HF.Set("Code", a)
+            HF.Set("FactoryCode", a)
         Catch ex As Exception
             show_error(MsgTypeEnum.Info, "", 0)
         End Try

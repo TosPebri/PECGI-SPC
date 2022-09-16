@@ -238,7 +238,7 @@
                     Width="100px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsMS_Baudrate" DropDownStyle="DropDownList" TextFormatString="{0}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="100%"
-                        TextField="Description" ValueField="Code" ClientInstanceName="Baud">
+                        TextField="Description" ValueField="Code" ClientInstanceName="Baud" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
                         <ItemStyle Height="10px" Paddings-Padding="4px">
                             <Paddings Padding="4px"></Paddings>
                         </ItemStyle>
@@ -253,14 +253,14 @@
                     <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
                         <Paddings PaddingLeft="5px"></Paddings>
                     </HeaderStyle>
-                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                    <CellStyle HorizontalAlign="Right" VerticalAlign="Middle"/>
                 </dx:GridViewDataComboBoxColumn>
                 
                 <dx:GridViewDataComboBoxColumn Caption="Data Bits" FieldName="DataBits" VisibleIndex="6"
-                    Width="100px" Settings-AutoFilterCondition="Contains">
+                    Width="50px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsMS_Databit" DropDownStyle="DropDownList" TextFormatString="{0}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="100%"
-                        TextField="Description" ValueField="Code" ClientInstanceName="Bit">
+                        TextField="Description" ValueField="Code" ClientInstanceName="Bit" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
                         <ItemStyle Height="10px" Paddings-Padding="4px">
                             <Paddings Padding="4px"></Paddings>
                         </ItemStyle>
@@ -275,11 +275,11 @@
                     <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
                         <Paddings PaddingLeft="5px"></Paddings>
                     </HeaderStyle>
-                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                    <CellStyle HorizontalAlign="Right" VerticalAlign="Middle"/>
                 </dx:GridViewDataComboBoxColumn>
 
                 <dx:GridViewDataComboBoxColumn Caption="Parity" FieldName="Parity" VisibleIndex="7"
-                    Width="100px" Settings-AutoFilterCondition="Contains">
+                    Width="60px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsMS_Parity" DropDownStyle="DropDownList" TextFormatString="{0}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="100%"
                         TextField="Description" ValueField="Code" ClientInstanceName="Parity">
@@ -301,10 +301,10 @@
                 </dx:GridViewDataComboBoxColumn>
 
                 <dx:GridViewDataComboBoxColumn Caption="Stop Bits" FieldName="StopBits" VisibleIndex="8"
-                    Width="100px" Settings-AutoFilterCondition="Contains">
+                    Width="50px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsMS_Stopbit" DropDownStyle="DropDownList" TextFormatString="{0}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="100%"
-                        TextField="Description" ValueField="Code" ClientInstanceName="StopBit">
+                        TextField="Description" ValueField="Code" ClientInstanceName="StopBit" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
                         <ItemStyle Height="10px" Paddings-Padding="4px">
                             <Paddings Padding="4px"></Paddings>
                         </ItemStyle>
@@ -319,7 +319,7 @@
                     <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
                         <Paddings PaddingLeft="5px"></Paddings>
                     </HeaderStyle>
-                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                    <CellStyle HorizontalAlign="Right" VerticalAlign="Middle"/>
                 </dx:GridViewDataComboBoxColumn>
 
                 <dx:GridViewDataSpinEditColumn Caption="Stable Condition (Seconds)" FieldName="Stable" VisibleIndex="9"
@@ -331,8 +331,8 @@
                     <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                 </dx:GridViewDataSpinEditColumn>
 
-                <dx:GridViewDataComboBoxColumn Caption="Passive/Active" FieldName="Passive" VisibleIndex="10"
-                    Width="100px" Settings-AutoFilterCondition="Contains">
+                <dx:GridViewDataComboBoxColumn Caption="Passive / Active" FieldName="Passive" VisibleIndex="10"
+                    Width="75px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsMS_Passive" DropDownStyle="DropDownList" TextFormatString="{0}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="100%"
                         TextField="Description" ValueField="Code" ClientInstanceName="Passive">
@@ -363,7 +363,7 @@
                 </dx:GridViewDataSpinEditColumn>
 
                 <dx:GridViewDataComboBoxColumn Caption="Active Status" FieldName="ActiveStatus" VisibleIndex="12"
-                    Width="100px" Settings-AutoFilterCondition="Contains">
+                    Width="75px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DropDownStyle="DropDownList" Width="100%" TextFormatString="{0}"
                         IncrementalFilteringMode="StartsWith" DisplayFormatInEditMode="true">
                         <Items>
@@ -385,7 +385,7 @@
                 </dx:GridViewDataComboBoxColumn>
 
                 <dx:GridViewDataTextColumn Caption="Last User" FieldName="LastUser" VisibleIndex="13"
-                    Width="100px" Settings-AutoFilterCondition="Contains">
+                    Width="75px" Settings-AutoFilterCondition="Contains">
                     <PropertiesTextEdit MaxLength="15" Width="100px">
                         <Style HorizontalAlign="Left"></Style>
                     </PropertiesTextEdit>
@@ -400,7 +400,7 @@
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewDataTextColumn Caption="Last Update" FieldName="LastUpdate" VisibleIndex="14"
-                    Width="150px" Settings-AutoFilterCondition="Contains">
+                    Width="135px" Settings-AutoFilterCondition="Contains">
                     <PropertiesTextEdit MaxLength="15" Width="100px">
                         <Style HorizontalAlign="Left"></Style>
                     </PropertiesTextEdit>
@@ -446,7 +446,7 @@
             <Settings HorizontalScrollBarMode="Auto" VerticalScrollBarMode="Auto" VerticalScrollableHeight="300" />
             <SettingsText ConfirmDelete="Are you sure want to delete ?"></SettingsText>
             <SettingsPopup>
-                <EditForm Modal="false" HorizontalAlign="WindowCenter" VerticalAlign="WindowCenter" Width="200" />
+                <EditForm Modal="false" HorizontalAlign="WindowCenter" VerticalAlign="WindowCenter" Width="300" />
             </SettingsPopup>
 
             <Styles EditFormColumnCaption-Paddings-PaddingLeft="10px" EditFormColumnCaption-Paddings-PaddingRight="10px">
@@ -461,12 +461,12 @@
 
             <Templates>
                 <EditForm>
-                    <div style="padding: 5px 15px 5px 15px; width: 200px">
+                    <div style="padding: 5px 15px 5px 15px; width: 300px">
                         <dx:ContentControl ID="ContentControl1" runat="server">
                             <table align="center">
                                 <tr style="height: 30px">
                                     <td>
-                                        <dx:ASPxLabel ID="ASPxLabel1" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Factory" Width="90px"></dx:ASPxLabel>
+                                        <dx:ASPxLabel ID="ASPxLabel1" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Factory" Width="100px"></dx:ASPxLabel>
                                     </td>
                                     <td>
                                         <dx:ASPxGridViewTemplateReplacement ID="editFactory" ReplacementType="EditFormCellEditor"

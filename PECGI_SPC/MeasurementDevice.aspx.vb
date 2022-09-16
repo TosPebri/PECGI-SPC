@@ -156,10 +156,8 @@ Public Class MeasurementDevice
             End If
         End If
 
-        If e.Column.FieldName = "Stable" Or e.Column.FieldName = "GetResult" Then
-            e.Editor.Width = "50"
-        ElseIf e.Column.FieldName = "RegNo" Or e.Column.FieldName = "Description" Or e.Column.FieldName = "ToolName" Or e.Column.FieldName = "Function" Then
-            e.Editor.Width = "100"
+        If e.Column.FieldName = "RegNo" Or e.Column.FieldName = "Description" Or e.Column.FieldName = "ToolName" Or e.Column.FieldName = "ToolFunction" Then
+            e.Editor.Width = "200"
         Else
             e.Editor.Width = "75"
         End If

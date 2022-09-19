@@ -10,7 +10,6 @@
             color: #fff;
         }
     </style>
-
     <script type="text/javascript">
         function OnEndCallback(s, e) {
             if (s.cp_message != "" && s.cp_val == 1) {
@@ -81,23 +80,51 @@
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolderJavaScriptBody" runat="server">
+    <%--<script type="text/javascript">
+        var a = screen.height;
+        var b = screen.width;
+        alert(a + " " + b);
+    </script>--%>
     <script type="text/javascript">
         $(document).ready(function () {
-            gridHeight(500);
-            gridHeight2(500);
+            var a = screen.height;
+            var b = screen.width;
 
-            $("#fullscreen").click(function () {
-                var fcval = $("#flscr").val();
-                if (fcval == "0") { //toClickFullScreen
-                    gridHeight(500);
-                    gridHeight2(500);
-                    $("#flscr").val("1");
-                } else if (fcval == "1") { //toNormalFullScreen
-                    gridHeight(500);
-                    gridHeight2(500);
-                    $("#flscr").val("0");
-                }
-            })
+            if (a <= "768" && b <= "1366") {
+                gridHeight(330);
+                gridHeight2(330);
+
+                $("#fullscreen").click(function () {
+                    var fcval = $("#flscr").val();
+                    if (fcval == "0") { //toClickFullScreen
+                        gridHeight(300);
+                        gridHeight2(300);
+                        $("#flscr").val("1");
+                    } else if (fcval == "1") { //toNormalFullScreen
+                        gridHeight(440);
+                        gridHeight2(440);
+                        $("#flscr").val("0");
+                    }
+                })
+            }
+            else if (a <= "1080" && b <= "1920") {
+                gridHeight(540);
+                gridHeight2(540);
+
+                $("#fullscreen").click(function () {
+                    var fcval = $("#flscr").val();
+                    if (fcval == "0") { //toClickFullScreen
+                        gridHeight(500);
+                        gridHeight2(500);
+                        $("#flscr").val("1");
+                    } else if (fcval == "1") { //toNormalFullScreen
+                        gridHeight(670);
+                        gridHeight2(670);
+                        $("#flscr").val("0");
+                    }
+                })
+            }
+            
         });
 
         function gridHeight(pF) {
@@ -558,12 +585,10 @@
 
             </dx:ASPxGridView>
             
-            <br />
-        <%--</div>--%>
-    </div>
-    <br />
             <button disabled="disabled" style="background-color:yellow;width: 20px;height:10px"></button> <label> Delay < 60 Minutes</label>
             <button disabled="disabled" style="background-color:red;width: 20px;height:10px"></button> <label> Delay > 60 Minutes</label>
+        <%--</div>--%>
+    </div>
     <div style="padding: 20px 5px 5px 5px">
 
         

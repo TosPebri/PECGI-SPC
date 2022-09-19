@@ -319,11 +319,15 @@ Public Class AlertDashboard
         End If
         If e.DataColumn.FieldName = "Delay" Then
             Delay = (e.CellValue)
+            Dim Test = TimeSpan.FromMinutes(e.CellValue)
+
             If Delay <= 60 Then
                 e.Cell.BackColor = System.Drawing.Color.Yellow
             ElseIf Delay > 60 Then
                 e.Cell.BackColor = System.Drawing.Color.Red
             End If
+
+            e.Cell.Text = Convert.ToString(Test.Days & " Day" & Test.Hours & " Hours")
         End If
     End Sub
     Private Sub GridNG_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles GridNG.HtmlDataCellPrepared

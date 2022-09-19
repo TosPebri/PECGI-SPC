@@ -514,8 +514,8 @@
                         <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"></CellStyle>
                     </dx:GridViewDataTextColumn>
 
-                    <dx:GridViewDataTextColumn Caption="Delay (Minute)" FieldName="Delay"
-                        VisibleIndex="8" Width="60px" Settings-AutoFilterCondition="Contains">
+                    <dx:GridViewDataTextColumn Caption="Delay" FieldName="Delay"
+                        VisibleIndex="8" Width="100px" Settings-AutoFilterCondition="Contains">
                         <PropertiesTextEdit MaxLength="25" Width="100px">
                             <Style HorizontalAlign="Left"></Style>
                         </PropertiesTextEdit>

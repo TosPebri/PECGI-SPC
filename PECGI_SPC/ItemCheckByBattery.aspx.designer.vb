@@ -140,6 +140,15 @@ Partial Public Class ItemCheckByBattery
     Protected WithEvents dsRegNo As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
+    '''dsCharStatus control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents dsCharStatus As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
     '''Grid control.
     '''</summary>
     '''<remarks>

@@ -250,6 +250,10 @@
                     Name="FactoryCode1"/>
             </SelectParameters>--%>
         </asp:SqlDataSource>
+    
+        <asp:SqlDataSource ID="dsCharStatus" runat="server"
+            ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
+            SelectCommand="Exec sp_SPC_ItemCheckByBattery_FillCombo '7' "></asp:SqlDataSource>
 
 
     <div style="padding: 20px 5px 5px 5px">
@@ -495,14 +499,36 @@
                     </HeaderStyle>
                     <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"></CellStyle>
                 </dx:GridViewDataTextColumn>
-                                
-                <dx:GridViewDataCheckColumn Caption="Special Characteristic" FieldName="CharacteristicStatus" 
+
+                <dx:GridViewDataComboBoxColumn Caption="Special Characteristic" FieldName="CharacteristicStatus" VisibleIndex="9"
+                    Width="100px" Settings-AutoFilterCondition="Contains">
+                    <PropertiesComboBox DataSourceID="dsCharStatus" DropDownStyle="DropDownList" TextFormatString="{0}"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="95px"
+                        TextField="CharacteristicStatus" ValueField="CharacteristicStatus" ClientInstanceName="CharacteristicStatus">
+                        <ItemStyle Height="10px" Paddings-Padding="4px">
+                            <Paddings Padding="4px"></Paddings>
+                        </ItemStyle>
+                        <ButtonStyle Width="5px" Paddings-Padding="2px">
+                            <Paddings Padding="2px"></Paddings>
+                        </ButtonStyle>
+                    </PropertiesComboBox>
+                    <Settings AutoFilterCondition="Contains"></Settings>
+                    <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                    </FilterCellStyle>
+                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                    </HeaderStyle>
+                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                </dx:GridViewDataComboBoxColumn>
+
+                <%--<dx:GridViewDataCheckColumn Caption="Special Characteristic" FieldName="CharacteristicStatus" 
                     VisibleIndex="9" Width="60px">
                     <PropertiesCheckEdit ValueChecked="1" ValueType="System.Char" 
                         ValueUnchecked="0">
                     </PropertiesCheckEdit>
                     <Settings AllowSort="False" />
-                </dx:GridViewDataCheckColumn>
+                </dx:GridViewDataCheckColumn>--%>
                 
                 <dx:GridViewDataCheckColumn Caption="Active Status" FieldName="ActiveStatus" 
                     VisibleIndex="10" Width="60px">
@@ -657,7 +683,7 @@
                                     </td>
                                 </tr>
                                 <tr style="height:30px">
-                                    <td>Characteristic Item</td>                                
+                                    <td>Special Characteristic</td>                                
                                     <td>
                                         <dx:ASPxGridViewTemplateReplacement ID="editCharacteristicStatus" ReplacementType="EditFormCellEditor"
                                             runat="server" ColumnID="CharacteristicStatus">

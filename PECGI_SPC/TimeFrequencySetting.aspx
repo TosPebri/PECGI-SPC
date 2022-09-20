@@ -64,15 +64,15 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolderJavaScriptBody" runat="server">
     <script type="text/javascript">
         $(document).ready(function () {
-            gridHeight(150);
+            gridHeight(110);
 
             $("#fullscreen").click(function () {
                 var fcval = $("#flscr").val();
                 if (fcval == "0") { //toClickFullScreen
-                    gridHeight(50);
+                    gridHeight(10);
                     $("#flscr").val("1");
                 } else if (fcval == "1") { //toNormalFullScreen
-                    gridHeight(260);
+                    gridHeight(220);
                     $("#flscr").val("0");
                 }
             })
@@ -108,7 +108,7 @@
                         <ItemStyle Height="10px" Paddings-Padding="4px" />
                         <ButtonStyle Width="5px" Paddings-Padding="4px" />
                         <ClientSideEvents SelectedIndexChanged="function(s, e) {
-                                    HF.Set('Code', s.GetSelectedItem().value);
+                            HF.Set('Code', s.GetSelectedItem().value);
                                     Grid.PerformCallback('Kosong');
                                 }" />
                     </dx:ASPxComboBox>
@@ -125,7 +125,7 @@
                     <dx:ASPxButton ID="btnClear" runat="server" AutoPostBack="False" ClientInstanceName="btnClear" Theme="Office2010Silver" Height="28px"
                         Text="Clear" Font-Names="Segoe UI" Font-Size="10pt">
                         <ClientSideEvents Click="function(s, e) {
-                                    cboFreq.SetSelectedIndex(0);
+                            cboFreq.SetSelectedIndex(0);
                                     Grid.PerformCallback('Kosong');
                                 }" />
                     </dx:ASPxButton>
@@ -134,7 +134,9 @@
         </table>
     </div>
 
-    <div style="padding: 20px 5px 5px 5px">
+
+
+    <div style="padding: 20px 0px 0px 0px">
         <asp:SqlDataSource ID="dsMS_Frequency" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
             SelectCommand="Exec sp_SPC_MS_FrequencySetting_FillCombo"></asp:SqlDataSource>
@@ -157,8 +159,10 @@
 
                 <dx:GridViewDataSpinEditColumn Caption="Sequence No" FieldName="No" VisibleIndex="1"
                     Width="75px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesSpinEdit MaxValue="6" MinValue="1" Width="75px">
-                        <ButtonStyle Width="5px" Paddings-Padding="4px"/>
+                    <PropertiesSpinEdit MaxValue="6" MinValue="1" Width="100%">
+                        <ButtonStyle Width="5px" 
+                            Paddings-PaddingBottom="2px" Paddings-PaddingTop="2px" Paddings-PaddingLeft="4px" Paddings-PaddingRight="4px">
+                        </ButtonStyle>
                     </PropertiesSpinEdit>
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                     <CellStyle HorizontalAlign="Center" VerticalAlign="Middle" />
@@ -190,7 +194,9 @@
                     Width="100px" Settings-AutoFilterCondition="Contains">
                     <Settings AutoFilterCondition="Contains"></Settings>
                     <PropertiesTimeEdit DisplayFormatString="HH:mm" EditFormat="Time" EditFormatString="HH:mm" Width="55px">
-                        <ButtonStyle Width="5px" Paddings-Padding="4px" ></ButtonStyle>
+                        <ButtonStyle Width="5px" 
+                            Paddings-PaddingBottom="2px" Paddings-PaddingTop="2px" Paddings-PaddingLeft="4px" Paddings-PaddingRight="4px">
+                        </ButtonStyle>
                     </PropertiesTimeEdit>
                     <SettingsHeaderFilter></SettingsHeaderFilter>
                     <FilterCellStyle Paddings-PaddingRight="4px">
@@ -206,7 +212,9 @@
                     Width="100px" Settings-AutoFilterCondition="Contains">
                     <Settings AutoFilterCondition="Contains"></Settings>
                     <PropertiesTimeEdit DisplayFormatString="HH:mm" EditFormat="Time" EditFormatString="HH:mm" Width="55px">
-                        <ButtonStyle Width="5px" Paddings-Padding="4px" ></ButtonStyle>
+                        <ButtonStyle Width="5px" 
+                            Paddings-PaddingBottom="2px" Paddings-PaddingTop="2px" Paddings-PaddingLeft="4px" Paddings-PaddingRight="4px">
+                        </ButtonStyle>
                     </PropertiesTimeEdit>
                     <SettingsHeaderFilter></SettingsHeaderFilter>
                     <FilterCellStyle Paddings-PaddingRight="4px">
@@ -218,7 +226,25 @@
                     <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
                 </dx:GridViewDataTimeEditColumn>
 
-                <dx:GridViewDataCheckColumn Caption="Active Status" FieldName="Status" VisibleIndex="5" Width="100px">
+                <dx:GridViewDataTimeEditColumn Caption="Verfication Time" FieldName="Verif" VisibleIndex="5"
+                    Width="100px" Settings-AutoFilterCondition="Contains">
+                    <Settings AutoFilterCondition="Contains"></Settings>
+                    <PropertiesTimeEdit DisplayFormatString="HH:mm" EditFormat="Time" EditFormatString="HH:mm" Width="55px">
+                        <ButtonStyle Width="5px" 
+                            Paddings-PaddingBottom="2px" Paddings-PaddingTop="2px" Paddings-PaddingLeft="4px" Paddings-PaddingRight="4px">
+                        </ButtonStyle>
+                    </PropertiesTimeEdit>
+                    <SettingsHeaderFilter></SettingsHeaderFilter>
+                    <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                    </FilterCellStyle>
+                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                    </HeaderStyle>
+                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                </dx:GridViewDataTimeEditColumn>
+
+                <dx:GridViewDataCheckColumn Caption="Active Status" FieldName="Status" VisibleIndex="6" Width="100px">
                     <PropertiesCheckEdit 
                         ValueChecked="1" ValueType="System.Char"  ValueUnchecked="0">
                     </PropertiesCheckEdit>
@@ -226,7 +252,7 @@
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
                 </dx:GridViewDataCheckColumn>
 
-                <dx:GridViewDataTextColumn Caption="Last User" FieldName="LastUser" VisibleIndex="6"
+                <dx:GridViewDataTextColumn Caption="Last User" FieldName="LastUser" VisibleIndex="7"
                     Width="100px" Settings-AutoFilterCondition="Contains">
                     <PropertiesTextEdit MaxLength="15" Width="100px">
                         <Style HorizontalAlign="Left"></Style>
@@ -241,7 +267,7 @@
                     <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataTextColumn Caption="Last Update" FieldName="LastUpdate" VisibleIndex="7"
+                <dx:GridViewDataTextColumn Caption="Last Update" FieldName="LastUpdate" VisibleIndex="8"
                     Width="150px" Settings-AutoFilterCondition="Contains">
                     <PropertiesTextEdit MaxLength="15" Width="100px">
                         <Style HorizontalAlign="Left"></Style>
@@ -256,7 +282,7 @@
                     <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
                 </dx:GridViewDataTextColumn>
 
-                <dx:GridViewDataComboBoxColumn Caption="Frequency" FieldName="Frequency" VisibleIndex="8"
+                <dx:GridViewDataComboBoxColumn Caption="Frequency" FieldName="Frequency" VisibleIndex="9"
                     Width="100px" Settings-AutoFilterCondition="Contains" Visible="false">
                     <PropertiesComboBox DataSourceID="dsMS_Frequency" DropDownStyle="DropDownList" TextFormatString="{0}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="100%"
@@ -308,7 +334,7 @@
                             <table align="center">
                                 <tr style="height: 30px">
                                     <td>
-                                        <dx:ASPxLabel ID="ASPxLabel1" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Frequency" Width="90px"></dx:ASPxLabel>
+                                        <dx:ASPxLabel ID="ASPxLabel1" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Frequency" Width="100px"></dx:ASPxLabel>
                                     </td>
                                     <td>
                                         <dx:ASPxGridViewTemplateReplacement ID="editFrequency" ReplacementType="EditFormCellEditor"
@@ -343,6 +369,13 @@
                                     <td>
                                         <dx:ASPxGridViewTemplateReplacement ID="editEnd" ReplacementType="EditFormCellEditor"
                                             runat="server" ColumnID="End"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>Verification Time</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="ASPxGridViewTemplateReplacement1" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="Verif"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
                                 </tr>
                                 <tr style="height: 30px">

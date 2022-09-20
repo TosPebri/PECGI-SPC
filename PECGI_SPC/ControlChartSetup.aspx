@@ -83,15 +83,15 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolderJavaScriptBody" runat="server">
     <script type="text/javascript">
         $(document).ready(function () {
-            gridHeight(150);
+            gridHeight(110);
 
             $("#fullscreen").click(function () {
                 var fcval = $("#flscr").val();
                 if (fcval == "0") { //toClickFullScreen
-                    gridHeight(50);
+                    gridHeight(10);
                     $("#flscr").val("1");
                 } else if (fcval == "1") { //toNormalFullScreen
-                    gridHeight(260);
+                    gridHeight(210);
                     $("#flscr").val("0");
                 }
             })
@@ -307,8 +307,8 @@
             </tr>
         </table>
     </div>
-
-    <div style="padding: 20px 5px 5px 5px">
+    
+    <div style="padding: 20px 0px 0px 0px">
         <asp:SqlDataSource ID="dsType" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
             SelectCommand="Exec sp_SPC_ChartSetup_FillCombo '1' "></asp:SqlDataSource>

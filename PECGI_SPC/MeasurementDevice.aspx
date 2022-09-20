@@ -63,15 +63,15 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolderJavaScriptBody" runat="server">
     <script type="text/javascript">
         $(document).ready(function () {
-            gridHeight(150);
+            gridHeight(110);
 
             $("#fullscreen").click(function () {
                 var fcval = $("#flscr").val();
                 if (fcval == "0") { //toClickFullScreen
-                    gridHeight(50);
+                    gridHeight(10);
                     $("#flscr").val("1");
                 } else if (fcval == "1") { //toNormalFullScreen
-                    gridHeight(260);
+                    gridHeight(220);
                     $("#flscr").val("0");
                 }
             })
@@ -133,7 +133,7 @@
         </table>
     </div>
 
-    <div style="padding: 20px 5px 5px 5px">
+    <div style="padding: 20px 0px 0px 0px">
         <asp:SqlDataSource ID="dsMS_Factory" runat="server"
             ConnectionString="<%$ ConnectionStrings:ApplicationServices %>"
             SelectCommand="Exec sp_SPC_MSDevice_FillCombo '0'"></asp:SqlDataSource>
@@ -324,8 +324,10 @@
 
                 <dx:GridViewDataSpinEditColumn Caption="Stable Condition (Seconds)" FieldName="Stable" VisibleIndex="9"
                     Width="75px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesSpinEdit MaxValue="100" MinValue="0" Width="75px" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
-                        <ButtonStyle Width="5px" Paddings-Padding="4px"/>
+                    <PropertiesSpinEdit MaxValue="100" MinValue="0" Width="100%" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
+                        <ButtonStyle Width="5px" 
+                            Paddings-PaddingBottom="2px" Paddings-PaddingTop="2px" Paddings-PaddingLeft="4px" Paddings-PaddingRight="4px">
+                        </ButtonStyle>
                     </PropertiesSpinEdit>
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                     <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
@@ -355,34 +357,20 @@
 
                 <dx:GridViewDataSpinEditColumn Caption="Get Result Data" FieldName="GetResult" VisibleIndex="11"
                     Width="75px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesSpinEdit MaxValue="10" MinValue="1" Width="75px" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
-                        <ButtonStyle Width="5px" Paddings-Padding="4px"/>
+                    <PropertiesSpinEdit MaxValue="10" MinValue="1" Width="100%" Style-VerticalAlign="Middle" Style-HorizontalAlign="Right">
+                        <ButtonStyle Width="5px" 
+                            Paddings-PaddingBottom="2px" Paddings-PaddingTop="2px" Paddings-PaddingLeft="4px" Paddings-PaddingRight="4px">
+                        </ButtonStyle>
                     </PropertiesSpinEdit>
                     <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                     <CellStyle HorizontalAlign="Right" VerticalAlign="Middle" />
                 </dx:GridViewDataSpinEditColumn>
 
-                <dx:GridViewDataComboBoxColumn Caption="Active Status" FieldName="ActiveStatus" VisibleIndex="12"
-                    Width="75px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesComboBox DropDownStyle="DropDownList" Width="100%" TextFormatString="{0}"
-                        IncrementalFilteringMode="StartsWith" DisplayFormatInEditMode="true">
-                        <Items>
-                            <dx:ListEditItem Text="Yes" Value="1" />
-                            <dx:ListEditItem Text="No" Value="0" />
-                        </Items>
-                        <ItemStyle Height="10px" Paddings-Padding="4px">
-                            <Paddings Padding="4px"></Paddings>
-                        </ItemStyle>
-                        <ButtonStyle Width="5px" Paddings-Padding="2px">
-                            <Paddings Padding="2px"></Paddings>
-                        </ButtonStyle>
-                    </PropertiesComboBox>
-                    <Settings AutoFilterCondition="Contains"></Settings>
-                    <HeaderStyle Paddings-PaddingLeft="2px" HorizontalAlign="Center" VerticalAlign="Middle" Wrap="True">
-                        <Paddings PaddingLeft="2px"></Paddings>
-                    </HeaderStyle>
-                    <CellStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
-                </dx:GridViewDataComboBoxColumn>
+                <dx:GridViewDataCheckColumn Caption="Active Status" FieldName="ActiveStatus" VisibleIndex="12" Width="100px">
+                    <PropertiesCheckEdit ValueChecked="1" ValueUnchecked="0" ValueType="System.Char"/>
+                    <Settings AllowSort="False" />
+                    <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+                </dx:GridViewDataCheckColumn>
 
                 <dx:GridViewDataTextColumn Caption="Last User" FieldName="LastUser" VisibleIndex="13"
                     Width="75px" Settings-AutoFilterCondition="Contains">
@@ -443,7 +431,8 @@
             <SettingsPager Mode="ShowPager" PageSize="20" AlwaysShowPager="true">
                 <PageSizeItemSettings Visible="True" />
             </SettingsPager>
-            <Settings HorizontalScrollBarMode="Auto" VerticalScrollBarMode="Auto" VerticalScrollableHeight="300" />
+            <Settings ShowFilterRow="True" VerticalScrollableHeight="300" 
+                HorizontalScrollBarMode="Auto" VerticalScrollBarMode="Auto" />
             <SettingsText ConfirmDelete="Are you sure want to delete ?"></SettingsText>
             <SettingsPopup>
                 <EditForm Modal="false" HorizontalAlign="WindowCenter" VerticalAlign="WindowCenter" Width="300" />

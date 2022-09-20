@@ -90,7 +90,7 @@ Public Class MeasurementDevice
                 e.NewValues("Stable"), _
                 e.NewValues("Passive"), _
                 e.NewValues("GetResult"), _
-                e.NewValues("ActiveStatus"), _
+                IIf(e.NewValues("ActiveStatus") Is Nothing, "0", e.NewValues("ActiveStatus")),
                 pUser)
             Grid.CancelEdit()
             up_GridLoad()
@@ -115,7 +115,7 @@ Public Class MeasurementDevice
                  e.NewValues("Stable"), _
                  e.NewValues("Passive"), _
                  e.NewValues("GetResult"), _
-                 e.NewValues("ActiveStatus"), _
+                 IIf(e.NewValues("ActiveStatus") Is Nothing, "0", e.NewValues("ActiveStatus")),
                  pUser)
             Grid.CancelEdit()
             up_GridLoad()
@@ -153,6 +153,10 @@ Public Class MeasurementDevice
             If e.Column.FieldName = "RegNo" Or e.Column.FieldName = "FactoryCode" Then
                 e.Editor.ReadOnly = True
                 e.Editor.ForeColor = Color.Silver
+            End If
+        ElseIf Grid.IsNewRowEditing Then
+            If e.Column.FieldName = "ActiveStatus" Then
+                TryCast(e.Editor, ASPxCheckBox).Checked = True
             End If
         End If
 
@@ -249,14 +253,6 @@ Public Class MeasurementDevice
             If dataColumn.FieldName = "Passive" Then
                 If IsNothing(e.NewValues("Passive")) OrElse e.NewValues("Passive").ToString.Trim = "" Then
                     e.Errors(dataColumn) = "Please Choose Passive!"
-                    show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
-                    AdaError = True
-                End If
-            End If
-
-            If dataColumn.FieldName = "ActiveStatus" Then
-                If IsNothing(e.NewValues("ActiveStatus")) OrElse e.NewValues("ActiveStatus").ToString.Trim = "" Then
-                    e.Errors(dataColumn) = "Please Choose Active!"
                     show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
                     AdaError = True
                 End If

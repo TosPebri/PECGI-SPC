@@ -118,15 +118,15 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolderJavaScriptBody" runat="server">
     <script type="text/javascript">
         $(document).ready(function () {
-            gridHeight(275);
+            gridHeight(220);
             
             $("#fullscreen").click(function () {
                 var fcval = $("#flscr").val();
                 if (fcval == "0") { //toClickFullScreen
-                    gridHeight(175);
+                    gridHeight(120);
                     $("#flscr").val("1");
                 } else if (fcval == "1") { //toNormalFullScreen
-                    gridHeight(385);
+                    gridHeight(330);
                     $("#flscr").val("0");
                 }
             })
@@ -435,7 +435,7 @@
         </table>
     </div>
 
-    <div style="padding: 20px 5px 5px 0px">
+    <div style="padding: 20px 0px 0px 0px">
         <dx:ASPxGridView ID="Grid" runat="server" AutoGenerateColumns="False" ClientInstanceName="Grid"
             EnableTheming="True" KeyFieldName="Type" Theme="Office2010Black" Width="100%"
             Font-Names="Segoe UI" Font-Size="9pt">
@@ -461,7 +461,7 @@
         </dx:ASPxGridView>
     </div>
 
-    <div style="padding: 5px 5px 5px 5px; padding-top: 20px; padding-bottom: 20px">
+    <div style="padding: 5px 5px 5px 5px; padding-top: 20px;">
         <table style="width: 100%; height: 15px">
             <tr>
                 <td style="background-color:yellow; width:0.2%; text-align:center">

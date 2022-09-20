@@ -79,6 +79,7 @@ Public Class TimeFrequencySetting
         Try
             Dim StTime As DateTime = Convert.ToDateTime(e.NewValues("Start"))
             Dim EnTime As DateTime = Convert.ToDateTime(e.NewValues("End"))
+            Dim verifTime As DateTime = Convert.ToDateTime(e.NewValues("Verif"))
 
             Call up_InsUpd("0", _
                 e.NewValues("Frequency"), _
@@ -86,6 +87,7 @@ Public Class TimeFrequencySetting
                 e.NewValues("Shift"), _
                 StTime.ToString("HH:mm"), _
                 EnTime.ToString("HH:mm"), _
+                verifTime.ToString("HH:mm"), _
                 IIf(e.NewValues("Status") Is Nothing, "0", e.NewValues("Status")), _
                 pUser)
             Grid.CancelEdit()
@@ -102,6 +104,7 @@ Public Class TimeFrequencySetting
             Dim EnTime As DateTime = Convert.ToDateTime(e.NewValues("End"))
             Dim StTimeOld As DateTime = Convert.ToDateTime(e.OldValues("Start"))
             Dim EnTimeOld As DateTime = Convert.ToDateTime(e.OldValues("End"))
+            Dim verifTime As DateTime = Convert.ToDateTime(e.NewValues("Verif"))
 
             Call up_InsUpd("1", _
                 e.NewValues("Frequency"), _
@@ -109,6 +112,7 @@ Public Class TimeFrequencySetting
                 e.NewValues("Shift"), _
                 StTime.ToString("HH:mm"), _
                 EnTime.ToString("HH:mm"), _
+                verifTime.ToString("HH:mm"), _
                 e.NewValues("Status"), _
                 pUser)
             Grid.CancelEdit()
@@ -149,9 +153,13 @@ Public Class TimeFrequencySetting
                 e.Editor.ReadOnly = True
                 e.Editor.ForeColor = Color.Silver
             End If
+        ElseIf Grid.IsNewRowEditing Then
+            If e.Column.FieldName = "Status" Then
+                TryCast(e.Editor, ASPxCheckBox).Checked = True
+            End If
         End If
 
-        If e.Column.FieldName = "Frequency" Or e.Column.FieldName = "Shift" Then
+        If e.Column.FieldName = "Frequency" Or e.Column.FieldName = "Shift" Or e.Column.FieldName = "No" Then
             e.Editor.Width = "75"
         End If
     End Sub
@@ -193,6 +201,14 @@ Public Class TimeFrequencySetting
             If dataColumn.FieldName = "End" Then
                 If IsNothing(e.NewValues("End")) OrElse e.NewValues("End").ToString.Trim = "" Then
                     e.Errors(dataColumn) = "Please Input End Time!"
+                    show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
+                    AdaError = True
+                End If
+            End If
+
+            If dataColumn.FieldName = "Verif" Then
+                If IsNothing(e.NewValues("Verif")) OrElse e.NewValues("Verif").ToString.Trim = "" Then
+                    e.Errors(dataColumn) = "Please Input Verif Time!"
                     show_error(MsgTypeEnum.Warning, "Please fill in all required fields!", 1)
                     AdaError = True
                 End If
@@ -287,7 +303,7 @@ Public Class TimeFrequencySetting
         End Try
     End Sub
 
-    Private Function up_InsUpd(Type As String, Frequency As String, Nomor As String, Shift As String, Start As String, EndTime As String, Status As String, User As String) As Boolean
+    Private Function up_InsUpd(Type As String, Frequency As String, Nomor As String, Shift As String, Start As String, EndTime As String, verifTime As String, Status As String, User As String) As Boolean
         Dim message As String = IIf(Type = "0", "Save data successfully!", "Update data successfully!") '0 Save | 1 Update
         Try
             Dim cls As New clsTimeFrequencySetting With
@@ -297,6 +313,7 @@ Public Class TimeFrequencySetting
                 .Shift = Shift,
                 .StartTime = Start,
                 .EndTime = EndTime,
+                .VerifTime = verifTime,
                 .Status = Status,
                 .User = User
             }

@@ -206,7 +206,7 @@
         <input type="hidden" id="flscr" name="flscr" value="0" />
         <div class="row">
             <div class="col-xs-12 col-sm-6">
-                <span class="txt-color-white">© 2018 - Developed by PT. TOS Information Systems</span>
+                <span class="txt-color-white">© 2022 - Developed by PT. TOS Information Systems</span>
             </div>
             <div class="col-xs-6 col-sm-6 text-right hidden-xs">
                 <div class="txt-color-white inline-block">
@@ -216,7 +216,7 @@
     </div>
     <!-- END PAGE FOOTER -->
     <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
-    <script data-pace-options='{ "restartOnRequestAfter": true }' src="js/plugin/pace/pace.min.js"></script>
+    <%--<script data-pace-options='{ "restartOnRequestAfter": true }' src="js/plugin/pace/pace.min.js"></script>--%>
     <!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
     <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>-->
     <script>

@@ -472,7 +472,7 @@
 
                 <dx:GridViewDataTextColumn Caption="Remark" FieldName="Remark"
                     VisibleIndex="7" Width="150px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesTextEdit MaxLength="35" Width="200px">
+                    <PropertiesTextEdit MaxLength="35" Width="195px">
                         <Style HorizontalAlign="Left"></Style>
                     </PropertiesTextEdit>
                     <Settings AutoFilterCondition="Contains"></Settings>
@@ -487,7 +487,7 @@
 
                 <dx:GridViewDataTextColumn Caption="Evaluation" FieldName="Evaluation"
                     VisibleIndex="8" Width="150px" Settings-AutoFilterCondition="Contains">
-                    <PropertiesTextEdit MaxLength="35" Width="200px">
+                    <PropertiesTextEdit MaxLength="35" Width="195px">
                         <Style HorizontalAlign="Left"></Style>
                     </PropertiesTextEdit>
                     <Settings AutoFilterCondition="Contains"></Settings>
@@ -501,9 +501,9 @@
                 </dx:GridViewDataTextColumn>
 
                 <dx:GridViewDataComboBoxColumn Caption="Special Characteristic" FieldName="CharacteristicStatus" VisibleIndex="9"
-                    Width="100px" Settings-AutoFilterCondition="Contains">
+                    Width="200px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsCharStatus" DropDownStyle="DropDownList" TextFormatString="{0}"
-                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="95px"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="195px"
                         TextField="CharacteristicStatus" ValueField="CharacteristicStatus" ClientInstanceName="CharacteristicStatus">
                         <ItemStyle Height="10px" Paddings-Padding="4px">
                             <Paddings Padding="4px"></Paddings>

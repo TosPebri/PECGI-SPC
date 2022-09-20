@@ -85,8 +85,10 @@ Public Class ItemCheckByBattery
         Dim pErr As String = ""
         Dim LineCode As String = ""
         Dim ItemCheck As String = ""
+        Dim SpecialChar As String = ""
         LineCode = e.NewValues("LineName")
         ItemCheck = e.NewValues("ItemCheck")
+        SpecialChar = e.NewValues("CharacteristicStatus")
         Dim BatteryType As New ClsSPCItemCheckByType With {
             .FactoryCode = e.NewValues("FactoryCode"),
             .FactoryName = cboFactory.Text,
@@ -98,7 +100,7 @@ Public Class ItemCheckByBattery
             .SampleSize = e.NewValues("SampleSize"),
             .Remark = e.NewValues("Remark"),
             .Evaluation = e.NewValues("Evaluation"),
-            .CharacteristicItem = e.NewValues("CharacteristicStatus"),
+            .CharacteristicItem = SpecialChar.Substring(0, SpecialChar.IndexOf(" -")),
             .ActiveStatus = e.NewValues("ActiveStatus"),
             .UpdateUser = pUser,
             .CreateUser = pUser
@@ -129,8 +131,10 @@ Public Class ItemCheckByBattery
         Dim pErr As String = ""
         Dim LineCode As String = ""
         Dim ItemCheck As String = ""
+        Dim SpecialChar As String = ""
         LineCode = e.NewValues("LineName")
         ItemCheck = e.NewValues("ItemCheck")
+        SpecialChar = e.NewValues("CharacteristicStatus")
         Dim BatteryType As New ClsSPCItemCheckByType With {
             .FactoryCode = e.NewValues("FactoryCode"),
             .ItemTypeCode = e.NewValues("ItemTypeCode"),
@@ -141,7 +145,7 @@ Public Class ItemCheckByBattery
             .SampleSize = e.NewValues("SampleSize"),
             .Remark = e.NewValues("Remark"),
             .Evaluation = e.NewValues("Evaluation"),
-            .CharacteristicItem = e.NewValues("CharacteristicStatus"),
+            .CharacteristicItem = SpecialChar.Substring(0, SpecialChar.IndexOf(" -")),
             .ActiveStatus = e.NewValues("ActiveStatus"),
             .UpdateUser = pUser,
             .CreateUser = pUser

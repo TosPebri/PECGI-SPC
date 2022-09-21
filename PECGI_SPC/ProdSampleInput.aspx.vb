@@ -3,6 +3,11 @@ Imports DevExpress.Web.Data
 Imports DevExpress.XtraCharts
 Imports DevExpress.XtraCharts.Web
 Imports System.Drawing
+Imports DevExpress.XtraPrinting
+Imports DevExpress.XtraPrintingLinks
+Imports DevExpress.XtraCharts.Native
+Imports OfficeOpenXml
+Imports System.IO
 
 Public Class ProdSampleInput
     Inherits System.Web.UI.Page
@@ -136,6 +141,7 @@ Public Class ProdSampleInput
     End Sub
 
     Private Sub InitCombo(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, ShiftCode As String, Sequence As String)
+        pUser = Session("user") & ""
         dtDate.Value = CDate(ProdDate)
         cboFactory.Value = FactoryCode
 
@@ -143,7 +149,7 @@ Public Class ProdSampleInput
         cboType.DataBind()
         cboType.Value = ItemTypeCode
 
-        cboLine.DataSource = ClsLineDB.GetList("admin", cboFactory.Value, cboType.Value)
+        cboLine.DataSource = ClsLineDB.GetList(pUser, cboFactory.Value, cboType.Value)
         cboLine.DataBind()
         cboLine.Value = Line
 
@@ -344,7 +350,6 @@ Public Class ProdSampleInput
             cbkRefresh.JSProperties("cpUCL") = Setup.XBarUCL
             cbkRefresh.JSProperties("cpLCL") = Setup.XBarLCL
         End If
-
     End Sub
 
     Private Sub cboType_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboType.Callback
@@ -396,6 +401,47 @@ Public Class ProdSampleInput
                 clsSPCResultDetailDB.Insert(Detail)
             Next
         End If
+    End Sub
+
+    Private Sub DownloadExcel()
+        Dim ps As New PrintingSystem()
+        LoadChartX(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value, Format(dtDate.Value, "yyyy-MM-dd"))
+        Dim linkX As New PrintableComponentLink(ps)
+        linkX.Component = (CType(chartX, IChartContainer)).Chart
+
+        Dim compositeLink As New CompositeLink(ps)
+        compositeLink.Links.AddRange(New Object() {linkX})
+        compositeLink.CreateDocument()
+        Dim Path As String = Server.MapPath("Download")
+        Dim streamImg As New MemoryStream
+        compositeLink.ExportToImage(streamImg)
+
+        Using Pck As New ExcelPackage
+            Dim ws As ExcelWorksheet = Pck.Workbook.Worksheets.Add("Sheet1")
+            With ws
+                Dim iDay As Integer = 2
+                Dim iCol As Integer = 2
+                Dim lastCol As Integer = 1
+                Dim Seq As Integer = 0
+                Dim SelDay As Date = dtDate.Value
+                .Cells(1, 1).Value = "Date"
+                .Cells(2, 1).Value = "Shift"
+                .Cells(3, 1).Value = "Sequence"
+
+                .InsertRow(20, 22)
+                Dim fi As New FileInfo(Path & "\chart.png")
+                Dim Picture As OfficeOpenXml.Drawing.ExcelPicture
+                Picture = .Drawings.AddPicture("chart", Image.FromStream(streamImg))
+                Picture.SetPosition(20, 0, 0, 0)
+            End With
+
+            Dim stream As MemoryStream = New MemoryStream(Pck.GetAsByteArray())
+            Response.AppendHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            Response.AppendHeader("Content-Disposition", "attachment; filename=ProdSampleInput_" & Format(Date.Now, "yyyy-MM-dd") & ".xlsx")
+            Response.BinaryWrite(stream.ToArray())
+            Response.End()
+
+        End Using
     End Sub
 
     Private Sub cboShift_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboShift.Callback
@@ -497,14 +543,14 @@ Public Class ProdSampleInput
             diagram.AxisY.ConstantLines.Clear()
             If Setup IsNot Nothing Then
                 Dim RCL As New ConstantLine("CL R")
-                RCL.Color = Drawing.Color.Purple
+                RCL.Color = System.Drawing.Color.Purple
                 RCL.LineStyle.Thickness = 2
                 RCL.LineStyle.DashStyle = DashStyle.DashDot
                 diagram.AxisY.ConstantLines.Add(RCL)
                 RCL.AxisValue = Setup.RCL
 
                 Dim RUCL As New ConstantLine("UCL R")
-                RUCL.Color = Drawing.Color.Purple
+                RUCL.Color = System.Drawing.Color.Purple
                 RUCL.LineStyle.Thickness = 2
                 RUCL.LineStyle.DashStyle = DashStyle.DashDot
                 diagram.AxisY.ConstantLines.Add(RUCL)
@@ -545,35 +591,35 @@ Public Class ProdSampleInput
             diagram.AxisY.ConstantLines.Clear()
             If Setup IsNot Nothing Then
                 Dim LCL As New ConstantLine("LCL")
-                LCL.Color = Drawing.Color.Purple
+                LCL.Color = System.Drawing.Color.Purple
                 LCL.LineStyle.Thickness = 2
                 LCL.LineStyle.DashStyle = DashStyle.DashDot
                 diagram.AxisY.ConstantLines.Add(LCL)
                 LCL.AxisValue = Setup.XBarLCL
 
                 Dim UCL As New ConstantLine("UCL")
-                UCL.Color = Drawing.Color.Purple
+                UCL.Color = System.Drawing.Color.Purple
                 UCL.LineStyle.Thickness = 2
                 UCL.LineStyle.DashStyle = DashStyle.DashDot
                 diagram.AxisY.ConstantLines.Add(UCL)
                 UCL.AxisValue = Setup.XBarUCL
 
                 Dim CL As New ConstantLine("CL")
-                CL.Color = Drawing.Color.Black
+                CL.Color = System.Drawing.Color.Black
                 CL.LineStyle.Thickness = 2
                 CL.LineStyle.DashStyle = DashStyle.Solid
                 diagram.AxisY.ConstantLines.Add(CL)
                 CL.AxisValue = Setup.XBarCL
 
                 Dim LSL As New ConstantLine("LSL")
-                LSL.Color = Drawing.Color.Red
+                LSL.Color = System.Drawing.Color.Red
                 LSL.LineStyle.Thickness = 2
                 LSL.LineStyle.DashStyle = DashStyle.Solid
                 diagram.AxisY.ConstantLines.Add(LSL)
                 LSL.AxisValue = Setup.SpecLSL
 
                 Dim USL As New ConstantLine("USL")
-                USL.Color = Drawing.Color.Red
+                USL.Color = System.Drawing.Color.Red
                 USL.LineStyle.Thickness = 2
                 USL.LineStyle.DashStyle = DashStyle.Solid
                 diagram.AxisY.ConstantLines.Add(USL)
@@ -679,26 +725,27 @@ Public Class ProdSampleInput
         Dim s As String = e.Series.Name
         If s = "#1" Then
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Red
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.Red
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.Red
         ElseIf s = "#2" Then
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Diamond
+            'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Diamond
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Orange
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.Orange
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Empty
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.Orange
         ElseIf s = "#3" Then
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Triangle
+            'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Triangle
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Green
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightGreen
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.LightGreen
         ElseIf s = "#4" Then
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Square
+            'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Square
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.DarkGreen
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.DarkGreen
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Empty
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.DarkGreen
         ElseIf s = "#5" Then
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
@@ -707,5 +754,13 @@ Public Class ProdSampleInput
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.LightBlue
         End If
+    End Sub
+
+    Private Sub btnExcel_Click(sender As Object, e As EventArgs) Handles btnExcel.Click
+        DownloadExcel()
+    End Sub
+
+    Private Sub grid_StartRowEditing(sender As Object, e As ASPxStartRowEditingEventArgs) Handles grid.StartRowEditing
+
     End Sub
 End Class

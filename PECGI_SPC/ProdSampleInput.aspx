@@ -420,7 +420,7 @@
                     ClientInstanceName="cboSeq" ValueField="SequenceNo" TextField="SequenceNo" Font-Names="Segoe UI" 
                     Font-Size="9pt" Height="25px" 
                     Width="60px" TabIndex="3">
-                    <ClientSideEvents SelectedIndexChanged="ClearGrid" EndCallback="function(s, e) {cboSeq.SetEnabled(true);}"/>
+                    <ClientSideEvents EndCallback="function(s, e) {cboSeq.SetEnabled(true);}"/>
 
                     <ButtonStyle Paddings-Padding="4px" Width="5px">
 <Paddings Padding="4px"></Paddings>
@@ -506,7 +506,7 @@
                         <td style="padding-right:5px">
                                 <dx:ASPxButton ID="btnRead" runat="server" AutoPostBack="False" 
                                     ClientInstanceName="btnRead" Font-Names="Segoe UI" Font-Size="9pt" 
-                                    Height="25px" Text="Read from Machine" Theme="Office2010Silver" UseSubmitBehavior="False" 
+                                    Height="25px" Text="Read from Device" Theme="Office2010Silver" UseSubmitBehavior="False" 
                                     Width="90px" TabIndex="10">
                                     <Paddings Padding="2px" />
                                 </dx:ASPxButton>                             

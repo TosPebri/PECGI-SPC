@@ -86,6 +86,7 @@ Public Class ProdSampleVerification
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         pUser = Session("user")
         MenuID = "B040"
+        Session("LogUserID") = pUser
         AuthAccess = sGlobal.Auth_UserAccess(pUser, MenuID)
         If AuthAccess = False Then
             Response.Redirect("~/Main.aspx")
@@ -232,7 +233,6 @@ Public Class ProdSampleVerification
                 Up_GridLoad(cls)
                 Up_GridChartSetup(cls)
                 Validation_Verify(cls)
-                IOTconnection(cls)
 
             ElseIf pAction = "Verify" Then
 
@@ -362,15 +362,65 @@ Public Class ProdSampleVerification
         End If
 
     End Sub
-    Private Sub chartX_BoundDataChanged(sender As Object, e As EventArgs) Handles chartX.BoundDataChanged
-        With chartX
-            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Color = Color.Red
-            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).FillStyle.FillMode = FillMode.Solid
-            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Transparency = 180
-            DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Border.Thickness = 1
-        End With
+    'Private Sub chartX_BoundDataChanged(sender As Object, e As EventArgs) Handles chartX.BoundDataChanged
+    '    With chartX
+    '        DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Color = Color.Red
+    '        DirectCast(.Series("Rule").View, FullStackedBarSeriesView).FillStyle.FillMode = FillMode.Solid
+    '        DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Transparency = 180
+    '        DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Border.Thickness = 1
+    '    End With
+    'End Sub
+    Private Sub chartX_CustomDrawSeries(sender As Object, e As CustomDrawSeriesEventArgs) Handles chartX.CustomDrawSeries
+        Dim s As String = e.Series.Name
+        If s = "#1" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.Red
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
+            e.LegendDrawOptions.Color = Color.Red
+        ElseIf s = "#2" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Diamond
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Orange
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.Orange
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Empty
+            e.LegendDrawOptions.Color = Color.Orange
+        ElseIf s = "#3" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Triangle
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Green
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightGreen
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
+            e.LegendDrawOptions.Color = Color.LightGreen
+        ElseIf s = "#4" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Square
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.DarkGreen
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.DarkGreen
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Empty
+            e.LegendDrawOptions.Color = Color.DarkGreen
+        ElseIf s = "#5" Then
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Blue
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightBlue
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
+            e.LegendDrawOptions.Color = Color.LightBlue
+        End If
     End Sub
+    Private Sub cbkIOTconn_Callback(source As Object, e As CallbackEventArgs) Handles cbkIOTconn.Callback
+        Dim ActionSts = e.Parameter.ToString
 
+        Dim cls As New clsProdSampleVerification
+        cls.FactoryCode = HideValue.Get("FactoryCode")
+        cls.ItemType_Code = HideValue.Get("ItemType_Code")
+        cls.LineCode = HideValue.Get("LineCode")
+        cls.ItemCheck_Code = HideValue.Get("ItemCheck_Code")
+        cls.ProdDate = Convert.ToDateTime(HideValue.Get("ProdDate")).ToString("yyyy-MM-dd")
+        cls.ShiftCode = HideValue.Get("ShiftCode")
+        cls.Seq = HideValue.Get("Seq")
+        cls.User = pUser
+
+        dt = clsProdSampleVerificationDB.IOTconnection(ActionSts, cls)
+        Dim URL = dt.Rows(0)("URL").ToString()
+        cbkIOTconn.JSProperties("cp_URL") = URL
+
+    End Sub
 #End Region
 
 #Region "GRID EVENT INSERT - UPDATE - DELETE"
@@ -830,10 +880,8 @@ Public Class ProdSampleVerification
         Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartR(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
         If xr.Count = 0 Then
             chartR.JSProperties("cpShow") = "0"
-            CharacteristicSts = "0"
         Else
             chartR.JSProperties("cpShow") = "1"
-            CharacteristicSts = "1"
         End If
         With chartR
             .DataSource = xr
@@ -878,6 +926,7 @@ Public Class ProdSampleVerification
             .DataBind()
         End With
     End Sub
+
     Private Sub LoadChartX(cls As clsProdSampleVerification)
         Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartXR(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
         With chartX
@@ -935,17 +984,17 @@ Public Class ProdSampleVerification
 
                 diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
                 diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
-
-                diagram.AxisY.VisualRange.MinValue = Setup.SpecLSL
-                diagram.AxisY.VisualRange.MaxValue = Setup.SpecUSL
+                diagram.AxisY.WholeRange.EndSideMargin = Setup.SpecUSL + 1
 
                 CType(.Diagram, XYDiagram).SecondaryAxesY.Clear()
                 Dim myAxisY As New SecondaryAxisY("my Y-Axis")
                 myAxisY.Visibility = DevExpress.Utils.DefaultBoolean.False
                 CType(.Diagram, XYDiagram).SecondaryAxesY.Add(myAxisY)
                 CType(.Series("Rule").View, XYDiagramSeriesViewBase).AxisY = myAxisY
+                CType(.Series("RuleYellow").View, XYDiagramSeriesViewBase).AxisY = myAxisY
             End If
             .DataBind()
+            .Width = xr.Count * 20
         End With
     End Sub
     Private Sub LoadForm_ByAnotherform()
@@ -965,7 +1014,6 @@ Public Class ProdSampleVerification
         Up_GridLoadActivities(cls)
         Up_GridChartSetup(cls)
         Validation_Verify(cls)
-        IOTconnection(cls)
 
         Dim RespChartSetUp = clsProdSampleVerificationDB.Validation(GetVerifyChartSetup, cls)
         If RespChartSetUp = "" Then
@@ -1030,16 +1078,6 @@ Public Class ProdSampleVerification
     Private Sub Validation_Verify(cls As clsProdSampleVerification)
         VerifyStatus = clsProdSampleVerificationDB.Validation(GetVerifyPrivilege, cls)
         Grid.JSProperties("cp_Verify") = VerifyStatus 'parameter to authorization verify
-    End Sub
-    Private Sub IOTconnection(cls As clsProdSampleVerification)
-        dt = clsProdSampleVerificationDB.IOTconnection(MenuID, cls)
-        If dt.Rows.Count > 0 Then
-            For i = 0 To dt.Rows.Count - 1
-                Dim Action = "cp_" & dt.Rows(i)("Action").ToString()
-                Dim URL = dt.Rows(i)("URL").ToString()
-                Grid.JSProperties(Action) = URL
-            Next
-        End If
     End Sub
 #End Region
 

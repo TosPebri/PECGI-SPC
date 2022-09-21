@@ -119,6 +119,31 @@ Public Class clsSPCAlertDashboardDB
             Return Nothing
         End Try
     End Function
+
+    Public Shared Function GetVerifyDataList(User As String, FactoryCode As String, Optional ByRef pErr As String = "") As DataTable
+        Try
+            Using conn As New SqlConnection(Sconn.Stringkoneksi)
+                conn.Open()
+                Dim sql As String = ""
+                sql = "sp_SPC_GetDelayVerify"
+
+                Dim cmd As New SqlCommand(sql, conn)
+                cmd.CommandType = CommandType.StoredProcedure
+                With cmd.Parameters
+                    .AddWithValue("User", User)
+                    .AddWithValue("FactoryCode", FactoryCode)
+                End With
+                Dim da As New SqlDataAdapter(cmd)
+                Dim dt As New DataTable
+                da.Fill(dt)
+
+                Return dt
+            End Using
+        Catch ex As Exception
+            pErr = ex.Message
+            Return Nothing
+        End Try
+    End Function
     Public Shared Function GetData(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String) As ClsSPCItemCheckByType
         Using cn As New SqlConnection(Sconn.Stringkoneksi)
             Dim sql As String

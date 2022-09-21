@@ -82,7 +82,7 @@ Public Class clsProdSampleVerificationDB
         End Try
     End Function
 
-    Public Shared Function IOTconnection(ByVal MenuID As String, data As clsProdSampleVerification) As DataTable
+    Public Shared Function IOTconnection(ActionSts As String, data As clsProdSampleVerification) As DataTable
         Try
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
@@ -98,7 +98,7 @@ Public Class clsProdSampleVerificationDB
                 cmd.Parameters.AddWithValue("Seq", If(data.Seq, ""))
                 cmd.Parameters.AddWithValue("ProdDate", If(data.ProdDate, ""))
                 cmd.Parameters.AddWithValue("User", If(data.User, ""))
-                cmd.Parameters.AddWithValue("MenuID", If(MenuID, ""))
+                cmd.Parameters.AddWithValue("ActionSts", If(ActionSts, ""))
                 Dim da As New SqlDataAdapter(cmd)
                 Dim dt As New DataTable
                 da.Fill(dt)

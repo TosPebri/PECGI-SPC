@@ -419,6 +419,15 @@ Partial Public Class ProdSampleVerification
     Protected WithEvents GridActivity As Global.DevExpress.Web.ASPxGridView
 
     '''<summary>
+    '''cbkIOTconn control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cbkIOTconn As Global.DevExpress.Web.ASPxCallback
+
+    '''<summary>
     '''HideValue control.
     '''</summary>
     '''<remarks>

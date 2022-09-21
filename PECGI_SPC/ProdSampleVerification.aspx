@@ -57,9 +57,6 @@
             } else {
                 tblChart.style.display = "none";
             }
-
-            HideValue.Set('IOTProcessTable', s.cp_IOTProcessTable);
-            HideValue.Set('IOTTraceability', s.cp_IOTTraceability);
         }
 
         function ChangeFactory() {
@@ -205,16 +202,12 @@
             }
 
             var nChart = s.cpChartSetup;
-            console.log(nChart);
             var tblChart = document.getElementById("tblChartSetup_2");
             if (nChart > 1) {
                 tblChart.style.display = "block";
             } else {
                 tblChart.style.display = "none";
             }
-
-            HideValue.Set('IOTProcessTable', s.cp_IOTProcessTable);
-            HideValue.Set('IOTTraceability', s.cp_IOTTraceability);
         }
 
         function EndCallback_GridActivity(s, e) {
@@ -332,31 +325,33 @@
 
 
         function IOTProcess() {
-            var URL = HideValue.Get('IOTProcessTable');
-            console.log(URL);
-            window.open('' + URL + '', '_blank');
-
-                //var dataObject = JSON.stringify(
-                //    {
-                //        UserID: 'AdminTos',
-                //        Password: 'Pecgi21'
-                //    });
-
-                //$.ajax({
-                //    url: 'http://192.168.0.190:81/Home/Login',
-                //    type: 'POST',
-                //    data: dataObject
-                //});
+            // Var IOT Tracebility = 1
+            cbkIOTconn.PerformCallback('1');
+            millisecondsToWait = 1000;
+            setTimeout(function () {
+                var URL = HideValue.Get('IOTConn');
+                console.log(URL);
+                window.open('' + URL + '', '_blank');
+            }, millisecondsToWait);
             
         }
 
-
-
         function IOTTraceability() {
-            var URL = HideValue.Get('IOTTraceability');
-            console.log(URL);
-           /* window.open('' + URL + '', '_blank');*/
+            // Var IOT Tracebility = 2
+            cbkIOTconn.PerformCallback('2');
+            millisecondsToWait = 1000;
+            setTimeout(function () {
+                var URL = HideValue.Get('IOTConn');
+                console.log(URL);
+                window.open('' + URL + '', '_blank');
+            }, millisecondsToWait);
         }
+
+        function IOTconn(s, e) {
+            console.log(s.cp_URL);
+            HideValue.Set('IOTConn', s.cp_URL);
+        }
+
 
     </script>
     <style type="text/css">
@@ -374,6 +369,56 @@
             height: 12px;
         }
     </style>
+</asp:Content>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolderJavaScriptBody" runat="server">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            gridHeight(150);
+
+            gridActivityHeight(150);
+
+            $("#fullscreen").click(function () {
+                var fcval = $("#flscr").val();
+                if (fcval == "0") { //toClickFullScreen
+                    gridHeight(50);
+                    gridActivityHeight(50);
+                    $("#flscr").val("1");
+                } else if (fcval == "1") { //toNormalFullScreen
+                    gridHeight(260);
+                    gridActivityHeight(260);
+                    $("#flscr").val("0");
+                }
+            })
+        });
+
+        function gridHeight(pF) {
+            var h1 = 49;
+            var p1 = 10;
+            var h2 = 34;
+            var p2 = 13;
+            var h3 = $("#divhead").height();
+
+            var hAll = h1 + p1 + h2 + p2 + h3 + pF;
+            /* alert(h1 + p1 + h2 + p2 + h3);*/
+            var height = Math.max(0, document.documentElement.clientHeight);
+            Grid.SetHeight(height - hAll);
+        };
+
+        function gridActivityHeight(pF) {
+            var h1 = 49;
+            var p1 = 10;
+            var h2 = 34;
+            var p2 = 13;
+            var h3 = $("#divhead").height();
+
+            var hAll = h1 + p1 + h2 + p2 + h3 + pF;
+            /* alert(h1 + p1 + h2 + p2 + h3);*/
+            var height = Math.max(0, document.documentElement.clientHeight);
+            GridActivity.SetHeight(height - hAll);
+        };
+
+    </script>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
@@ -563,7 +608,7 @@
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 100%">
-                    <table style="width: 50%; margin-left:50%">
+                    <table style="width: 50%; margin-left: 50%">
                         <tr>
                             <td rowspan="2" class="header" style="width: 180px">
                                 <dx:ASPxLabel ID="ASPxLabel1" runat="server" Text="Period" Font-Names="Segoe UI" Font-Size="9pt"></dx:ASPxLabel>
@@ -659,110 +704,119 @@
         </dx:ASPxGridView>
     </div>
     <div style="padding: 5px 5px 5px 5px;">
-        <div id="chartXdiv">
-            <dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
-                Height="434px" Width="1080px" CrosshairEnabled="True" SeriesDataMember="Description">
-                <SeriesSerializable>
-                    <cc1:Series ArgumentDataMember="Seq" Name="Average" ValueDataMembersSerializable="AvgValue">
-                        <ViewSerializable>
-                            <cc1:LineSeriesView Color="Blue">
-                                <LineStyle Thickness="1" />
-                                <LineMarkerOptions Color="Blue" Size="3">
-                                </LineMarkerOptions>
-                            </cc1:LineSeriesView>
-                        </ViewSerializable>
-                    </cc1:Series>
-                    <cc1:Series ArgumentDataMember="Seq" Name="Rule" ValueDataMembersSerializable="RuleValue">
-                        <ViewSerializable>
-                            <cc1:FullStackedBarSeriesView BarWidth="1">
-                            </cc1:FullStackedBarSeriesView>
-                        </ViewSerializable>
-                    </cc1:Series>
-                </SeriesSerializable>
-
-                <SeriesTemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
-                    <ViewSerializable>
-                        <cc1:PointSeriesView>
-                            <PointMarkerOptions Kind="Circle" BorderColor="255, 255, 255"></PointMarkerOptions>
-                        </cc1:PointSeriesView>
-                    </ViewSerializable>
-                </SeriesTemplate>
-                <DiagramSerializable>
-                    <cc1:XYDiagram>
-                        <AxisX VisibleInPanesSerializable="-1" MinorCount="1">
-                            <GridLines MinorVisible="True">
-                            </GridLines>
-                        </AxisX>
-                        <AxisY VisibleInPanesSerializable="-1" MinorCount="1">
-                            <Tickmarks MinorVisible="False" />
-                            <Label TextPattern="{V:0.000}" Font="Tahoma, 7pt">
-                                <ResolveOverlappingOptions AllowHide="True" />
-                            </Label>
-                            <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0.015" MaxValueSerializable="2.715" MinValueSerializable="2.645" StartSideMargin="0.025" />
-                            <WholeRange AlwaysShowZeroLevel="False" Auto="False" AutoSideMargins="False" EndSideMargin="0.015" MaxValueSerializable="2.73" MinValueSerializable="2.62" StartSideMargin="0.025" />
-                            <GridLines>
-                                <LineStyle DashStyle="Dot" />
-                            </GridLines>
-                            <NumericScaleOptions AutoGrid="False" CustomGridAlignment="0.005" GridAlignment="Custom" />
-                        </AxisY>
-                    </cc1:XYDiagram>
-                </DiagramSerializable>
-                <Titles>
-                    <cc1:ChartTitle Font="Segoe UI, 12pt, style=Bold" Text="Graph Monitoring" />
-                </Titles>
-                <Legend AlignmentHorizontal="Left" AlignmentVertical="BottomOutside"
-                    Direction="LeftToRight"></Legend>
-            </dx:WebChartControl>
-        </div>
+        <div id="chartXdiv" style="overflow-x:auto; width:100%; border:1px solid black"">
+<dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
+        Height="434px" Width="800px" CrosshairEnabled="True" SeriesDataMember="Description">
+        <seriestemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
+            <viewserializable>
+                <cc1:PointSeriesView>                    
+                    <PointMarkerOptions kind="Circle" BorderColor="255, 255, 255"></PointMarkerOptions>
+                </cc1:PointSeriesView>
+            </viewserializable>
+        </seriestemplate>    
+        <SeriesSerializable>
+            <cc1:Series ArgumentDataMember="Seq" Name="Rule" ValueDataMembersSerializable="RuleValue" LabelsVisibility="False" ShowInLegend="False">
+                <ViewSerializable>
+                    <cc1:FullStackedBarSeriesView BarWidth="1" Color="Red" Transparency="200">
+                    </cc1:FullStackedBarSeriesView>
+                </ViewSerializable>
+            </cc1:Series>
+            <cc1:Series ArgumentDataMember="Seq" Name="RuleYellow" ValueDataMembersSerializable="RuleYellow" LabelsVisibility="False" ShowInLegend="False">
+                <ViewSerializable>
+                    <cc1:FullStackedBarSeriesView BarWidth="1" Color="Yellow" Transparency="200">
+                    </cc1:FullStackedBarSeriesView>
+                </ViewSerializable>
+            </cc1:Series>
+            <cc1:Series ArgumentDataMember="Seq" Name="Average" ValueDataMembersSerializable="AvgValue">
+                <ViewSerializable>
+                    <cc1:LineSeriesView Color="Blue">
+                        <LineStyle Thickness="1" />
+                        <LineMarkerOptions Color="Blue" Size="3">
+                        </LineMarkerOptions>
+                    </cc1:LineSeriesView>
+                </ViewSerializable>
+            </cc1:Series>
+        </SeriesSerializable>     
+        <DiagramSerializable>
+            <cc1:XYDiagram>
+                <AxisX VisibleInPanesSerializable="-1" MinorCount="1">
+                    <Label Alignment="Center">
+                        <ResolveOverlappingOptions AllowHide="False" />
+                    </Label>
+                    <GridLines MinorVisible="True">
+                    </GridLines>
+                    <NumericScaleOptions AutoGrid="False" />
+                </AxisX>
+                <AxisY VisibleInPanesSerializable="-1" MinorCount="1">
+                    <Tickmarks MinorVisible="False" />
+                    <Label TextPattern="{V:0.000}" Font="Tahoma, 7pt">
+                        <ResolveOverlappingOptions AllowHide="True" />
+                    </Label>
+                    <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0.015" MaxValueSerializable="2.715" MinValueSerializable="2.645" StartSideMargin="0.025" />
+                    <WholeRange AlwaysShowZeroLevel="False" Auto="False" AutoSideMargins="False" EndSideMargin="0.015" MaxValueSerializable="2.73" MinValueSerializable="2.62" StartSideMargin="0.025" />
+                    <GridLines>
+                        <LineStyle DashStyle="Dot" />
+                    </GridLines>
+                    <NumericScaleOptions AutoGrid="False" CustomGridAlignment="0.005" GridAlignment="Custom" />
+                </AxisY>
+            </cc1:XYDiagram>
+        </DiagramSerializable>
+        <titles>
+            <cc1:ChartTitle Font="Segoe UI, 12pt, style=Bold" Text="Graph Monitoring" />
+        </titles>
+        <legend alignmenthorizontal="Left" alignmentvertical="BottomOutside" 
+            direction="LeftToRight"></legend> 
+    </dx:WebChartControl>
+</div>
     </div>
     <div style="padding: 5px 5px 5px 5px;">
         <div id="chartRdiv">
-            <dx:WebChartControl ID="chartR" runat="server" ClientInstanceName="chartR"
-                Height="450px" Width="1080px" CrosshairEnabled="True">
-                <SeriesSerializable>
-                    <cc1:Series ArgumentDataMember="Seq" Name="R" ValueDataMembersSerializable="RValue">
-                        <ViewSerializable>
-                            <cc1:LineSeriesView>
-                            </cc1:LineSeriesView>
-                        </ViewSerializable>
-                    </cc1:Series>
-                </SeriesSerializable>
-                <SeriesTemplate ValueDataMembersSerializable="Value">
-                    <ViewSerializable>
-                        <cc1:LineSeriesView>
-                            <LineMarkerOptions BorderColor="White" Size="8">
-                            </LineMarkerOptions>
-                        </cc1:LineSeriesView>
-                    </ViewSerializable>
-                </SeriesTemplate>
-                <DiagramSerializable>
-                    <cc1:XYDiagram>
-                        <AxisX VisibleInPanesSerializable="-1" MinorCount="1">
-                            <GridLines MinorVisible="True">
-                            </GridLines>
-                        </AxisX>
-                        <AxisY VisibleInPanesSerializable="-1" MinorCount="1">
-                            <Tickmarks MinorLength="1" MinorVisible="False" />
-                            <Label TextAlignment="Near" TextPattern="{V:0.000}">
-                                <ResolveOverlappingOptions AllowHide="True" />
-                            </Label>
-                            <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0.001" MaxValueSerializable="0.027" MinValueSerializable="0" StartSideMargin="0" />
-                            <WholeRange Auto="False" MaxValueSerializable="0.027" MinValueSerializable="0" AutoSideMargins="False" EndSideMargin="1" StartSideMargin="1" />
-                            <GridLines>
-                                <LineStyle DashStyle="Dot" />
-                            </GridLines>
-                            <NumericScaleOptions AutoGrid="False" CustomGridAlignment="0.001" GridAlignment="Custom" GridOffset="1" />
-                        </AxisY>
-                    </cc1:XYDiagram>
-                </DiagramSerializable>
-                <Titles>
-                    <cc1:ChartTitle Font="Segoe UI, 12pt, style=Bold" Text="R Control Chart" />
-                </Titles>
-                <Legend AlignmentHorizontal="Left" AlignmentVertical="BottomOutside"
-                    Direction="LeftToRight"></Legend>
-                <ClientSideEvents EndCallback="ChartREndCallBack" />
-            </dx:WebChartControl>
-        </div>
+    <dx:WebChartControl ID="chartR" runat="server" ClientInstanceName="chartR"
+        Height="450px" Width="1080px" CrosshairEnabled="True">
+        <SeriesSerializable>
+            <cc1:Series ArgumentDataMember="Seq" Name="R" ValueDataMembersSerializable="RValue">
+                <ViewSerializable>
+                    <cc1:LineSeriesView>
+                    </cc1:LineSeriesView>
+                </ViewSerializable>
+            </cc1:Series>
+        </SeriesSerializable>
+        <seriestemplate ValueDataMembersSerializable="Value">            
+            <viewserializable>
+                <cc1:LineSeriesView>
+                    <LineMarkerOptions BorderColor="White" Size="8">
+                    </LineMarkerOptions>
+                </cc1:LineSeriesView>
+            </viewserializable>
+        </seriestemplate>  
+        <DiagramSerializable>
+            <cc1:XYDiagram>
+                <AxisX VisibleInPanesSerializable="-1" MinorCount="1">
+                    <GridLines MinorVisible="True">
+                    </GridLines>
+                </AxisX>
+                <AxisY VisibleInPanesSerializable="-1" MinorCount="1">
+                    <Tickmarks MinorLength="1" MinorVisible="False" />
+                    <Label TextAlignment="Near" TextPattern="{V:0.000}">
+                        <ResolveOverlappingOptions AllowHide="True" />
+                    </Label>
+                    <VisualRange Auto="False" AutoSideMargins="False" EndSideMargin="0.001" MaxValueSerializable="0.027" MinValueSerializable="0" StartSideMargin="0" />
+                    <WholeRange Auto="False" MaxValueSerializable="0.027" MinValueSerializable="0" AutoSideMargins="False" EndSideMargin="1" StartSideMargin="1" />
+                    <GridLines>
+                        <LineStyle DashStyle="Dot" />
+                    </GridLines>
+                    <NumericScaleOptions AutoGrid="False" CustomGridAlignment="0.001" GridAlignment="Custom" GridOffset="1" />
+                </AxisY>
+            </cc1:XYDiagram>
+        </DiagramSerializable>
+        <titles>
+            <cc1:ChartTitle Font="Segoe UI, 12pt, style=Bold" Text="R Control Chart" />
+        </titles>
+        <legend alignmenthorizontal="Left" alignmentvertical="BottomOutside" 
+            direction="LeftToRight"></legend> 
+        <ClientSideEvents EndCallback="ChartREndCallBack" />
+    </dx:WebChartControl>
+</div>
     </div>
     <div style="height: 26px; padding-bottom: 5px; padding-left: 450px; padding-top: 20px">
         <dx:ASPxLabel ID="lblGridActivity" runat="server" Text="ACTIVITY MONITORING"
@@ -1102,5 +1156,10 @@
             </Templates>
         </dx:ASPxGridView>
     </div>
+
+    <dx:ASPxCallback ID="cbkIOTconn" runat="server" ClientInstanceName="cbkIOTconn">
+        <ClientSideEvents EndCallback="IOTconn" />
+    </dx:ASPxCallback>
+
     <dx:ASPxHiddenField ID="HideValue" runat="server" ClientInstanceName="HideValue"></dx:ASPxHiddenField>
 </asp:Content>

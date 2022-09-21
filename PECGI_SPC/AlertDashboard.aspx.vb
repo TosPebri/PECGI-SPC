@@ -428,6 +428,28 @@ Public Class AlertDashboard
         Return msg
     End Function
 
+    <System.Web.Script.Services.ScriptMethod()>
+    <WebMethod()>
+    Public Shared Function DelayVerify(pUser As String, pFactory As String) As String
+
+        Dim dt As DataTable
+        Dim msg As String = ""
+
+        dt = clsSPCAlertDashboardDB.GetNGDataList(pUser, pFactory)
+        If dt.Rows.Count > 0 Then
+            For i = 0 To dt.Rows.Count - 1
+                If msg <> "" Then msg = msg & ";"
+                msg = msg & dt.Rows(i)("Label").ToString
+
+                If msg <> "" Then msg = msg & "|"
+                msg = msg & dt.Rows(i)("Link").ToString
+            Next
+        Else
+            msg = ""
+        End If
+        Return msg
+    End Function
+
     'Private Sub GridNG_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles GridNG.CustomCallback
     '    Try
     '        Dim pAction As String = Split(e.Parameters, "|")(0)

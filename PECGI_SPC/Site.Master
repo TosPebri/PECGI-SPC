@@ -54,13 +54,17 @@
 
                     <div class="ajax-dropdown">
                         <div class="btn-group btn-group-justified" data-toggle="buttons">
-                            <label class="btn btn-default">
+                            <label class="btn btn-default" style="font-size:12px">
                                 <input type="radio" name="btnDelay">
-                                Delay Input (<%# Eval("TotDelay")%>)
+                                Delay Input (<%# Eval("DelayInput")%>)
+                            </label>                                                        </label>                           
+                            <label class="btn btn-default" style="font-size:12px">
+                                <input type="radio" name="btnDelayVerify">
+                                Delay Verify (<%# Eval("DelayVerify")%>)
                             </label>
-                            <label class="btn btn-default">
+                            <label class="btn btn-default" style="font-size:12px">
                                 <input type="radio" name="btnNG">
-                                NG Input (<%# Eval("TotNG")%>)
+                                NG Input (<%# Eval("NGInput")%>)
                             </label>
                         </div>
                         <div class="ajax-notifications custom-scroll">
@@ -140,7 +144,6 @@
                                     <ItemTemplate>
                                         <li>
                                             <a href="<%#Eval("MenuName") %>">
-                                                <span class="badge bg-color-greenLight pull-right inbox-badge"><%#Eval("Notif") %></span>
                                                 <i class="<%#Eval("HelpName") %>"></i>
                                                 <%#Eval("MenuDesc") %>
                                             </a>
@@ -921,7 +924,7 @@
                             var Label = a[i].split("|")[0];
                             var nValue = a[i].split("|")[1];
                             /*console.log(nValue);*/
-                            html += '<label style="border-bottom:groove"><a href=' + nValue + '><span class="fa fa-bell icon-color-bad"></span><span style="font-size:15px; color:black; margin-left:10px">' + Label + '</span></a></label><br/>'
+                            html += '<label style="border-bottom:groove"><a href=' + nValue + '><span class="fa fa-bell icon-color-bad"></span><span style="font-size:15px; color:black; margin-left:12px">' + Label + '</span></a></label><br/>'
                         };
                     } else {
                         html = '<div class="sa-ajax-notification-container"><div class="alert sa-ajax-notification-alert"><h4>Click a button to show messages here</h4> Data Is Not Found!</div ><span class="fa fa-search fa-4x fa-border"></span></div >'
@@ -950,6 +953,11 @@
         $(":radio[name='btnNG']").change(function () {
             GetNotif("NGInput")
         });
+
+        $(":radio[name='btnDelayVerify']").change(function () {
+            GetNotif("DelayVerify")
+        });
+
 
     </script>
 

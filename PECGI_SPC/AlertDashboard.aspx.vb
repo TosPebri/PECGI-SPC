@@ -435,7 +435,7 @@ Public Class AlertDashboard
         Dim dt As DataTable
         Dim msg As String = ""
 
-        dt = clsSPCAlertDashboardDB.GetNGDataList(pUser, pFactory)
+        dt = clsSPCAlertDashboardDB.GetVerifyDataList(pUser, pFactory)
         If dt.Rows.Count > 0 Then
             For i = 0 To dt.Rows.Count - 1
                 If msg <> "" Then msg = msg & ";"

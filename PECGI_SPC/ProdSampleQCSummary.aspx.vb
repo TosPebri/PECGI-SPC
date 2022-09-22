@@ -6,6 +6,8 @@ Imports DevExpress.Web
 Imports DevExpress.Web.Data
 Imports System.Drawing
 Imports OfficeOpenXml
+Imports System.Web.Services
+Imports OfficeOpenXml.Style
 
 Public Class ProdSampleQCSummary
     Inherits System.Web.UI.Page
@@ -20,6 +22,7 @@ Public Class ProdSampleQCSummary
 #Region "Events"
     Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
         If Not Page.IsPostBack Then
+            pUser = Session("user")
             HF.Set("Excel", "0")
             up_Fillcombo()
         End If
@@ -133,6 +136,12 @@ Public Class ProdSampleQCSummary
                     e.Cell.BackColor = ColorTranslator.FromHtml(Split(e.CellValue, "||")(1))
                     If Split(e.CellValue, "||")(1) = "#515151" Then e.Cell.BorderColor = ColorTranslator.FromHtml("#515151")
                 End If
+            ElseIf e.CellValue.ToString.Contains("NoActive") Then
+                If Split(e.CellValue, "||").Count = 2 Then
+                    e.Cell.Text = "No Active"
+                    e.Cell.BackColor = ColorTranslator.FromHtml(Split(e.CellValue, "||")(1))
+                    e.Cell.BorderColor = ColorTranslator.FromHtml(Split(e.CellValue, "||")(1))
+                End If
             ElseIf e.CellValue.ToString.Contains("NOK") Then
                 e.Cell.Text = ""
             Else
@@ -175,11 +184,11 @@ Public Class ProdSampleQCSummary
     Private Sub up_FillcomboFactory()
         If HF.Get("Excel") = "0" Then
             Dim a As String = ""
-            dt = clsProdSampleQCSummaryDB.FillCombo("0")
+            dt = clsProdSampleQCSummaryDB.FillCombo("0", pUser)
             With cboFactory
                 .DataSource = dt
                 .DataBind()
-                .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)
+                .SelectedIndex = 0 'IIf(dt.Rows.Count > 0, 0, -1)
 
                 If .SelectedIndex < 0 Then
                     a = ""
@@ -282,7 +291,7 @@ Public Class ProdSampleQCSummary
 
             If dt.Rows.Count > 0 Then
                 For i = 1 To dt.Columns.Count - 1
-                    OK = OK + dt.Select("[" + dt.Columns(i).ColumnName + "] = 'OK'").Length
+                    OK = OK + dt.Select("[" + dt.Columns(i).ColumnName + "] Like '%OK%'").Length
                     NG = NG + dt.Select("[" + dt.Columns(i).ColumnName + "] Like '%NG%'").Length
                     no = no + dt.Select("[" + dt.Columns(i).ColumnName + "] Like '%NoResult%'").Length
 
@@ -474,6 +483,11 @@ Public Class ProdSampleQCSummary
                         .Cells(rowsExcel, i + 1).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
                     Next
 
+                    Dim Hdr As ExcelRange = .Cells(rowsExcel, 1, rowsExcel, lastCol + 1)
+                    Hdr.Style.Font.Color.SetColor(Color.White)
+                    Hdr.Style.Fill.PatternType = ExcelFillStyle.Solid
+                    Hdr.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.DimGray)
+
                     rowsExcel += 1
                     If dt.Rows.Count > 1 Then
                         For i = 0 To dt.Rows.Count - 1
@@ -495,6 +509,12 @@ Public Class ProdSampleQCSummary
                                         End If
                                     ElseIf dt.Rows(i)(j).ToString.Contains("NoProd") Or dt.Rows(i)(j).ToString.Contains("NoResult") Then
                                         .Cells(rowsExcel, j + 1).Value = ""
+                                        If Split(dt.Rows(i)(j).ToString, "||").Count = 2 Then
+                                            .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
+                                            .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(Split(dt.Rows(i)(j).ToString, "||")(1)))
+                                        End If
+                                    ElseIf dt.Rows(i)(j).ToString.Contains("NoActive") Then
+                                        .Cells(rowsExcel, j + 1).Value = "No Active"
                                         If Split(dt.Rows(i)(j).ToString, "||").Count = 2 Then
                                             .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
                                             .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(Split(dt.Rows(i)(j).ToString, "||")(1)))
@@ -535,5 +555,5 @@ Public Class ProdSampleQCSummary
         End Try
     End Sub
 #End Region
-    
+
 End Class

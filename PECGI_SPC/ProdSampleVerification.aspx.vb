@@ -630,6 +630,8 @@ Public Class ProdSampleVerification
                     End If
                 Next
                 cboFactory.Enabled = False
+            Else
+                cboFactory.SelectedIndex = 0
             End If
             If cboFactory.SelectedIndex < 0 Then
                 a = ""

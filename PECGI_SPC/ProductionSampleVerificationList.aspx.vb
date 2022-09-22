@@ -171,7 +171,7 @@ Public Class ProductionSampleVerificationList
                 UpGridLoad(cls)
 
             ElseIf pAction = "Clear" Then
-                dt = clsProductionSampleVerificationListDB.LoadGrid(cls)
+                dt = clsProductionSampleVerificationListDB.LoadGrid(pUser, cls)
                 Grid.DataSource = dt
                 Grid.DataBind()
             End If
@@ -387,7 +387,7 @@ Public Class ProductionSampleVerificationList
     End Sub
     Private Sub UpGridLoad(cls As clsProductionSampleVerificationList)
         Try
-            dt = clsProductionSampleVerificationListDB.LoadGrid(cls)
+            dt = clsProductionSampleVerificationListDB.LoadGrid(pUser, cls)
             Grid.DataSource = dt
             Grid.DataBind()
 
@@ -449,7 +449,7 @@ Public Class ProductionSampleVerificationList
                 Dim ws As ExcelWorksheet
                 ws = excel.Workbook.Worksheets.Add("BO3 - Prod Sample Verifiaction List")
 
-                dt = clsProductionSampleVerificationListDB.LoadGrid(cls)
+                dt = clsProductionSampleVerificationListDB.LoadGrid(pUser, cls)
                 With ws
                     InsertHeader(ws, cls)
 

@@ -23,7 +23,7 @@ Public Class clsProductionSampleVerificationListDB
         End Try
     End Function
 
-    Public Shared Function LoadGrid(data As clsProductionSampleVerificationList) As DataTable
+    Public Shared Function LoadGrid(UserID As String, data As clsProductionSampleVerificationList) As DataTable
         Try
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
@@ -39,6 +39,8 @@ Public Class clsProductionSampleVerificationListDB
                 cmd.Parameters.AddWithValue("ProdDateTo", If(data.ProdDateTo, ""))
                 cmd.Parameters.AddWithValue("MKVerification", If(data.MKVerification, ""))
                 cmd.Parameters.AddWithValue("QCVerification", If(data.QCVerification, ""))
+                cmd.Parameters.AddWithValue("User", If(UserID, ""))
+
                 Dim da As New SqlDataAdapter(cmd)
                 Dim dt As New DataTable
                 da.Fill(dt)

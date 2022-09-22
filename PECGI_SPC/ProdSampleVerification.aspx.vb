@@ -622,7 +622,7 @@ Public Class ProdSampleVerification
                 .DataSource = dt
                 .DataBind()
             End With
-            If Request.QueryString("FactoryCode") IsNot Nothing Then
+            If prmFactoryCode <> "" Then
                 For i = 0 To dt.Rows.Count - 1
                     If dt.Rows(i)("CODE") = prmFactoryCode Then
                         cboFactory.SelectedIndex = i
@@ -646,7 +646,7 @@ Public Class ProdSampleVerification
                 .DataSource = dt
                 .DataBind()
             End With
-            If Request.QueryString("ItemTypeCode") IsNot Nothing Then
+            If prmItemType <> "" Then
                 For i = 0 To dt.Rows.Count - 1
                     If dt.Rows(i)("CODE") = prmItemType Then
                         cboItemType.SelectedIndex = i
@@ -670,7 +670,7 @@ Public Class ProdSampleVerification
                 .DataSource = dt
                 .DataBind()
             End With
-            If Request.QueryString("Line") IsNot Nothing Then
+            If prmLineCode <> "" Then
                 For i = 0 To dt.Rows.Count - 1
                     If dt.Rows(i)("CODE") = prmLineCode Then
                         cboLineID.SelectedIndex = i
@@ -695,7 +695,7 @@ Public Class ProdSampleVerification
                 .DataSource = dt
                 .DataBind()
             End With
-            If Request.QueryString("ItemCheckCode") IsNot Nothing Then
+            If prmItemCheck <> "" Then
                 For i = 0 To dt.Rows.Count - 1
                     If dt.Rows(i)("CODE") = prmItemCheck Then
                         cboItemCheck.SelectedIndex = i
@@ -719,7 +719,7 @@ Public Class ProdSampleVerification
                 .DataSource = dt
                 .DataBind()
             End With
-            If Request.QueryString("Shift") IsNot Nothing Then
+            If prmShifCode <> "" Then
                 For i = 0 To dt.Rows.Count - 1
                     If dt.Rows(i)("CODE") = prmShifCode Then
                         cboShift.SelectedIndex = i
@@ -743,7 +743,7 @@ Public Class ProdSampleVerification
                 .DataSource = dt
                 .DataBind()
             End With
-            If Request.QueryString("Sequence") IsNot Nothing Then
+            If prmSeqNo <> "" Then
                 For i = 0 To dt.Rows.Count - 1
                     If dt.Rows(i)("CODE") = prmSeqNo Then
                         cboSeq.SelectedIndex = i
@@ -926,7 +926,6 @@ Public Class ProdSampleVerification
             .DataBind()
         End With
     End Sub
-
     Private Sub LoadChartX(cls As clsProdSampleVerification)
         Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartXR(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
         With chartX
@@ -999,14 +998,22 @@ Public Class ProdSampleVerification
     End Sub
     Private Sub LoadForm_ByAnotherform()
 
+        prmFactoryCode = Request.QueryString("FactoryCode")
+        prmItemType = Request.QueryString("ItemTypeCode")
+        prmLineCode = Request.QueryString("Line")
+        prmItemCheck = Request.QueryString("ItemCheckCode")
+        prmProdDate = Request.QueryString("ProdDate")
+        prmShifCode = Request.QueryString("Shift")
+        prmSeqNo = Request.QueryString("Sequence")
+
         Dim cls As New clsProdSampleVerification
-        cls.FactoryCode = Request.QueryString("FactoryCode")
-        cls.ItemType_Code = Request.QueryString("ItemTypeCode")
-        cls.LineCode = Request.QueryString("Line")
-        cls.ItemCheck_Code = Request.QueryString("ItemCheckCode")
-        cls.ProdDate = Convert.ToDateTime(Request.QueryString("ProdDate")).ToString("yyyy-MM-dd")
-        cls.ShiftCode = Request.QueryString("Shift")
-        cls.Seq = Request.QueryString("Sequence")
+        cls.FactoryCode = prmFactoryCode
+        cls.ItemType_Code = prmItemType
+        cls.LineCode = prmLineCode
+        cls.ItemCheck_Code = prmItemCheck
+        cls.ProdDate = Convert.ToDateTime(prmProdDate).ToString("yyyy-MM-dd")
+        cls.ShiftCode = prmShifCode
+        cls.Seq = prmSeqNo
         cls.User = pUser
 
         UpFillCombo()

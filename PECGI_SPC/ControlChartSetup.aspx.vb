@@ -21,6 +21,7 @@ Public Class ControlChartSetup
 #Region "Events"
     Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
         If Not Page.IsPostBack Then
+            pUser = Session("user")
             up_Fillcombo()
         End If
     End Sub
@@ -79,7 +80,7 @@ Public Class ControlChartSetup
 
         If e.Column.FieldName = "Factory" Then
             Dim combo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
-            up_FillcomboGrid(combo, "0")
+            up_FillcomboGrid(combo, "0", pUser)
             If Grid.IsEditing Then combo.Value = e.Value : HF.Set("FactoryEdit", e.Value)
         ElseIf e.Column.FieldName = "MachineEditGrid" Then
             Dim combo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
@@ -398,11 +399,11 @@ Public Class ControlChartSetup
     Private Sub up_Fillcombo()
         Try
             Dim a As String = ""
-            dt = clsControlChartSetupDB.FillCombo("0")
+            dt = clsControlChartSetupDB.FillCombo("0", pUser)
             With cboFactory
                 .DataSource = dt
                 .DataBind()
-                .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)
+                .SelectedIndex = 0 'IIf(dt.Rows.Count > 0, 0, -1)
             End With
             If cboFactory.SelectedIndex < 0 Then
                 a = ""
@@ -453,7 +454,7 @@ Public Class ControlChartSetup
             .TextField = "Description"
             .ValueField = "Code"
             .DataBind()
-            .SelectedIndex = -1
+            .SelectedIndex = IIf(Type = 0, 0, -1)
         End With
     End Sub
 

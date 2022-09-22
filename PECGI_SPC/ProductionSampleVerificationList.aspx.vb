@@ -249,6 +249,8 @@ Public Class ProductionSampleVerificationList
                         Exit For
                     End If
                 Next
+            Else
+                cboFactory.SelectedIndex = 0
             End If
             If cboFactory.SelectedIndex < 0 Then
                 a = ""
@@ -283,13 +285,13 @@ Public Class ProductionSampleVerificationList
 
 
             '============== FILL COMBO LINE CODE =================='         
-            If sLineCode <> "" Then
-                dt = clsProductionSampleVerificationListDB.FillCombo(Line_Sel, data)
-                With cboLineID
-                    .DataSource = dt
-                    .DataBind()
-                End With
 
+            dt = clsProductionSampleVerificationListDB.FillCombo(Line_Sel, data)
+            With cboLineID
+                .DataSource = dt
+                .DataBind()
+            End With
+            If sLineCode <> "" Then
                 For i = 0 To dt.Rows.Count - 1
                     If dt.Rows(i)("CODE") = sLineCode Then
                         cboLineID.SelectedIndex = i
@@ -302,19 +304,19 @@ Public Class ProductionSampleVerificationList
                 Else
                     a = cboLineID.SelectedItem.GetFieldValue("CODE")
                 End If
-                data.LineCode = a
             End If
+            data.LineCode = a
             '======================================================'
 
 
             '============== FILL COMBO ITEM CHECK =================='         
-            If sItemCheck <> "" Then
-                dt = clsProductionSampleVerificationListDB.FillCombo(ItemCheck_Sel, data)
-                With cboItemCheck
-                    .DataSource = dt
-                    .DataBind()
-                End With
 
+            dt = clsProductionSampleVerificationListDB.FillCombo(ItemCheck_Sel, data)
+            With cboItemCheck
+                .DataSource = dt
+                .DataBind()
+            End With
+            If sItemCheck <> "" Then
                 For i = 0 To dt.Rows.Count - 1
                     If dt.Rows(i)("CODE") = sItemCheck Then
                         cboItemCheck.SelectedIndex = i
@@ -327,9 +329,8 @@ Public Class ProductionSampleVerificationList
                 Else
                     a = cboItemCheck.SelectedItem.GetFieldValue("CODE")
                 End If
-                data.ItemCheck_Code = a
-
             End If
+            data.ItemCheck_Code = a
             '======================================================'
 
             '============== FILL MK VERIFICATION =================='

@@ -131,6 +131,24 @@ Partial Public Class SampleControlQuality
     Protected WithEvents cboItemCheck As Global.DevExpress.Web.ASPxComboBox
 
     '''<summary>
+    '''ASPxLabel9 control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ASPxLabel9 As Global.DevExpress.Web.ASPxLabel
+
+    '''<summary>
+    '''cboShow control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents cboShow As Global.DevExpress.Web.ASPxComboBox
+
+    '''<summary>
     '''hfRevNo control.
     '''</summary>
     '''<remarks>

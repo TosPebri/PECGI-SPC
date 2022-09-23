@@ -65,6 +65,22 @@ Public Class clsSPCResultDB
         End Using
     End Function
 
+    Public Shared Function GetLastVerification(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String) As Integer
+        Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+            Cn.Open()
+            Dim q As String = "sp_SPCResult_GetLastVerification"
+            Dim cmd As New SqlCommand(q, Cn)
+            cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
+            cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
+            cmd.Parameters.AddWithValue("LineCode", LineCode)
+            cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
+            cmd.Parameters.AddWithValue("ProdDate", ProdDate)
+            cmd.CommandType = CommandType.StoredProcedure
+            Dim Verification As Integer = cmd.ExecuteScalar
+            Return Verification
+        End Using
+    End Function
+
     Public Shared Function IsProdDate(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String) As Boolean
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()

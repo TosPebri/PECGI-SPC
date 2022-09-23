@@ -79,7 +79,7 @@ Public Class SampleControlQuality
     Dim dtUCL As DataTable
     Dim dtChart As DataTable
 
-    Private Sub GridXLoad(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String, ProdDate2 As String)
+    Private Sub GridXLoad(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String, ProdDate2 As String, VerifiedOnly As Integer)
         With gridX
             .Columns.Clear()
             Dim Band1 As New GridViewBandColumn
@@ -100,7 +100,7 @@ Public Class SampleControlQuality
             Col1.CellStyle.HorizontalAlign = HorizontalAlign.Center
             Band2.Columns.Add(Col1)
 
-            Dim ds As DataSet = clsSPCResultDetailDB.GetSampleByPeriod(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate, ProdDate2)
+            Dim ds As DataSet = clsSPCResultDetailDB.GetSampleByPeriod(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate, ProdDate2, VerifiedOnly)
             Dim dtDay As DataTable = ds.Tables(0)
 
             Dim PrevDay As String = ""
@@ -155,7 +155,8 @@ Public Class SampleControlQuality
         Dim ItemCheckCode As String = Split(e.Parameters, "|")(3)
         Dim ProdDate As String = Split(e.Parameters, "|")(4)
         Dim ProdDate2 As String = Split(e.Parameters, "|")(5)
-        GridXLoad(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate, ProdDate2)
+        Dim VerifiedOnly As Integer = Split(e.Parameters, "|")(6)
+        GridXLoad(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate, ProdDate2, VerifiedOnly)
     End Sub
 
     Private Sub gridX_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles gridX.HtmlDataCellPrepared
@@ -205,26 +206,27 @@ Public Class SampleControlQuality
         Dim s As String = e.Series.Name
         If s = "#1" Then
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Red
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.Red
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.Red
         ElseIf s = "#2" Then
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Diamond
+            'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Diamond
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Orange
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.Orange
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Empty
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.Orange
         ElseIf s = "#3" Then
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Triangle
+            'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Triangle
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Green
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightGreen
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.LightGreen
         ElseIf s = "#4" Then
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Square
+            'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Square
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.DarkGreen
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.DarkGreen
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Empty
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.DarkGreen
         ElseIf s = "#5" Then
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
@@ -324,21 +326,21 @@ Public Class SampleControlQuality
     End Sub
 
     Private Sub chartX_BoundDataChanged(sender As Object, e As EventArgs) Handles chartX.BoundDataChanged
-        With chartX
-            Dim view As FullStackedBarSeriesView = TryCast(.Series("Rule").View, FullStackedBarSeriesView)
-            If view IsNot Nothing Then
-                view.Color = Color.Red
-                view.FillStyle.FillMode = FillMode.Solid
-                view.Transparency = 160
-                view.Border.Thickness = 1
-            End If
-            Dim view2 As FullStackedBarSeriesView = TryCast(.Series("RuleYellow").View, FullStackedBarSeriesView)
-            If view2 IsNot Nothing Then
-                view2.Color = Color.Yellow
-                view2.FillStyle.FillMode = FillMode.Solid
-                view2.Transparency = 160
-                view2.Border.Thickness = 1
-            End If
-        End With
+        'With chartX
+        '    Dim view As FullStackedBarSeriesView = TryCast(.Series("Rule").View, FullStackedBarSeriesView)
+        '    If view IsNot Nothing Then
+        '        view.Color = Color.Red
+        '        view.FillStyle.FillMode = FillMode.Solid
+        '        view.Transparency = 200
+        '        view.Border.Thickness = 1
+        '    End If
+        '    Dim view2 As FullStackedBarSeriesView = TryCast(.Series("RuleYellow").View, FullStackedBarSeriesView)
+        '    If view2 IsNot Nothing Then
+        '        view2.Color = Color.Yellow
+        '        view2.FillStyle.FillMode = FillMode.Solid
+        '        view2.Transparency = 200
+        '        view2.Border.Thickness = 1
+        '    End If
+        'End With
     End Sub
 End Class

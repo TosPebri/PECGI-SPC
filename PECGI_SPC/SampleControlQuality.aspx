@@ -19,9 +19,37 @@
             height: 12px;
         }
             .auto-style2 {
-                width: 110px;
+                width: 60px;
+                height: 41px;
             }
-    </style>
+            .auto-style3 {
+                width: 130px;
+                height: 41px;
+            }
+            .auto-style4 {
+                width: 100px;
+                height: 41px;
+            }
+            .auto-style5 {
+                width: 34px;
+                height: 41px;
+            }
+            .auto-style6 {
+                width: 10px;
+                height: 41px;
+            }
+            .auto-style7 {
+                width: 110px;
+                height: 41px;
+            }
+            .auto-style8 {
+                width: 25px;
+                height: 41px;
+            }
+            .auto-style9 {
+                height: 41px;
+            }
+            </style>
     <script type="text/javascript" >
         var rowIndex, columnIndex;
         function OnInit(s, e) {
@@ -38,7 +66,7 @@
         }
 
         function GridLoad(s, e) {
-            gridX.PerformCallback('load' + '|' + cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
+            gridX.PerformCallback('load' + '|' + cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + cboShow.GetValue());
         }
 
         function ValidateSave(s, e) {
@@ -189,12 +217,12 @@
     <div style="padding: 0px 5px 5px 5px">
         <table class="auto-style3" style="width: 100%">
         <tr >
-            <td style="width:60px; padding:5px 0px 0px 0px">
+            <td style="padding:5px 0px 0px 0px" class="auto-style2">
                 <dx:ASPxLabel ID="ASPxLabel1" runat="server" Text="Factory" Font-Names="Segoe UI" 
                     Font-Size="9pt">
                 </dx:ASPxLabel>
             </td>
-            <td style=" width:130px; padding:5px 0px 0px 0px">
+            <td style=" padding:5px 0px 0px 0px" class="auto-style3">
                 <dx:ASPxComboBox ID="cboFactory" runat="server" Theme="Office2010Black" TextField="FactoryName"
                     ClientInstanceName="cboFactory" ValueField="FactoryCode" Font-Names="Segoe UI" 
                     Font-Size="9pt" Height="25px" 
@@ -210,12 +238,12 @@
                     </ButtonStyle>
                 </dx:ASPxComboBox>
             </td>
-            <td style=" width:100px; padding:5px 0px 0px 0px">
+            <td style=" padding:5px 0px 0px 0px" class="auto-style4">
                 <dx:ASPxLabel ID="ASPxLabel4" runat="server" Text="Machine Process" 
                     Font-Names="Segoe UI" Font-Size="9pt">
                 </dx:ASPxLabel>
             </td>
-            <td style="width:130px; padding:5px 0px 0px 0px">
+            <td style="padding:5px 0px 0px 0px" class="auto-style3">
                 <dx:ASPxComboBox ID="cboLine" runat="server" Theme="Office2010Black" TextField="LineName"
                     ClientInstanceName="cboLine" ValueField="LineCode" Font-Names="Segoe UI" 
                     Font-Size="9pt" Height="25px" 
@@ -229,15 +257,15 @@
                     </ButtonStyle>
                 </dx:ASPxComboBox>
             </td>
-            <td style=" padding: 5px 0px 0px 10px; width:34px">
+            <td style=" padding: 5px 0px 0px 10px; " class="auto-style5">
                 <dx:ASPxLabel ID="ASPxLabel8" runat="server" Text="Date" 
                     Font-Names="Segoe UI" Font-Size="9pt">
                 </dx:ASPxLabel>
             </td>
-            <td style=" width:10px">
+            <td class="auto-style6">
                 &nbsp;
                 </td>
-            <td style="padding: 5px 0px 0px 0px; width:110px">                
+            <td style="padding: 5px 0px 0px 0px; " class="auto-style7">                
                                 <dx:ASPxDateEdit ID="dtDate" runat="server" Theme="Office2010Black" 
                     Width="100px"
                         ClientInstanceName="dtDate" EditFormatString="dd MMM yyyy" DisplayFormatString="dd MMM yyyy"
@@ -265,12 +293,12 @@
            
            
            
-            <td style="padding: 5px 0px 0px 0px; width:25px">  
+            <td style="padding: 5px 0px 0px 0px; " class="auto-style8">  
                                 <dx:ASPxLabel ID="ASPxLabel10" runat="server" Text="To" 
                     Font-Names="Segoe UI" Font-Size="9pt">
                 </dx:ASPxLabel></td>            
            
-            <td style="padding: 5px 0px 0px 0px; width:130px">  
+            <td style="padding: 5px 0px 0px 0px; " class="auto-style3">  
                                 <dx:ASPxDateEdit ID="dtTo" runat="server" ClientInstanceName="dtTo" DisplayFormatString="dd MMM yyyy" EditFormat="Custom" EditFormatString="dd MMM yyyy" Font-Names="Segoe UI" Font-Size="9pt" Height="25px" TabIndex="2" Theme="Office2010Black" Width="100px">
                                     <CalendarProperties ShowWeekNumbers="False">
                                         <HeaderStyle Font-Size="12pt" Paddings-Padding="5px">
@@ -294,7 +322,7 @@
                                     </ButtonStyle>
                                 </dx:ASPxDateEdit>
             </td>            
-            <td style="padding: 5px 0px 0px 0px">
+            <td style="padding: 5px 0px 0px 0px" class="auto-style9">
 
 <dx:ASPxButton ID="btnSearch" runat="server" AutoPostBack="False" 
                     ClientInstanceName="btnSearch" Font-Names="Segoe UI" Font-Size="9pt" 
@@ -327,7 +355,7 @@
 		                    e.processOnServer = false;
 		                    return;
                         }
-                         gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + dtTo.GetText());                        
+                         gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + dtTo.GetText() + '|' + cboShow.GetValue());                        
                     }" />
                     <Paddings Padding="2px" />
                 </dx:ASPxButton>
@@ -385,17 +413,39 @@
             </td>
             <td style=" padding: 3px 0px 0px 10px; ">
                 
-                &nbsp;</td>
+               
+                </td>
             <td style=" width:10px">
-                &nbsp;</td>
+                                    
+            </td>
             <td style="padding:3px 0px 0px 0px">
-                
+                <dx:ASPxLabel ID="ASPxLabel9" runat="server" Text="Show Verified Only" 
+                        Font-Names="Segoe UI" Font-Size="9pt" Width="109px">
+            </dx:ASPxLabel> 
                                 
                 
                 
             </td>
             <td></td>
-            <td></td>
+            <td>
+                                
+                <dx:ASPxComboBox ID="cboShow" runat="server" Theme="Office2010Black" 
+                    ClientInstanceName="cboShow" Font-Names="Segoe UI" 
+                    Font-Size="9pt" Height="25px" 
+                    Width="58px" TabIndex="9" SelectedIndex="0">
+                    <Items>                        
+                        <dx:ListEditItem Text="No" Value="0" Selected="true"/>
+                        <dx:ListEditItem Text="Yes" Value="1" />
+                    </Items>
+                    <ItemStyle Height="10px" Paddings-Padding="4px"><Paddings Padding="4px"></Paddings>
+                    </ItemStyle>
+                    <ButtonStyle Paddings-Padding="4px" Width="5px"><Paddings Padding="4px"></Paddings>
+                    </ButtonStyle>
+                </dx:ASPxComboBox>
+                
+            
+
+            </td>
             <td>&nbsp;</td>
         </tr>
     </table>
@@ -465,13 +515,13 @@
         <SeriesSerializable>
             <cc1:Series ArgumentDataMember="Seq" Name="Rule" ValueDataMembersSerializable="RuleValue" LabelsVisibility="False" ShowInLegend="False">
                 <ViewSerializable>
-                    <cc1:FullStackedBarSeriesView BarWidth="1" Color="Red" Transparency="160">
+                    <cc1:FullStackedBarSeriesView BarWidth="1" Color="Red" Transparency="200">
                     </cc1:FullStackedBarSeriesView>
                 </ViewSerializable>
             </cc1:Series>
             <cc1:Series ArgumentDataMember="Seq" Name="RuleYellow" ValueDataMembersSerializable="RuleYellow" LabelsVisibility="False" ShowInLegend="False">
                 <ViewSerializable>
-                    <cc1:FullStackedBarSeriesView BarWidth="1" Color="Yellow" Transparency="160">
+                    <cc1:FullStackedBarSeriesView BarWidth="1" Color="Yellow" Transparency="200">
                     </cc1:FullStackedBarSeriesView>
                 </ViewSerializable>
             </cc1:Series>

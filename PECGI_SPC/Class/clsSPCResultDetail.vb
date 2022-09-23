@@ -68,7 +68,7 @@ Public Class clsSPCResultDetailDB
         End Using
     End Function
 
-    Public Shared Function GetTableXR(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String) As DataTable
+    Public Shared Function GetTableXR(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, VerifiedOnly As Integer) As DataTable
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
             Dim q As String = "sp_SPC_XRTable"
@@ -79,6 +79,7 @@ Public Class clsSPCResultDetailDB
             cmd.Parameters.AddWithValue("Line", Line)
             cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
             cmd.Parameters.AddWithValue("ProdDate", ProdDate)
+            cmd.Parameters.AddWithValue("VerifiedOnly", VerifiedOnly)
             Dim da As New SqlDataAdapter(cmd)
             Dim dt As New DataTable
             da.Fill(dt)
@@ -86,7 +87,7 @@ Public Class clsSPCResultDetailDB
         End Using
     End Function
 
-    Public Shared Function GetSampleByPeriod(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, ProdDate2 As String) As DataSet
+    Public Shared Function GetSampleByPeriod(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, ProdDate2 As String, VerifiedOnly As Integer) As DataSet
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
             Dim q As String = "sp_SPC_SampleControl"
@@ -98,6 +99,7 @@ Public Class clsSPCResultDetailDB
             cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
             cmd.Parameters.AddWithValue("ProdDate", ProdDate)
             cmd.Parameters.AddWithValue("ProdDate2", ProdDate2)
+            cmd.Parameters.AddWithValue("VerifiedOnly", VerifiedOnly)
             Dim da As New SqlDataAdapter(cmd)
             Dim ds As New DataSet
             da.Fill(ds)

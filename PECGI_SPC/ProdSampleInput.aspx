@@ -229,7 +229,7 @@
                 document.getElementById('Max').style.backgroundColor = 'White';
             }
             if (s.cpRefresh == '1') {
-                gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
+                gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + cboShow.GetValue());
                 chartX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
                 chartR.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText());
             }            
@@ -817,7 +817,7 @@
                     </SettingsPager>
 
 
-                    <Settings HorizontalScrollBarMode="Auto" VerticalScrollableHeight="360" VerticalScrollBarMode="Auto" />
+                    <Settings HorizontalScrollBarMode="Auto" VerticalScrollableHeight="380" VerticalScrollBarMode="Auto" />
                     <SettingsBehavior AllowSort="False" />
                     <SettingsDataSecurity AllowDelete="False" AllowEdit="False" AllowInsert="False" />
 
@@ -852,7 +852,7 @@
                 
 <div id="chartXdiv" style="overflow-x:auto; width:100%; border:1px solid black"">
 <dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
-        Height="434px" Width="800px" CrosshairEnabled="True" SeriesDataMember="Description">
+        Height="490px" Width="800px" CrosshairEnabled="True" SeriesDataMember="Description">
         <seriestemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
             <viewserializable>
                 <cc1:PointSeriesView>                    

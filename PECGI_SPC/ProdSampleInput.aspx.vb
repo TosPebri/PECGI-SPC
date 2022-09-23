@@ -18,7 +18,7 @@ Public Class ProdSampleInput
     Public ValueType As String
     Dim GlobalPrm As String = ""
 
-    Private Sub GridXLoad(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String)
+    Private Sub GridXLoad(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String, VerifiedOnly As Integer)
         With gridX
             .Columns.Clear()
             Dim Band1 As New GridViewBandColumn
@@ -95,7 +95,7 @@ Public Class ProdSampleInput
                 End If
                 SelDay = CDate(ProdDate)
             Next
-            Dim dt As DataTable = clsSPCResultDetailDB.GetTableXR(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
+            Dim dt As DataTable = clsSPCResultDetailDB.GetTableXR(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate, VerifiedOnly)
             gridX.DataSource = dt
             gridX.DataBind()
         End With
@@ -232,7 +232,7 @@ Public Class ProdSampleInput
     Protected Sub grid_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles grid.AfterPerformCallback
         If e.CallbackName <> "CANCELEDIT" And e.CallbackName <> "CUSTOMCALLBACK" Then
             GridLoad(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value, Format(dtDate.Value, "yyyy-MM-dd"), cboShift.Value, cboSeq.Value, cboShow.Value)
-            GridXLoad(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value, Format(dtDate.Value, "yyyy-MM-dd"))
+            GridXLoad(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value, Format(dtDate.Value, "yyyy-MM-dd"), cboShow.Value)
         End If
     End Sub
 
@@ -271,6 +271,9 @@ Public Class ProdSampleInput
                 grid.JSProperties("cpRemarks") = .Item("Remarks")
                 grid.JSProperties("cpRefresh") = "1"
             End With
+            Dim LastVerification As Integer = clsSPCResultDB.GetLastVerification(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
+            grid.SettingsDataSecurity.AllowInsert = LastVerification = 1
+            grid.SettingsDataSecurity.AllowEdit = LastVerification = 1
         End If
     End Sub
 
@@ -504,7 +507,8 @@ Public Class ProdSampleInput
         Dim LineCode As String = Split(e.Parameters, "|")(2)
         Dim ItemCheckCode As String = Split(e.Parameters, "|")(3)
         Dim ProdDate As String = Split(e.Parameters, "|")(4)
-        GridXLoad(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
+        Dim VerifiedOnly As String = Split(e.Parameters, "|")(5)
+        GridXLoad(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate, VerifiedOnly)
     End Sub
 
     Private Sub gridX_HtmlRowPrepared(sender As Object, e As ASPxGridViewTableRowEventArgs) Handles gridX.HtmlRowPrepared
@@ -585,7 +589,7 @@ Public Class ProdSampleInput
 
             diagram.AxisY.NumericScaleOptions.CustomGridAlignment = 0.005
             diagram.AxisY.GridLines.MinorVisible = False
-
+            .Titles(0).Text = "Chart X"
 
             Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
             diagram.AxisY.ConstantLines.Clear()

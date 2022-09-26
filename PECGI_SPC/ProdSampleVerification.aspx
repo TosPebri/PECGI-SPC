@@ -320,7 +320,7 @@
 
             window.open('ProdSampleInput.aspx?menu=prodSampleVerification.aspx' + '&FactoryCode=' + Factory + '&ItemTypeCode=' + ItemType
                 + '&Line=' + Line + '&ItemCheckCode=' + ItemCheck + '&ProdDate=' + ProdDate + '&Shift=' + Shift + '&Sequence' + Seq
-                + '', '_self');
+                + '', '_blank');
         }
 
 
@@ -772,7 +772,7 @@
     <div style="padding: 5px 5px 5px 5px;">
         <div id="chartRdiv">
     <dx:WebChartControl ID="chartR" runat="server" ClientInstanceName="chartR"
-        Height="450px" Width="1080px" CrosshairEnabled="True">
+        Height="450px" Width="1080px" CrosshairEnabled="True" ClientSideEvents-Init="InitRBar">
         <SeriesSerializable>
             <cc1:Series ArgumentDataMember="Seq" Name="R" ValueDataMembersSerializable="RValue">
                 <ViewSerializable>

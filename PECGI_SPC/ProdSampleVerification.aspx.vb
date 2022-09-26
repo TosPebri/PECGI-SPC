@@ -305,7 +305,7 @@ Public Class ProdSampleVerification
                     Dim Link As New HyperLink()
                     Link.Text = "View"
                     Link.NavigateUrl = e.CellValue
-                    Link.Target = "_self"
+                    Link.Target = "_blank"
                     e.Cell.Controls.Add(Link)
                 End If
             End If
@@ -339,8 +339,6 @@ Public Class ProdSampleVerification
         Else
             show_errorGrid(MsgTypeEnum.Warning, RespChartSetUp, 1)
         End If
-
-
     End Sub
     Private Sub chartR_CustomCallback(sender As Object, e As CustomCallbackEventArgs) Handles chartR.CustomCallback
         Dim cls As New clsProdSampleVerification
@@ -362,14 +360,6 @@ Public Class ProdSampleVerification
         End If
 
     End Sub
-    'Private Sub chartX_BoundDataChanged(sender As Object, e As EventArgs) Handles chartX.BoundDataChanged
-    '    With chartX
-    '        DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Color = Color.Red
-    '        DirectCast(.Series("Rule").View, FullStackedBarSeriesView).FillStyle.FillMode = FillMode.Solid
-    '        DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Transparency = 180
-    '        DirectCast(.Series("Rule").View, FullStackedBarSeriesView).Border.Thickness = 1
-    '    End With
-    'End Sub
     Private Sub chartX_CustomDrawSeries(sender As Object, e As CustomDrawSeriesEventArgs) Handles chartX.CustomDrawSeries
         Dim s As String = e.Series.Name
         If s = "#1" Then
@@ -895,8 +885,6 @@ Public Class ProdSampleVerification
             diagram.AxisX.GridLines.MinorVisible = True
             diagram.AxisX.MinorCount = 1
             diagram.AxisX.GridLines.Visible = False
-
-
 
             Dim Setup As clsChartSetup = clsChartSetupDB.GetData(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
             diagram.AxisY.ConstantLines.Clear()

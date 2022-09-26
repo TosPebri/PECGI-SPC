@@ -44,7 +44,18 @@ Public Class SampleControlQuality
                 ScriptManager.RegisterStartupScript(Me, Page.GetType, "Script", "GridLoad();", True)
             Else
                 dtDate.Value = Now.Date
-                InitCombo("F001", "TPMSBR011", "015", "IC021", "2022-08-03", "SH001", 1, "2022-09-01")
+                pUser = Session("user") & ""
+                dtDate.Value = Now.Date
+                dtTo.Value = Now.Date
+                If pUser <> "" Then
+                    Dim User As clsUserSetup = clsUserSetupDB.GetData(pUser)
+                    If User IsNot Nothing Then
+                        cboFactory.Value = User.FactoryCode
+                        cboType.DataSource = clsItemTypeDB.GetList(cboFactory.Value)
+                        cboType.DataBind()
+                    End If
+                End If
+                'InitCombo("F001", "TPMSBR011", "015", "IC021", "2022-08-03", "SH001", 1, "2022-09-01")
             End If
         End If
     End Sub
@@ -140,11 +151,13 @@ Public Class SampleControlQuality
             gridX.DataSource = dtXR
             gridX.DataBind()
 
-            dtLSL = ds.Tables(2)
-            dtUSL = ds.Tables(3)
-            dtLCL = ds.Tables(4)
-            dtUCL = ds.Tables(5)
-            dtChart = ds.Tables(6)
+            If ds.Tables.Count > 2 Then
+                dtLSL = ds.Tables(2)
+                dtUSL = ds.Tables(3)
+                dtLCL = ds.Tables(4)
+                dtUCL = ds.Tables(5)
+                dtChart = ds.Tables(6)
+            End If
         End With
     End Sub
 
@@ -342,5 +355,27 @@ Public Class SampleControlQuality
         '        view2.Border.Thickness = 1
         '    End If
         'End With
+    End Sub
+
+    Private Sub cboType_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboType.Callback
+        Dim FactoryCode As String = Split(e.Parameter, "|")(0)
+        cboType.DataSource = clsItemTypeDB.GetList(FactoryCode)
+        cboType.DataBind()
+    End Sub
+
+    Private Sub cboLine_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboLine.Callback
+        Dim FactoryCode As String = Split(e.Parameter, "|")(0)
+        Dim ItemTypeCode As String = Split(e.Parameter, "|")(1)
+        Dim UserID As String = Session("user") & ""
+        cboLine.DataSource = ClsLineDB.GetList(UserID, FactoryCode, ItemTypeCode)
+        cboLine.DataBind()
+    End Sub
+
+    Private Sub cboItemCheck_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboItemCheck.Callback
+        Dim FactoryCode As String = Split(e.Parameter, "|")(0)
+        Dim ItemTypeCode As String = Split(e.Parameter, "|")(1)
+        Dim LineCode As String = Split(e.Parameter, "|")(2)
+        cboItemCheck.DataSource = clsItemCheckDB.GetList(FactoryCode, ItemTypeCode, LineCode)
+        cboItemCheck.DataBind()
     End Sub
 End Class

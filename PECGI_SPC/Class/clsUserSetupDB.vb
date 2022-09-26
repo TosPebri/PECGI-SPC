@@ -195,6 +195,7 @@ Public Class clsUserSetupDB
                             .Password = clsDESEncryption.DecryptData(dt.Rows(i)("Password")),
                             .Description = Trim(dt.Rows(i)("Description") & ""),
                             .LockStatus = Val(dt.Rows(i)("LockStatus") & ""),
+                            .FactoryCode = dt.Rows(i)("FactoryCode") & "",
                             .FailedLogin = Val(dt.Rows(i)("FailedLogin") & ""),
                             .AdminStatus = Val(dt.Rows(i)("AdminStatus") & "")
                         }

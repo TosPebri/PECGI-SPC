@@ -115,18 +115,8 @@
         function cboLineChanged(s, e) {    
             cboItemCheck.SetEnabled(false);
             cboItemCheck.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue());
-
-            cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());            
         }
 
-        function cboItemCheckChanged(s, e) {
-            cboShift.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue());            
-            cboSeq.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + cboShift.GetValue() + '|' + dtDate.GetText());
-        }
-
-        function cboShiftChanged(s, e) {            
-            
-        }
 
         function OnBatchEditStartEditing(s, e) {
             if(cboSeq.GetValue() == '') {
@@ -398,8 +388,7 @@
                     Width="190px" TabIndex="5" >
                     <ClientSideEvents EndCallback="function(s, e) {
                             cboItemCheck.SetEnabled(true);                            
-                       }"
-                        SelectedIndexChanged="cboItemCheckChanged"/>
+                       }"/>
 
                     <ItemStyle Height="10px" Paddings-Padding="4px">
 <Paddings Padding="4px"></Paddings>

@@ -134,8 +134,17 @@ Public Class ProdSampleInput
                 ScriptManager.RegisterStartupScript(Me, Page.GetType, "Script", "GridLoad();", True)
                 'GridLoad(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence, 0)
             Else
+                pUser = Session("user") & ""
                 dtDate.Value = Now.Date
-                InitCombo("F001", "TPMSBR011", "015", "IC021", "2022-08-04", "SH001", 1)
+                If pUser <> "" Then
+                    Dim User As clsUserSetup = clsUserSetupDB.GetData(pUser)
+                    If User IsNot Nothing Then
+                        cboFactory.Value = User.FactoryCode
+                        cboType.DataSource = clsItemTypeDB.GetList(cboFactory.Value)
+                        cboType.DataBind()
+                    End If
+                End If
+                'InitCombo(User.FactoryCode, "TPMSBR011", "015", "IC021", "2022-08-04", "SH001", 1)
             End If
         End If
     End Sub

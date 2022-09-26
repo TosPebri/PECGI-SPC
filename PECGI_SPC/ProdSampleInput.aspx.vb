@@ -8,6 +8,8 @@ Imports DevExpress.XtraPrintingLinks
 Imports DevExpress.XtraCharts.Native
 Imports OfficeOpenXml
 Imports System.IO
+Imports DevExpress.Utils
+Imports OfficeOpenXml.Style
 
 Public Class ProdSampleInput
     Inherits System.Web.UI.Page
@@ -17,8 +19,38 @@ Public Class ProdSampleInput
     Public AuthDelete As Boolean = False
     Public ValueType As String
     Dim GlobalPrm As String = ""
+    Dim row_GridTitle = 0
+    Dim row_HeaderResult = 0
+    Dim row_HeaderActivity = 0
+    Dim row_CellResult = 0
+    Dim row_CellChart = 0
+    Dim row_CellActivity = 0
+    Dim col_HeaderResult = 0
+    Dim col_HeaderActivity = 0
+    Dim col_CellResult = 0
+    Dim col_CellActivity = 0
+    Dim RowIndexName As String = ""
+    Dim CharacteristicSts As String = ""
 
-    Private Sub GridXLoad(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String, VerifiedOnly As Integer)
+
+    Private Class clsHeader
+        Public Property FactoryCode As String
+        Public Property FactoryName As String
+        Public Property ItemTypeCode As String
+        Public Property ItemTypeName As String
+        Public Property LineCode As String
+        Public Property LineName As String
+        Public Property ItemCheckCode As String
+        Public Property ItemCheckName As String
+
+        Public Property ProdDate As String
+        Public Property ShiftCode As String
+        Public Property Shiftname As String
+        Public Property Seq As Integer
+        Public Property VerifiedOnly As String
+    End Class
+
+    Private Sub GridXLoad(Hdr As clsHeader)
         With gridX
             .Columns.Clear()
             Dim Band1 As New GridViewBandColumn
@@ -39,7 +71,7 @@ Public Class ProdSampleInput
             Col1.CellStyle.HorizontalAlign = HorizontalAlign.Center
             Band2.Columns.Add(Col1)
 
-            Dim SelDay As Object = clsSPCResultDB.GetPrevDate(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate)
+            Dim SelDay As Object = clsSPCResultDB.GetPrevDate(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Hdr.ProdDate)
             For iDay = 1 To 2
                 If Not IsDBNull(SelDay) Then
                     Dim dDay As String = Format(CDate(SelDay), "yyyy-MM-dd")
@@ -47,14 +79,14 @@ Public Class ProdSampleInput
                     BandDay.Caption = Format(SelDay, "dd MMM yyyy")
                     .Columns.Add(BandDay)
 
-                    Dim Shiftlist As List(Of clsShift) = clsFrequencyDB.GetShift(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, dDay)
+                    Dim Shiftlist As List(Of clsShift) = clsFrequencyDB.GetShift(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, dDay)
 
                     For Each Shift In Shiftlist
                         Dim BandShift As New GridViewBandColumn
                         BandShift.Caption = "S-" & Shift.ShiftName
                         BandDay.Columns.Add(BandShift)
 
-                        Dim SeqList As List(Of clsSequenceNo) = clsFrequencyDB.GetSequence(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, Shift.ShiftCode, dDay)
+                        Dim SeqList As List(Of clsSequenceNo) = clsFrequencyDB.GetSequence(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Shift.ShiftCode, dDay)
                         Dim ColIndex As Integer = 1
                         For Each Seq In SeqList
                             Dim colTime As New GridViewDataTextColumn
@@ -93,9 +125,9 @@ Public Class ProdSampleInput
 
                     Next
                 End If
-                SelDay = CDate(ProdDate)
+                SelDay = CDate(Hdr.ProdDate)
             Next
-            Dim dt As DataTable = clsSPCResultDetailDB.GetTableXR(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate, VerifiedOnly)
+            Dim dt As DataTable = clsSPCResultDetailDB.GetTableXR(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Hdr.ProdDate, Hdr.VerifiedOnly)
             gridX.DataSource = dt
             gridX.DataBind()
         End With
@@ -240,8 +272,21 @@ Public Class ProdSampleInput
     End Sub
     Protected Sub grid_AfterPerformCallback(sender As Object, e As DevExpress.Web.ASPxGridViewAfterPerformCallbackEventArgs) Handles grid.AfterPerformCallback
         If e.CallbackName <> "CANCELEDIT" And e.CallbackName <> "CUSTOMCALLBACK" Then
+            Dim Hdr As New clsHeader
+            Hdr.FactoryCode = cboFactory.Value
+            Hdr.FactoryName = cboFactory.Text
+            Hdr.ItemTypeCode = cboType.Value
+            Hdr.ItemTypeName = cboType.Text
+            Hdr.LineCode = cboLine.Value
+            Hdr.LineName = cboLine.Text
+            Hdr.ItemCheckCode = cboItemCheck.Value
+            Hdr.ItemCheckName = cboItemCheck.Value
+            Hdr.ProdDate = Convert.ToDateTime(dtDate.Value).ToString("yyyy-MM-dd")
+            Hdr.ShiftCode = cboShift.Value
+            Hdr.Shiftname = cboShift.Text
+            Hdr.Seq = cboSeq.Value
             GridLoad(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value, Format(dtDate.Value, "yyyy-MM-dd"), cboShift.Value, cboSeq.Value, cboShow.Value)
-            GridXLoad(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value, Format(dtDate.Value, "yyyy-MM-dd"), cboShow.Value)
+            GridXLoad(Hdr)
         End If
     End Sub
 
@@ -250,6 +295,7 @@ Public Class ProdSampleInput
         Dim dt As DataTable = clsSPCResultDetailDB.GetTable(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence, VerifiedOnly)
         grid.DataSource = dt
         grid.DataBind()
+        Dim Verified As Boolean = False
         If dt.Rows.Count = 0 Then
             up_ClearJS()
             grid.JSProperties("cpRefresh") = "1"
@@ -279,10 +325,13 @@ Public Class ProdSampleInput
                 grid.JSProperties("cpSubLotNo") = .Item("SubLotNo")
                 grid.JSProperties("cpRemarks") = .Item("Remarks")
                 grid.JSProperties("cpRefresh") = "1"
+                If .Item("QCDate") & "" <> "" Then
+                    Verified = True
+                End If
             End With
             Dim LastVerification As Integer = clsSPCResultDB.GetLastVerification(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
-            grid.SettingsDataSecurity.AllowInsert = LastVerification = 1
-            grid.SettingsDataSecurity.AllowEdit = LastVerification = 1
+            grid.SettingsDataSecurity.AllowInsert = LastVerification = 1 And Not Verified
+            grid.SettingsDataSecurity.AllowEdit = LastVerification = 1 And Not Verified
         End If
     End Sub
 
@@ -378,6 +427,56 @@ Public Class ProdSampleInput
         cboLine.DataBind()
     End Sub
 
+    Private Sub GridTitle(ByVal pExl As ExcelWorksheet, cls As clsHeader)
+        With pExl
+            Try
+                .Cells(1, 1).Value = "Production Sample Input"
+                .Cells(1, 1, 1, 13).Merge = True
+                .Cells(1, 1, 1, 13).Style.HorizontalAlignment = HorzAlignment.Near
+                .Cells(1, 1, 1, 13).Style.VerticalAlignment = VertAlignment.Center
+                .Cells(1, 1, 1, 13).Style.Font.Bold = True
+                .Cells(1, 1, 1, 13).Style.Font.Size = 16
+                .Cells(1, 1, 1, 13).Style.Font.Name = "Segoe UI"
+
+                .Cells(3, 1, 3, 2).Value = "Factory Code"
+                .Cells(3, 1, 3, 2).Merge = True
+                .Cells(3, 3).Value = ": " & cls.FactoryName
+
+                .Cells(4, 1, 4, 2).Value = "Item Type Code"
+                .Cells(4, 1, 4, 2).Merge = True
+                .Cells(4, 3).Value = ": " & cls.ItemTypeName
+
+                .Cells(5, 1, 5, 2).Value = "Line Code"
+                .Cells(5, 1, 5, 2).Merge = True
+                .Cells(5, 3).Value = ": " & cls.LineName
+
+                .Cells(6, 1, 6, 2).Value = "Item Check Code"
+                .Cells(6, 1, 6, 2).Merge = True
+                .Cells(6, 3).Value = ": " & cls.ItemCheckName
+
+                .Cells(7, 1, 7, 2).Value = "Prod Date"
+                .Cells(7, 1, 7, 2).Merge = True
+                .Cells(7, 3).Value = ": " & cls.ProdDate
+
+                .Cells(8, 1, 8, 2).Value = "Shift Code"
+                .Cells(8, 1, 8, 2).Merge = True
+                .Cells(8, 3).Value = ": " & cls.Shiftname
+
+                .Cells(9, 1, 9, 2).Value = "Sequence No"
+                .Cells(9, 1, 9, 2).Merge = True
+                .Cells(9, 3).Value = ": " & cls.Seq
+
+                Dim rgHdr As ExcelRange = .Cells(3, 3, 9, 4)
+                rgHdr.Style.HorizontalAlignment = HorzAlignment.Near
+                rgHdr.Style.VerticalAlignment = VertAlignment.Center
+                rgHdr.Style.Font.Size = 10
+                rgHdr.Style.Font.Name = "Segoe UI"
+            Catch ex As Exception
+                Throw New Exception(ex.Message)
+            End Try
+        End With
+    End Sub
+
     Private Sub cboItemCheck_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboItemCheck.Callback
         Dim FactoryCode As String = Split(e.Parameter, "|")(0)
         Dim ItemTypeCode As String = Split(e.Parameter, "|")(1)
@@ -436,9 +535,23 @@ Public Class ProdSampleInput
                 Dim lastCol As Integer = 1
                 Dim Seq As Integer = 0
                 Dim SelDay As Date = dtDate.Value
-                .Cells(1, 1).Value = "Date"
-                .Cells(2, 1).Value = "Shift"
-                .Cells(3, 1).Value = "Sequence"
+
+                Dim Hdr As New clsHeader
+                Hdr.FactoryCode = cboFactory.Value
+                Hdr.FactoryName = cboFactory.Text
+                Hdr.ItemTypeCode = cboType.Value
+                Hdr.ItemTypeName = cboType.Text
+                Hdr.LineCode = cboLine.Value
+                Hdr.LineName = cboLine.Text
+                Hdr.ItemCheckCode = cboItemCheck.Value
+                Hdr.ItemCheckName = cboItemCheck.Value
+                Hdr.ProdDate = Convert.ToDateTime(dtDate.Value).ToString("yyyy-MM-dd")
+                Hdr.ShiftCode = cboShift.Value
+                Hdr.Shiftname = cboShift.Text
+                Hdr.Seq = cboSeq.Value
+
+                GridTitle(ws, Hdr)
+                GridExcel(ws, Hdr)
 
                 .InsertRow(20, 22)
                 Dim fi As New FileInfo(Path & "\chart.png")
@@ -454,6 +567,60 @@ Public Class ProdSampleInput
             Response.End()
 
         End Using
+    End Sub
+
+    Private Sub GridExcel(pExl As ExcelWorksheet, Hdr As clsHeader)
+        Dim dt As DataTable = clsSPCResultDetailDB.GetTable(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Hdr.ProdDate, Hdr.ShiftCode, Hdr.Seq, Hdr.VerifiedOnly)
+        Dim iRow As Integer = 12
+        With pExl
+            .Cells(iRow, 1).Value = "Data"
+            .Cells(iRow, 2).Value = "Value"
+            .Cells(iRow, 3).Value = "Judgement"
+            .Cells(iRow, 4).Value = "Operator"
+            .Cells(iRow, 5).Value = "Sample Date"
+            .Cells(iRow, 6).Value = "Delete Status"
+            .Cells(iRow, 7).Value = "Remarks"
+            .Cells(iRow, 8).Value = "Last User"
+            .Cells(iRow, 9).Value = "Last Update"
+            .Cells(iRow, 1, iRow, 9).Style.Fill.PatternType = ExcelFillStyle.Solid
+            .Cells(iRow, 1, iRow, 9).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#878787"))
+            For i = 0 To dt.Rows.Count - 1
+                iRow = iRow + 1
+                .Cells(iRow, 1).Value = dt.Rows(i)("SeqNo")
+                .Cells(iRow, 2).Value = dt.Rows(i)("Value")
+                .Cells(iRow, 3).Value = dt.Rows(i)("Judgement")
+                .Cells(iRow, 4).Value = dt.Rows(i)("RegisterUser")
+                .Cells(iRow, 5).Value = dt.Rows(i)("RegisterDate")
+            Next
+
+            iRow = iRow + 1
+            .Cells(iRow, 1).Value = "Sub Lot No"
+            .Cells(iRow, 2).Value = "Sub Lot No"
+            iRow = iRow + 1
+            .Cells(iRow, 1).Value = "Remarks"
+            .Cells(iRow, 2).Value = "Remarks"
+            iRow = iRow + 2
+
+            Dim iCol As Integer = 1
+            Dim SelDay As Object = clsSPCResultDB.GetPrevDate(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Hdr.ProdDate)
+            For iDay = 1 To 2
+                If Not IsDBNull(SelDay) Then
+                    iCol = iCol + 1
+                    Dim dDay As String = Format(CDate(SelDay), "yyyy-MM-dd")
+                    .Cells(iRow, iCol).Value = dDay
+
+                    Dim Shiftlist As List(Of clsShift) = clsFrequencyDB.GetShift(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, dDay)
+                    For Each Shift In Shiftlist
+                        Dim SeqList As List(Of clsSequenceNo) = clsFrequencyDB.GetSequence(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Shift.ShiftCode, dDay)
+                        For Each Seq In SeqList
+                            iCol = iCol + 1
+                            .Cells(iRow, iCol).Value = iDay.ToString
+                        Next
+                    Next
+                End If
+            Next
+
+        End With
     End Sub
 
     Private Sub cboShift_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboShift.Callback
@@ -511,13 +678,14 @@ Public Class ProdSampleInput
     End Sub
 
     Private Sub gridX_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles gridX.CustomCallback
-        Dim FactoryCode As String = Split(e.Parameters, "|")(0)
-        Dim ItemTypeCode As String = Split(e.Parameters, "|")(1)
-        Dim LineCode As String = Split(e.Parameters, "|")(2)
-        Dim ItemCheckCode As String = Split(e.Parameters, "|")(3)
-        Dim ProdDate As String = Split(e.Parameters, "|")(4)
-        Dim VerifiedOnly As String = Split(e.Parameters, "|")(5)
-        GridXLoad(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate, VerifiedOnly)
+        Dim Hdr As New clsHeader
+        Hdr.FactoryCode = Split(e.Parameters, "|")(0)
+        Hdr.ItemTypeCode = Split(e.Parameters, "|")(1)
+        Hdr.LineCode = Split(e.Parameters, "|")(2)
+        Hdr.ItemCheckCode = Split(e.Parameters, "|")(3)
+        Hdr.ProdDate = Split(e.Parameters, "|")(4)
+        Hdr.VerifiedOnly = Split(e.Parameters, "|")(5)
+        GridXLoad(Hdr)
     End Sub
 
     Private Sub gridX_HtmlRowPrepared(sender As Object, e As ASPxGridViewTableRowEventArgs) Handles gridX.HtmlRowPrepared

@@ -295,6 +295,10 @@ Public Class ProdSampleInput
         Dim dt As DataTable = clsSPCResultDetailDB.GetTable(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Shift, Sequence, VerifiedOnly)
         grid.DataSource = dt
         grid.DataBind()
+
+        Dim UserID As String = Session("user")
+        Dim AllowSkill As Boolean = clsIOT.AllowSkill(UserID, FactoryCode, Line, ItemTypeCode)
+
         Dim Verified As Boolean = False
         If dt.Rows.Count = 0 Then
             up_ClearJS()
@@ -330,8 +334,8 @@ Public Class ProdSampleInput
                 End If
             End With
             Dim LastVerification As Integer = clsSPCResultDB.GetLastVerification(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
-            grid.SettingsDataSecurity.AllowInsert = LastVerification = 1 And Not Verified
-            grid.SettingsDataSecurity.AllowEdit = LastVerification = 1 And Not Verified
+            grid.SettingsDataSecurity.AllowInsert = LastVerification = 1 And Not Verified And AuthUpdate
+            grid.SettingsDataSecurity.AllowEdit = LastVerification = 1 And Not Verified And AuthUpdate
         End If
     End Sub
 
@@ -552,8 +556,8 @@ Public Class ProdSampleInput
 
                 GridTitle(ws, Hdr)
                 GridExcel(ws, Hdr)
-
-                .InsertRow(20, 22)
+                LastRow = 50
+                .InsertRow(LastRow, 22)
                 Dim fi As New FileInfo(Path & "\chart.png")
                 Dim Picture As OfficeOpenXml.Drawing.ExcelPicture
                 Picture = .Drawings.AddPicture("chart", Image.FromStream(streamImg))
@@ -568,6 +572,8 @@ Public Class ProdSampleInput
 
         End Using
     End Sub
+
+    Dim LastRow As Integer
 
     Private Sub GridExcel(pExl As ExcelWorksheet, Hdr As clsHeader)
         Dim dt As DataTable = clsSPCResultDetailDB.GetTable(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Hdr.ProdDate, Hdr.ShiftCode, Hdr.Seq, Hdr.VerifiedOnly)
@@ -601,25 +607,54 @@ Public Class ProdSampleInput
             .Cells(iRow, 2).Value = "Remarks"
             iRow = iRow + 2
 
-            Dim iCol As Integer = 1
             Dim SelDay As Object = clsSPCResultDB.GetPrevDate(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Hdr.ProdDate)
+            .Cells(iRow, 1).Value = "Date"
+            .Cells(iRow + 1, 1).Value = "Shift"
+            .Cells(iRow + 2, 1).Value = "Time"
+            Dim StartRow As Integer = iRow
+            Dim StartCol As Integer, EndCol As Integer
+            Dim StartCol2 As Integer, EndCol2 As Integer
+            Dim FieldNames As New List(Of String)
             For iDay = 1 To 2
+                Dim iCol As Integer = 1
                 If Not IsDBNull(SelDay) Then
+                    iRow = StartRow
                     iCol = iCol + 1
                     Dim dDay As String = Format(CDate(SelDay), "yyyy-MM-dd")
-                    .Cells(iRow, iCol).Value = dDay
+                    .Cells(iRow, iCol).Value = Format(SelDay, "dd MMM yyyy")
 
+                    StartCol = iCol
                     Dim Shiftlist As List(Of clsShift) = clsFrequencyDB.GetShift(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, dDay)
                     For Each Shift In Shiftlist
+                        .Cells(iRow + 1, iCol).Value = "S-" & Shift.ShiftName
+                        StartCol2 = iCol
                         Dim SeqList As List(Of clsSequenceNo) = clsFrequencyDB.GetSequence(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Shift.ShiftCode, dDay)
                         For Each Seq In SeqList
+                            .Cells(iRow + 2, iCol).Value = Seq.StartTime
+                            FieldNames.Add(iDay.ToString + "_" + Shift.ShiftName.ToString + "_" + Seq.SequenceNo.ToString)
                             iCol = iCol + 1
-                            .Cells(iRow, iCol).Value = iDay.ToString
                         Next
+                        EndCol2 = iCol
+                        If EndCol2 > StartCol2 Then
+                            .Cells(iRow + 1, StartCol2, iRow + 1, EndCol2).Merge = True
+                        End If
                     Next
+                    EndCol = iCol - 1
+                    .Cells(iRow, StartCol, iRow, EndCol).Merge = True
                 End If
+                SelDay = CDate(Hdr.ProdDate)
+                dt = clsSPCResultDetailDB.GetTableXR(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Hdr.ProdDate, Hdr.VerifiedOnly)
+                iRow = StartRow
+                'For j = 0 To dt.Rows.Count - 1
+                '    iCol = 1
+                '    For Each Fn In FieldNames
+                '        iCol = iCol + 1
+                '        .Cells(iRow, iCol).Value = dt.Rows(j)(Fn)
+                '    Next
+                '    iRow = iRow + 1
+                'Next
             Next
-
+            LastRow = iRow + 1
         End With
     End Sub
 
@@ -766,7 +801,13 @@ Public Class ProdSampleInput
 
             diagram.AxisY.NumericScaleOptions.CustomGridAlignment = 0.005
             diagram.AxisY.GridLines.MinorVisible = False
-            .Titles(0).Text = "Chart X"
+            Dim ChartType As String = clsXRChartDB.GetChartType(FactoryCode, ItemTypeCode, Line, ItemCheckCode)
+            If ChartType = "1" Then
+                .Titles(0).Text = "Chart X"
+            Else
+                .Titles(0).Text = "Graph Monitoring"
+            End If
+
 
             Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
             diagram.AxisY.ConstantLines.Clear()

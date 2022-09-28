@@ -95,17 +95,15 @@ Public Class clsXRChartDB
         End Using
     End Function
 
-    Public Shared Function GetChartType(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String) As String
+    Public Shared Function GetChartType(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String) As String
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
             Dim q As String = "select top 1 isnull(CharacteristicStatus, '0') from spc_ItemCheckByType where FactoryCode = @FactoryCode and ItemTypeCode = @ItemTypeCode and LineCode = @Line and ItemCheckCode = @ItemCheckCode "
             Dim cmd As New SqlCommand(q, Cn)
-            cmd.CommandType = CommandType.StoredProcedure
             cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
             cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
             cmd.Parameters.AddWithValue("Line", Line)
             cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
-            cmd.Parameters.AddWithValue("ProdDate", ProdDate)
             Dim ChartType As String = cmd.ExecuteScalar
             Return ChartType
         End Using

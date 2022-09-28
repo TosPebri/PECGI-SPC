@@ -35,31 +35,7 @@
         }
 
         function ValidateSave(s, e) {
-            var rows = grid.GetVisibleRowsOnPage();
-            var startIndex = 0;
-            var i;
-            var errmsg = '';      
-            
-            for (i = startIndex; i < rows - 1; i++) {
-                if (isNumeric(grid.batchEditApi.GetCellValue(i, 'Value')) == false) {
-                    errmsg = 'Please input valid numeric!';
-                    grid.batchEditApi.StartEdit(i, 1);
-                    break;
-                }
-            }                  
-            if (errmsg != '') {
-                e.cancel = true; 
-                toastr.warning(errmsg, 'Warning');
-                toastr.options.closeButton = false;
-                toastr.options.debug = false;
-                toastr.options.newestOnTop = false;
-                toastr.options.progressBar = false;
-                toastr.options.preventDuplicates = true;
-                toastr.options.onclick = null;
-                e.processOnServer = false;
-                return;
-            }
-            grid.UpdateEdit();
+            grid.PerformCallback('save' + '|' + cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + cboShift.GetValue() + '|' + cboSeq.GetValue() + '|' + txtSubLotNo.GetText() + '|' + txtRemarks.GetText() );
         }
 
         function ClearGrid(s, e) {

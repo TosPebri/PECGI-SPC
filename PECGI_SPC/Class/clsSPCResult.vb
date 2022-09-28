@@ -65,6 +65,27 @@ Public Class clsSPCResultDB
         End Using
     End Function
 
+    Public Shared Function Update(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String, ShiftCode As String, SequenceNo As Integer, SubLotNo As Integer, Remark As String, RegisterUser As String) As Object
+        Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+            Cn.Open()
+            Dim q As String = "sp_SPCResult_Upd"
+            Dim cmd As New SqlCommand(q, Cn)
+            cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
+            cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
+            cmd.Parameters.AddWithValue("LineCode", LineCode)
+            cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
+            cmd.Parameters.AddWithValue("ProdDate", ProdDate)
+            cmd.Parameters.AddWithValue("ShiftCode", ShiftCode)
+            cmd.Parameters.AddWithValue("SequenceNo", SequenceNo)
+            cmd.Parameters.AddWithValue("SubLotNo", SubLotNo)
+            cmd.Parameters.AddWithValue("Remark", Remark)
+            cmd.Parameters.AddWithValue("RegisterUser", RegisterUser)
+            cmd.CommandType = CommandType.StoredProcedure
+            Dim PrevDate As Object = cmd.ExecuteScalar
+            Return PrevDate
+        End Using
+    End Function
+
     Public Shared Function GetLastVerification(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String) As Integer
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()

@@ -363,6 +363,12 @@ Public Class ProdSampleInput
                 Dim pSeq As String = Split(e.Parameters, "|")(7)
                 Dim pVerified As String = Split(e.Parameters, "|")(8)
                 pSeq = Val(pSeq)
+                If pFunction = "save" Then
+                    Dim pSubLotNo As String = Split(e.Parameters, "|")(8)
+                    Dim pRemark As String = Split(e.Parameters, "|")(9)
+                    pUser = Session("user") & ""
+                    clsSPCResultDB.Update(pFactory, pItemType, pLine, pItemCheck, pDate, pShift, pSeq, pSubLotNo, pRemark, pUser)
+                End If
                 GridLoad(pFactory, pItemType, pLine, pItemCheck, pDate, pShift, pSeq, pVerified)
         End Select
     End Sub
@@ -524,12 +530,22 @@ Public Class ProdSampleInput
         Dim linkX As New PrintableComponentLink(ps)
         linkX.Component = (CType(chartX, IChartContainer)).Chart
 
+        LoadChartR(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value, Format(dtDate.Value, "yyyy-MM-dd"))
+        Dim linkR As New PrintableComponentLink(ps)
+        linkR.Component = (CType(chartR, IChartContainer)).Chart
+
         Dim compositeLink As New CompositeLink(ps)
         compositeLink.Links.AddRange(New Object() {linkX})
         compositeLink.CreateDocument()
         Dim Path As String = Server.MapPath("Download")
         Dim streamImg As New MemoryStream
         compositeLink.ExportToImage(streamImg)
+
+        Dim compositeLink2 As New CompositeLink(ps)
+        compositeLink2.Links.AddRange(New Object() {linkR})
+        compositeLink2.CreateDocument()
+        Dim streamImg2 As New MemoryStream
+        compositeLink2.ExportToImage(streamImg2)
 
         Using Pck As New ExcelPackage
             Dim ws As ExcelWorksheet = Pck.Workbook.Worksheets.Add("Sheet1")
@@ -556,12 +572,16 @@ Public Class ProdSampleInput
 
                 GridTitle(ws, Hdr)
                 GridExcel(ws, Hdr)
-                LastRow = 50
                 .InsertRow(LastRow, 22)
                 Dim fi As New FileInfo(Path & "\chart.png")
                 Dim Picture As OfficeOpenXml.Drawing.ExcelPicture
                 Picture = .Drawings.AddPicture("chart", Image.FromStream(streamImg))
-                Picture.SetPosition(20, 0, 0, 0)
+                Picture.SetPosition(LastRow, 0, 0, 0)
+
+                Dim fi2 As New FileInfo(Path & "\chartR.png")
+                Dim Picture2 As OfficeOpenXml.Drawing.ExcelPicture
+                Picture2 = .Drawings.AddPicture("chartR", Image.FromStream(streamImg2))
+                Picture2.SetPosition(LastRow + 25, 0, 0, 0)
             End With
 
             Dim stream As MemoryStream = New MemoryStream(Pck.GetAsByteArray())
@@ -578,6 +598,13 @@ Public Class ProdSampleInput
     Private Sub GridExcel(pExl As ExcelWorksheet, Hdr As clsHeader)
         Dim dt As DataTable = clsSPCResultDetailDB.GetTable(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Hdr.ProdDate, Hdr.ShiftCode, Hdr.Seq, Hdr.VerifiedOnly)
         Dim iRow As Integer = 12
+        Dim StartRow As Integer = iRow
+        Dim EndRow As Integer
+        Dim EndCol As Integer
+        Dim MKUser As String = "", MKDate As String = ""
+        Dim QCUser As String = "", QCDate As String = ""
+        Dim USL As String = "", LSL As String = "", UCL As String = "", LCL As String = ""
+        Dim vMin As String = "", vMax As String = "", vAvg As String = "", vR As String = "", SubLotNo As String = "", Remarks As String = ""
         With pExl
             .Cells(iRow, 1).Value = "Data"
             .Cells(iRow, 2).Value = "Value"
@@ -590,29 +617,111 @@ Public Class ProdSampleInput
             .Cells(iRow, 9).Value = "Last Update"
             .Cells(iRow, 1, iRow, 9).Style.Fill.PatternType = ExcelFillStyle.Solid
             .Cells(iRow, 1, iRow, 9).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#878787"))
+            .Cells(iRow, 1, iRow, 9).Style.Font.Color.SetColor(Color.White)
+            .Cells(iRow, 1, iRow, 9).Style.WrapText = True
+            .Cells(iRow, 1, iRow, 9).Style.VerticalAlignment = ExcelVerticalAlignment.Center
+            .Column(1).Width = 13
+            .Column(3).Width = 11
+
+            .Column(5).Width = 11
+            .Column(7).Width = 11
+            If dt.Rows.Count > 0 Then
+                MKDate = dt.Rows(0)("MKDate") & ""
+                MKUser = dt.Rows(0)("MKUser") & ""
+                QCDate = dt.Rows(0)("QCDate") & ""
+                QCUser = dt.Rows(0)("QCUser") & ""
+                USL = dt.Rows(0)("SpecUSL") & ""
+                LSL = dt.Rows(0)("SpecUSL") & ""
+                UCL = dt.Rows(0)("XBarUCL") & ""
+                LCL = dt.Rows(0)("XBarLCL") & ""
+                vMin = dt.Rows(0)("MinValue") & ""
+                vMax = dt.Rows(0)("MaxValue") & ""
+                vAvg = dt.Rows(0)("AvgValue") & ""
+                vR = dt.Rows(0)("RValue") & ""
+                SubLotNo = dt.Rows(0)("SubLotNo") & ""
+                Remarks = dt.Rows(0)("Remarks") & ""
+            End If
             For i = 0 To dt.Rows.Count - 1
                 iRow = iRow + 1
                 .Cells(iRow, 1).Value = dt.Rows(i)("SeqNo")
+                .Cells(iRow, 2).Style.Numberformat.Format = "0.000"
                 .Cells(iRow, 2).Value = dt.Rows(i)("Value")
                 .Cells(iRow, 3).Value = dt.Rows(i)("Judgement")
                 .Cells(iRow, 4).Value = dt.Rows(i)("RegisterUser")
+                .Cells(iRow, 5).Style.Numberformat.Format = "HH:mm"
                 .Cells(iRow, 5).Value = dt.Rows(i)("RegisterDate")
+
+                EndRow = iRow
             Next
 
-            iRow = iRow + 1
+            Dim Range1 As ExcelRange = .Cells(StartRow, 1, EndRow, 9)
+            Range1.Style.Border.Top.Style = ExcelBorderStyle.Thin
+            Range1.Style.Border.Bottom.Style = ExcelBorderStyle.Thin
+            Range1.Style.Border.Right.Style = ExcelBorderStyle.Thin
+            Range1.Style.Border.Left.Style = ExcelBorderStyle.Thin
+            Range1.Style.Font.Size = 10
+            Range1.Style.Font.Name = "Segoe UI"
+            Range1.Style.HorizontalAlignment = HorzAlignment.Center
+
+            iRow = iRow + 2
             .Cells(iRow, 1).Value = "Sub Lot No"
-            .Cells(iRow, 2).Value = "Sub Lot No"
+            .Cells(iRow, 2).Value = SubLotNo
+
+            .Cells(iRow, 5).Value = "Verification"
+            .Cells(iRow + 1, 5).Value = "MK"
+            .Cells(iRow + 2, 5).Value = "QC"
+
+            .Cells(iRow, 6).Value = "PIC"
+            .Cells(iRow + 1, 6).Value = MKUser
+            .Cells(iRow + 2, 6).Value = QCUser
+
+            .Cells(iRow, 7).Value = "Date"
+            .Cells(iRow + 1, 7).Value = MKDate
+            .Cells(iRow + 2, 7).Value = QCDate
+
+            ExcelHeader(pExl, iRow, 5, iRow, 7)
+            ExcelBorder(pExl, iRow, 5, iRow + 2, 7)
+
+            .Cells(iRow, 9).Value = "Specification"
+            .Cells(iRow, 9, iRow, 10).Merge = True
+            .Cells(iRow, 11).Value = "X Bar Control"
+            .Cells(iRow, 11, iRow, 12).Merge = True
+            .Cells(iRow, 13).Value = "Result"
+            .Cells(iRow, 13, iRow, 18).Merge = True
+
+            .Cells(iRow + 1, 9).Value = "USL"
+            .Cells(iRow + 2, 9).Value = USL
+            .Cells(iRow + 1, 10).Value = "LSL"
+            .Cells(iRow + 2, 10).Value = LSL
+            .Cells(iRow + 1, 11).Value = "UCL"
+            .Cells(iRow + 2, 11).Value = UCL
+            .Cells(iRow + 1, 12).Value = "LCL"
+            .Cells(iRow + 2, 12).Value = LCL
+            .Cells(iRow + 1, 13).Value = "Min"
+            .Cells(iRow + 2, 13).Value = vMin
+            .Cells(iRow + 1, 14).Value = "Max"
+            .Cells(iRow + 2, 14).Value = vMax
+            .Cells(iRow + 1, 15).Value = "Ave"
+            .Cells(iRow + 2, 15).Value = vAvg
+            .Cells(iRow + 1, 16).Value = "R"
+            .Cells(iRow + 2, 16).Value = vR
+            .Cells(iRow + 1, 9, iRow + 1, 16).Style.Numberformat.Format = "0.0000"
+
+            ExcelHeader(pExl, iRow, 9, iRow + 1, 16)
+            ExcelHeader(pExl, iRow, 17, iRow, 18)
+            ExcelBorder(pExl, iRow, 9, iRow + 2, 18)
+
             iRow = iRow + 1
             .Cells(iRow, 1).Value = "Remarks"
-            .Cells(iRow, 2).Value = "Remarks"
-            iRow = iRow + 2
+            .Cells(iRow, 2).Value = Remarks
+            iRow = iRow + 3
 
             Dim SelDay As Object = clsSPCResultDB.GetPrevDate(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Hdr.ProdDate)
             .Cells(iRow, 1).Value = "Date"
             .Cells(iRow + 1, 1).Value = "Shift"
             .Cells(iRow + 2, 1).Value = "Time"
-            Dim StartRow As Integer = iRow
-            Dim StartCol As Integer, EndCol As Integer
+            StartRow = iRow
+            Dim StartCol1 As Integer, EndCol1 As Integer
             Dim StartCol2 As Integer, EndCol2 As Integer
             Dim FieldNames As New List(Of String)
             For iDay = 1 To 2
@@ -623,7 +732,7 @@ Public Class ProdSampleInput
                     Dim dDay As String = Format(CDate(SelDay), "yyyy-MM-dd")
                     .Cells(iRow, iCol).Value = Format(SelDay, "dd MMM yyyy")
 
-                    StartCol = iCol
+                    StartCol1 = iCol
                     Dim Shiftlist As List(Of clsShift) = clsFrequencyDB.GetShift(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, dDay)
                     For Each Shift In Shiftlist
                         .Cells(iRow + 1, iCol).Value = "S-" & Shift.ShiftName
@@ -634,27 +743,69 @@ Public Class ProdSampleInput
                             FieldNames.Add(iDay.ToString + "_" + Shift.ShiftName.ToString + "_" + Seq.SequenceNo.ToString)
                             iCol = iCol + 1
                         Next
-                        EndCol2 = iCol
+                        EndCol2 = iCol - 1
                         If EndCol2 > StartCol2 Then
                             .Cells(iRow + 1, StartCol2, iRow + 1, EndCol2).Merge = True
                         End If
                     Next
-                    EndCol = iCol - 1
-                    .Cells(iRow, StartCol, iRow, EndCol).Merge = True
+                    EndCol1 = iCol - 1
+                    .Cells(iRow, StartCol1, iRow, EndCol1).Merge = True
                 End If
                 SelDay = CDate(Hdr.ProdDate)
                 dt = clsSPCResultDetailDB.GetTableXR(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Hdr.ProdDate, Hdr.VerifiedOnly)
-                iRow = StartRow
-                'For j = 0 To dt.Rows.Count - 1
-                '    iCol = 1
-                '    For Each Fn In FieldNames
-                '        iCol = iCol + 1
-                '        .Cells(iRow, iCol).Value = dt.Rows(j)(Fn)
-                '    Next
-                '    iRow = iRow + 1
-                'Next
+                iRow = StartRow + 3
+                For j = 0 To dt.Rows.Count - 1
+                    iCol = 1
+                    EndCol = FieldNames.Count + 1
+                    If dt.Rows(j)(1) = "-" Or dt.Rows(j)(1) = "--" Then
+                        .Row(iRow).Height = 2
+                    Else
+                        .Cells(iRow, iCol).Value = dt.Rows(j)(1)
+                        For Each Fn In FieldNames
+                            iCol = iCol + 1
+                            .Cells(iRow, iCol).Value = dt.Rows(j)(Fn)
+                        Next
+                    End If
+                    iRow = iRow + 1
+                Next
             Next
+            ExcelHeader(pExl, StartRow, 1, StartRow + 2, EndCol)
+            ExcelBorder(pExl, StartRow, 1, iRow - 1, EndCol)
+
             LastRow = iRow + 1
+        End With
+    End Sub
+
+    Private Sub ExcelHeader(Exl As ExcelWorksheet, StartRow As Integer, StartCol As Integer, EndRow As Integer, EndCol As Integer)
+        With Exl
+            .Cells(StartRow, StartCol, EndRow, EndCol).Style.Fill.PatternType = ExcelFillStyle.Solid
+            .Cells(StartRow, StartCol, EndRow, EndCol).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#878787"))
+            .Cells(StartRow, StartCol, EndRow, EndCol).Style.Font.Color.SetColor(Color.White)
+        End With
+    End Sub
+
+    Private Sub ExcelBorder(Exl As ExcelWorksheet, StartRow As Integer, StartCol As Integer, EndRow As Integer, EndCol As Integer)
+        With Exl
+            Dim Range As ExcelRange = .Cells(StartRow, StartCol, EndRow, EndCol)
+            Range.Style.Border.Top.Style = ExcelBorderStyle.Thin
+            Range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin
+            Range.Style.Border.Right.Style = ExcelBorderStyle.Thin
+            Range.Style.Border.Left.Style = ExcelBorderStyle.Thin
+            Range.Style.Font.Size = 10
+            Range.Style.Font.Name = "Segoe UI"
+            Range.Style.HorizontalAlignment = HorzAlignment.Center
+        End With
+    End Sub
+
+    Private Sub ExcelBorder(Exl As ExcelWorksheet, Range As ExcelRange)
+        With Exl
+            Range.Style.Border.Top.Style = ExcelBorderStyle.Thin
+            Range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin
+            Range.Style.Border.Right.Style = ExcelBorderStyle.Thin
+            Range.Style.Border.Left.Style = ExcelBorderStyle.Thin
+            Range.Style.Font.Size = 10
+            Range.Style.Font.Name = "Segoe UI"
+            Range.Style.HorizontalAlignment = HorzAlignment.Center
         End With
     End Sub
 
@@ -859,7 +1010,11 @@ Public Class ProdSampleInput
                 CType(.Series("RuleYellow").View, XYDiagramSeriesViewBase).AxisY = myAxisY
             End If
             .DataBind()
-            .Width = xr.Count * 20
+            If xr.Count < 5 Then
+                .Width = 5 * 20
+            Else
+                .Width = xr.Count * 20
+            End If
         End With
     End Sub
 

@@ -31,7 +31,7 @@ Public Class ProdSampleInput
     Dim col_CellActivity = 0
     Dim RowIndexName As String = ""
     Dim CharacteristicSts As String = ""
-
+    Dim LastRow As Integer
 
     Private Class clsHeader
         Public Property FactoryCode As String
@@ -592,8 +592,6 @@ Public Class ProdSampleInput
 
         End Using
     End Sub
-
-    Dim LastRow As Integer
 
     Private Sub GridExcel(pExl As ExcelWorksheet, Hdr As clsHeader)
         Dim dt As DataTable = clsSPCResultDetailDB.GetTable(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Hdr.ProdDate, Hdr.ShiftCode, Hdr.Seq, Hdr.VerifiedOnly)

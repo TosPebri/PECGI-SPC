@@ -493,9 +493,6 @@
                                     ClientInstanceName="btnExcel" Font-Names="Segoe UI" Font-Size="9pt" 
                                     Height="25px" Text="Excel" Theme="Office2010Silver" UseSubmitBehavior="False" 
                                     Width="90px" TabIndex="10">
-                                    <ClientSideEvents Click="function(s, e) {
-	chartX.PerformCallback();
-}" />
                                     <Paddings Padding="2px" />
                                 </dx:ASPxButton>                            
                         </td>

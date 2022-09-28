@@ -1,7 +1,15 @@
-﻿Imports System.Drawing
-Imports DevExpress.Web
+﻿Imports DevExpress.Web
+Imports DevExpress.Web.Data
 Imports DevExpress.XtraCharts
 Imports DevExpress.XtraCharts.Web
+Imports System.Drawing
+Imports DevExpress.XtraPrinting
+Imports DevExpress.XtraPrintingLinks
+Imports DevExpress.XtraCharts.Native
+Imports OfficeOpenXml
+Imports System.IO
+Imports DevExpress.Utils
+Imports OfficeOpenXml.Style
 
 Public Class SampleControlQuality
     Inherits System.Web.UI.Page
@@ -11,11 +19,214 @@ Public Class SampleControlQuality
     Public AuthDelete As Boolean = False
     Public ValueType As String
     Dim GlobalPrm As String = ""
+    Dim LastRow As Integer
+
+    Private Class clsHeader
+        Public Property FactoryCode As String
+        Public Property FactoryName As String
+        Public Property ItemTypeCode As String
+        Public Property ItemTypeName As String
+        Public Property LineCode As String
+        Public Property LineName As String
+        Public Property ItemCheckCode As String
+        Public Property ItemCheckName As String
+
+        Public Property ProdDate As String
+        Public Property ProdDate2 As String
+        Public Property ShiftCode As String
+        Public Property Shiftname As String
+        Public Property Seq As Integer
+        Public Property VerifiedOnly As String
+    End Class
 
     Private Sub show_error(ByVal msgType As MsgTypeEnum, ByVal ErrMsg As String, ByVal pVal As Integer)
         gridX.JSProperties("cp_message") = ErrMsg
         gridX.JSProperties("cp_type") = msgType
         gridX.JSProperties("cp_val") = pVal
+    End Sub
+
+    Private Sub ExcelHeader(Exl As ExcelWorksheet, StartRow As Integer, StartCol As Integer, EndRow As Integer, EndCol As Integer)
+        With Exl
+            .Cells(StartRow, StartCol, EndRow, EndCol).Style.Fill.PatternType = ExcelFillStyle.Solid
+            .Cells(StartRow, StartCol, EndRow, EndCol).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#878787"))
+            .Cells(StartRow, StartCol, EndRow, EndCol).Style.Font.Color.SetColor(Color.White)
+        End With
+    End Sub
+
+    Private Sub ExcelBorder(Exl As ExcelWorksheet, StartRow As Integer, StartCol As Integer, EndRow As Integer, EndCol As Integer)
+        With Exl
+            Dim Range As ExcelRange = .Cells(StartRow, StartCol, EndRow, EndCol)
+            Range.Style.Border.Top.Style = ExcelBorderStyle.Thin
+            Range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin
+            Range.Style.Border.Right.Style = ExcelBorderStyle.Thin
+            Range.Style.Border.Left.Style = ExcelBorderStyle.Thin
+            Range.Style.Font.Size = 10
+            Range.Style.Font.Name = "Segoe UI"
+            Range.Style.HorizontalAlignment = HorzAlignment.Center
+        End With
+    End Sub
+
+    Private Sub ExcelBorder(Exl As ExcelWorksheet, Range As ExcelRange)
+        With Exl
+            Range.Style.Border.Top.Style = ExcelBorderStyle.Thin
+            Range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin
+            Range.Style.Border.Right.Style = ExcelBorderStyle.Thin
+            Range.Style.Border.Left.Style = ExcelBorderStyle.Thin
+            Range.Style.Font.Size = 10
+            Range.Style.Font.Name = "Segoe UI"
+            Range.Style.HorizontalAlignment = HorzAlignment.Center
+        End With
+    End Sub
+
+    Private Sub DownloadExcel()
+        Dim ps As New PrintingSystem()
+        LoadChartX(cboFactory.Value, cboType.Value, cboLine.Value, cboItemCheck.Value, Format(dtDate.Value, "yyyy-MM-dd"), Format(dtTo.Value, "yyyy-MM-dd"))
+        Dim linkX As New PrintableComponentLink(ps)
+        linkX.Component = (CType(chartX, IChartContainer)).Chart
+
+        Dim compositeLink As New CompositeLink(ps)
+        compositeLink.Links.AddRange(New Object() {linkX})
+        compositeLink.CreateDocument()
+        Dim Path As String = Server.MapPath("Download")
+        Dim streamImg As New MemoryStream
+        compositeLink.ExportToImage(streamImg)
+
+        Using Pck As New ExcelPackage
+            Dim ws As ExcelWorksheet = Pck.Workbook.Worksheets.Add("Sheet1")
+            With ws
+                Dim iDay As Integer = 2
+                Dim iCol As Integer = 2
+                Dim lastCol As Integer = 1
+                Dim Seq As Integer = 0
+                Dim SelDay As Date = dtDate.Value
+
+                Dim Hdr As New clsHeader
+                Hdr.FactoryCode = cboFactory.Value
+                Hdr.FactoryName = cboFactory.Text
+                Hdr.ItemTypeCode = cboType.Value
+                Hdr.ItemTypeName = cboType.Text
+                Hdr.LineCode = cboLine.Value
+                Hdr.LineName = cboLine.Text
+                Hdr.ItemCheckCode = cboItemCheck.Value
+                Hdr.ItemCheckName = cboItemCheck.Value
+                Hdr.ProdDate = Convert.ToDateTime(dtDate.Value).ToString("yyyy-MM-dd")
+                Hdr.ProdDate2 = Convert.ToDateTime(dtTo.Value).ToString("yyyy-MM-dd")
+
+                GridTitle(ws, Hdr)
+                GridExcel(ws, Hdr)
+                .InsertRow(LastRow, 22)
+                Dim fi As New FileInfo(Path & "\chart.png")
+                Dim Picture As OfficeOpenXml.Drawing.ExcelPicture
+                Picture = .Drawings.AddPicture("chart", Image.FromStream(streamImg))
+                Picture.SetPosition(LastRow, 0, 0, 0)
+            End With
+
+            Dim stream As MemoryStream = New MemoryStream(Pck.GetAsByteArray())
+            Response.AppendHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            Response.AppendHeader("Content-Disposition", "attachment; filename=SampleControlQuality_" & Format(Date.Now, "yyyy-MM-dd") & ".xlsx")
+            Response.BinaryWrite(stream.ToArray())
+            Response.End()
+
+        End Using
+    End Sub
+
+    Private Sub GridExcel(pExl As ExcelWorksheet, Hdr As clsHeader)
+        Dim dt As DataTable
+        Dim iRow As Integer = 12
+        Dim iCol As Integer
+        Dim StartRow As Integer = iRow
+        Dim EndRow As Integer
+        Dim EndCol As Integer
+        Dim StartCol1 As Integer, EndCol1 As Integer
+        Dim StartCol2 As Integer, EndCol2 As Integer
+
+        With pExl
+            Dim ds As DataSet = clsSPCResultDetailDB.GetSampleByPeriod(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Hdr.ProdDate, Hdr.ProdDate2, Hdr.VerifiedOnly)
+            Dim dtDay As DataTable = ds.Tables(0)
+            StartRow = iRow
+            .Cells(iRow, 1).Value = "Date"
+            .Cells(iRow + 1, 1).Value = "Shift"
+            .Cells(iRow + 2, 1).Value = "Time"
+
+            For iDay = 0 To dtDay.Rows.Count - 1
+                Dim SelDay As Date = dtDay.Rows(iDay)("ProdDate")
+                Dim dDay As String = Format(SelDay, "yyyy-MM-dd")
+
+                iCol = iDay + 2
+                .Cells(iRow, iCol).Value = Format(SelDay, "dd MMM yyyy")
+                .Cells(iRow + 1, iCol).Value = dtDay.Rows(iDay)("ShiftCode")
+                .Cells(iRow + 2, iCol).Value = dtDay.Rows(iDay)("SeqNo")
+            Next
+            iRow = iRow + 3
+            dt = ds.Tables(1)
+            For j = 0 To dt.Rows.Count - 1
+                iCol = 1
+                If dt.Rows(j)(1) = "-" Or dt.Rows(j)(1) = "--" Then
+                    .Row(iRow).Height = 2
+                End If
+                For k = 1 To dt.Columns.Count - 1
+                    .Cells(iRow, iCol).Value = dt.Rows(j)(k)
+                    iCol = iCol + 1
+                Next
+                iRow = iRow + 1
+            Next
+            EndCol = dt.Columns.Count - 1
+            EndRow = iRow - 1
+
+            ExcelHeader(pExl, StartRow, 1, StartRow + 2, EndCol)
+            ExcelBorder(pExl, StartRow, 1, EndRow, EndCol)
+            LastRow = iRow + 4
+        End With
+    End Sub
+
+    Private Sub GridTitle(ByVal pExl As ExcelWorksheet, cls As clsHeader)
+        With pExl
+            Try
+                .Cells(1, 1).Value = "Sample Control Quality by Period"
+                .Cells(1, 1, 1, 13).Merge = True
+                .Cells(1, 1, 1, 13).Style.HorizontalAlignment = HorzAlignment.Near
+                .Cells(1, 1, 1, 13).Style.VerticalAlignment = VertAlignment.Center
+                .Cells(1, 1, 1, 13).Style.Font.Bold = True
+                .Cells(1, 1, 1, 13).Style.Font.Size = 16
+                .Cells(1, 1, 1, 13).Style.Font.Name = "Segoe UI"
+
+                .Cells(3, 1, 3, 2).Value = "Factory Code"
+                .Cells(3, 1, 3, 2).Merge = True
+                .Cells(3, 3).Value = ": " & cls.FactoryName
+
+                .Cells(4, 1, 4, 2).Value = "Item Type Code"
+                .Cells(4, 1, 4, 2).Merge = True
+                .Cells(4, 3).Value = ": " & cls.ItemTypeName
+
+                .Cells(5, 1, 5, 2).Value = "Line Code"
+                .Cells(5, 1, 5, 2).Merge = True
+                .Cells(5, 3).Value = ": " & cls.LineName
+
+                .Cells(6, 1, 6, 2).Value = "Item Check Code"
+                .Cells(6, 1, 6, 2).Merge = True
+                .Cells(6, 3).Value = ": " & cls.ItemCheckName
+
+                .Cells(7, 1, 7, 2).Value = "Prod Date"
+                .Cells(7, 1, 7, 2).Merge = True
+                .Cells(7, 3).Value = ": " & cls.ProdDate
+
+                .Cells(8, 1, 8, 2).Value = "Shift Code"
+                .Cells(8, 1, 8, 2).Merge = True
+                .Cells(8, 3).Value = ": " & cls.Shiftname
+
+                .Cells(9, 1, 9, 2).Value = "Sequence No"
+                .Cells(9, 1, 9, 2).Merge = True
+                .Cells(9, 3).Value = ": " & cls.Seq
+
+                Dim rgHdr As ExcelRange = .Cells(3, 3, 9, 4)
+                rgHdr.Style.HorizontalAlignment = HorzAlignment.Near
+                rgHdr.Style.VerticalAlignment = VertAlignment.Center
+                rgHdr.Style.Font.Size = 10
+                rgHdr.Style.Font.Name = "Segoe UI"
+            Catch ex As Exception
+                Throw New Exception(ex.Message)
+            End Try
+        End With
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -277,35 +488,35 @@ Public Class SampleControlQuality
             diagram.AxisY.ConstantLines.Clear()
             If Setup IsNot Nothing Then
                 Dim LCL As New ConstantLine("LCL")
-                LCL.Color = Drawing.Color.Purple
+                LCL.Color = System.Drawing.Color.Purple
                 LCL.LineStyle.Thickness = 2
                 LCL.LineStyle.DashStyle = DashStyle.DashDot
                 diagram.AxisY.ConstantLines.Add(LCL)
                 LCL.AxisValue = Setup.XBarLCL
 
                 Dim UCL As New ConstantLine("UCL")
-                UCL.Color = Drawing.Color.Purple
+                UCL.Color = System.Drawing.Color.Purple
                 UCL.LineStyle.Thickness = 2
                 UCL.LineStyle.DashStyle = DashStyle.DashDot
                 diagram.AxisY.ConstantLines.Add(UCL)
                 UCL.AxisValue = Setup.XBarUCL
 
                 Dim CL As New ConstantLine("CL")
-                CL.Color = Drawing.Color.Black
+                CL.Color = System.Drawing.Color.Black
                 CL.LineStyle.Thickness = 2
                 CL.LineStyle.DashStyle = DashStyle.Solid
                 diagram.AxisY.ConstantLines.Add(CL)
                 CL.AxisValue = Setup.XBarCL
 
                 Dim LSL As New ConstantLine("LSL")
-                LSL.Color = Drawing.Color.Red
+                LSL.Color = System.Drawing.Color.Red
                 LSL.LineStyle.Thickness = 2
                 LSL.LineStyle.DashStyle = DashStyle.Solid
                 diagram.AxisY.ConstantLines.Add(LSL)
                 LSL.AxisValue = Setup.SpecLSL
 
                 Dim USL As New ConstantLine("USL")
-                USL.Color = Drawing.Color.Red
+                USL.Color = System.Drawing.Color.Red
                 USL.LineStyle.Thickness = 2
                 USL.LineStyle.DashStyle = DashStyle.Solid
                 diagram.AxisY.ConstantLines.Add(USL)
@@ -383,5 +594,9 @@ Public Class SampleControlQuality
         Dim LineCode As String = Split(e.Parameter, "|")(2)
         cboItemCheck.DataSource = clsItemCheckDB.GetList(FactoryCode, ItemTypeCode, LineCode)
         cboItemCheck.DataBind()
+    End Sub
+
+    Private Sub btnExcel_Click(sender As Object, e As EventArgs) Handles btnExcel.Click
+        DownloadExcel()
     End Sub
 End Class

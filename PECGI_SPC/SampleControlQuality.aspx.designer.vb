@@ -86,15 +86,6 @@ Partial Public Class SampleControlQuality
     Protected WithEvents dtTo As Global.DevExpress.Web.ASPxDateEdit
 
     '''<summary>
-    '''btnSearch control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents btnSearch As Global.DevExpress.Web.ASPxButton
-
-    '''<summary>
     '''ASPxLabel2 control.
     '''</summary>
     '''<remarks>
@@ -147,6 +138,24 @@ Partial Public Class SampleControlQuality
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents cboShow As Global.DevExpress.Web.ASPxComboBox
+
+    '''<summary>
+    '''btnSearch control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnSearch As Global.DevExpress.Web.ASPxButton
+
+    '''<summary>
+    '''btnExcel control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnExcel As Global.DevExpress.Web.ASPxButton
 
     '''<summary>
     '''hfRevNo control.

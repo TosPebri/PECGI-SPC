@@ -314,43 +314,8 @@
             </td>            
             <td style="padding: 5px 0px 0px 0px" class="auto-style9">
 
-<dx:ASPxButton ID="btnSearch" runat="server" AutoPostBack="False" 
-                    ClientInstanceName="btnSearch" Font-Names="Segoe UI" Font-Size="9pt" 
-                    Height="25px" Text="Browse" Theme="Office2010Silver" UseSubmitBehavior="False" 
-                    Width="90px" TabIndex="10">
-                    <ClientSideEvents Click="function(s, e) {
-                        var errmsg = '';
-                        if(cboFactory.GetText() == '') {
-                            cboFactory.Focus();
-                            errmsg = 'Please select Factory!';                                                                
-	                    } else if(cboType.GetText() == '') {
-                            cboType.Focus();
-                            errmsg = 'Please select Type!';
-	                    } else if(cboLine.GetText() == '') {
-                            cboLine.Focus();
-                            errmsg = 'Please select Machine Process!';
-	                    } else if(cboItemCheck.GetText() == '') {
-                            cboItemCheck.Focus();
-                            errmsg = 'Please select Item Check!';
-	                    }
-
-                        if(errmsg != '') {
-                            toastr.warning(errmsg, 'Warning');
-                            toastr.options.closeButton = false;
-                            toastr.options.debug = false;
-                            toastr.options.newestOnTop = false;
-                            toastr.options.progressBar = false;
-                            toastr.options.preventDuplicates = true;
-                            toastr.options.onclick = null;		
-		                    e.processOnServer = false;
-		                    return;
-                        }
-                         gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + dtTo.GetText() + '|' + cboShow.GetValue());                        
-                    }" />
-                    <Paddings Padding="2px" />
-                </dx:ASPxButton>
-                
-            </td>
+                &nbsp;</td>
+            <td></td>
         </tr>
 
         <tr>
@@ -435,7 +400,55 @@
             
 
             </td>
-            <td>&nbsp;</td>
+            <td>
+
+<dx:ASPxButton ID="btnSearch" runat="server" AutoPostBack="False" 
+                    ClientInstanceName="btnSearch" Font-Names="Segoe UI" Font-Size="9pt" 
+                    Height="25px" Text="Browse" Theme="Office2010Silver" UseSubmitBehavior="False" 
+                    Width="90px" TabIndex="10">
+                    <ClientSideEvents Click="function(s, e) {
+                        var errmsg = '';
+                        if(cboFactory.GetText() == '') {
+                            cboFactory.Focus();
+                            errmsg = 'Please select Factory!';                                                                
+	                    } else if(cboType.GetText() == '') {
+                            cboType.Focus();
+                            errmsg = 'Please select Type!';
+	                    } else if(cboLine.GetText() == '') {
+                            cboLine.Focus();
+                            errmsg = 'Please select Machine Process!';
+	                    } else if(cboItemCheck.GetText() == '') {
+                            cboItemCheck.Focus();
+                            errmsg = 'Please select Item Check!';
+	                    }
+
+                        if(errmsg != '') {
+                            toastr.warning(errmsg, 'Warning');
+                            toastr.options.closeButton = false;
+                            toastr.options.debug = false;
+                            toastr.options.newestOnTop = false;
+                            toastr.options.progressBar = false;
+                            toastr.options.preventDuplicates = true;
+                            toastr.options.onclick = null;		
+		                    e.processOnServer = false;
+		                    return;
+                        }
+                         gridX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + dtTo.GetText() + '|' + cboShow.GetValue());                        
+                    }" />
+                    <Paddings Padding="2px" />
+                </dx:ASPxButton>
+                
+            </td>
+            <td style="padding-left:2px">
+
+                                <dx:ASPxButton ID="btnExcel" runat="server" AutoPostBack="False" 
+                                    ClientInstanceName="btnExcel" Font-Names="Segoe UI" Font-Size="9pt" 
+                                    Height="25px" Text="Excel" Theme="Office2010Silver" UseSubmitBehavior="False" 
+                                    Width="90px" TabIndex="10">
+                                    <Paddings Padding="2px" />
+                                </dx:ASPxButton>                            
+
+            </td>
         </tr>
     </table>
     </div>

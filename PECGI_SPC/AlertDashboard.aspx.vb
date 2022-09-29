@@ -194,7 +194,7 @@ Public Class AlertDashboard
         GetFactoryCode()
     End Sub
     Private Sub GetFactoryCode()
-        cboFactory.DataSource = clsFactoryDB.GetList
+        cboFactory.DataSource = ClsSPCItemCheckByTypeDB.FillComboFactoryGrid("1", Session("user"))
         cboFactory.DataBind()
     End Sub
 

@@ -185,6 +185,15 @@ Partial Public Class ItemCheckByBattery
     Protected WithEvents hdItemTypeCode As Global.System.Web.UI.HtmlControls.HtmlInputHidden
 
     '''<summary>
+    '''HF control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents HF As Global.DevExpress.Web.ASPxHiddenField
+
+    '''<summary>
     '''Master property.
     '''</summary>
     '''<remarks>

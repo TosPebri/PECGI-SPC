@@ -62,7 +62,8 @@ Public Class ItemCheckByBattery
         End If
     End Sub
     Private Sub GetFactoryCode()
-        cboFactory.DataSource = clsFactoryDB.GetList
+        'cboFactory.DataSource = clsFactoryDB.GetList
+        cboFactory.DataSource = ClsSPCItemCheckByTypeDB.FillComboFactoryGrid("1", Session("user"))
         cboFactory.DataBind()
     End Sub
     Private Sub FillCBRegNoGrid()
@@ -198,14 +199,6 @@ Public Class ItemCheckByBattery
     End Sub
 
     Private Sub Grid_CellEditorInitialize(ByVal sender As Object, ByVal e As DevExpress.Web.ASPxGridViewEditorEventArgs) Handles Grid.CellEditorInitialize
-        'If (e.Column.FieldName = "RegistrationNo") Then
-        '    Dim DT As New DataTable
-        '    DT = ClsSPCItemCheckByTypeDB.GetRegNo(cboFactory.Value)
-        '    Dim myCombo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
-        '    CType(TryCast(sender, ASPxGridView).Columns("RegistrationNo"), GridViewDataComboBoxColumn).PropertiesComboBox.DataSource = DT
-        '    myCombo.DataSource = DT
-        '    myCombo.DataBindItems()
-        'End If
         If Not Grid.IsNewRowEditing Then
             If e.Column.FieldName = "ItemCheckCode" Or e.Column.FieldName = "FactoryCode" Or e.Column.FieldName = "ItemTypeCode" Or e.Column.FieldName = "LineName" Or e.Column.FieldName = "ItemTypeCode" Or e.Column.FieldName = "ItemCheck" Then
                 e.Editor.ReadOnly = True
@@ -215,16 +208,15 @@ Public Class ItemCheckByBattery
         End If
 
         If Grid.IsNewRowEditing Then
-            'If e.Column.FieldName = "FactoryCode" Then
-            '    e.Editor.Value = cboFactory.Value
-            'End If
-            'If e.Column.FieldName = "ItemTypeCode" Then
-            '    e.Editor.Visible = True
-            '    e.Editor.ForeColor = Color.Silver
-            'End If
             If e.Column.FieldName = "ActiveStatus" Then
                 TryCast(e.Editor, ASPxCheckBox).Checked = True
             End If
+        End If
+
+        If e.Column.FieldName = "FactoryCode" Then
+            Dim combo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
+            up_FillcomboGrid(combo, "1", pUser)
+            If Grid.IsEditing Then combo.Value = e.Value : HF.Set("FactoryGrid", e.Value)
         End If
     End Sub
     Protected Sub Grid_RowValidating(ByVal sender As Object, ByVal e As DevExpress.Web.Data.ASPxDataValidationEventArgs) Handles Grid.RowValidating
@@ -350,6 +342,20 @@ Public Class ItemCheckByBattery
         Dim UserID As String = Session("user") & ""
         cboLine.DataSource = ClsSPCItemCheckByTypeDB.GetMachineProccess(UserID, FactoryCode, ItemTypeCode)
         cboLine.DataBind()
+    End Sub
+    Private Sub up_FillcomboGrid(ByVal cmb As ASPxComboBox, Type As String, Optional Param As String = "")
+        dt = ClsSPCItemCheckByTypeDB.FillComboFactoryGrid(Type, Param)
+        With cmb
+            .Items.Clear() : .Columns.Clear()
+            .DataSource = dt
+            '.Columns.Add("FactoryCode") : .Columns(0).Visible = False
+            '.Columns.Add("FactoryName") : .Columns(1).Width = 100
+
+            .TextField = "FactoryName"
+            .ValueField = "FactoryCode"
+            .DataBind()
+            .SelectedIndex = IIf(Type = 0, 0, -1)
+        End With
     End Sub
 #End Region
 

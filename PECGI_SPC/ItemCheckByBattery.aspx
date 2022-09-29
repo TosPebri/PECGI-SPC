@@ -275,7 +275,30 @@
                     </HeaderStyle>
                 </dx:GridViewCommandColumn>
 
-                <dx:GridViewDataComboBoxColumn Caption="Factory Code" FieldName="FactoryCode" VisibleIndex="0"
+                <dx:GridViewDataComboBoxColumn Caption="Factory" FieldName="FactoryCode" VisibleIndex="0"
+                    Width="70px" Settings-AutoFilterCondition="Contains" Visible="false">
+                    <PropertiesComboBox DropDownStyle="DropDownList" TextFormatString="{0}"
+                        IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="70px"
+                        TextField="FactoryName" ValueField="FactoryCode" ClientInstanceName="FactoryCode">
+                        <%--<ClientSideEvents ValueChanged = "gridFactorySelected" />--%>
+                        <ItemStyle Height="10px" Paddings-Padding="4px">
+                            <Paddings Padding="4px"></Paddings>
+                        </ItemStyle>
+                        <ButtonStyle Width="5px" Paddings-Padding="2px">
+                            <Paddings Padding="2px"></Paddings>
+                        </ButtonStyle>
+                    </PropertiesComboBox>
+                    <Settings AutoFilterCondition="Contains"></Settings>
+                    <FilterCellStyle Paddings-PaddingRight="4px">
+                        <Paddings PaddingRight="4px"></Paddings>
+                    </FilterCellStyle>
+                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
+                        <Paddings PaddingLeft="5px"></Paddings>
+                    </HeaderStyle>
+                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
+                </dx:GridViewDataComboBoxColumn>
+
+                <%--<dx:GridViewDataComboBoxColumn Caption="Factory Code" FieldName="FactoryCode" VisibleIndex="0"
                     Width="70px" Settings-AutoFilterCondition="Contains" Visible="false">
                     <PropertiesComboBox DataSourceID="dsFactory" DropDownStyle="DropDownList" TextFormatString="{0}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="70px"
@@ -295,23 +318,7 @@
                         <Paddings PaddingLeft="5px"></Paddings>
                     </HeaderStyle>
                     <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
-                </dx:GridViewDataComboBoxColumn>
-
-                <%--<dx:GridViewDataTextColumn Caption="Item Type Code" FieldName="ItemTypeCode"
-                    VisibleIndex="0" Width="100px" Settings-AutoFilterCondition="Contains" 
-                    FixedStyle="Left" Visible="false">
-                    <PropertiesTextEdit MaxLength="15" Width="120px">
-                        <Style HorizontalAlign="Left"></Style>
-                    </PropertiesTextEdit>
-                    <Settings AutoFilterCondition="Contains"></Settings>
-                    <FilterCellStyle Paddings-PaddingRight="4px">
-                    <Paddings PaddingRight="4px"></Paddings>
-                    </FilterCellStyle>
-                    <HeaderStyle Paddings-PaddingLeft="5px" HorizontalAlign="Center" VerticalAlign="Middle">
-                    <Paddings PaddingLeft="5px"></Paddings>
-                    </HeaderStyle>
-                    <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"></CellStyle>
-                </dx:GridViewDataTextColumn>--%>
+                </dx:GridViewDataComboBoxColumn>--%>
 
                 <dx:GridViewDataComboBoxColumn Caption="Type" FieldName="ItemTypeCode" VisibleIndex="0"
                     Width="80px" Settings-AutoFilterCondition="Contains" Visible="false" >
@@ -720,5 +727,6 @@
         <input type="hidden" runat="server" id="hdUserLogin" value="<%=hdUserLogin %>" />  
         <input type="hidden" runat="server" id="hdFactoryCode" value="<%=hdFactoryCode %>" />  
         <input type="hidden" runat="server" id="hdItemTypeCode" value="<%=hdItemTypeCode %>" />  
+        <dx:ASPxHiddenField ID="HF" runat="server" ClientInstanceName="HF"></dx:ASPxHiddenField>
     </div>
 </asp:Content>

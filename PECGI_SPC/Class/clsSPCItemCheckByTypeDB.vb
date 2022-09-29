@@ -278,4 +278,21 @@ Public Class ClsSPCItemCheckByTypeDB
             Return Nothing
         End Try
     End Function
+    Public Shared Function FillComboFactoryGrid(Type As String, Optional User As String = "") As DataTable
+        Using cn As New SqlConnection(Sconn.Stringkoneksi)
+            cn.Open()
+            Dim sql As String
+            sql = "sp_SPC_ItemCheckByBattery_FillCombo"
+            Dim cmd As New SqlCommand(sql, cn)
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.Parameters.AddWithValue("Type", Type)
+            If User <> "" Then cmd.Parameters.AddWithValue("User", User)
+
+            Dim da As New SqlDataAdapter(cmd)
+            Dim dt As New DataTable
+
+            da.Fill(dt)
+            Return dt
+        End Using
+    End Function
 End Class

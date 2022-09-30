@@ -166,6 +166,9 @@ Public Class SampleControlQuality
                 End If
                 For k = 1 To dt.Columns.Count - 1
                     .Cells(iRow, iCol).Value = dt.Rows(j)(k)
+                    If k > 1 Then
+                        .Cells(iRow, iCol).Style.Numberformat.Format = "0.0000"
+                    End If
                     iCol = iCol + 1
                 Next
                 iRow = iRow + 1

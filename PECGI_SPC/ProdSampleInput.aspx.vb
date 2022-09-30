@@ -601,7 +601,7 @@ Public Class ProdSampleInput
         Dim EndCol As Integer
         Dim MKUser As String = "", MKDate As String = ""
         Dim QCUser As String = "", QCDate As String = ""
-        Dim USL As String = "", LSL As String = "", UCL As String = "", LCL As String = ""
+        Dim USL As String = "", LSL As String = "", UCL As String = "", LCL As String = "", NG As String = "", C As String = ""
         Dim vMin As String = "", vMax As String = "", vAvg As String = "", vR As String = "", SubLotNo As String = "", Remarks As String = ""
         With pExl
             .Cells(iRow, 1).Value = "Data"
@@ -636,6 +636,8 @@ Public Class ProdSampleInput
                 vMax = dt.Rows(0)("MaxValue") & ""
                 vAvg = dt.Rows(0)("AvgValue") & ""
                 vR = dt.Rows(0)("RValue") & ""
+                NG = dt.Rows(0)("NGValue") & ""
+                C = dt.Rows(0)("CValue") & ""
                 SubLotNo = dt.Rows(0)("SubLotNo") & ""
                 Remarks = dt.Rows(0)("Remarks") & ""
             End If
@@ -703,6 +705,28 @@ Public Class ProdSampleInput
             .Cells(iRow + 2, 15).Value = vAvg
             .Cells(iRow + 1, 16).Value = "R"
             .Cells(iRow + 2, 16).Value = vR
+
+            If NG = "2" Then
+                .Cells(iRow + 1, 17).Value = "NG"
+                .Cells(iRow + 1, 17).Style.Fill.PatternType = ExcelFillStyle.Solid
+                .Cells(iRow + 1, 17).Style.Fill.BackgroundColor.SetColor(Color.Red)
+            ElseIf NG = "1" Then
+                .Cells(iRow + 1, 17).Value = "NG"
+                .Cells(iRow + 1, 17).Style.Fill.PatternType = ExcelFillStyle.Solid
+                .Cells(iRow + 1, 17).Style.Fill.BackgroundColor.SetColor(Color.Pink)
+            ElseIf NG = "0" Then
+                .Cells(iRow + 1, 17).Value = "OK"
+                .Cells(iRow + 1, 17).Style.Fill.PatternType = ExcelFillStyle.Solid
+                .Cells(iRow + 1, 17).Style.Fill.BackgroundColor.SetColor(Color.Green)
+            Else
+                .Cells(iRow + 1, 17).Value = ""
+            End If
+
+            .Cells(iRow + 2, 18).Value = C
+            .Cells(iRow + 1, 17, iRow + 2, 17).Merge = True
+            .Cells(iRow + 1, 18, iRow + 2, 18).Merge = True
+            .Cells(iRow + 1, 17, iRow + 2, 18).Style.VerticalAlignment = ExcelVerticalAlignment.Center
+
             .Cells(iRow + 1, 9, iRow + 1, 16).Style.Numberformat.Format = "0.0000"
 
             ExcelHeader(pExl, iRow, 9, iRow + 1, 16)
@@ -747,7 +771,9 @@ Public Class ProdSampleInput
                         End If
                     Next
                     EndCol1 = iCol - 1
-                    .Cells(iRow, StartCol1, iRow, EndCol1).Merge = True
+                    If EndCol1 > StartCol1 Then
+                        .Cells(iRow, StartCol1, iRow, EndCol1).Merge = True
+                    End If
                 End If
                 SelDay = CDate(Hdr.ProdDate)
                 dt = clsSPCResultDetailDB.GetTableXR(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Hdr.ProdDate, Hdr.VerifiedOnly)

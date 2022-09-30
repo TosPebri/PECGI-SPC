@@ -1074,7 +1074,9 @@ Public Class ProdSampleVerification
     End Sub
     Private Sub Validation_Verify(cls As clsProdSampleVerification)
         VerifyStatus = clsProdSampleVerificationDB.Validation(GetVerifyPrivilege, cls)
+        Dim AllowSkill As Boolean = clsIOT.AllowSkill(cls.User, cls.FactoryCode, cls.LineCode, cls.ItemType_Code)
         Grid.JSProperties("cp_Verify") = VerifyStatus 'parameter to authorization verify
+        'Grid.JSProperties("cp_AllowSkill") = AllowSkill 'parameter to authorization verify
     End Sub
 #End Region
 

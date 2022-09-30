@@ -157,8 +157,10 @@
     <Content Include="ItemCheck.aspx" />
     <Content Include="AlertDashboard.aspx" />
     <Content Include="ItemCheckByBattery.aspx" />
+    <Content Include="MeasurementDevice.aspx" />
     <Content Include="ProdSampleInput.aspx" />
     <Content Include="ProdSampleQCSummary.aspx" />
+    <Content Include="ProdSampleQCSummaryDetail.aspx" />
     <Content Include="ProdSampleVerification.aspx" />
     <Content Include="ProductionSampleVerificationList.aspx" />
     <Content Include="SampleControlQuality.aspx" />
@@ -880,6 +882,7 @@
     <Compile Include="Class\clsItemType.vb" />
     <Compile Include="Class\ClsLine.vb" />
     <Compile Include="Class\ClsLineDB.vb" />
+    <Compile Include="Class\clsMeasurementDevice.vb" />
     <Compile Include="Class\clsProdSampleQCSummary.vb" />
     <Compile Include="Class\clsProdSampleVerification.vb" />
     <Compile Include="Class\clsProdSampleVerificationDB.vb" />
@@ -931,6 +934,13 @@
       <DependentUpon>ItemCheckByBattery.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="MeasurementDevice.aspx.designer.vb">
+      <DependentUpon>MeasurementDevice.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MeasurementDevice.aspx.vb">
+      <DependentUpon>MeasurementDevice.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="ProdSampleInput.aspx.designer.vb">
       <DependentUpon>ProdSampleInput.aspx</DependentUpon>
     </Compile>
@@ -943,6 +953,13 @@
     </Compile>
     <Compile Include="ProdSampleQCSummary.aspx.vb">
       <DependentUpon>ProdSampleQCSummary.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProdSampleQCSummaryDetail.aspx.designer.vb">
+      <DependentUpon>ProdSampleQCSummaryDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProdSampleQCSummaryDetail.aspx.vb">
+      <DependentUpon>ProdSampleQCSummaryDetail.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ProdSampleVerification.aspx.designer.vb">

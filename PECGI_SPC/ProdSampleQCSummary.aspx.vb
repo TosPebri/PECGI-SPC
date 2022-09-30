@@ -118,41 +118,79 @@ Public Class ProdSampleQCSummary
     Private Sub Grid_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles Grid.HtmlDataCellPrepared
         Dim Link As New HyperLink()
         If (e.DataColumn.FieldName <> "Type") Then
-            If e.CellValue.ToString.Contains("NG") Then
-                If Split(e.CellValue, "||").Count = 3 Then
-                    e.Cell.Text = ""
+            If e.CellValue <> "NoProd||#515151||1" Then
+                Dim assss As String = 1
+            End If
 
+            If Split(e.CellValue, "|,|").Count = 1 Then
+                If e.CellValue.ToString.Contains("NG") Then
+                    If Split(e.CellValue, "||").Count > 1 Then
+                        e.Cell.Text = ""
+                        e.Cell.BackColor = ColorTranslator.FromHtml(Split(e.CellValue, "||")(1))
+
+                        Link.ForeColor = Color.Black
+                        Link.Text = "NG " & Split(e.CellValue, "||")(3)
+                        Link.NavigateUrl = Split(e.CellValue, "||")(2)
+                        Link.Target = "_blank"
+
+                        e.Cell.Controls.Add(Link)
+                    End If
+                ElseIf e.CellValue.ToString.Contains("NoProd") Or e.CellValue.ToString.Contains("NoResult") Then
+                    If Split(e.CellValue, "||").Count > 1 Then
+                        e.Cell.Text = ""
+                        e.Cell.BackColor = ColorTranslator.FromHtml(Split(e.CellValue, "||")(1))
+                        If Split(e.CellValue, "||")(1) = "#515151" Then e.Cell.BorderColor = ColorTranslator.FromHtml("#515151")
+                    End If
+                ElseIf e.CellValue.ToString.Contains("NoActive") Then
+                    If Split(e.CellValue, "||").Count > 1 Then
+                        e.Cell.Text = "No Active"
+                        e.Cell.BackColor = ColorTranslator.FromHtml(Split(e.CellValue, "||")(1))
+                        e.Cell.BorderColor = ColorTranslator.FromHtml(Split(e.CellValue, "||")(1))
+                    End If
+                ElseIf e.CellValue.ToString.Contains("NOK") Then
+                    e.Cell.Text = ""
+                Else
+                    e.Cell.Text = ""
                     Link.ForeColor = Color.Black
-                    Link.Text = "NG"
-                    Link.NavigateUrl = Split(e.CellValue, "||")(2)
+                    Link.Text = "OK " & Split(e.CellValue, "||")(2)
+                    Link.NavigateUrl = Split(e.CellValue, "||")(1)
                     Link.Target = "_blank"
 
                     e.Cell.Controls.Add(Link)
-                    e.Cell.BackColor = ColorTranslator.FromHtml(Split(e.CellValue, "||")(1))
                 End If
-            ElseIf e.CellValue.ToString.Contains("NoProd") Or e.CellValue.ToString.Contains("NoResult") Then
-                If Split(e.CellValue, "||").Count = 2 Then
-                    e.Cell.Text = ""
-                    e.Cell.BackColor = ColorTranslator.FromHtml(Split(e.CellValue, "||")(1))
-                    If Split(e.CellValue, "||")(1) = "#515151" Then e.Cell.BorderColor = ColorTranslator.FromHtml("#515151")
-                End If
-            ElseIf e.CellValue.ToString.Contains("NoActive") Then
-                If Split(e.CellValue, "||").Count = 2 Then
-                    e.Cell.Text = "No Active"
-                    e.Cell.BackColor = ColorTranslator.FromHtml(Split(e.CellValue, "||")(1))
-                    e.Cell.BorderColor = ColorTranslator.FromHtml(Split(e.CellValue, "||")(1))
-                End If
-            ElseIf e.CellValue.ToString.Contains("NOK") Then
-                e.Cell.Text = ""
             Else
-                e.Cell.Text = ""
+                Dim result = "", resultURL As String = ""
+                e.Cell.BackColor = ColorTranslator.FromHtml("#ef6c00")
+                e.Cell.BorderColor = ColorTranslator.FromHtml("#ef6c00")
+                For i = 0 To Split(e.CellValue, "|,|").Count - 1
+                    Dim strSplit = Split(e.CellValue, "|,|")(i)
 
-                Link.ForeColor = Color.Black
-                Link.Text = "OK"
-                Link.NavigateUrl = Split(e.CellValue, "||")(1)
-                Link.Target = "_blank"
+                    If strSplit.Contains("NoProd") Or strSplit.Contains("NoResult") Or strSplit.Contains("NOK") Then
+                        If strSplit.Contains("NOK") = False Then
+                            result += "No Data " & Split(strSplit, "||")(2) & "<br/>"
+                        End If
+                    ElseIf strSplit.Contains("NG") Then
+                        result += "NG " & Split(strSplit, "||")(3) & "<br/>"
+                        resultURL = IIf(resultURL = "", Split(strSplit, "||")(2), resultURL)
+                    Else
+                        result += "OK " & Split(strSplit, "||")(2) & "<br/>"
+                        resultURL = IIf(resultURL = "", Split(strSplit, "||")(1), resultURL)
+                    End If
+                Next
 
-                e.Cell.Controls.Add(Link)
+                If result.Contains("No Data") And (result.Contains("NG") = False Or result.Contains("OK") = False) Then
+                    e.Cell.Text = ""
+                    e.Cell.BackColor = ColorTranslator.FromHtml("#FFFB00")
+                    e.Cell.BorderColor = ColorTranslator.FromHtml("#FFFB00")
+                Else
+                    e.Cell.Text = ""
+                    Link.ForeColor = Color.Black
+                    Link.Text = result
+                    Link.NavigateUrl = resultURL
+                    Link.Target = "_blank"
+
+                    e.Cell.Controls.Add(Link)
+                End If
             End If
         End If
     End Sub
@@ -291,39 +329,50 @@ Public Class ProdSampleQCSummary
 
             If dt.Rows.Count > 0 Then
                 For i = 1 To dt.Columns.Count - 1
-                    OK = OK + dt.Select("[" + dt.Columns(i).ColumnName + "] Like '%OK%'").Length
-                    NG = NG + dt.Select("[" + dt.Columns(i).ColumnName + "] Like '%NG%'").Length
-                    no = no + dt.Select("[" + dt.Columns(i).ColumnName + "] Like '%NoResult%'").Length
+                    Dim Col As New GridViewDataTextColumn()
 
-                    Dim Col As New GridViewDataTextColumn
-                    'Dim Col As New GridViewDataHyperLinkColumn()
-                    'Col.PropertiesHyperLinkEdit.NavigateUrlFormatString = "~/details.aspx?Device={0}"
-                    Col.FieldName = dt.Columns(i).ColumnName
-                    Col.Caption = dt.Columns(i).ColumnName
-                    Col.Width = 100
+                    With Col
+                        .FieldName = dt.Columns(i).ColumnName
+                        .Caption = dt.Columns(i).ColumnName
+                        .Width = 100
 
-                    Col.HeaderStyle.Wrap = DefaultBoolean.True
-                    Col.HeaderStyle.VerticalAlign = VerticalAlign.Middle
-                    Col.HeaderStyle.HorizontalAlign = HorizontalAlign.Center
-                    Col.CellStyle.VerticalAlign = VerticalAlign.Middle
-                    Col.CellStyle.HorizontalAlign = HorizontalAlign.Center
+                        .HeaderStyle.Wrap = DefaultBoolean.True
+                        .HeaderStyle.VerticalAlign = VerticalAlign.Middle
+                        .HeaderStyle.HorizontalAlign = HorizontalAlign.Center
+                        .CellStyle.VerticalAlign = VerticalAlign.Middle
+                        .CellStyle.HorizontalAlign = HorizontalAlign.Center
+                    End With
 
                     .Columns.Add(Col)
                 Next
 
                 If ds.Tables(1).Rows.Count = 0 Then
-                    sampletime = ""
+                    sampletime = "-"
                 Else
                     sampletime = ds.Tables(1).Rows(0)(0)
                 End If
                 If cls.Frequency = "ALL" Then sampletime = "ALL"
+
+                If ds.Tables(2).Select("Result Like '%OK%'").Length > 0 Then
+                    OK = ds.Tables(2).Select("Result Like '%OK%'")(0)("Jumlah")
+                End If
+
+                If ds.Tables(2).Select("Result Like '%NG%'").Length > 0 Then
+                    NG = ds.Tables(2).Select("Result Like '%NG%'")(0)("Jumlah")
+                End If
+
+                If ds.Tables(2).Select("Result Like '%Delay%'").Length > 0 Then
+                    no = ds.Tables(2).Select("Result Like '%Delay%'")(0)("Jumlah")
+                End If
+
+
 
                 .JSProperties("cp_header") = "Yes"
                 .JSProperties("cp_sampletime") = sampletime
                 .JSProperties("cp_ok") = OK
                 .JSProperties("cp_ng") = NG
                 .JSProperties("cp_no") = no
-                .JSProperties("cp_total") = dt.Rows.Count * (dt.Columns.Count - 1)
+                .JSProperties("cp_total") = OK + NG + no
             Else
                 .JSProperties("cp_header") = "No"
             End If
@@ -493,36 +542,58 @@ Public Class ProdSampleQCSummary
                         For i = 0 To dt.Rows.Count - 1
                             'dataCount = ""
                             For j = 0 To lastCol
-                                .Cells(rowsExcel, j + 1).Value = dt.Rows(i)(j).ToString()
                                 .Cells(rowsExcel, j + 1).Style.Font.Size = 10
                                 .Cells(rowsExcel, j + 1).Style.VerticalAlignment = Style.ExcelVerticalAlignment.Center
                                 .Cells(rowsExcel, j + 1).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
                                 If j = 0 Then
+                                    .Cells(rowsExcel, j + 1).Value = dt.Rows(i)(j).ToString()
                                     .Column(j + 1).Width = 13
                                 ElseIf j <> 0 Then
+                                    Dim value As String = dt.Rows(i)(j).ToString()
                                     .Column(j + 1).Width = 17
-                                    If dt.Rows(i)(j).ToString.Contains("NG") Then
-                                        .Cells(rowsExcel, j + 1).Value = "NG"
-                                        If Split(dt.Rows(i)(j).ToString, "||").Count = 2 Then
-                                            .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
-                                            .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(Split(dt.Rows(i)(j).ToString, "||")(1)))
+
+                                    If Split(value, "|,|").Count = 1 Then
+                                        If value.Contains("NG") Then
+                                            If Split(value, "||").Count > 1 Then
+                                                .Cells(rowsExcel, j + 1).Value = "NG " + Split(value, "||")(3)
+                                                .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
+                                                .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(Split(value, "||")(1)))
+                                            End If
+                                        ElseIf value.Contains("NoProd") Or value.Contains("NoResult") Then
+                                            If Split(value, "||").Count > 1 Then
+                                                .Cells(rowsExcel, j + 1).Value = ""
+                                                .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
+                                                .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(Split(value, "||")(1)))
+                                            End If
+                                        ElseIf value.Contains("NoActive") Then
+                                            If Split(value, "||").Count > 1 Then
+                                                .Cells(rowsExcel, j + 1).Value = "No Active"
+                                                .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
+                                                .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(Split(value, "||")(1)))
+                                            End If
+                                        ElseIf value.Contains("NOK") Then
+                                            .Cells(rowsExcel, j + 1).Value = ""
+                                        Else
+                                            .Cells(rowsExcel, j + 1).Value = "OK" & Split(value, "||")(2)
                                         End If
-                                    ElseIf dt.Rows(i)(j).ToString.Contains("NoProd") Or dt.Rows(i)(j).ToString.Contains("NoResult") Then
-                                        .Cells(rowsExcel, j + 1).Value = ""
-                                        If Split(dt.Rows(i)(j).ToString, "||").Count = 2 Then
-                                            .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
-                                            .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(Split(dt.Rows(i)(j).ToString, "||")(1)))
-                                        End If
-                                    ElseIf dt.Rows(i)(j).ToString.Contains("NoActive") Then
-                                        .Cells(rowsExcel, j + 1).Value = "No Active"
-                                        If Split(dt.Rows(i)(j).ToString, "||").Count = 2 Then
-                                            .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
-                                            .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(Split(dt.Rows(i)(j).ToString, "||")(1)))
-                                        End If
-                                    ElseIf dt.Rows(i)(j).ToString.Contains("NOK") Then
-                                        .Cells(rowsExcel, j + 1).Value = ""
                                     Else
-                                        .Cells(rowsExcel, j + 1).Value = "OK"
+                                        Dim result = "", resultURL As String = ""
+                                        .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
+                                        .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#ef6c00"))
+                                        For ii = 0 To Split(value, "|,|").Count - 1
+                                            Dim strSplit = Split(value, "|,|")(ii)
+
+                                            If strSplit.Contains("NoProd") Or strSplit.Contains("NoResult") Then
+                                                result += "No Data " & Split(strSplit, "||")(2) & vbCrLf
+                                            ElseIf strSplit.Contains("NG") Then
+                                                result += "NG " & Split(strSplit, "||")(3) & vbCrLf
+                                            Else
+                                                result += "OK " & Split(strSplit, "||")(2) & vbCrLf
+                                            End If
+                                        Next
+
+                                        .Cells(rowsExcel, j + 1).Value = Left(result, result.Length - 2)
+                                        .Cells(rowsExcel, j + 1).Style.WrapText = True
                                     End If
                                 End If
                             Next

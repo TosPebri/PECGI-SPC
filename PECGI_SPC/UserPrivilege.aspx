@@ -52,9 +52,14 @@
                     toastr.options.preventDuplicates = true;
                     toastr.options.onclick = null;
                 }
-
+            }
+            console.log(s.cp_Show);
+            if (s.cp_Show == false) {
+                alert("test");
+                window.open('Main.aspx', '_self');
             }
         }
+
         function OnBatchEditStartEditing(s, e) {
             currentColumnName = e.focusedColumn.fieldName;
             if (currentColumnName == "GroupID" || currentColumnName == "MenuID" || currentColumnName == "MenuDesc") {
@@ -111,6 +116,11 @@
             setTimeout(function () {
                 gridMenu.PerformCallback('save|' + HideValue.Get('UserID'));
             }, millisecondsToWait);
+        }
+
+        function CallbackErr(s, e) {
+            e.Cancel = True
+            e.cancel = true;
         }
     </script>
 </asp:Content>
@@ -175,9 +185,7 @@
                     Width="100%">
                     <ClientSideEvents
                         BatchEditStartEditing="OnBatchEditStartEditing"
-                        EndCallback="OnEndCallback" CallbackError="function(s, e) {
-	                                        e.Cancel=True
-                                        }" />
+                        EndCallback="OnEndCallback" CallbackError="CallbackErr" />
                     <Columns>
                         <dx:GridViewDataTextColumn Caption="Menu Group" FieldName="GroupID" Name="GroupID"
                             ReadOnly="True" VisibleIndex="0" Width="200px">

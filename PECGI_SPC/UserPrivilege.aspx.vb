@@ -81,7 +81,9 @@ Public Class UserPrivilege
 
         AuthAccess = sGlobal.Auth_UserAccess(RegisterUser, "Z020")
         If AuthAccess = False Then
-            Response.Redirect("~/Main.aspx")
+            If Not Page.IsPostBack Then
+                Response.Redirect("~/Main.aspx")
+            End If
         End If
 
         AuthUpdate = sGlobal.Auth_UserUpdate(RegisterUser, "Z020")
@@ -135,7 +137,7 @@ Public Class UserPrivilege
                     .RegisterUser = RegisterUser
                 }
                 Dim pErr As String = ""
-                pErr  = Cls_ss_UserPrivilegeDB.Save(UserPrevilege, pErr)
+                pErr = Cls_ss_UserPrivilegeDB.Save(UserPrevilege, pErr)
                 If pErr <> "" Then
                     Exit For
                 End If
@@ -157,6 +159,7 @@ Public Class UserPrivilege
             show_error(MsgTypeEnum.Success, "Update data successful", 1)
         End If
 
+        gridMenu.JSProperties("cp_Show") = AuthAccess
     End Sub
 
     Private Sub cbkValid_Callback(source As Object, e As DevExpress.Web.CallbackEventArgs) Handles cbkValid.Callback
@@ -166,6 +169,10 @@ Public Class UserPrivilege
         If FromUserID <> "null" Then
             Cls_ss_UserPrivilegeDB.Copy(FromUserID, TouserID, RegisterUser)
         End If
+    End Sub
+
+    Private Sub gridMenu_RowUpdating(sender As Object, e As ASPxDataUpdatingEventArgs) Handles gridMenu.RowUpdating
+        e.Cancel = True
     End Sub
 #End Region
 End Class

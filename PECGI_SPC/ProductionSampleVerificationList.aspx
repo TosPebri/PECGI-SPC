@@ -62,9 +62,10 @@
                 console.log(s.cp_GridTot);
                 btnExcel.SetEnabled(true);
             } else {
-                btnExcel.SetEnabled(false);
+                btnExcel.SetEnabled(false);                
             }
-            btnVerification.SetEnabled(false);         
+            btnVerification.SetEnabled(false);
+            btnViewSampleInput.SetEnabled(false);
         }
 
         function Browse() {
@@ -148,9 +149,11 @@
           /*  console.log(Content_SelectData);*/
             if (values.length == 0) {
                 btnVerification.SetEnabled(false);
+                btnViewSampleInput.SetEnabled(false);
             }
             else {
                 btnVerification.SetEnabled(true);
+                btnViewSampleInput.SetEnabled(true);
             }
         };
 
@@ -186,9 +189,25 @@
 
             window.open('ProdSampleVerification.aspx?menu=ProductionSampleVerificationList.aspx' + '&FactoryCode=' + Factory + '&ItemTypeCode=' + ItemType
                 + '&Line=' + Line + '&ItemCheckCode=' + ItemCheck + '&ProdDate=' + ProdDate + '&Shift=' + Shift + '&Sequence=' + Seq
-                + '&cboLine=' + prmLine + '&cboItemCheck=' + prmItemCheck + '&FromDate=' + prmFromDate + '&ToDate='+ prmToDate + '&MK=' +prmMK + '&QC=' +prmQC + '', '_self');           
+                + '&cboLine=' + prmLine + '&cboItemCheck=' + prmItemCheck + '&FromDate=' + prmFromDate + '&ToDate='+ prmToDate + '&MK=' +prmMK + '&QC=' +prmQC + '', '_blank');           
         }
 
+        function ViewSampleInput() {
+            /*   console.log(Content_SelectData);*/
+            let text = Content_SelectData;
+            const myArray = text.split("|");
+            var Factory = myArray[1];
+            var ItemType = myArray[2];
+            var Line = myArray[3];
+            var ItemCheck = myArray[4];
+            var ProdDate = myArray[5];
+            var Shift = myArray[6];
+            var Seq = myArray[7];
+
+            window.open('ProdSampleInput.aspx?menu=prodSampleVerification.aspx' + '&FactoryCode=' + Factory + '&ItemTypeCode=' + ItemType
+                + '&Line=' + Line + '&ItemCheckCode=' + ItemCheck + '&ProdDate=' + ProdDate + '&Shift=' + Shift + '&Sequence=' + Seq
+                + '', '_blank');
+        }
 
     </script>
 </asp:Content>
@@ -402,14 +421,13 @@
                 <td>
                     <dx:ASPxButton ID="btnViewSampleInput" runat="server" AutoPostBack="False" ClientInstanceName="btnViewSampleInput" Height="25px"
                         Font-Names="Segoe UI" Font-Size="9pt" Text="View Sample Input" Theme="Office2010Silver" Width="100px">
-                        <%-- <ClientSideEvents Click="ViewSampleInput" />--%>
+                         <ClientSideEvents Click="ViewSampleInput" />
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 10px">&nbsp;</td>
                 <td>
                     <dx:ASPxButton ID="btnExcel" runat="server" AutoPostBack="False" ClientInstanceName="btnExcel" Height="25px"
                         Font-Names="Segoe UI" Font-Size="9pt" Text="Excel" Theme="Office2010Silver" Width="100px">
-                        <%-- <ClientSideEvents Click="Excel" />--%>
                     </dx:ASPxButton>
                 </td>
                 <td>

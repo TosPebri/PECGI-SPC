@@ -117,12 +117,20 @@ Public Class ProdSampleQCSummary
 
     Private Sub Grid_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles Grid.HtmlDataCellPrepared
         Dim Link As New HyperLink()
+        Dim cSplit As Integer = 1
+
         If (e.DataColumn.FieldName <> "Type") Then
             If e.CellValue <> "NoProd||#515151||1" Then
                 Dim assss As String = 1
             End If
 
-            If Split(e.CellValue, "|,|").Count = 1 Then
+            Try
+                Dim check As String = Split(e.CellValue, "|,|")(1)
+            Catch ex As Exception
+                cSplit = 0
+            End Try
+
+            If cSplit = 0 Then
                 If e.CellValue.ToString.Contains("NG") Then
                     If Split(e.CellValue, "||").Count > 1 Then
                         e.Cell.Text = ""
@@ -178,7 +186,7 @@ Public Class ProdSampleQCSummary
                     End If
                 Next
 
-                If result.Contains("No Data") And (result.Contains("NG") = False Or result.Contains("OK") = False) Then
+                If result.Contains("No Data") And result.Contains("NG") = False And result.Contains("OK") = False Then
                     e.Cell.Text = ""
                     e.Cell.BackColor = ColorTranslator.FromHtml("#FFFB00")
                     e.Cell.BorderColor = ColorTranslator.FromHtml("#FFFB00")
@@ -385,6 +393,7 @@ Public Class ProdSampleQCSummary
     Private Sub DownloadExcel()
         Try
             Dim cls As New clsProdSampleQCSummary
+            Dim cSplit As Integer = 1
             Dim dTime As DateTime = dtPeriod.Value
 
             With cls
@@ -538,7 +547,7 @@ Public Class ProdSampleQCSummary
                     Hdr.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.DimGray)
 
                     rowsExcel += 1
-                    If dt.Rows.Count > 1 Then
+                    If dt.Rows.Count > 0 Then
                         For i = 0 To dt.Rows.Count - 1
                             'dataCount = ""
                             For j = 0 To lastCol
@@ -549,10 +558,17 @@ Public Class ProdSampleQCSummary
                                     .Cells(rowsExcel, j + 1).Value = dt.Rows(i)(j).ToString()
                                     .Column(j + 1).Width = 13
                                 ElseIf j <> 0 Then
+                                    cSplit = 1
                                     Dim value As String = dt.Rows(i)(j).ToString()
                                     .Column(j + 1).Width = 17
 
-                                    If Split(value, "|,|").Count = 1 Then
+                                    Try
+                                        Dim check As String = Split(value, "|,|")(1)
+                                    Catch ex As Exception
+                                        cSplit = 0
+                                    End Try
+
+                                    If cSplit = 0 Then
                                         If value.Contains("NG") Then
                                             If Split(value, "||").Count > 1 Then
                                                 .Cells(rowsExcel, j + 1).Value = "NG " + Split(value, "||")(3)

@@ -55,7 +55,6 @@
             }
             console.log(s.cp_Show);
             if (s.cp_Show == false) {
-                alert("test");
                 window.open('Main.aspx', '_self');
             }
         }

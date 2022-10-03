@@ -393,24 +393,24 @@ Public Class ProdSampleVerification
             e.LegendDrawOptions.Color = Color.LightBlue
         End If
     End Sub
-    Private Sub cbkIOTconn_Callback(source As Object, e As CallbackEventArgs) Handles cbkIOTconn.Callback
-        Dim ActionSts = e.Parameter.ToString
+    'Private Sub cbkIOTconn_Callback(source As Object, e As CallbackEventArgs) Handles cbkIOTconn.Callback
+    '    Dim ActionSts = e.Parameter.ToString
 
-        Dim cls As New clsProdSampleVerification
-        cls.FactoryCode = HideValue.Get("FactoryCode")
-        cls.ItemType_Code = HideValue.Get("ItemType_Code")
-        cls.LineCode = HideValue.Get("LineCode")
-        cls.ItemCheck_Code = HideValue.Get("ItemCheck_Code")
-        cls.ProdDate = Convert.ToDateTime(HideValue.Get("ProdDate")).ToString("yyyy-MM-dd")
-        cls.ShiftCode = HideValue.Get("ShiftCode")
-        cls.Seq = HideValue.Get("Seq")
-        cls.User = pUser
+    '    Dim cls As New clsProdSampleVerification
+    '    cls.FactoryCode = HideValue.Get("FactoryCode")
+    '    cls.ItemType_Code = HideValue.Get("ItemType_Code")
+    '    cls.LineCode = HideValue.Get("LineCode")
+    '    cls.ItemCheck_Code = HideValue.Get("ItemCheck_Code")
+    '    cls.ProdDate = Convert.ToDateTime(HideValue.Get("ProdDate")).ToString("yyyy-MM-dd")
+    '    cls.ShiftCode = HideValue.Get("ShiftCode")
+    '    cls.Seq = HideValue.Get("Seq")
+    '    cls.User = pUser
 
-        dt = clsProdSampleVerificationDB.IOTconnection(ActionSts, cls)
-        Dim URL = dt.Rows(0)("URL").ToString()
-        cbkIOTconn.JSProperties("cp_URL") = URL
+    '    dt = clsProdSampleVerificationDB.IOTconnection(ActionSts, cls)
+    '    Dim URL = dt.Rows(0)("URL").ToString()
+    '    cbkIOTconn.JSProperties("cp_URL") = URL
 
-    End Sub
+    'End Sub
 #End Region
 
 #Region "GRID EVENT INSERT - UPDATE - DELETE"

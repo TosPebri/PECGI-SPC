@@ -324,33 +324,33 @@
         }
 
 
-        function IOTProcess() {
-            // Var IOT Tracebility = 1
-            cbkIOTconn.PerformCallback('1');
-            millisecondsToWait = 1000;
-            setTimeout(function () {
-                var URL = HideValue.Get('IOTConn');
-                console.log(URL);
-                window.open('' + URL + '', '_blank');
-            }, millisecondsToWait);
+        //function IOTProcess() {
+        //    // Var IOT Tracebility = 1
+        //    cbkIOTconn.PerformCallback('1');
+        //    millisecondsToWait = 1000;
+        //    setTimeout(function () {
+        //        var URL = HideValue.Get('IOTConn');
+        //        console.log(URL);
+        //        window.open('' + URL + '', '_blank');
+        //    }, millisecondsToWait);
             
-        }
+        //}
 
-        function IOTTraceability() {
-            // Var IOT Tracebility = 2
-            cbkIOTconn.PerformCallback('2');
-            millisecondsToWait = 1000;
-            setTimeout(function () {
-                var URL = HideValue.Get('IOTConn');
-                console.log(URL);
-                window.open('' + URL + '', '_blank');
-            }, millisecondsToWait);
-        }
+        //function IOTTraceability() {
+        //    // Var IOT Tracebility = 2
+        //    cbkIOTconn.PerformCallback('2');
+        //    millisecondsToWait = 1000;
+        //    setTimeout(function () {
+        //        var URL = HideValue.Get('IOTConn');
+        //        console.log(URL);
+        //        window.open('' + URL + '', '_blank');
+        //    }, millisecondsToWait);
+        //}
 
-        function IOTconn(s, e) {
-            console.log(s.cp_URL);
-            HideValue.Set('IOTConn', s.cp_URL);
-        }
+        //function IOTconn(s, e) {
+        //    console.log(s.cp_URL);
+        //    HideValue.Set('IOTConn', s.cp_URL);
+        //}
 
 
     </script>
@@ -591,14 +591,14 @@
                 <td>
                     <dx:ASPxButton ID="btnIOTProcess" runat="server" AutoPostBack="False" ClientInstanceName="btnIOTProcess"
                         Font-Names="Segoe UI" Font-Size="9pt" Text="View IOT Process Table" Theme="Office2010Silver" Width="100px">
-                        <ClientSideEvents Click="IOTProcess" />
+                      <%--  <ClientSideEvents Click="IOTProcess" />--%>
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 10px">&nbsp;</td>
                 <td>
                     <dx:ASPxButton ID="btnIOTTraceability" runat="server" AutoPostBack="False" ClientInstanceName="btnIOTTraceability"
                         Font-Names="Segoe UI" Font-Size="9pt" Text="View IOT Traceability" Theme="Office2010Silver" Width="100px">
-                        <ClientSideEvents Click="IOTTraceability" />
+                       <%-- <ClientSideEvents Click="IOTTraceability" />--%>
                     </dx:ASPxButton>
                 </td>
                 <td style="width: 10px">&nbsp;</td>
@@ -1157,9 +1157,9 @@
         </dx:ASPxGridView>
     </div>
 
-    <dx:ASPxCallback ID="cbkIOTconn" runat="server" ClientInstanceName="cbkIOTconn">
+<%--    <dx:ASPxCallback ID="cbkIOTconn" runat="server" ClientInstanceName="cbkIOTconn">
         <ClientSideEvents EndCallback="IOTconn" />
-    </dx:ASPxCallback>
+    </dx:ASPxCallback>--%>
 
     <dx:ASPxHiddenField ID="HideValue" runat="server" ClientInstanceName="HideValue"></dx:ASPxHiddenField>
 </asp:Content>

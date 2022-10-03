@@ -650,7 +650,11 @@ Public Class ProdSampleInput
                 .Cells(iRow, 4).Value = dt.Rows(i)("RegisterUser")
                 .Cells(iRow, 5).Style.Numberformat.Format = "HH:mm"
                 .Cells(iRow, 5).Value = dt.Rows(i)("RegisterDate")
-
+                .Cells(iRow, 6).Value = dt.Rows(i)("DelStatus")
+                .Cells(iRow, 7).Value = dt.Rows(i)("Remark")
+                .Cells(iRow, 8).Value = dt.Rows(i)("RegisterUser")
+                .Cells(iRow, 9).Value = dt.Rows(i)("RegisterDate")
+                .Cells(iRow, 9).Style.Numberformat.Format = "dd MMM yyyy HH:mm"
                 EndRow = iRow
             Next
 
@@ -707,22 +711,26 @@ Public Class ProdSampleInput
             .Cells(iRow + 2, 16).Value = vR
 
             If NG = "2" Then
-                .Cells(iRow + 1, 17).Value = "NG"
-                .Cells(iRow + 1, 17).Style.Fill.PatternType = ExcelFillStyle.Solid
-                .Cells(iRow + 1, 17).Style.Fill.BackgroundColor.SetColor(Color.Red)
+                .Cells(iRow + 1, 18).Value = "NG"
+                .Cells(iRow + 1, 18).Style.Fill.PatternType = ExcelFillStyle.Solid
+                .Cells(iRow + 1, 18).Style.Fill.BackgroundColor.SetColor(Color.Red)
             ElseIf NG = "1" Then
-                .Cells(iRow + 1, 17).Value = "NG"
-                .Cells(iRow + 1, 17).Style.Fill.PatternType = ExcelFillStyle.Solid
-                .Cells(iRow + 1, 17).Style.Fill.BackgroundColor.SetColor(Color.Pink)
+                .Cells(iRow + 1, 18).Value = "NG"
+                .Cells(iRow + 1, 18).Style.Fill.PatternType = ExcelFillStyle.Solid
+                .Cells(iRow + 1, 18).Style.Fill.BackgroundColor.SetColor(Color.Pink)
             ElseIf NG = "0" Then
-                .Cells(iRow + 1, 17).Value = "OK"
-                .Cells(iRow + 1, 17).Style.Fill.PatternType = ExcelFillStyle.Solid
-                .Cells(iRow + 1, 17).Style.Fill.BackgroundColor.SetColor(Color.Green)
+                .Cells(iRow + 1, 18).Value = "OK"
+                .Cells(iRow + 1, 18).Style.Fill.PatternType = ExcelFillStyle.Solid
+                .Cells(iRow + 1, 18).Style.Fill.BackgroundColor.SetColor(Color.Green)
             Else
-                .Cells(iRow + 1, 17).Value = ""
+                .Cells(iRow + 1, 18).Value = ""
             End If
 
-            .Cells(iRow + 2, 18).Value = C
+            .Cells(iRow + 1, 17).Value = C
+            If C <> "" Then
+                .Cells(iRow + 1, 17).Style.Fill.PatternType = ExcelFillStyle.Solid
+                .Cells(iRow + 1, 17).Style.Fill.BackgroundColor.SetColor(Color.Orange)
+            End If
             .Cells(iRow + 1, 17, iRow + 2, 17).Merge = True
             .Cells(iRow + 1, 18, iRow + 2, 18).Merge = True
             .Cells(iRow + 1, 17, iRow + 2, 18).Style.VerticalAlignment = ExcelVerticalAlignment.Center
@@ -1023,16 +1031,19 @@ Public Class ProdSampleInput
                 USL.AxisValue = Setup.SpecUSL
 
                 Dim MinValue As Double, MaxValue As Double
-                If xr.Count > 0 Then
-                    MinValue = xr(0).MinValue
-                    MaxValue = xr(0).MaxValue
-                End If
-                If Setup.SpecLSL < MinValue Then
-                    MinValue = Setup.SpecLSL
-                End If
-                If Setup.SpecUSL > MaxValue Then
-                    MaxValue = Setup.SpecUSL
-                End If
+                'If xr.Count > 0 Then
+                '    MinValue = xr(0).MinValue
+                '    MaxValue = xr(0).MaxValue
+                'End If
+                'If Setup.SpecLSL < MinValue Then
+                '    MinValue = Setup.SpecLSL
+                'End If
+                'If Setup.SpecUSL > MaxValue Then
+                '    MaxValue = Setup.SpecUSL
+                'End If
+
+                MinValue = Setup.SpecLSL
+                MaxValue = Setup.SpecUSL
                 diagram.AxisY.WholeRange.MinValue = 0
                 diagram.AxisY.WholeRange.MaxValue = 10
                 diagram.AxisY.WholeRange.EndSideMargin = 0.015

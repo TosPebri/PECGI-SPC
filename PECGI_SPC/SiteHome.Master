@@ -54,7 +54,7 @@
             <span class="project-selector dropdown-toggle" style="font-family: Tahoma; font-weight: bold; font-size: 12pt; margin-top: 10px; padding: 8px 0px 0px 18px;">PANASONIC SPC SYSTEM</span>
         </div>
 
-        <div id="logo-group" style="padding-left:20px">
+        <div id="logo-group" style="padding-left: 20px">
             <asp:Repeater ID="NG" runat="server">
                 <ItemTemplate>
                     <span id="activity" class="activity-dropdown"><i class="fa fa-user"></i><b class="badge"><%# Eval("TotNotif")%> </b></span>
@@ -64,15 +64,15 @@
 
                         <!-- the ID links are fetched via AJAX to the ajax container "ajax-notifications" -->
                         <div class="btn-group btn-group-justified" data-toggle="buttons">
-                            <label class="btn btn-default" style="font-size:12px">
-                                <input type="radio" name="btnDelay" >
+                            <label class="btn btn-default" style="font-size: 12px">
+                                <input type="radio" name="btnDelay">
                                 Delay Input (<%# Eval("DelayInput")%>)
                             </label>
-                                <label class="btn btn-default" style="font-size:12px">
+                            <label class="btn btn-default" style="font-size: 12px">
                                 <input type="radio" name="btnDelayVerify">
                                 Delay Verify (<%# Eval("DelayVerify")%>)
                             </label>
-                            <label class="btn btn-default" style="font-size:12px">
+                            <label class="btn btn-default" style="font-size: 12px">
                                 <input type="radio" name="btnNG">
                                 NG Input (<%# Eval("NGInput")%>)
                             </label>
@@ -88,9 +88,9 @@
 
                         <!-- footer: refresh area -->
                         <span><%# Eval("Date")%>
-						<button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Loading..." class="btn btn-xs btn-default pull-right">
-                            <i class="fa fa-refresh"></i>
-                        </button>
+                            <button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Loading..." class="btn btn-xs btn-default pull-right">
+                                <i class="fa fa-refresh"></i>
+                            </button>
                         </span>
                         <!-- end footer -->
 
@@ -154,7 +154,8 @@
                 <asp:Repeater ID="rptMenu" runat="server">
                     <ItemTemplate>
                         <li class="menu">
-                            <a href='#' title="<%# Eval("MenuDesc")%>"></span><i class="<%#Eval("HelpName") %>"><em><%#Eval("Notif") %></em></i><span class="menu-item-parent"><%# Eval("MenuDesc")%></span></a>
+                            <%--<a href='#' title="<%# Eval("MenuDesc")%>"></span><i class="<%#Eval("HelpName") %>"><em><%#Eval("Notif") %></em></i><span class="menu-item-parent"><%# Eval("MenuDesc")%></span></a>--%>
+                            <a href='#' title="<%# Eval("MenuDesc")%>"></span><i class="<%#Eval("HelpName") %>"></i><span class="menu-item-parent"><%# Eval("MenuDesc")%></span></a>
                             <ul>
                                 <asp:Repeater ID="rptChildMenu" runat="server">
                                     <ItemTemplate>
@@ -278,7 +279,7 @@
     <script src="js/smart-chat-ui/smart.chat.manager.min.js"></script>
     <!-- PAGE RELATED PLUGIN(S) -->
     <!-- Flot Chart Plugin: Flot Engine, Flot Resizer, Flot Tooltip -->
-<%--    <script src="js/plugin/flot/jquery.flot.cust.min.js"></script>
+    <%--    <script src="js/plugin/flot/jquery.flot.cust.min.js"></script>
     <script src="js/plugin/flot/jquery.flot.resize.min.js"></script>
     <script src="js/plugin/flot/jquery.flot.time.min.js"></script>
     <script src="js/plugin/flot/jquery.flot.tooltip.min.js"></script>--%>
@@ -931,81 +932,81 @@
 
     </script>--%>
 
- <script type="text/javascript">
-     $(document).ready(function () {
-         $(".menu").each(function () {
-             $(this).find('em').each(function () {
-                 if ($.trim($(this).text()) == "0") {
-                     $(this).hide();
-                 }
-             });
+    <script type="text/javascript">
+        //$(document).ready(function () {
+        //    $(".menu").each(function () {
+        //        $(this).find('em').each(function () {
+        //            if ($.trim($(this).text()) == "0") {
+        //                $(this).hide();
+        //            }
+        //        });
 
-             $(this).find('span').each(function () {
-                 if ($.trim($(this).text()) == "0") {
-                     $(this).hide();
-                 }
-             });
-         });
-     });
+        //        $(this).find('span').each(function () {
+        //            if ($.trim($(this).text()) == "0") {
+        //                $(this).hide();
+        //            }
+        //        });
+        //    });
+        //});
 
-     function GetNotif(Action) {
+        function GetNotif(Action) {
 
-         var User = $("#lblUser").text();
-         var Factory = "ALL";
+            var User = $("#lblUser").text();
+            var Factory = "ALL";
 
-         $.ajax({
-             type: "POST",
-             url: "AlertDashboard.aspx/" + Action + "",
-             data: '{ pUser: "' + User + '",pFactory: "' + Factory + '"}',
-             contentType: "application/json; charset=utf-8",
-             dataType: "json",
-             success: function (data) {
-                 $("#listdata").html();
-                 var html = "";
+            $.ajax({
+                type: "POST",
+                url: "AlertDashboard.aspx/" + Action + "",
+                data: '{ pUser: "' + User + '",pFactory: "' + Factory + '"}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#listdata").html();
+                    var html = "";
 
-                 var sData = data.d.toString();
+                    var sData = data.d.toString();
 
-                 if (sData != "") {
-                     const a = sData.split(";");
-                     for (var i = 0; i < a.length; i++) {
-                         var Label = a[i].split("|")[0];
-                         var nValue = a[i].split("|")[1];
-                         /*console.log(nValue);*/
-                         html += '<label style="border-bottom:groove"><a href=' + nValue + '><span class="fa fa-bell icon-color-bad"></span><span style="font-size:15px; color:black; margin-left:12px">' + Label + '</span></a></label><br/>'
-                     };
-                 } else {
-                     html = '<div class="sa-ajax-notification-container"><div class="alert sa-ajax-notification-alert"><h4>Click a button to show messages here</h4> Data Is Not Found!</div ><span class="fa fa-search fa-4x fa-border"></span></div >'
-                 }
+                    if (sData != "") {
+                        const a = sData.split(";");
+                        for (var i = 0; i < a.length; i++) {
+                            var Label = a[i].split("|")[0];
+                            var nValue = a[i].split("|")[1];
+                            /*console.log(nValue);*/
+                            html += '<label style="border-bottom:groove"><a href=' + nValue + '><span class="fa fa-bell icon-color-bad"></span><span style="font-size:15px; color:black; margin-left:12px">' + Label + '</span></a></label><br/>'
+                        };
+                    } else {
+                        html = '<div class="sa-ajax-notification-container"><div class="alert sa-ajax-notification-alert"><h4>Click a button to show messages here</h4> Data Is Not Found!</div ><span class="fa fa-search fa-4x fa-border"></span></div >'
+                    }
 
-                 $("#listdata").html(html);
-             },
-             failure: function (response) {
-                 alert(response.d);
-             },
-             error: function (response) {
-                 alert(response.d);
-             }
-         });
-     }
+                    $("#listdata").html(html);
+                },
+                failure: function (response) {
+                    alert(response.d);
+                },
+                error: function (response) {
+                    alert(response.d);
+                }
+            });
+        }
 
-     $("#activity").click(function () {
-         GetNotif("DelayInput")
-     });
+        $("#activity").click(function () {
+            GetNotif("DelayInput")
+        });
 
 
-     $(":radio[name='btnDelay']").change(function () {
-         GetNotif("DelayInput");
-     });
+        $(":radio[name='btnDelay']").change(function () {
+            GetNotif("DelayInput");
+        });
 
-     $(":radio[name='btnNG']").change(function () {
-         GetNotif("NGInput")
-     });
+        $(":radio[name='btnNG']").change(function () {
+            GetNotif("NGInput")
+        });
 
-     $(":radio[name='btnDelayVerify']").change(function () {
-         GetNotif("DelayVerify")
-     });
+        $(":radio[name='btnDelayVerify']").change(function () {
+            GetNotif("DelayVerify")
+        });
 
- </script>
+    </script>
 
 </body>
 </html>

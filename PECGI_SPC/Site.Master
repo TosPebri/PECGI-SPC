@@ -54,15 +54,16 @@
 
                     <div class="ajax-dropdown">
                         <div class="btn-group btn-group-justified" data-toggle="buttons">
-                            <label class="btn btn-default" style="font-size:12px">
+                            <label class="btn btn-default" style="font-size: 12px">
                                 <input type="radio" name="btnDelay">
                                 Delay Input (<%# Eval("DelayInput")%>)
-                            </label>                                                        </label>                           
-                            <label class="btn btn-default" style="font-size:12px">
+                            </label>
+                            </label>                           
+                            <label class="btn btn-default" style="font-size: 12px">
                                 <input type="radio" name="btnDelayVerify">
                                 Delay Verify (<%# Eval("DelayVerify")%>)
                             </label>
-                            <label class="btn btn-default" style="font-size:12px">
+                            <label class="btn btn-default" style="font-size: 12px">
                                 <input type="radio" name="btnNG">
                                 NG Input (<%# Eval("NGInput")%>)
                             </label>
@@ -130,7 +131,7 @@
         <!-- end user info -->
 
         <!-- NAVIGATION : This navigation is also responsive-->
-         <nav>
+        <nav>
             <ul>
                 <li>
                     <a href="Main.aspx" title="Home"><i class="fa fa-lg fa-fw fa-home"></i><span class="menu-item-parent">Home</span></a>
@@ -138,7 +139,9 @@
                 <asp:Repeater ID="rptMenu" runat="server">
                     <ItemTemplate>
                         <li class="menu">
-                            <a href='#' title="<%# Eval("MenuDesc")%>"></span><i class="<%#Eval("HelpName") %>"><em><%#Eval("Notif") %></em></i><span class="menu-item-parent"><%# Eval("MenuDesc")%></span></a>
+                            <%--<a href='#' title="<%# Eval("MenuDesc")%>"></span><i class="<%#Eval("HelpName") %>"><em><%#Eval("Notif") %></em></i><span class="menu-item-parent"><%# Eval("MenuDesc")%></span></a>--%>
+                            <a href='#' title="<%# Eval("MenuDesc")%>"></span><i class="<%#Eval("HelpName") %>"></i><span class="menu-item-parent"><%# Eval("MenuDesc")%></span></a>
+
                             <ul>
                                 <asp:Repeater ID="rptChildMenu" runat="server">
                                     <ItemTemplate>
@@ -859,19 +862,19 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            $(".menu").each(function () {
-                $(this).find('em').each(function () {
-                    if ($.trim($(this).text()) == "0") {
-                        $(this).hide();
-                    }
-                });
+            //$(".menu").each(function () {
+            //    $(this).find('em').each(function () {
+            //        if ($.trim($(this).text()) == "0") {
+            //            $(this).hide();
+            //        }
+            //    });
 
-                $(this).find('span').each(function () {
-                    if ($.trim($(this).text()) == "0") {
-                        $(this).hide();
-                    }
-                });
-            });
+            //    $(this).find('span').each(function () {
+            //        if ($.trim($(this).text()) == "0") {
+            //            $(this).hide();
+            //        }
+            //    });
+            //});
 
             $("#hide-menu").click(function () {
                 var hiddenVal = $("#hdnmenu").val()

@@ -90,7 +90,7 @@ Public Class Site
     Private Sub BindMenu()
         Dim ds As New DataSet
         Dim dt As New DataTable
-        Dim dtNotif As New DataTable
+        'Dim dtNotif As New DataTable
 
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
@@ -104,19 +104,19 @@ Public Class Site
             dt = ds.Tables(0)
         End Using
 
-        dtNotif = Notification()
+        'dtNotif = Notification()
 
-        Dim colTotNotif = New DataColumn("Notif", GetType(Int32))
-        Dim a = dtNotif.Rows(0)("TotNotif")
-        dt.Columns.Add(colTotNotif)
+        'Dim colTotNotif = New DataColumn("Notif", GetType(Int32))
+        'Dim a = dtNotif.Rows(0)("TotNotif")
+        'dt.Columns.Add(colTotNotif)
 
-        For i = 0 To dt.Rows.Count - 1
-            If dt.Rows(i)("GroupID").ToString() = "SPC System" Then
-                dt.Rows(i)("Notif") = a
-            Else
-                dt.Rows(i)("Notif") = 0
-            End If
-        Next
+        'For i = 0 To dt.Rows.Count - 1
+        '    If dt.Rows(i)("GroupID").ToString() = "SPC System" Then
+        '        dt.Rows(i)("Notif") = a
+        '    Else
+        '        dt.Rows(i)("Notif") = 0
+        '    End If
+        'Next
 
         Me.rptMenu.DataSource = dt
         Me.rptMenu.DataBind()

@@ -89,7 +89,6 @@ Public Class SiteHome
     Private Sub BindMenu()
         Dim ds As New DataSet
         Dim dt As New DataTable
-        Dim dtNotif As New DataTable
 
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
@@ -102,22 +101,6 @@ Public Class SiteHome
             da.Fill(ds)
             dt = ds.Tables(0)
         End Using
-
-        dtNotif = Notification()
-
-        Dim colTotNotif = New DataColumn("Notif", GetType(Int32))
-        Dim a = dtNotif.Rows(0)("TotNotif")
-        dt.Columns.Add(colTotNotif)
-
-        For i = 0 To dt.Rows.Count - 1
-            If dt.Rows(i)("GroupID").ToString() = "SPC System" Then
-                dt.Rows(i)("Notif") = a
-            Else
-                dt.Rows(i)("Notif") = 0
-            End If
-        Next
-
-
 
         Me.rptMenu.DataSource = dt
         Me.rptMenu.DataBind()
@@ -205,60 +188,6 @@ Public Class SiteHome
         End Using
         Return dt
     End Function
-
-    'Private Sub Notification()
-    '    Dim dsDelayInput As New DataSet
-    '    Dim dsDelayVerify As New DataSet
-    '    Dim dsNGInput As New DataSet
-    '    Dim dt As New DataTable
-
-    '    Using Cn As New SqlConnection(Sconn.Stringkoneksi)
-    '        Cn.Open()
-    '        Dim q As String
-    '        q = "sp_SPC_GetDelayInput"
-    '        Dim cmdDelayInput As New SqlCommand(q, Cn)
-    '        cmdDelayInput.CommandType = CommandType.StoredProcedure
-    '        cmdDelayInput.Parameters.AddWithValue("UserID", pUser)
-    '        cmdDelayInput.Parameters.AddWithValue("Factory Code", "ALL")
-    '        Dim daDelayInput As New SqlDataAdapter(cmdDelayInput)
-    '        daDelayInput.Fill(dsDelayInput)
-
-    '        q = "sp_SPC_GetDelayInput"
-    '        Dim cmdNGInput As New SqlCommand(q, Cn)
-    '        cmdNGInput.CommandType = CommandType.StoredProcedure
-    '        cmdNGInput.Parameters.AddWithValue("UserID", pUser)
-    '        cmdNGInput.Parameters.AddWithValue("Factory Code", "ALL")
-    '        Dim daNGInput As New SqlDataAdapter(cmdNGInput)
-    '        daNGInput.Fill(dsNGInput)
-
-    '        q = "sp_SPC_GetDelayInput"
-    '        Dim cmdDelayVerify As New SqlCommand(q, Cn)
-    '        cmdDelayVerify.CommandType = CommandType.StoredProcedure
-    '        cmdDelayVerify.Parameters.AddWithValue("UserID", pUser)
-    '        cmdDelayVerify.Parameters.AddWithValue("Factory Code", "ALL")
-    '        Dim daDelayVerify As New SqlDataAdapter(cmdDelayVerify)
-    '        daDelayVerify.Fill(dsDelayVerify)
-
-    '        Dim nDelayInput = dsDelayInput.Tables(0).Rows.Count
-    '        Dim nDelayVerify = dsDelayVerify.Tables(0).Rows.Count
-    '        Dim nNGInput = dsNGInput.Tables(0).Rows.Count
-    '        Dim nTotNotif = nDelayInput + nDelayVerify + nNGInput
-
-    '        Dim colDelayInput = New DataColumn("DelayInput", GetType(Int32))
-    '        Dim colDelayVerify = New DataColumn("DelayVerify", GetType(Int32))
-    '        Dim colNGInput = New DataColumn("NGInput", GetType(Int32))
-    '        Dim colTotNotif = New DataColumn("TotNotif", GetType(Int32))
-
-    '        dt.Columns.Add(colDelayInput)
-    '        dt.Columns.Add(colDelayVerify)
-    '        dt.Columns.Add(colNGInput)
-    '        dt.Columns.Add(colTotNotif)
-
-    '        dt.Rows.Add(nDelayInput, nDelayVerify, nNGInput, nTotNotif)
-    '    End Using
-    '    Me.NG.DataSource = dt
-    '    Me.NG.DataBind()
-    'End Sub
 
 #End Region
 

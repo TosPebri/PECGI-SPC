@@ -86,7 +86,7 @@ Public Class clsSPCResultDB
         End Using
     End Function
 
-    Public Shared Function GetLastVerification(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String) As Integer
+    Public Shared Function GetLastVerification(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String, SequenceNo As Integer) As Integer
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
             Dim q As String = "sp_SPCResult_GetLastVerification"
@@ -96,6 +96,7 @@ Public Class clsSPCResultDB
             cmd.Parameters.AddWithValue("LineCode", LineCode)
             cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
             cmd.Parameters.AddWithValue("ProdDate", ProdDate)
+            cmd.Parameters.AddWithValue("SequenceNo", SequenceNo)
             cmd.CommandType = CommandType.StoredProcedure
             Dim Verification As Integer = cmd.ExecuteScalar
             Return Verification

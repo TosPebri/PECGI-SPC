@@ -132,8 +132,8 @@
                 <div>
                     <table>
                         <tr style="height: 30px">
-                            <td style="width: 120px">&nbsp;
-                                    <dx:ASPxLabel ID="ASPxLabel3" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="User">
+                            <td style="width: 150px">&nbsp;
+                                    <dx:ASPxLabel ID="ASPxLabel3" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="User">
                                     </dx:ASPxLabel>
                             </td>
                             <td>
@@ -154,7 +154,7 @@
                         </tr>
                         <tr style="height: 30px">
                             <td>&nbsp;
-                                    <dx:ASPxLabel ID="ASPxLabel4" runat="server" Font-Names="Segoe UI" Font-Size="8pt" Text="Copy Privileges From">
+                                    <dx:ASPxLabel ID="ASPxLabel4" runat="server" Font-Names="Segoe UI" Font-Size="9pt" Text="Copy Privileges From">
                                     </dx:ASPxLabel>
                             </td>
                             <td>
@@ -188,13 +188,13 @@
                     <Columns>
                         <dx:GridViewDataTextColumn Caption="Menu Group" FieldName="GroupID" Name="GroupID"
                             ReadOnly="True" VisibleIndex="0" Width="200px">
-                            <CellStyle Font-Names="Segoe UI" Font-Size="8pt">
+                            <CellStyle Font-Names="Segoe UI" Font-Size="9pt">
                             </CellStyle>
                         </dx:GridViewDataTextColumn>
 
                         <dx:GridViewDataTextColumn Caption="Menu ID" FieldName="MenuID" Name="MenuID"
                             VisibleIndex="1" Width="100px">
-                            <CellStyle Font-Names="Segoe UI" Font-Size="8pt" HorizontalAlign="Left">
+                            <CellStyle Font-Names="Segoe UI" Font-Size="9pt" HorizontalAlign="Left">
                             </CellStyle>
                         </dx:GridViewDataTextColumn>
 
@@ -208,7 +208,7 @@
                                 ValueUnchecked="0" AllowGrayedByClick="false">
                             </PropertiesCheckEdit>
                             <HeaderCaptionTemplate>
-                                <dx:ASPxCheckBox ID="chkAccess" runat="server" ClientInstanceName="chkAccess" ClientSideEvents-CheckedChanged="OnAccessCheckedChanged" ValueType="System.String" ValueChecked="1" ValueUnchecked="0" Text="Access" Font-Names="Segoe UI" Font-Size="8pt" ForeColor="White">
+                                <dx:ASPxCheckBox ID="chkAccess" runat="server" ClientInstanceName="chkAccess" ClientSideEvents-CheckedChanged="OnAccessCheckedChanged" ValueType="System.String" ValueChecked="1" ValueUnchecked="0" Text="Access" Font-Names="Segoe UI" Font-Size="9pt" ForeColor="White">
                                 </dx:ASPxCheckBox>
                             </HeaderCaptionTemplate>
                             <HeaderStyle HorizontalAlign="Center" />
@@ -220,7 +220,7 @@
                                 ValueUnchecked="0" AllowGrayedByClick="false">
                             </PropertiesCheckEdit>
                             <HeaderCaptionTemplate>
-                                <dx:ASPxCheckBox ID="chkUpdate" runat="server" ClientInstanceName="chkUpdate" ClientSideEvents-CheckedChanged="OnUpdateCheckedChanged" ValueType="System.String" ValueChecked="1" ValueUnchecked="0" Text="Update" Font-Names="Segoe UI" Font-Size="8pt" ForeColor="White">
+                                <dx:ASPxCheckBox ID="chkUpdate" runat="server" ClientInstanceName="chkUpdate" ClientSideEvents-CheckedChanged="OnUpdateCheckedChanged" ValueType="System.String" ValueChecked="1" ValueUnchecked="0" Text="Update" Font-Names="Segoe UI" Font-Size="9pt" ForeColor="White">
                                 </dx:ASPxCheckBox>
                             </HeaderCaptionTemplate>
                             <HeaderStyle HorizontalAlign="Center" />
@@ -232,7 +232,7 @@
                                 ValueUnchecked="0" AllowGrayedByClick="false">
                             </PropertiesCheckEdit>
                             <HeaderCaptionTemplate>
-                                <dx:ASPxCheckBox ID="chkDelete" runat="server" ClientInstanceName="chkDelete" ClientSideEvents-CheckedChanged="OnDeleteCheckedChanged" ValueType="System.String" ValueChecked="1" ValueUnchecked="0" Text="Delete" Font-Names="Segoe UI" Font-Size="8pt" ForeColor="White">
+                                <dx:ASPxCheckBox ID="chkDelete" runat="server" ClientInstanceName="chkDelete" ClientSideEvents-CheckedChanged="OnDeleteCheckedChanged" ValueType="System.String" ValueChecked="1" ValueUnchecked="0" Text="Delete" Font-Names="Segoe UI" Font-Size="9pt" ForeColor="White">
                                 </dx:ASPxCheckBox>
                             </HeaderCaptionTemplate>
                             <HeaderStyle HorizontalAlign="Center" />
@@ -265,13 +265,13 @@
                         <tr>
                             <td>
                                 <dx:ASPxButton ID="btnCancel" TabIndex="2" runat="server" AutoPostBack="False" ClientInstanceName="btnCancel"
-                                    Font-Names="Segoe UI" Font-Size="8pt" Text="Cancel" Theme="Office2010Silver"
+                                    Font-Names="Segoe UI" Font-Size="9pt" Text="Cancel" Theme="Office2010Silver"
                                     Width="80px">
                                     <ClientSideEvents Click="function close() {window.open('UserSetup.aspx', '_self' );}" />
                                 </dx:ASPxButton>
                                 &nbsp;&nbsp;
                                 <dx:ASPxButton ID="btnSave" TabIndex="1" runat="server" AutoPostBack="False" ClientInstanceName="btnSave"
-                                    Font-Names="Segoe UI" Font-Size="8pt" Text="Save" Theme="Office2010Silver"
+                                    Font-Names="Segoe UI" Font-Size="9pt" Text="Save" Theme="Office2010Silver"
                                     Width="80px">
                                     <ClientSideEvents Click="SaveData" />
                                 </dx:ASPxButton>

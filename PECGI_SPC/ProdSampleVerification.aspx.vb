@@ -58,6 +58,7 @@ Public Class ProdSampleVerification
 
     'EXCEL PARAMETER
     Dim row_GridTitle = 0
+    Dim row_ChartSetup = 0
     Dim row_HeaderResult = 0
     Dim row_HeaderActivity = 0
     Dim row_CellResult = 0
@@ -872,8 +873,10 @@ Public Class ProdSampleVerification
         Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartR(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
         If xr.Count = 0 Then
             chartR.JSProperties("cpShow") = "0"
+            CharacteristicSts = "0"
         Else
             chartR.JSProperties("cpShow") = "1"
+            CharacteristicSts = "1"
         End If
         With chartR
             .DataSource = xr
@@ -931,7 +934,12 @@ Public Class ProdSampleVerification
 
             diagram.AxisY.NumericScaleOptions.CustomGridAlignment = 0.005
             diagram.AxisY.GridLines.MinorVisible = False
-
+            Dim ChartType As String = clsXRChartDB.GetChartType(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code)
+            If ChartType = "1" Then
+                .Titles(0).Text = "Chart X"
+            Else
+                .Titles(0).Text = "Graph Monitoring"
+            End If
 
             Dim Setup As clsChartSetup = clsChartSetupDB.GetData(cls.FactoryCode, cls.ItemType_Code, cls.LineCode, cls.ItemCheck_Code, cls.ProdDate)
             diagram.AxisY.ConstantLines.Clear()
@@ -971,9 +979,16 @@ Public Class ProdSampleVerification
                 diagram.AxisY.ConstantLines.Add(USL)
                 USL.AxisValue = Setup.SpecUSL
 
-                diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
-                diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
-                diagram.AxisY.WholeRange.EndSideMargin = Setup.SpecUSL + 1
+                Dim MinValue As Double, MaxValue As Double
+                MinValue = Setup.SpecLSL
+                MaxValue = Setup.SpecUSL
+                diagram.AxisY.WholeRange.MinValue = 0
+                diagram.AxisY.WholeRange.MaxValue = 10
+                diagram.AxisY.WholeRange.EndSideMargin = 0.015
+
+                diagram.AxisY.VisualRange.MinValue = MinValue
+                diagram.AxisY.VisualRange.MaxValue = MaxValue
+                diagram.AxisY.VisualRange.EndSideMargin = 0.015
 
                 CType(.Diagram, XYDiagram).SecondaryAxesY.Clear()
                 Dim myAxisY As New SecondaryAxisY("my Y-Axis")
@@ -983,7 +998,11 @@ Public Class ProdSampleVerification
                 CType(.Series("RuleYellow").View, XYDiagramSeriesViewBase).AxisY = myAxisY
             End If
             .DataBind()
-            .Width = xr.Count * 20
+            If xr.Count < 5 Then
+                .Width = 5 * 20
+            Else
+                .Width = xr.Count * 20
+            End If
         End With
     End Sub
     Private Sub LoadForm_ByAnotherform()
@@ -1073,8 +1092,8 @@ Public Class ProdSampleVerification
         End Try
     End Sub
     Private Sub Validation_Verify(cls As clsProdSampleVerification)
-        VerifyStatus = clsProdSampleVerificationDB.Validation(GetVerifyPrivilege, cls)
-        Dim AllowSkill As Boolean = clsIOT.AllowSkill(cls.User, cls.FactoryCode, cls.LineCode, cls.ItemType_Code)
+        'VerifyStatus = clsProdSampleVerificationDB.Validation(GetVerifyPrivilege, cls)
+        'Dim AllowSkill As Boolean = clsIOT.AllowSkill(cls.User, cls.FactoryCode, cls.LineCode, cls.ItemType_Code)
         Grid.JSProperties("cp_Verify") = VerifyStatus 'parameter to authorization verify
         'Grid.JSProperties("cp_AllowSkill") = AllowSkill 'parameter to authorization verify
     End Sub
@@ -1111,6 +1130,8 @@ Public Class ProdSampleVerification
 
                 With ws
                     GridTitle(ws, cls)
+                    'ADD Chart Setup
+                    SpecGrid(ws, cls)
 
                     'ADD GRID RESULT
                     HeaderResult(ws, cls)
@@ -1200,10 +1221,83 @@ Public Class ProdSampleVerification
             End Try
         End With
     End Sub
+    Private Sub SpecGrid(ByVal pExl As ExcelWorksheet, cls As clsProdSampleVerification)
+        With pExl
+            Try
+                Dim irow = row_GridTitle + 2
+
+                .Cells(irow, 10).Value = "Period"
+                .Cells(irow, 10, irow + 1, 10).Merge = True
+
+                .Cells(irow, 11).Value = "Specification"
+                .Cells(irow, 11, irow, 12).Merge = True
+
+                .Cells(irow, 13).Value = "X Bar Control"
+                .Cells(irow, 13, irow, 14).Merge = True
+                irow = irow + 1
+
+                .Cells(irow, 11).Value = "USL"
+                .Cells(irow, 12).Value = "LSL"
+
+                .Cells(irow, 13).Value = "UCL"
+                .Cells(irow, 14).Value = "LCL"
+
+                .Column(10).Width = 25
+                .Column(11).Width = 10
+                .Column(12).Width = 10
+                .Column(13).Width = 10
+                .Column(14).Width = 10
+
+                Dim rgCell As ExcelRange = .Cells(irow - 1, 10, irow, 14)
+                rgCell.Style.Font.Size = 10
+                rgCell.Style.Font.Name = "Segoe UI"
+                rgCell.Style.HorizontalAlignment = HorzAlignment.Center
+                rgCell.Style.Font.Color.SetColor(Color.White)
+                rgCell.Style.Fill.PatternType = ExcelFillStyle.Solid
+                rgCell.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.DimGray)
+
+                ds = clsProdSampleVerificationDB.GridLoad(GetCharSetup, cls)
+                Dim dtChartSetup As DataTable = ds.Tables(0)
+                If dtChartSetup.Rows.Count > 0 Then
+                    irow = irow + 1
+                    For i = 0 To dtChartSetup.Rows.Count - 1
+                        .Cells(irow + i, 10).Value = dtChartSetup.Rows(i)("Period")
+                        .Cells(irow + i, 10).Style.WrapText = True
+
+                        .Cells(irow + i, 11).Value = dtChartSetup.Rows(i)("USL")
+                        .Cells(irow + i, 11).Style.Numberformat.Format = "####0.000"
+
+                        .Cells(irow + i, 12).Value = dtChartSetup.Rows(i)("LSL")
+                        .Cells(irow + i, 12).Style.Numberformat.Format = "####0.000"
+
+                        .Cells(irow + i, 13).Value = dtChartSetup.Rows(i)("UCL")
+                        .Cells(irow + i, 13).Style.Numberformat.Format = "####0.000"
+
+                        .Cells(irow + i, 14).Value = dtChartSetup.Rows(i)("LCL")
+                        .Cells(irow + i, 14).Style.Numberformat.Format = "####0.000"
+                        irow = irow + 1
+                    Next
+                End If
+
+                Dim Border As ExcelRange = .Cells(irow - 3, 10, irow - 1, 14)
+                Border.Style.Border.Top.Style = ExcelBorderStyle.Thin
+                Border.Style.Border.Bottom.Style = ExcelBorderStyle.Thin
+                Border.Style.Border.Right.Style = ExcelBorderStyle.Thin
+                Border.Style.Border.Left.Style = ExcelBorderStyle.Thin
+                Border.Style.Font.Size = 10
+                Border.Style.Font.Name = "Segoe UI"
+
+                row_ChartSetup = irow
+
+            Catch ex As Exception
+                Throw New Exception(ex.Message)
+            End Try
+        End With
+    End Sub
     Private Sub HeaderResult(ByVal pExl As ExcelWorksheet, cls As clsProdSampleVerification)
         With pExl
             Try
-                Dim irow = row_GridTitle + 4
+                Dim irow = row_ChartSetup + 1
                 Dim nColDate = 2
                 Dim nColSeq = 2
                 Dim nColShift = 2
@@ -1307,6 +1401,9 @@ Public Class ProdSampleVerification
                                             .Cells(irow + i, n).Value = value
                                             .Cells(irow + i, n).Style.Fill.PatternType = ExcelFillStyle.Solid
                                             .Cells(irow + i, n).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(color))
+                                            If RowIndex = "EachData" Or RowIndex = "XBar" Then
+                                                .Cells(irow + i, n).Style.Numberformat.Format = "####0.000"
+                                            End If
                                         End If
                                     Else
                                         .Cells(irow + i, n).Value = data
@@ -1329,7 +1426,7 @@ Public Class ProdSampleVerification
                 col_CellResult = dtGrid.Columns.Count
                 row_CellResult = irow + dtGrid.Rows.Count
 
-                Dim Border As ExcelRange = .Cells(row_GridTitle + 4, 1, row_CellResult - 2, col_CellResult - 1)
+                Dim Border As ExcelRange = .Cells(row_ChartSetup + 2, 1, row_CellResult - 2, col_CellResult - 1)
                 Border.Style.Border.Top.Style = ExcelBorderStyle.Thin
                 Border.Style.Border.Bottom.Style = ExcelBorderStyle.Thin
                 Border.Style.Border.Right.Style = ExcelBorderStyle.Thin

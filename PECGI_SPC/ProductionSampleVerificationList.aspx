@@ -189,7 +189,7 @@
 
             window.open('ProdSampleVerification.aspx?menu=ProductionSampleVerificationList.aspx' + '&FactoryCode=' + Factory + '&ItemTypeCode=' + ItemType
                 + '&Line=' + Line + '&ItemCheckCode=' + ItemCheck + '&ProdDate=' + ProdDate + '&Shift=' + Shift + '&Sequence=' + Seq
-                + '&cboLine=' + prmLine + '&cboItemCheck=' + prmItemCheck + '&FromDate=' + prmFromDate + '&ToDate='+ prmToDate + '&MK=' +prmMK + '&QC=' +prmQC + '', '_blank');           
+                + '&cboLine=' + prmLine + '&cboItemCheck=' + prmItemCheck + '&FromDate=' + prmFromDate + '&ToDate='+ prmToDate + '&MK=' +prmMK + '&QC=' +prmQC + '', '_self');           
         }
 
         function ViewSampleInput() {

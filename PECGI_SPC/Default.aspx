@@ -154,11 +154,12 @@
                     </td>
                     <td>&nbsp;</td>
                 </tr>
+
                 <tr>
                     <td align="center" colspan="2">
                         <dx:ASPxLabel ID="ASPxLabel2" runat="server" class="version" CssClass="version"
                             ForeColor="Black" Font-Size="10pt"
-                            Text="© 2022 - Developed by PT. TOS Information Systems Indonesia">
+                            Text="© 2022 - PT.PANASONIC GOBEL ENERGY INDONESIA. ALL RIGHTS RESERVED.">
                         </dx:ASPxLabel>
                     </td>
                     <td>&nbsp;</td>

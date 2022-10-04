@@ -668,7 +668,7 @@
                     </td>
                     <td>
 
-                        <dx:ASPxTextBox ID="txtSubLotNo" runat="server" Width="60px" ClientInstanceName="txtSubLotNo">
+                        <dx:ASPxTextBox ID="txtSubLotNo" runat="server" Width="160px" ClientInstanceName="txtSubLotNo">
                         </dx:ASPxTextBox>
                     </td>
                 </tr>
@@ -853,6 +853,12 @@
                         <LineStyle Thickness="1" />
                         <LineMarkerOptions Color="Blue" Size="3">
                         </LineMarkerOptions>
+                    </cc1:LineSeriesView>
+                </ViewSerializable>
+            </cc1:Series>
+            <cc1:Series ArgumentDataMember="Seq" Name="LCL" ValueDataMembersSerializable="LCL">
+                <ViewSerializable>
+                    <cc1:LineSeriesView>
                     </cc1:LineSeriesView>
                 </ViewSerializable>
             </cc1:Series>

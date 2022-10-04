@@ -147,8 +147,8 @@ Public Class ProdSampleInput
         Master.SiteTitle = sGlobal.menuName
         pUser = Session("user") & ""
         AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "B020 ")
-        grid.SettingsDataSecurity.AllowInsert = AuthUpdate
-        grid.SettingsDataSecurity.AllowEdit = AuthUpdate
+        grid.SettingsDataSecurity.AllowInsert = False
+        grid.SettingsDataSecurity.AllowEdit = False
         show_error(MsgTypeEnum.Info, "", 0)
         If Not IsPostBack And Not IsCallback Then
             up_FillCombo()
@@ -297,7 +297,7 @@ Public Class ProdSampleInput
         grid.DataBind()
 
         Dim UserID As String = Session("user")
-        Dim AllowSkill As Boolean = clsIOT.AllowSkill(UserID, FactoryCode, Line, ItemTypeCode)
+        'Dim AllowSkill As Boolean = clsIOT.AllowSkill(UserID, FactoryCode, Line, ItemTypeCode)
 
         Dim Verified As Boolean = False
         If dt.Rows.Count = 0 Then
@@ -305,10 +305,10 @@ Public Class ProdSampleInput
             grid.JSProperties("cpRefresh") = "1"
             Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
             If Setup IsNot Nothing Then
-                grid.JSProperties("cpUSL") = Setup.SpecUSL
-                grid.JSProperties("cpLSL") = Setup.SpecLSL
-                grid.JSProperties("cpUCL") = Setup.XBarUCL
-                grid.JSProperties("cpLCL") = Setup.XBarLCL
+                grid.JSProperties("cpUSL") = AFormat(Setup.SpecUSL)
+                grid.JSProperties("cpLSL") = AFormat(Setup.SpecLSL)
+                grid.JSProperties("cpUCL") = AFormat(Setup.XBarUCL)
+                grid.JSProperties("cpLCL") = AFormat(Setup.XBarLCL)
             End If
         Else
             With dt.Rows(0)
@@ -333,9 +333,12 @@ Public Class ProdSampleInput
                     Verified = True
                 End If
             End With
-            Dim LastVerification As Integer = clsSPCResultDB.GetLastVerification(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Sequence)
-            grid.SettingsDataSecurity.AllowInsert = LastVerification = 1 And Not Verified And AuthUpdate
-            grid.SettingsDataSecurity.AllowEdit = LastVerification = 1 And Not Verified And AuthUpdate
+        End If
+        Dim LastVerification As Integer = clsSPCResultDB.GetLastVerification(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Sequence)
+        grid.SettingsDataSecurity.AllowInsert = LastVerification = 1 And Not Verified And AuthUpdate
+        grid.SettingsDataSecurity.AllowEdit = LastVerification = 1 And Not Verified And AuthUpdate
+        If LastVerification = 0 Then
+            show_error(MsgTypeEnum.ErrorMsg, "Previous sequence is not verified yet", 1)
         End If
     End Sub
 
@@ -613,11 +616,12 @@ Public Class ProdSampleInput
             .Cells(iRow, 7).Value = "Remarks"
             .Cells(iRow, 8).Value = "Last User"
             .Cells(iRow, 9).Value = "Last Update"
-            .Cells(iRow, 1, iRow, 9).Style.Fill.PatternType = ExcelFillStyle.Solid
-            .Cells(iRow, 1, iRow, 9).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#878787"))
-            .Cells(iRow, 1, iRow, 9).Style.Font.Color.SetColor(Color.White)
-            .Cells(iRow, 1, iRow, 9).Style.WrapText = True
-            .Cells(iRow, 1, iRow, 9).Style.VerticalAlignment = ExcelVerticalAlignment.Center
+            .Cells(iRow, 9, iRow, 10).Merge = True
+            .Cells(iRow, 1, iRow, 10).Style.Fill.PatternType = ExcelFillStyle.Solid
+            .Cells(iRow, 1, iRow, 10).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#878787"))
+            .Cells(iRow, 1, iRow, 10).Style.Font.Color.SetColor(Color.White)
+            .Cells(iRow, 1, iRow, 10).Style.WrapText = True
+            .Cells(iRow, 1, iRow, 10).Style.VerticalAlignment = ExcelVerticalAlignment.Center
             .Column(1).Width = 13
             .Column(3).Width = 11
 
@@ -655,10 +659,11 @@ Public Class ProdSampleInput
                 .Cells(iRow, 8).Value = dt.Rows(i)("RegisterUser")
                 .Cells(iRow, 9).Value = dt.Rows(i)("RegisterDate")
                 .Cells(iRow, 9).Style.Numberformat.Format = "dd MMM yyyy HH:mm"
+                .Cells(iRow, 9, iRow, 10).Merge = True
                 EndRow = iRow
             Next
 
-            Dim Range1 As ExcelRange = .Cells(StartRow, 1, EndRow, 9)
+            Dim Range1 As ExcelRange = .Cells(StartRow, 1, EndRow, 10)
             Range1.Style.Border.Top.Style = ExcelBorderStyle.Thin
             Range1.Style.Border.Bottom.Style = ExcelBorderStyle.Thin
             Range1.Style.Border.Right.Style = ExcelBorderStyle.Thin
@@ -670,6 +675,8 @@ Public Class ProdSampleInput
             iRow = iRow + 2
             .Cells(iRow, 1).Value = "Sub Lot No"
             .Cells(iRow, 2).Value = SubLotNo
+            .Cells(iRow + 1, 1).Value = "Remarks"
+            .Cells(iRow + 1, 2).Value = Remarks
 
             .Cells(iRow, 5).Value = "Verification"
             .Cells(iRow + 1, 5).Value = "MK"
@@ -686,65 +693,64 @@ Public Class ProdSampleInput
             ExcelHeader(pExl, iRow, 5, iRow, 7)
             ExcelBorder(pExl, iRow, 5, iRow + 2, 7)
 
-            .Cells(iRow, 9).Value = "Specification"
-            .Cells(iRow, 9, iRow, 10).Merge = True
-            .Cells(iRow, 11).Value = "X Bar Control"
-            .Cells(iRow, 11, iRow, 12).Merge = True
-            .Cells(iRow, 13).Value = "Result"
-            .Cells(iRow, 13, iRow, 18).Merge = True
+            iRow = iRow + 4
 
-            .Cells(iRow + 1, 9).Value = "USL"
-            .Cells(iRow + 2, 9).Value = USL
-            .Cells(iRow + 1, 10).Value = "LSL"
-            .Cells(iRow + 2, 10).Value = LSL
-            .Cells(iRow + 1, 11).Value = "UCL"
-            .Cells(iRow + 2, 11).Value = UCL
-            .Cells(iRow + 1, 12).Value = "LCL"
-            .Cells(iRow + 2, 12).Value = LCL
-            .Cells(iRow + 1, 13).Value = "Min"
-            .Cells(iRow + 2, 13).Value = vMin
-            .Cells(iRow + 1, 14).Value = "Max"
-            .Cells(iRow + 2, 14).Value = vMax
-            .Cells(iRow + 1, 15).Value = "Ave"
-            .Cells(iRow + 2, 15).Value = vAvg
-            .Cells(iRow + 1, 16).Value = "R"
-            .Cells(iRow + 2, 16).Value = vR
+            .Cells(iRow, 1).Value = "Specification"
+            .Cells(iRow, 1, iRow, 2).Merge = True
+            .Cells(iRow, 3).Value = "X Bar Control"
+            .Cells(iRow, 3, iRow, 4).Merge = True
+            .Cells(iRow, 5).Value = "Result"
+            .Cells(iRow, 5, iRow, 10).Merge = True
+
+            .Cells(iRow + 1, 1).Value = "USL"
+            .Cells(iRow + 2, 1).Value = Val(USL)
+            .Cells(iRow + 1, 2).Value = "LSL"
+            .Cells(iRow + 2, 2).Value = Val(LSL)
+            .Cells(iRow + 1, 3).Value = "UCL"
+            .Cells(iRow + 2, 3).Value = Val(UCL)
+            .Cells(iRow + 1, 4).Value = "LCL"
+            .Cells(iRow + 2, 4).Value = Val(LCL)
+            .Cells(iRow + 1, 5).Value = "Min"
+            .Cells(iRow + 2, 5).Value = Val(vMin)
+            .Cells(iRow + 1, 6).Value = "Max"
+            .Cells(iRow + 2, 6).Value = Val(vMax)
+            .Cells(iRow + 1, 7).Value = "Ave"
+            .Cells(iRow + 2, 7).Value = Val(vAvg)
+            .Cells(iRow + 1, 8).Value = "R"
+            .Cells(iRow + 2, 8).Value = Val(vR)
 
             If NG = "2" Then
-                .Cells(iRow + 1, 18).Value = "NG"
-                .Cells(iRow + 1, 18).Style.Fill.PatternType = ExcelFillStyle.Solid
-                .Cells(iRow + 1, 18).Style.Fill.BackgroundColor.SetColor(Color.Red)
+                .Cells(iRow + 1, 10).Value = "NG"
+                .Cells(iRow + 1, 10).Style.Fill.PatternType = ExcelFillStyle.Solid
+                .Cells(iRow + 1, 10).Style.Fill.BackgroundColor.SetColor(Color.Red)
             ElseIf NG = "1" Then
-                .Cells(iRow + 1, 18).Value = "NG"
-                .Cells(iRow + 1, 18).Style.Fill.PatternType = ExcelFillStyle.Solid
-                .Cells(iRow + 1, 18).Style.Fill.BackgroundColor.SetColor(Color.Pink)
+                .Cells(iRow + 1, 10).Value = "NG"
+                .Cells(iRow + 1, 10).Style.Fill.PatternType = ExcelFillStyle.Solid
+                .Cells(iRow + 1, 10).Style.Fill.BackgroundColor.SetColor(Color.Pink)
             ElseIf NG = "0" Then
-                .Cells(iRow + 1, 18).Value = "OK"
-                .Cells(iRow + 1, 18).Style.Fill.PatternType = ExcelFillStyle.Solid
-                .Cells(iRow + 1, 18).Style.Fill.BackgroundColor.SetColor(Color.Green)
+                .Cells(iRow + 1, 10).Value = "OK"
+                .Cells(iRow + 1, 10).Style.Fill.PatternType = ExcelFillStyle.Solid
+                .Cells(iRow + 1, 10).Style.Fill.BackgroundColor.SetColor(Color.Green)
             Else
-                .Cells(iRow + 1, 18).Value = ""
+                .Cells(iRow + 1, 10).Value = ""
             End If
 
-            .Cells(iRow + 1, 17).Value = C
+            .Cells(iRow + 1, 9).Value = C
             If C <> "" Then
-                .Cells(iRow + 1, 17).Style.Fill.PatternType = ExcelFillStyle.Solid
-                .Cells(iRow + 1, 17).Style.Fill.BackgroundColor.SetColor(Color.Orange)
+                .Cells(iRow + 1, 9).Style.Fill.PatternType = ExcelFillStyle.Solid
+                .Cells(iRow + 1, 9).Style.Fill.BackgroundColor.SetColor(Color.Orange)
             End If
-            .Cells(iRow + 1, 17, iRow + 2, 17).Merge = True
-            .Cells(iRow + 1, 18, iRow + 2, 18).Merge = True
-            .Cells(iRow + 1, 17, iRow + 2, 18).Style.VerticalAlignment = ExcelVerticalAlignment.Center
+            .Cells(iRow + 1, 9, iRow + 2, 9).Merge = True
+            .Cells(iRow + 1, 10, iRow + 2, 10).Merge = True
+            .Cells(iRow + 1, 9, iRow + 2, 10).Style.VerticalAlignment = ExcelVerticalAlignment.Center
 
-            .Cells(iRow + 1, 9, iRow + 1, 16).Style.Numberformat.Format = "0.0000"
+            .Cells(iRow + 2, 1, iRow + 2, 8).Style.Numberformat.Format = "0.000"
 
-            ExcelHeader(pExl, iRow, 9, iRow + 1, 16)
-            ExcelHeader(pExl, iRow, 17, iRow, 18)
-            ExcelBorder(pExl, iRow, 9, iRow + 2, 18)
+            ExcelHeader(pExl, iRow, 1, iRow + 1, 8)
+            ExcelHeader(pExl, iRow, 9, iRow, 10)
+            ExcelBorder(pExl, iRow, 1, iRow + 2, 10)
 
-            iRow = iRow + 1
-            .Cells(iRow, 1).Value = "Remarks"
-            .Cells(iRow, 2).Value = Remarks
-            iRow = iRow + 3
+            iRow = iRow + 4
 
             Dim SelDay As Object = clsSPCResultDB.GetPrevDate(Hdr.FactoryCode, Hdr.ItemTypeCode, Hdr.LineCode, Hdr.ItemCheckCode, Hdr.ProdDate)
             .Cells(iRow, 1).Value = "Date"
@@ -795,7 +801,17 @@ Public Class ProdSampleInput
                         .Cells(iRow, iCol).Value = dt.Rows(j)(1)
                         For Each Fn In FieldNames
                             iCol = iCol + 1
-                            .Cells(iRow, iCol).Value = dt.Rows(j)(Fn)
+                            If iCol > 1 Then
+                                Select Case .Cells(iRow, 1).Value
+                                    Case "1", "2", "3", "4", "5", "Min", "Max", "Avg", "R"
+                                        .Cells(iRow, iCol).Value = Val(dt.Rows(j)(Fn))
+                                        .Cells(iRow, iCol).Style.Numberformat.Format = "0.000"
+                                    Case Else
+                                        .Cells(iRow, iCol).Value = dt.Rows(j)(Fn)
+                                End Select
+                            Else
+                                .Cells(iRow, iCol).Value = dt.Rows(j)(Fn)
+                            End If
                         Next
                     End If
                     iRow = iRow + 1
@@ -1060,9 +1076,7 @@ Public Class ProdSampleInput
                 CType(.Series("RuleYellow").View, XYDiagramSeriesViewBase).AxisY = myAxisY
             End If
             .DataBind()
-            If xr.Count < 5 Then
-                .Width = 5 * 20
-            Else
+            If xr.Count > 5 Then
                 .Width = xr.Count * 20
             End If
         End With
@@ -1117,17 +1131,18 @@ Public Class ProdSampleInput
                 End If
             End If
         End If
+        Dim cs As New clsSPCColor
         If e.DataColumn.FieldName = "Des" Then
             If e.CellValue = "1" Then
-                e.Cell.BackColor = Color.Red
+                e.Cell.BackColor = cs.Color1
             ElseIf e.CellValue = "2" Then
-                e.Cell.BackColor = Color.Orange
+                e.Cell.BackColor = cs.Color2
             ElseIf e.CellValue = "3" Then
-                e.Cell.BackColor = Color.LightGreen
+                e.Cell.BackColor = cs.Color3
             ElseIf e.CellValue = "4" Then
-                e.Cell.BackColor = Color.DarkGreen
+                e.Cell.BackColor = cs.Color4
             ElseIf e.CellValue = "5" Then
-                e.Cell.BackColor = Color.LightBlue
+                e.Cell.BackColor = cs.Color5
             End If
         End If
         If e.KeyValue = "-" Or e.KeyValue = "--" Then
@@ -1149,35 +1164,36 @@ Public Class ProdSampleInput
     End Sub
 
     Private Sub chartX_CustomDrawSeries(sender As Object, e As CustomDrawSeriesEventArgs) Handles chartX.CustomDrawSeries
+        Dim cs As New clsSPCColor
         Dim s As String = e.Series.Name
         If s = "#1" Then
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Red
-            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.Red
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor1
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color1
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.Red
         ElseIf s = "#2" Then
             'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Diamond
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Orange
-            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.Orange
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor2
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color2
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.Orange
         ElseIf s = "#3" Then
             'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Triangle
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Green
-            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightGreen
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor3
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color3
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.LightGreen
         ElseIf s = "#4" Then
             'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Square
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.DarkGreen
-            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.DarkGreen
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor4
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color4
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.DarkGreen
         ElseIf s = "#5" Then
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Blue
-            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightBlue
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor5
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color5
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
             e.LegendDrawOptions.Color = Color.LightBlue
         End If

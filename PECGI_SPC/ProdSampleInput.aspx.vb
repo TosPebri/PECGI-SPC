@@ -906,8 +906,7 @@ Public Class ProdSampleInput
         Dim LineCode As String = Split(e.Parameter, "|")(2)
         Dim ItemCheckCode As String = Split(e.Parameter, "|")(3)
         Dim ShiftCode As String = Split(e.Parameter, "|")(4)
-        Dim ProdDate As String = Split(e.Parameter, "|")(5)
-        cboSeq.DataSource = clsFrequencyDB.GetSequence(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode)
+        cboSeq.DataSource = clsFrequencyDB.GetSequence(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ShiftCode)
         cboSeq.DataBind()
     End Sub
 

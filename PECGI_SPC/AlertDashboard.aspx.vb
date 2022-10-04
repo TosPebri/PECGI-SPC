@@ -327,7 +327,11 @@ Public Class AlertDashboard
                 e.Cell.BackColor = System.Drawing.Color.Red
             End If
 
-            e.Cell.Text = Convert.ToString(Test.Days & " Day " & Test.Hours & " Hours")
+            Dim Days = Test.Days * 24
+            Dim Hours = Days + Test.Hours
+
+            'e.Cell.Text = Convert.ToString(Test.Days & " Day " & Test.Hours & " Hours " & Test.Minutes & " Minutes")
+            e.Cell.Text = Convert.ToString(Hours & ":" & Test.Minutes & ":00")
         End If
     End Sub
     Private Sub GridNG_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles GridNG.HtmlDataCellPrepared

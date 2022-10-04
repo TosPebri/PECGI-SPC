@@ -140,15 +140,6 @@ Partial Public Class AlertDashboard
     Protected WithEvents dsSequence As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
-    '''Grid control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents Grid As Global.DevExpress.Web.ASPxGridView
-
-    '''<summary>
     '''GridNG control.
     '''</summary>
     '''<remarks>
@@ -156,6 +147,15 @@ Partial Public Class AlertDashboard
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents GridNG As Global.DevExpress.Web.ASPxGridView
+
+    '''<summary>
+    '''Grid control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents Grid As Global.DevExpress.Web.ASPxGridView
 
     '''<summary>
     '''hdInterval control.

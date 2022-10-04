@@ -8,6 +8,8 @@ Public Class clsXRChart
     Public Property MinValue As Double
     Public Property MaxValue As Double
     Public Property RValue As Double
+    Public Property LCL As Double
+    Public Property UCL As Double
     Public Property RuleValue As Double?
     Public Property RuleYellow As Double?
     Public Property RuleColor As String
@@ -87,6 +89,14 @@ Public Class clsXRChartDB
                     If Not IsDBNull(.Item("RuleYellow")) Then
                         value = .Item("RuleYellow")
                         xr.RuleYellow = value
+                    End If
+                    If Not IsDBNull(.Item("LCL")) Then
+                        value = .Item("LCL")
+                        xr.LCL = value
+                    End If
+                    If Not IsDBNull(.Item("UCL")) Then
+                        value = .Item("UCL")
+                        xr.UCL = value
                     End If
                 End With
                 XRList.Add(xr)

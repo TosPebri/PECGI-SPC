@@ -14,6 +14,22 @@ Public Class clsSPCResult
     Public Property RegisterUser As String
 End Class
 
+Public Class clsSPCColor
+    Public Property Color1 As System.Drawing.Color = System.Drawing.Color.PeachPuff
+    Public Property Color2 As System.Drawing.Color = System.Drawing.Color.PaleGreen
+    Public Property Color3 As System.Drawing.Color = System.Drawing.Color.PaleTurquoise
+    Public Property Color4 As System.Drawing.Color = System.Drawing.Color.Thistle
+    Public Property Color5 As System.Drawing.Color = System.Drawing.Color.Orchid
+    Public Property Color6 As System.Drawing.Color = System.Drawing.Color.Wheat
+
+    Public Property BorderColor1 As System.Drawing.Color = System.Drawing.Color.DarkOrange
+    Public Property BorderColor2 As System.Drawing.Color = System.Drawing.Color.DarkGreen
+    Public Property BorderColor3 As System.Drawing.Color = System.Drawing.Color.Blue
+    Public Property BorderColor4 As System.Drawing.Color = System.Drawing.Color.DarkViolet
+    Public Property BorderColor5 As System.Drawing.Color = System.Drawing.Color.Indigo
+    Public Property BorderColor6 As System.Drawing.Color = System.Drawing.Color.SaddleBrown
+End Class
+
 Public Class clsSPCResultDB
 
     Public Shared Function ADbl(ByVal value As Object) As Double
@@ -65,7 +81,7 @@ Public Class clsSPCResultDB
         End Using
     End Function
 
-    Public Shared Function Update(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String, ShiftCode As String, SequenceNo As Integer, SubLotNo As Integer, Remark As String, RegisterUser As String) As Object
+    Public Shared Function Update(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, ProdDate As String, ShiftCode As String, SequenceNo As Integer, SubLotNo As String, Remark As String, RegisterUser As String) As Object
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
             Dim q As String = "sp_SPCResult_Upd"

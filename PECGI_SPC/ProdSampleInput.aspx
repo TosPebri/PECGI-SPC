@@ -35,7 +35,7 @@
         }
 
         function ValidateSave(s, e) {
-            grid.PerformCallback('save' + '|' + cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + cboShift.GetValue() + '|' + cboSeq.GetValue() + '|' + txtSubLotNo.GetText() + '|' + txtRemarks.GetText() );
+            grid.PerformCallback('save' + '|' + cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + cboShift.GetValue() + '|' + cboSeq.GetValue() + '|' + cboShow.GetValue() + '|' + txtSubLotNo.GetText() + '|' + txtRemarks.GetText() );           
         }
 
         function ClearGrid(s, e) {
@@ -172,8 +172,8 @@
                 lblNG.SetText('NG');
                 document.getElementById('NG').style.backgroundColor = 'Red';
             } else if (s.cpNG == '1') {
-                lblNG.SetText('NG');
-                document.getElementById('NG').style.backgroundColor = 'Pink';
+                lblNG.SetText('');
+                document.getElementById('NG').style.backgroundColor = 'White';
             } else if (s.cpNG == '0') {
                 lblNG.SetText('OK');
                 document.getElementById('NG').style.backgroundColor = 'Green';
@@ -731,10 +731,10 @@
                             </dx:ASPxLabel>
                         </td>
                         <td style="border: 1px solid silver; width: 100px" align="center">
-                            &nbsp;<dx:ASPxLabel ID="lblQCDate" runat="server" Text="" 
+                            <dx:ASPxLabel ID="lblQCDate" runat="server" Text="" 
                                 Font-Names="Segoe UI" Font-Size="9pt" ClientInstanceName="lblQCDate">
                             </dx:ASPxLabel>
-                        &nbsp;</td>
+                        </td>
                     </tr>
                 </table>
         </td>
@@ -826,7 +826,7 @@
                 
 <div id="chartXdiv" style="overflow-x:auto; width:100%; border:1px solid black"">
 <dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
-        Height="490px" Width="800px" CrosshairEnabled="True" SeriesDataMember="Description">
+        Height="490px" Width="1080px" CrosshairEnabled="True" SeriesDataMember="Description">
         <seriestemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
             <viewserializable>
                 <cc1:PointSeriesView>                    

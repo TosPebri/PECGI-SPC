@@ -147,8 +147,8 @@ Public Class ProdSampleInput
         Master.SiteTitle = sGlobal.menuName
         pUser = Session("user") & ""
         AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "B020 ")
-        grid.SettingsDataSecurity.AllowInsert = False
-        grid.SettingsDataSecurity.AllowEdit = False
+        grid.SettingsDataSecurity.AllowInsert = True
+        grid.SettingsDataSecurity.AllowEdit = True
         show_error(MsgTypeEnum.Info, "", 0)
         If Not IsPostBack And Not IsCallback Then
             up_FillCombo()
@@ -952,8 +952,6 @@ Public Class ProdSampleInput
             diagram.AxisX.MinorCount = 1
             diagram.AxisX.GridLines.Visible = False
 
-
-
             Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
             diagram.AxisY.ConstantLines.Clear()
             If Setup IsNot Nothing Then
@@ -980,6 +978,7 @@ Public Class ProdSampleInput
                     End If
                 End If
                 diagram.AxisY.WholeRange.MaxValue = MaxValue
+                diagram.AxisY.VisualRange.MaxValue = MaxValue
             End If
             .DataBind()
         End With
@@ -1002,7 +1001,7 @@ Public Class ProdSampleInput
             diagram.AxisY.GridLines.MinorVisible = False
             Dim ChartType As String = clsXRChartDB.GetChartType(FactoryCode, ItemTypeCode, Line, ItemCheckCode)
             If ChartType = "1" Then
-                .Titles(0).Text = "Chart X"
+                .Titles(0).Text = "X Bar Control Chart"
             Else
                 .Titles(0).Text = "Graph Monitoring"
             End If
@@ -1076,9 +1075,9 @@ Public Class ProdSampleInput
                 CType(.Series("RuleYellow").View, XYDiagramSeriesViewBase).AxisY = myAxisY
             End If
             .DataBind()
-            If xr.Count > 5 Then
-                .Width = xr.Count * 20
-            End If
+            'If xr.Count > 5 Then
+            '    .Width = xr.Count * 20
+            'End If
         End With
     End Sub
 
@@ -1127,7 +1126,11 @@ Public Class ProdSampleInput
                 If Value < LSL Or Value > USL Then
                     e.Cell.BackColor = Color.Red
                 ElseIf Value < LCL Or Value > UCL Then
-                    e.Cell.BackColor = Color.Pink
+                    If e.GetValue("Seq") = "1" Then
+                        e.Cell.BackColor = Color.Pink
+                    Else
+                        e.Cell.BackColor = Color.Yellow
+                    End If
                 End If
             End If
         End If
@@ -1171,31 +1174,31 @@ Public Class ProdSampleInput
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor1
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color1
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
-            e.LegendDrawOptions.Color = Color.Red
+            e.LegendDrawOptions.Color = cs.Color1
         ElseIf s = "#2" Then
             'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Diamond
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor2
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color2
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
-            e.LegendDrawOptions.Color = Color.Orange
+            e.LegendDrawOptions.Color = cs.Color2
         ElseIf s = "#3" Then
             'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Triangle
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor3
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color3
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
-            e.LegendDrawOptions.Color = Color.LightGreen
+            e.LegendDrawOptions.Color = cs.Color3
         ElseIf s = "#4" Then
             'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Square
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor4
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color4
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
-            e.LegendDrawOptions.Color = Color.DarkGreen
+            e.LegendDrawOptions.Color = cs.Color4
         ElseIf s = "#5" Then
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor5
             CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color5
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
-            e.LegendDrawOptions.Color = Color.LightBlue
+            e.LegendDrawOptions.Color = cs.Color5
         End If
     End Sub
 

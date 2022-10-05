@@ -220,8 +220,10 @@
                         </dx:GridViewDataCheckColumn>
                     </Columns>
                     <SettingsBehavior AllowFocusedRow="True" AllowSort="False" ColumnResizeMode="Control" EnableRowHotTrack="True" />
-                    <SettingsPager Mode="ShowAllRecords" NumericButtonCount="10">
+                    <SettingsPager Mode="ShowPager" PageSize="20" AlwaysShowPager="true" PageSizeItemSettings-Visible="true">
+                        <PageSizeItemSettings Visible="True"></PageSizeItemSettings>
                     </SettingsPager>
+                    <Settings HorizontalScrollBarMode="Auto" VerticalScrollBarMode="Auto" VerticalScrollableHeight="300" />
                     <SettingsEditing Mode="Batch" NewItemRowPosition="Bottom">
                         <BatchEditSettings ShowConfirmOnLosingChanges="False" />
                     </SettingsEditing>

@@ -170,7 +170,7 @@ Public Class ProdSampleQCSummary
                     Dim strSplit = Split(e.CellValue, "|,|")(i)
 
                     If strSplit.Contains("NoProd") Or strSplit.Contains("NoResult") Or strSplit.Contains("NOK") Then
-                        If strSplit.Contains("NOK") = False Then
+                        If strSplit.Contains("NoProd") = False Or strSplit.Contains("NOK") = False Then
                             result += "No Data " & Split(strSplit, "||")(2) & "<br/>"
                         End If
                     ElseIf strSplit.Contains("NG") Then
@@ -595,8 +595,10 @@ Public Class ProdSampleQCSummary
                                         For ii = 0 To Split(value, "|,|").Count - 1
                                             Dim strSplit = Split(value, "|,|")(ii)
 
-                                            If strSplit.Contains("NoProd") Or strSplit.Contains("NoResult") Then
-                                                result += "No Data " & Split(strSplit, "||")(2) & vbCrLf
+                                            If strSplit.Contains("NoProd") Or strSplit.Contains("NoResult") Or strSplit.Contains("NOK") Then
+                                                If strSplit.Contains("NoProd") = False Or strSplit.Contains("NOK") = False Then
+                                                    result += "No Data " & Split(strSplit, "||")(2) & vbCrLf
+                                                End If
                                             ElseIf strSplit.Contains("NG") Then
                                                 result += "NG " & Split(strSplit, "||")(3) & vbCrLf
                                             Else

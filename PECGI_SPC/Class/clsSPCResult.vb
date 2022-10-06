@@ -9,7 +9,7 @@ Public Class clsSPCResult
     Public Property ProdDate As Date
     Public Property ShiftCode As String
     Public Property SequenceNo As Integer
-    Public Property SubLotNo As Integer
+    Public Property SubLotNo As String
     Public Property Remark As String
     Public Property RegisterUser As String
 End Class

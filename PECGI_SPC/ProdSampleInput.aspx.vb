@@ -326,7 +326,7 @@ Public Class ProdSampleInput
                 grid.JSProperties("cpMKUser") = .Item("MKUser")
                 grid.JSProperties("cpQCDate") = .Item("QCDate")
                 grid.JSProperties("cpQCUser") = .Item("QCUser")
-                grid.JSProperties("cpSubLotNo") = .Item("SubLotNo")
+                grid.JSProperties("cpSubLotNo") = .Item("SubLotNo") & ""
                 grid.JSProperties("cpRemarks") = .Item("Remarks")
                 grid.JSProperties("cpRefresh") = "1"
                 If .Item("QCDate") & "" <> "" Then
@@ -367,8 +367,8 @@ Public Class ProdSampleInput
                 Dim pVerified As String = Split(e.Parameters, "|")(8)
                 pSeq = Val(pSeq)
                 If pFunction = "save" Then
-                    Dim pSubLotNo As String = Split(e.Parameters, "|")(8)
-                    Dim pRemark As String = Split(e.Parameters, "|")(9)
+                    Dim pSubLotNo As String = Split(e.Parameters, "|")(9)
+                    Dim pRemark As String = Split(e.Parameters, "|")(10)
                     pUser = Session("user") & ""
                     clsSPCResultDB.Update(pFactory, pItemType, pLine, pItemCheck, pDate, pShift, pSeq, pSubLotNo, pRemark, pUser)
                 End If
@@ -386,7 +386,7 @@ Public Class ProdSampleInput
         Result.ProdDate = dtDate.Value
         Result.ShiftCode = cboShift.Value
         Result.SequenceNo = cboSeq.Value
-        Result.SubLotNo = Val(txtSubLotNo.Text)
+        Result.SubLotNo = txtSubLotNo.Text
         Result.Remark = txtRemarks.Text
         Result.RegisterUser = Session("user") & ""
         clsSPCResultDB.Insert(Result)
@@ -508,7 +508,7 @@ Public Class ProdSampleInput
             Result.ProdDate = dtDate.Value
             Result.ShiftCode = cboShift.Value
             Result.SequenceNo = cboSeq.Value
-            Result.SubLotNo = 0
+            Result.SubLotNo = ""
             Result.Remark = ""
             Result.RegisterUser = Session("user") & ""
 

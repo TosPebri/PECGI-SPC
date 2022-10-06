@@ -57,28 +57,26 @@ Public Class clsFrequencyDB
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
             Dim q As String
-            If ShiftCode = "" Then
-                q = "select distinct F.SequenceNo, convert(char(5), StartTime, 114) StartTime " & vbCrLf &
-                    "From spc_ItemCheckByType T inner Join spc_MS_Frequency F on T.FrequencyCode = F.FrequencyCode " & vbCrLf &
-                    "where T.FactoryCode = @FactoryCode and T.ItemTypeCode = @ItemTypeCode and T.LineCode = @LineCode and T.ItemCheckCode = @ItemCheckCode " & vbCrLf &
-                    "and T.ActiveStatus = 1 " & vbCrLf
-            Else
-                q = "select distinct R.SequenceNo, convert(char(5), coalesce(R.RegisterDate, F.StartTime), 114) StartTime " & vbCrLf &
-                    "From spc_ItemCheckByType T inner Join spc_MS_Frequency F on T.FrequencyCode = F.FrequencyCode " & vbCrLf &
-                    "inner join spc_Result R on R.FactoryCode = T.FactoryCode and R.ItemTypeCode = T.ItemTypeCode and R.LineCode = T.LineCode and R.ItemCheckCode = T.ItemCheckCode and R.ProdDate = @ProdDate " & vbCrLf &
-                    "inner join vw_spcResultDetailOK D on R.SPCResultID = D.SPCResultID " & vbCrLf &
-                    "where T.FactoryCode = @FactoryCode and T.ItemTypeCode = @ItemTypeCode and T.LineCode = @LineCode and T.ItemCheckCode = @ItemCheckCode and R.ShiftCode = @ShiftCode and R.ProdDate = @ProdDate " & vbCrLf &
-                    "and T.ActiveStatus = 1 and F.ActiveStatus = 1  " & vbCrLf
-            End If
+            'If ShiftCode = "" Then
+
+            'Else
+            '    q = "select distinct R.SequenceNo, convert(char(5), coalesce(R.RegisterDate, F.StartTime), 114) StartTime " & vbCrLf &
+            '        "From spc_ItemCheckByType T inner Join spc_MS_Frequency F on T.FrequencyCode = F.FrequencyCode " & vbCrLf &
+            '        "inner join spc_Result R on R.FactoryCode = T.FactoryCode and R.ItemTypeCode = T.ItemTypeCode and R.LineCode = T.LineCode and R.ItemCheckCode = T.ItemCheckCode and R.ProdDate = @ProdDate " & vbCrLf &
+            '        "inner join vw_spcResultDetailOK D on R.SPCResultID = D.SPCResultID " & vbCrLf &
+            '        "where T.FactoryCode = @FactoryCode and T.ItemTypeCode = @ItemTypeCode and T.LineCode = @LineCode and T.ItemCheckCode = @ItemCheckCode and R.ShiftCode = @ShiftCode and R.ProdDate = @ProdDate " & vbCrLf &
+            '        "and T.ActiveStatus = 1 and F.ActiveStatus = 1  " & vbCrLf
+            'End If
+            q = "select distinct F.SequenceNo, convert(char(5), StartTime, 114) StartTime " & vbCrLf &
+                "From spc_ItemCheckByType T inner Join spc_MS_Frequency F on T.FrequencyCode = F.FrequencyCode " & vbCrLf &
+                "where T.FactoryCode = @FactoryCode and T.ItemTypeCode = @ItemTypeCode and T.LineCode = @LineCode and T.ItemCheckCode = @ItemCheckCode " & vbCrLf &
+                "and T.ActiveStatus = 1 and ShiftCode = @ShiftCode " & vbCrLf
             Dim cmd As New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
             cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
             cmd.Parameters.AddWithValue("LineCode", LineCode)
             cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
-            If ShiftCode <> "" Then
-                cmd.Parameters.AddWithValue("ShiftCode", ShiftCode)
-                cmd.Parameters.AddWithValue("ProdDate", ProdDate)
-            End If
+            cmd.Parameters.AddWithValue("ShiftCode", ShiftCode)
             Dim rd As SqlDataReader = cmd.ExecuteReader
             Dim SequenceList As New List(Of clsSequenceNo)
             Do While rd.Read

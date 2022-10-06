@@ -342,7 +342,7 @@
                     <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
                 </dx:GridViewDataComboBoxColumn>
 
-                <dx:GridViewDataComboBoxColumn Caption="Type" FieldName="ItemTypeName" VisibleIndex="1"
+                <dx:GridViewDataComboBoxColumn FixedStyle="Left" Caption="Type" FieldName="ItemTypeName" VisibleIndex="1"
                     Width="80px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsType" DropDownStyle="DropDownList" TextFormatString="{0}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="70px"
@@ -364,7 +364,7 @@
                     <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
                 </dx:GridViewDataComboBoxColumn>
 
-                <dx:GridViewDataComboBoxColumn Caption="Machine Process" FieldName="LineName" VisibleIndex="2"
+                <dx:GridViewDataComboBoxColumn FixedStyle="Left" Caption="Machine Process" FieldName="LineName" VisibleIndex="2"
                     Width="200px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsMachine" DropDownStyle="DropDownList" TextFormatString="{0}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="195px"
@@ -386,7 +386,7 @@
                     <CellStyle HorizontalAlign="Left" VerticalAlign="Middle"/>
                 </dx:GridViewDataComboBoxColumn>
                 
-                <dx:GridViewDataComboBoxColumn Caption="Item Check" FieldName="ItemCheck" VisibleIndex="3"
+                <dx:GridViewDataComboBoxColumn FixedStyle="Left" Caption="Item Check" FieldName="ItemCheck" VisibleIndex="3"
                     Width="200px" Settings-AutoFilterCondition="Contains">
                     <PropertiesComboBox DataSourceID="dsItemCheck" DropDownStyle="DropDownList" TextFormatString="{0}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="195px"

@@ -179,8 +179,7 @@ Public Class ClsSPCItemCheckByTypeDB
                 "select distinct Number = 2, L.FactoryCode, L.ProcessCode, L.LineCode, L.LineCode + ' - ' + L.LineName as LineName  " & vbCrLf &
                 "from MS_Line L inner join spc_ItemCheckByType I " & vbCrLf &
                 "on L.FactoryCode = I.FactoryCode and L.LineCode = I.LineCode " & vbCrLf &
-                "inner join spc_UserLine P on L.LineCode = P.LineCode " & vbCrLf &
-                "where P.UserID = @UserID and P.AllowShow = 1 " & vbCrLf
+                " where 1 = 1 " & vbCrLf
                 If FactoryCode <> "" Then
                     q = q & "and L.FactoryCode = @FactoryCode "
                 End If

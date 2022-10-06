@@ -23,7 +23,7 @@ Public Class clsControlChartSetup
 End Class
 
 Public Class clsControlChartSetupDB
-    Public Shared Function FillCombo(type As String, Optional param As String = "") As DataTable
+    Public Shared Function FillCombo(type As String, Optional param As String = "", Optional param2 As String = "") As DataTable
         Using cn As New SqlConnection(Sconn.Stringkoneksi)
             cn.Open()
             Dim sql As String
@@ -32,6 +32,7 @@ Public Class clsControlChartSetupDB
             cmd.CommandType = CommandType.StoredProcedure
             cmd.Parameters.AddWithValue("Type", type)
             If param <> "" Then cmd.Parameters.AddWithValue("Param", param)
+            If param2 <> "" Then cmd.Parameters.AddWithValue("Param2", param2)
 
             Dim da As New SqlDataAdapter(cmd)
             Dim dt As New DataTable

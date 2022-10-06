@@ -82,10 +82,6 @@ Public Class ControlChartSetup
             Dim combo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
             up_FillcomboGrid(combo, "0", pUser)
             If Grid.IsEditing Then combo.Value = e.Value : HF.Set("FactoryEdit", e.Value)
-        ElseIf e.Column.FieldName = "MachineEditGrid" Then
-            Dim combo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
-            AddHandler combo.Callback, AddressOf cmbGridMachine_OnCallback
-            If Grid.IsEditing Then Call up_FillcomboGrid(combo, "3", HF.Get("FactoryEdit")) : combo.Value = e.Value
         ElseIf e.Column.FieldName = "ItemCheckEditGrid" Then
             Dim combo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
             up_FillcomboGrid(combo, "5")
@@ -93,7 +89,11 @@ Public Class ControlChartSetup
         ElseIf e.Column.FieldName = "TypeEditGrid" Then
             Dim combo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
             up_FillcomboGrid(combo, "1")
-            If Grid.IsEditing Then combo.Value = e.Value
+            If Grid.IsEditing Then combo.Value = e.Value : HF.Set("TypeEditGrid", e.Value)
+        ElseIf e.Column.FieldName = "MachineEditGrid" Then
+            Dim combo As ASPxComboBox = TryCast(e.Editor, ASPxComboBox)
+            AddHandler combo.Callback, AddressOf cmbGridMachine_OnCallback
+            If Grid.IsEditing Then Call up_FillcomboGrid(combo, "3", HF.Get("FactoryEdit"), HF.Get("TypeEditGrid")) : combo.Value = e.Value
         End If
 
         If e.Column.FieldName = "Factory" Or e.Column.FieldName = "TypeEditGrid" Or e.Column.FieldName = "Start" Or e.Column.FieldName = "End" Then
@@ -350,10 +350,11 @@ Public Class ControlChartSetup
     End Sub
 
     Private Sub cboMachine_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboMachine.Callback
-        Dim FactoryCode As String = e.Parameter
+        Dim FactoryCode As String = Split(e.Parameter, "|")(0)
+        Dim ItemType As String = Split(e.Parameter, "|")(1)
 
         Try
-            dt = clsControlChartSetupDB.FillCombo("2", FactoryCode)
+            dt = clsControlChartSetupDB.FillCombo("2", FactoryCode, ItemType)
             With cboMachine
                 .Items.Clear() : .Columns.Clear()
                 .DataSource = dt
@@ -372,9 +373,10 @@ Public Class ControlChartSetup
 
     Private Sub cmbGridMachine_OnCallback(ByVal source As Object, ByVal e As CallbackEventArgsBase)
         Dim cmb As ASPxComboBox = source
-        Dim Param As String = e.Parameter
+        Dim Param As String = Split(e.Parameter, "|")(0)
+        Dim ItemType As String = Split(e.Parameter, "|")(1)
 
-        dt = clsControlChartSetupDB.FillCombo("3", Param)
+        dt = clsControlChartSetupDB.FillCombo("3", Param, ItemType)
         With cmb
             .Items.Clear() : .Columns.Clear()
             .DataSource = dt
@@ -443,8 +445,8 @@ Public Class ControlChartSetup
         End Try
     End Sub
 
-    Private Sub up_FillcomboGrid(ByVal cmb As ASPxComboBox, Type As String, Optional Param As String = "")
-        dt = clsControlChartSetupDB.FillCombo(Type, Param)
+    Private Sub up_FillcomboGrid(ByVal cmb As ASPxComboBox, Type As String, Optional Param As String = "", Optional Param2 As String = "")
+        dt = clsControlChartSetupDB.FillCombo(Type, Param, Param2)
         With cmb
             .Items.Clear() : .Columns.Clear()
             .DataSource = dt

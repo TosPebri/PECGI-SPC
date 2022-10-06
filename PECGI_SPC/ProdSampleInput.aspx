@@ -855,19 +855,23 @@
                     </cc1:LineSeriesView>
                 </ViewSerializable>
             </cc1:Series>
-            <cc1:Series ArgumentDataMember="Seq" Name="LCL" ValueDataMembersSerializable="LCL">
+            <cc1:Series ArgumentDataMember="Seq" Name="LCL" ValueDataMembersSerializable="LCL" LabelsVisibility="False">
                 <ViewSerializable>
                     <cc1:LineSeriesView Color="0, 32, 96" MarkerVisibility="False">
-                        <LineStyle DashStyle="DashDot" Thickness="1" />
+                        <LineStyle DashStyle="DashDot" Thickness="2" />
                         <LineMarkerOptions Size="1">
                         </LineMarkerOptions>
                     </cc1:LineSeriesView>
                 </ViewSerializable>
+                <LabelSerializable>
+                    <cc1:PointSeriesLabel Position="Center">
+                    </cc1:PointSeriesLabel>
+                </LabelSerializable>
             </cc1:Series>
             <cc1:Series ArgumentDataMember="Seq" Name="UCL" ValueDataMembersSerializable="UCL">
                 <ViewSerializable>
                     <cc1:LineSeriesView Color="0, 32, 96" MarkerVisibility="False">
-                        <LineStyle DashStyle="DashDot" Thickness="1" />
+                        <LineStyle DashStyle="DashDot" Thickness="2" />
                         <LineMarkerOptions Size="1">
                         </LineMarkerOptions>
                     </cc1:LineSeriesView>
@@ -899,6 +903,7 @@
                     <Label Alignment="Center">
                         <ResolveOverlappingOptions AllowHide="False" />
                     </Label>
+                    <WholeRange AutoSideMargins="False" EndSideMargin="-0.5" StartSideMargin="-0.5" />
                     <GridLines MinorVisible="True">
                     </GridLines>
                     <NumericScaleOptions AutoGrid="False" />

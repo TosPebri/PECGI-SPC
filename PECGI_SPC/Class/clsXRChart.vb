@@ -38,11 +38,18 @@ Public Class clsXRChartDB
                 With dt.Rows(i)
                     xr.Seq = .Item("Seq")
                     xr.Description = .Item("Description")
-                    Dim value As Double = .Item("Value")
-                    xr.Value = value
-                    value = .Item("AvgValue")
-                    xr.AvgValue = value
-                    xr.RValue = .Item("RValue")
+                    Dim value As Double
+                    If Not IsDBNull(.Item("Value")) Then
+                        value = .Item("Value")
+                        xr.Value = value
+                    End If
+                    If Not IsDBNull(.Item("AvgValue")) Then
+                        value = .Item("AvgValue")
+                        xr.AvgValue = value
+                    End If
+                    If Not IsDBNull(.Item("RValue")) Then
+                        xr.RValue = .Item("RValue")
+                    End If
                     If Not IsDBNull(.Item("RuleValue")) Then
                         value = .Item("RuleValue")
                         xr.RuleValue = value
@@ -95,8 +102,11 @@ Public Class clsXRChartDB
                 With dt.Rows(i)
                     xr.Seq = .Item("Seq")
                     xr.Description = .Item("Description")
-                    Dim value As Double = .Item("Value")
-                    xr.Value = value
+                    Dim value As Double
+                    If Not IsDBNull(.Item("Value")) Then
+                        value = .Item("Value")
+                        xr.Value = value
+                    End If
                     value = .Item("AvgValue")
                     xr.AvgValue = value
                     xr.RValue = .Item("RValue")

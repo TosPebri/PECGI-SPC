@@ -405,17 +405,18 @@ Public Class SampleControlQuality
                 e.Cell.BackColor = Color.Pink
             End If
         End If
+        Dim cs As New clsSPCColor
         If e.DataColumn.FieldName = "Des" Then
             If e.CellValue = "1" Then
-                e.Cell.BackColor = Color.Red
+                e.Cell.BackColor = cs.Color1
             ElseIf e.CellValue = "2" Then
-                e.Cell.BackColor = Color.Orange
+                e.Cell.BackColor = cs.Color2
             ElseIf e.CellValue = "3" Then
-                e.Cell.BackColor = Color.LightGreen
+                e.Cell.BackColor = cs.Color3
             ElseIf e.CellValue = "4" Then
-                e.Cell.BackColor = Color.DarkGreen
+                e.Cell.BackColor = cs.Color4
             ElseIf e.CellValue = "5" Then
-                e.Cell.BackColor = Color.LightBlue
+                e.Cell.BackColor = cs.Color5
             End If
         End If
         If e.KeyValue = "-" Or e.KeyValue = "--" Then
@@ -430,37 +431,38 @@ Public Class SampleControlQuality
     End Sub
 
     Private Sub chartX_CustomDrawSeries(sender As Object, e As CustomDrawSeriesEventArgs) Handles chartX.CustomDrawSeries
+        Dim cs As New clsSPCColor
         Dim s As String = e.Series.Name
         If s = "#1" Then
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Red
-            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.Red
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor1
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color1
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
-            e.LegendDrawOptions.Color = Color.Red
+            e.LegendDrawOptions.Color = cs.Color1
         ElseIf s = "#2" Then
             'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Diamond
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Orange
-            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.Orange
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor2
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color2
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
-            e.LegendDrawOptions.Color = Color.Orange
+            e.LegendDrawOptions.Color = cs.Color2
         ElseIf s = "#3" Then
             'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Triangle
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Green
-            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightGreen
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor3
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color3
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
-            e.LegendDrawOptions.Color = Color.LightGreen
+            e.LegendDrawOptions.Color = cs.Color3
         ElseIf s = "#4" Then
             'CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Square
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.DarkGreen
-            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.DarkGreen
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor4
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color4
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
-            e.LegendDrawOptions.Color = Color.DarkGreen
+            e.LegendDrawOptions.Color = cs.Color4
         ElseIf s = "#5" Then
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.Kind = MarkerKind.Circle
-            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = Color.Blue
-            CType(e.SeriesDrawOptions, PointDrawOptions).Color = Color.LightBlue
+            CType(e.SeriesDrawOptions, PointDrawOptions).Marker.BorderColor = cs.BorderColor5
+            CType(e.SeriesDrawOptions, PointDrawOptions).Color = cs.Color5
             CType(e.SeriesDrawOptions, PointDrawOptions).Marker.FillStyle.FillMode = FillMode.Solid
-            e.LegendDrawOptions.Color = Color.LightBlue
+            e.LegendDrawOptions.Color = cs.Color5
         End If
     End Sub
 
@@ -540,7 +542,9 @@ Public Class SampleControlQuality
                 CType(.Series("RuleYellow").View, XYDiagramSeriesViewBase).AxisY = myAxisY
             End If
             .DataBind()
-            .Width = xr.Count * 12
+            If xr.Count > 10 Then
+                .Width = xr.Count * 12
+            End If
         End With
     End Sub
 

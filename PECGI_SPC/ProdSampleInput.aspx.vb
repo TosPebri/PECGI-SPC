@@ -1009,62 +1009,66 @@ Public Class ProdSampleInput
             Dim Setup As clsChartSetup = clsChartSetupDB.GetData(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
             diagram.AxisY.ConstantLines.Clear()
             If Setup IsNot Nothing Then
-                Dim LCL As New ConstantLine("LCL")
-                LCL.Color = System.Drawing.Color.Purple
-                LCL.LineStyle.Thickness = 2
-                LCL.LineStyle.DashStyle = DashStyle.DashDot
-                diagram.AxisY.ConstantLines.Add(LCL)
-                LCL.AxisValue = Setup.XBarLCL
+                'Dim LCL As New ConstantLine("LCL")
+                'LCL.Color = System.Drawing.Color.Purple
+                'LCL.LineStyle.Thickness = 2
+                'LCL.LineStyle.DashStyle = DashStyle.DashDot
+                'diagram.AxisY.ConstantLines.Add(LCL)
+                'LCL.AxisValue = Setup.XBarLCL
 
-                Dim UCL As New ConstantLine("UCL")
-                UCL.Color = System.Drawing.Color.Purple
-                UCL.LineStyle.Thickness = 2
-                UCL.LineStyle.DashStyle = DashStyle.DashDot
-                diagram.AxisY.ConstantLines.Add(UCL)
-                UCL.AxisValue = Setup.XBarUCL
+                'Dim UCL As New ConstantLine("UCL")
+                'UCL.Color = System.Drawing.Color.Purple
+                'UCL.LineStyle.Thickness = 2
+                'UCL.LineStyle.DashStyle = DashStyle.DashDot
+                'diagram.AxisY.ConstantLines.Add(UCL)
+                'UCL.AxisValue = Setup.XBarUCL
 
-                Dim CL As New ConstantLine("CL")
-                CL.Color = System.Drawing.Color.Black
-                CL.LineStyle.Thickness = 2
-                CL.LineStyle.DashStyle = DashStyle.Solid
-                diagram.AxisY.ConstantLines.Add(CL)
-                CL.AxisValue = Setup.XBarCL
+                'Dim CL As New ConstantLine("CL")
+                'CL.Color = System.Drawing.Color.Black
+                'CL.LineStyle.Thickness = 2
+                'CL.LineStyle.DashStyle = DashStyle.Solid
+                'diagram.AxisY.ConstantLines.Add(CL)
+                'CL.AxisValue = Setup.XBarCL
 
-                Dim LSL As New ConstantLine("LSL")
-                LSL.Color = System.Drawing.Color.Red
-                LSL.LineStyle.Thickness = 2
-                LSL.LineStyle.DashStyle = DashStyle.Solid
-                diagram.AxisY.ConstantLines.Add(LSL)
-                LSL.AxisValue = Setup.SpecLSL
+                'Dim LSL As New ConstantLine("LSL")
+                'LSL.Color = System.Drawing.Color.Red
+                'LSL.LineStyle.Thickness = 2
+                'LSL.LineStyle.DashStyle = DashStyle.Solid
+                'diagram.AxisY.ConstantLines.Add(LSL)
+                'LSL.AxisValue = Setup.SpecLSL
 
-                Dim USL As New ConstantLine("USL")
-                USL.Color = System.Drawing.Color.Red
-                USL.LineStyle.Thickness = 2
-                USL.LineStyle.DashStyle = DashStyle.Solid
-                diagram.AxisY.ConstantLines.Add(USL)
-                USL.AxisValue = Setup.SpecUSL
+                'Dim USL As New ConstantLine("USL")
+                'USL.Color = System.Drawing.Color.Red
+                'USL.LineStyle.Thickness = 2
+                'USL.LineStyle.DashStyle = DashStyle.Solid
+                'diagram.AxisY.ConstantLines.Add(USL)
+                'USL.AxisValue = Setup.SpecUSL
 
                 Dim MinValue As Double, MaxValue As Double
-                'If xr.Count > 0 Then
-                '    MinValue = xr(0).MinValue
-                '    MaxValue = xr(0).MaxValue
-                'End If
-                'If Setup.SpecLSL < MinValue Then
-                '    MinValue = Setup.SpecLSL
-                'End If
-                'If Setup.SpecUSL > MaxValue Then
-                '    MaxValue = Setup.SpecUSL
-                'End If
+                If xr.Count > 0 Then
+                    MinValue = xr(0).MinValue
+                    MaxValue = xr(0).MaxValue
+                End If
+                If Setup.SpecLSL < MinValue Then
+                    MinValue = Setup.SpecLSL
+                End If
+                If Setup.SpecUSL > MaxValue Then
+                    MaxValue = Setup.SpecUSL
+                End If
 
                 MinValue = Setup.SpecLSL
                 MaxValue = Setup.SpecUSL
-                diagram.AxisY.WholeRange.MinValue = 0
-                diagram.AxisY.WholeRange.MaxValue = 10
+                diagram.AxisY.WholeRange.MinValue = MinValue
+                diagram.AxisY.WholeRange.MaxValue = MaxValue
                 diagram.AxisY.WholeRange.EndSideMargin = 0.015
 
                 diagram.AxisY.VisualRange.MinValue = MinValue
                 diagram.AxisY.VisualRange.MaxValue = MaxValue
                 diagram.AxisY.VisualRange.EndSideMargin = 0.015
+
+                Dim diff As Double = MaxValue - MinValue
+                Dim gridAlignment As Double = Math.Round(diff / 15, 3)
+                diagram.AxisY.NumericScaleOptions.CustomGridAlignment = gridAlignment
 
                 CType(.Diagram, XYDiagram).SecondaryAxesY.Clear()
                 Dim myAxisY As New SecondaryAxisY("my Y-Axis")
@@ -1125,11 +1129,7 @@ Public Class ProdSampleInput
                 If Value < LSL Or Value > USL Then
                     e.Cell.BackColor = Color.Red
                 ElseIf Value < LCL Or Value > UCL Then
-                    If e.GetValue("Seq") = "1" Then
-                        e.Cell.BackColor = Color.Pink
-                    Else
-                        e.Cell.BackColor = Color.Yellow
-                    End If
+                    e.Cell.BackColor = Color.Pink
                 End If
             End If
         End If

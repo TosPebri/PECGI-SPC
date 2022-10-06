@@ -120,10 +120,6 @@ Public Class ProdSampleQCSummary
         Dim cSplit As Integer = 1
 
         If (e.DataColumn.FieldName <> "Type") Then
-            If e.CellValue <> "NoProd||#515151||1" Then
-                Dim assss As String = 1
-            End If
-
             Try
                 Dim check As String = Split(e.CellValue, "|,|")(1)
             Catch ex As Exception
@@ -145,7 +141,7 @@ Public Class ProdSampleQCSummary
                     End If
                 ElseIf e.CellValue.ToString.Contains("NoProd") Or e.CellValue.ToString.Contains("NoResult") Then
                     If Split(e.CellValue, "||").Count > 1 Then
-                        e.Cell.Text = ""
+                        e.Cell.Text = IIf(e.CellValue.ToString.Contains("NoResult"), "No Data " & Split(e.CellValue, "||")(2), "")
                         e.Cell.BackColor = ColorTranslator.FromHtml(Split(e.CellValue, "||")(1))
                         If Split(e.CellValue, "||")(1) = "#515151" Then e.Cell.BorderColor = ColorTranslator.FromHtml("#515151")
                     End If
@@ -174,7 +170,7 @@ Public Class ProdSampleQCSummary
                     Dim strSplit = Split(e.CellValue, "|,|")(i)
 
                     If strSplit.Contains("NoProd") Or strSplit.Contains("NoResult") Or strSplit.Contains("NOK") Then
-                        If strSplit.Contains("NOK") = False Then
+                        If strSplit.Contains("NoResult") Then
                             result += "No Data " & Split(strSplit, "||")(2) & "<br/>"
                         End If
                     ElseIf strSplit.Contains("NG") Then
@@ -186,12 +182,12 @@ Public Class ProdSampleQCSummary
                     End If
                 Next
 
+                e.Cell.Text = ""
                 If result.Contains("No Data") And result.Contains("NG") = False And result.Contains("OK") = False Then
-                    e.Cell.Text = ""
+                    e.Cell.Text = result
                     e.Cell.BackColor = ColorTranslator.FromHtml("#FFFB00")
                     e.Cell.BorderColor = ColorTranslator.FromHtml("#FFFB00")
                 Else
-                    e.Cell.Text = ""
                     Link.ForeColor = Color.Black
                     Link.Text = result
                     Link.NavigateUrl = resultURL
@@ -359,7 +355,7 @@ Public Class ProdSampleQCSummary
                 Else
                     sampletime = ds.Tables(1).Rows(0)(0)
                 End If
-                If cls.Frequency = "ALL" Then sampletime = "ALL"
+                If cls.Frequency = "ALL" Or cls.Sequence = "ALL" Then sampletime = "ALL"
 
                 If ds.Tables(2).Select("Result Like '%OK%'").Length > 0 Then
                     OK = ds.Tables(2).Select("Result Like '%OK%'")(0)("Jumlah")
@@ -577,7 +573,7 @@ Public Class ProdSampleQCSummary
                                             End If
                                         ElseIf value.Contains("NoProd") Or value.Contains("NoResult") Then
                                             If Split(value, "||").Count > 1 Then
-                                                .Cells(rowsExcel, j + 1).Value = ""
+                                                .Cells(rowsExcel, j + 1).Value = IIf(value.Contains("NoResult"), "No Data " & Split(value, "||")(2), "")
                                                 .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.PatternType = Style.ExcelFillStyle.Solid
                                                 .Cells(rowsExcel, j + 1, rowsExcel, j + 1).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(Split(value, "||")(1)))
                                             End If
@@ -599,8 +595,10 @@ Public Class ProdSampleQCSummary
                                         For ii = 0 To Split(value, "|,|").Count - 1
                                             Dim strSplit = Split(value, "|,|")(ii)
 
-                                            If strSplit.Contains("NoProd") Or strSplit.Contains("NoResult") Then
-                                                result += "No Data " & Split(strSplit, "||")(2) & vbCrLf
+                                            If strSplit.Contains("NoProd") Or strSplit.Contains("NoResult") Or strSplit.Contains("NOK") Then
+                                                If strSplit.Contains("NoResult") Then
+                                                    result += "No Data " & Split(strSplit, "||")(2) & vbCrLf
+                                                End If
                                             ElseIf strSplit.Contains("NG") Then
                                                 result += "NG " & Split(strSplit, "||")(3) & vbCrLf
                                             Else

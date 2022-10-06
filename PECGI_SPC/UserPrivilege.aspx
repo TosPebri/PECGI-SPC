@@ -105,7 +105,7 @@
             currentEditableVisibleIndex = e.visibleIndex;
         }
 
-        function SaveData(s, e) {        
+        function SaveData(s, e) {
             cbkValid.PerformCallback('save|' + cboUserReplace.GetValue() + '|' + HideValue.Get('UserID'));
         }
 
@@ -256,6 +256,12 @@
                         <ProgressBar Height="21px">
                         </ProgressBar>
                     </StylesEditors>
+
+                    <SettingsPager Mode="ShowPager" PageSize="20" AlwaysShowPager="true" PageSizeItemSettings-Visible="true">
+                        <PageSizeItemSettings Visible="True"></PageSizeItemSettings>
+                    </SettingsPager>
+                    <Settings HorizontalScrollBarMode="Auto" VerticalScrollBarMode="Auto" VerticalScrollableHeight="300" />
+
                 </dx:ASPxGridView>
 
                 <div style="height: 10px">
@@ -289,7 +295,7 @@
             </div>
         </div>
     </div>
-      <dx:ASPxHiddenField ID="HideValue" runat="server" ClientInstanceName="HideValue"></dx:ASPxHiddenField>
+    <dx:ASPxHiddenField ID="HideValue" runat="server" ClientInstanceName="HideValue"></dx:ASPxHiddenField>
 </asp:Content>
 
 

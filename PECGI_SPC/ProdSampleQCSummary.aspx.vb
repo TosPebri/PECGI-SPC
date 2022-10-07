@@ -30,7 +30,7 @@ Public Class ProdSampleQCSummary
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         sGlobal.getMenu(pMenuID)
-        Master.SiteTitle = sGlobal.menuName
+        Master.SiteTitle = pMenuID & " - " & sGlobal.menuName
         pUser = Session("user")
         AuthAccess = sGlobal.Auth_UserAccess(pUser, pMenuID)
         If AuthAccess = False Then

@@ -17,7 +17,8 @@ Public Class ClsLineDB
                 "from MS_Line L inner join spc_ItemCheckByType I " & vbCrLf &
                 "on L.FactoryCode = I.FactoryCode and L.LineCode = I.LineCode " & vbCrLf &
                 "inner join spc_UserLine P on L.LineCode = P.LineCode " & vbCrLf &
-                "where P.UserID = @UserID and P.AllowShow = 1 " & vbCrLf
+                "where P.UserID = @UserID and P.AllowShow = 1 " & vbCrLf &
+                "and I.ActiveStatus = 1 " & vbCrLf
             If FactoryCode <> "" Then
                 q = q & "and L.FactoryCode = @FactoryCode "
             End If

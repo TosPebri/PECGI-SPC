@@ -10,6 +10,8 @@ Public Class clsXRChart
     Public Property RValue As Double
     Public Property LCL As Double
     Public Property UCL As Double
+    Public Property USL As Double
+    Public Property LSL As Double
     Public Property RuleValue As Double?
     Public Property RuleYellow As Double?
     Public Property RuleColor As String
@@ -36,11 +38,18 @@ Public Class clsXRChartDB
                 With dt.Rows(i)
                     xr.Seq = .Item("Seq")
                     xr.Description = .Item("Description")
-                    Dim value As Double = .Item("Value")
-                    xr.Value = value
-                    value = .Item("AvgValue")
-                    xr.AvgValue = value
-                    xr.RValue = .Item("RValue")
+                    Dim value As Double
+                    If Not IsDBNull(.Item("Value")) Then
+                        value = .Item("Value")
+                        xr.Value = value
+                    End If
+                    If Not IsDBNull(.Item("AvgValue")) Then
+                        value = .Item("AvgValue")
+                        xr.AvgValue = value
+                    End If
+                    If Not IsDBNull(.Item("RValue")) Then
+                        xr.RValue = .Item("RValue")
+                    End If
                     If Not IsDBNull(.Item("RuleValue")) Then
                         value = .Item("RuleValue")
                         xr.RuleValue = value
@@ -48,6 +57,22 @@ Public Class clsXRChartDB
                     If Not IsDBNull(.Item("RuleYellow")) Then
                         value = .Item("RuleYellow")
                         xr.RuleYellow = value
+                    End If
+                    If Not IsDBNull(.Item("XbarUCL")) Then
+                        value = .Item("XbarUCL")
+                        xr.UCL = value
+                    End If
+                    If Not IsDBNull(.Item("XbarLCL")) Then
+                        value = .Item("XbarLCL")
+                        xr.LCL = value
+                    End If
+                    If Not IsDBNull(.Item("SpecLSL")) Then
+                        value = .Item("SpecLSL")
+                        xr.LSL = value
+                    End If
+                    If Not IsDBNull(.Item("SpecUSL")) Then
+                        value = .Item("SpecUSL")
+                        xr.USL = value
                     End If
                 End With
                 XRList.Add(xr)
@@ -77,8 +102,11 @@ Public Class clsXRChartDB
                 With dt.Rows(i)
                     xr.Seq = .Item("Seq")
                     xr.Description = .Item("Description")
-                    Dim value As Double = .Item("Value")
-                    xr.Value = value
+                    Dim value As Double
+                    If Not IsDBNull(.Item("Value")) Then
+                        value = .Item("Value")
+                        xr.Value = value
+                    End If
                     value = .Item("AvgValue")
                     xr.AvgValue = value
                     xr.RValue = .Item("RValue")
@@ -89,14 +117,6 @@ Public Class clsXRChartDB
                     If Not IsDBNull(.Item("RuleYellow")) Then
                         value = .Item("RuleYellow")
                         xr.RuleYellow = value
-                    End If
-                    If Not IsDBNull(.Item("LCL")) Then
-                        value = .Item("LCL")
-                        xr.LCL = value
-                    End If
-                    If Not IsDBNull(.Item("UCL")) Then
-                        value = .Item("UCL")
-                        xr.UCL = value
                     End If
                 End With
                 XRList.Add(xr)

@@ -77,6 +77,12 @@
             var a = Grid.GetEditor("Factory").GetValue().toString();
             Grid.GetEditor("MachineEditGrid").PerformCallback(a);
         }
+
+        function gridItemTypeSelected() {
+            var a = Grid.GetEditor("Factory").GetValue().toString();
+            var b = Grid.GetEditor("TypeEditGrid").GetValue().toString();
+            Grid.GetEditor("MachineEditGrid").PerformCallback(a + '|' + b);
+        }
     </script>
 </asp:Content>
 
@@ -254,8 +260,10 @@
                         <ItemStyle Height="10px" Paddings-Padding="4px" />
                         <ButtonStyle Width="5px" Paddings-Padding="4px" />
                         <ClientSideEvents SelectedIndexChanged="function(s, e) {
+                                var FactoryCode = cboFactory.GetValue();
                                 var TypeCode = cboType.GetValue();
                                 HF.Set('Type', TypeCode);
+                                cboMachine.PerformCallback(FactoryCode + '|' + TypeCode);
                                 Grid.PerformCallback('Kosong');
                             }" />
                     </dx:ASPxComboBox>
@@ -659,6 +667,7 @@
                     <PropertiesComboBox DropDownStyle="DropDownList" TextFormatString="{0}"
                         IncrementalFilteringMode="Contains" DisplayFormatInEditMode="true" Width="195px"
                         TextField="Description" ValueField="Code" ClientInstanceName="TypeEditGrid">
+                        <ClientSideEvents ValueChanged = "gridItemTypeSelected" />
                         <ItemStyle Height="10px" Paddings-Padding="4px">
                             <Paddings Padding="4px"></Paddings>
                         </ItemStyle>
@@ -714,17 +723,17 @@
                                     </td>
                                 </tr>
                                 <tr style="height: 30px">
-                                    <td>Machine Process</td>
-                                    <td>
-                                        <dx:ASPxGridViewTemplateReplacement ID="editMachine" ReplacementType="EditFormCellEditor"
-                                            runat="server" ColumnID="MachineEditGrid"></dx:ASPxGridViewTemplateReplacement>
-                                    </td>
-                                </tr>
-                                <tr style="height: 30px">
                                     <td>Type</td>
                                     <td>
                                         <dx:ASPxGridViewTemplateReplacement ID="editType" ReplacementType="EditFormCellEditor"
                                             runat="server" ColumnID="TypeEditGrid"></dx:ASPxGridViewTemplateReplacement>
+                                    </td>
+                                </tr>
+                                <tr style="height: 30px">
+                                    <td>Machine Process</td>
+                                    <td>
+                                        <dx:ASPxGridViewTemplateReplacement ID="editMachine" ReplacementType="EditFormCellEditor"
+                                            runat="server" ColumnID="MachineEditGrid"></dx:ASPxGridViewTemplateReplacement>
                                     </td>
                                 </tr>
                                 <tr style="height: 30px">

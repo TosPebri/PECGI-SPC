@@ -118,7 +118,7 @@
             var FactoryCode = cboFactory.GetValue();
             var ItemType_Code = cboItemType.GetValue();
             var LineCode = cboLineID.GetValue();
-            cboLineID.PerformCallback(FactoryCode); //GET LIST LINE
+            cboLineID.PerformCallback(FactoryCode + '|' + ItemType_Code); //GET LIST LINE
             cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode); //GET LIST ITEM CHECK
         }
 
@@ -126,6 +126,10 @@
             var FactoryCode = cboFactory.GetValue();
             var ItemType_Code = cboItemType.GetValue();
             var LineCode = cboLineID.GetValue();
+            if (LineCode == null) {
+                LineCode = ""
+            }
+            cboLineID.PerformCallback(FactoryCode + '|' + ItemType_Code);
             cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode); //GET LIST ITEM CHECK
         }
 

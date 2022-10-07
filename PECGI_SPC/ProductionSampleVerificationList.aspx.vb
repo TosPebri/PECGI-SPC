@@ -81,7 +81,8 @@ Public Class ProductionSampleVerificationList
     Private Sub cboLineID_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboLineID.Callback
         Try
             Dim data As New clsProductionSampleVerificationList()
-            data.FactoryCode = e.Parameter
+            data.FactoryCode = e.Parameter.Split("|")(0)
+            data.ItemType_Code = e.Parameter.Split("|")(1)
             data.UserID = pUser
 
             Dim ErrMsg As String = ""

@@ -9,7 +9,8 @@ Public Class clsItemCheckDB
     Public Shared Function GetList(Optional FactoryCode As String = "", Optional ItemTypeCode As String = "", Optional LineCode As String = "") As List(Of clsItemCheck)
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
-            Dim q As String = "select I.ItemCheckCode, I.ItemCheckCode + ' - ' + I.ItemCheck ItemCheck from spc_ItemCheckMaster I inner join spc_ItemCheckByType T on I.ItemCheckCode = T.ItemCheckCode "
+            Dim q As String = "select I.ItemCheckCode, I.ItemCheckCode + ' - ' + I.ItemCheck ItemCheck " & vbCrLf &
+                "from spc_ItemCheckMaster I inner join spc_ItemCheckByType T on I.ItemCheckCode = T.ItemCheckCode "
             q = q & "where T.ItemCheckCode is not Null "
             If FactoryCode <> "" Then
                 q = q & "and T.FactoryCode = @FactoryCode " & vbCrLf
@@ -20,7 +21,7 @@ Public Class clsItemCheckDB
             If LineCode <> "" Then
                 q = q & "and LineCode = @LineCode "
             End If
-
+            q = q & "and I.ActiveStatus = '1' "
             Dim cmd As New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
             cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)

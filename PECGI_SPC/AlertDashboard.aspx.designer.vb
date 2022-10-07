@@ -149,6 +149,24 @@ Partial Public Class AlertDashboard
     Protected WithEvents GridNG As Global.DevExpress.Web.ASPxGridView
 
     '''<summary>
+    '''GridDelayVerif control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents GridDelayVerif As Global.DevExpress.Web.ASPxGridView
+
+    '''<summary>
+    '''SendEmail control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents SendEmail As Global.DevExpress.Web.GridViewCommandColumnCustomButton
+
+    '''<summary>
     '''Grid control.
     '''</summary>
     '''<remarks>

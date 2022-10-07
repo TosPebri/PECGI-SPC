@@ -196,6 +196,7 @@ Public Class AlertDashboard
     Private Sub GetFactoryCode()
         cboFactory.DataSource = ClsSPCItemCheckByTypeDB.FillComboFactoryGrid("1", Session("user"))
         cboFactory.DataBind()
+        cboFactory.SelectedIndex = 1
     End Sub
 
 #End Region
@@ -210,6 +211,15 @@ Public Class AlertDashboard
     Private Sub up_GridLoad(FactoryCode As String)
         LoadGridDelay(FactoryCode)
         LoadGridNG(FactoryCode)
+        LoadGridDelayVerif(FactoryCode)
+    End Sub
+    Private Sub LoadGridDelayVerif(FactoryCode As String)
+        Try
+            GridDelayVerif.DataSource = clsSPCAlertDashboardDB.GetDelayVerificationGrid(pUser, FactoryCode)
+            GridDelayVerif.DataBind()
+        Catch ex As Exception
+            show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
+        End Try
     End Sub
     Private Sub LoadGridNG(FactoryCode As String)
         Try
@@ -330,8 +340,20 @@ Public Class AlertDashboard
             Dim Days = Test.Days * 24
             Dim Hours = Days + Test.Hours
 
-            'e.Cell.Text = Convert.ToString(Test.Days & " Day " & Test.Hours & " Hours " & Test.Minutes & " Minutes")
-            e.Cell.Text = Convert.ToString(Hours & ":" & Test.Minutes & ":00")
+            If Days > 0 Then
+
+                e.Cell.Text = Convert.ToString(Test.Days & " Day " & Test.Hours & " Hours " & Test.Minutes & " Minutes")
+
+            Else
+
+                If Hours > 0 Then
+                    e.Cell.Text = Convert.ToString(Test.Hours & " Hours " & Test.Minutes & " Minutes")
+                Else
+                    e.Cell.Text = Convert.ToString(Test.Minutes & " Minutes")
+                End If
+
+            End If
+            'e.Cell.Text = Convert.ToString(Hours & ":" & Test.Minutes & ":00")
         End If
     End Sub
     Private Sub GridNG_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles GridNG.HtmlDataCellPrepared
@@ -454,18 +476,111 @@ Public Class AlertDashboard
         Return msg
     End Function
 
-    'Private Sub GridNG_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles GridNG.CustomCallback
-    '    Try
-    '        Dim pAction As String = Split(e.Parameters, "|")(0)
+    Protected Sub GridDelayVerif_RowInserting(sender As Object, e As ASPxDataInsertingEventArgs)
 
-    '        If pAction = "Load" Then
-    '            up_GridLoad(cboFactory.Value)
-    '        End If
+    End Sub
 
-    '    Catch ex As Exception
-    '        show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
-    '    End Try
-    'End Sub
+    Protected Sub GridDelayVerif_RowDeleting(sender As Object, e As ASPxDataDeletingEventArgs)
+
+    End Sub
+
+    Protected Sub GridDelayVerif_AfterPerformCallback(sender As Object, e As ASPxGridViewAfterPerformCallbackEventArgs)
+        If e.CallbackName <> "CANCELEDIT" Then
+            up_GridLoad(cboFactory.Value)
+        End If
+    End Sub
+
+    Protected Sub GridDelayVerif_StartRowEditing(sender As Object, e As ASPxStartRowEditingEventArgs)
+
+    End Sub
+
+    Protected Sub GridDelayVerif_RowValidating(sender As Object, e As ASPxDataValidationEventArgs)
+
+    End Sub
+    Private Sub GridDelayVerif_HtmlDataCellPrepared(sender As Object, e As ASPxGridViewTableDataCellEventArgs) Handles GridDelayVerif.HtmlDataCellPrepared
+        Dim Delay As String = ""
+        Dim Link As New HyperLink()
+        If e.CellValue Is Nothing Then
+            Dim Ab As String = "Test"
+        Else
+            If e.CellValue.ToString.Contains("Edit") AndAlso e.CellValue.ToString IsNot Nothing Then
+                e.Cell.Text = ""
+
+                Link.ForeColor = Color.Blue
+                Link.Text = "<label class='fa fa-edit'></label>"
+                Link.NavigateUrl = Split(e.CellValue, "||")(1)
+                Link.Target = "_blank"
+
+                e.Cell.Controls.Add(Link)
+            End If
+        End If
+        If e.DataColumn.FieldName = "Delay" Then
+            Delay = (e.CellValue)
+            Dim Test = TimeSpan.FromMinutes(e.CellValue)
+
+            If Delay <= 60 Then
+                e.Cell.BackColor = System.Drawing.Color.Yellow
+            ElseIf Delay > 60 Then
+                e.Cell.BackColor = System.Drawing.Color.Red
+            End If
+
+            Dim Days = Test.Days * 24
+            Dim Hours = Days + Test.Hours
+
+            e.Cell.Text = Convert.ToString(Test.Days & " Day " & Test.Hours & " Hours " & Test.Minutes & " Minutes")
+            'e.Cell.Text = Convert.ToString(Hours & ":" & Test.Minutes & ":00")
+        End If
+    End Sub
+    Protected Sub GridDelayVerif_CustomButtonCallback(ByVal sender As Object, ByVal e As ASPxGridViewCustomButtonCallbackEventArgs) Handles GridDelayVerif.CustomButtonCallback
+
+        Try
+
+            Dim CountSendEmail As Integer
+            Dim CheckAvailableData As DataTable
+
+            Dim FactoryCode = cboFactory.Value
+            Dim ItemTypeName = GridDelayVerif.GetRowValues(e.VisibleIndex, "ItemTypeName")
+            'Dim ItemTypeCode = GridDelayVerif.GetRowValues(e.VisibleIndex, "ItemTypeCode")
+            Dim LineCode = GridDelayVerif.GetRowValues(e.VisibleIndex, "LineCode")
+            Dim ItemCheck = GridDelayVerif.GetRowValues(e.VisibleIndex, "ItemCheck")
+            Dim LinkDate = GridDelayVerif.GetRowValues(e.VisibleIndex, "LinkDate")
+            Dim ShiftCode = GridDelayVerif.GetRowValues(e.VisibleIndex, "ShiftCode")
+            Dim SequenceNo = GridDelayVerif.GetRowValues(e.VisibleIndex, "SequenceNo")
+
+            CheckAvailableData = clsSPCAlertDashboardDB.CheckDataSendEmail(FactoryCode, ItemTypeName, LineCode, ItemCheck, LinkDate, ShiftCode, SequenceNo)
+
+            If CheckAvailableData.Rows.Count <= 0 Then
+
+                CountSendEmail = clsSPCAlertDashboardDB.SendEmail(FactoryCode, ItemTypeName, LineCode, ItemCheck, LinkDate, ShiftCode, SequenceNo)
+
+                'If CountSendEmail > 1 Then
+                '    show_error(MsgTypeEnum.Success, "Send Email Success !", 1)
+                'Else
+                '    show_error(MsgTypeEnum.ErrorMsg, "Send Email Failed !", 1)
+                'End If
+
+            Else
+                show_error(MsgTypeEnum.ErrorMsg, "Data Already Sended ", 1)
+                Return
+            End If
+
+        Catch ex As Exception
+            Throw New Exception(ex.Message)
+        End Try
+
+    End Sub
+    Private Sub GridDelayVerif_CustomCallback(sender As Object, e As ASPxGridViewCustomCallbackEventArgs) Handles GridDelayVerif.CustomCallback
+        Try
+            Dim pAction As String = Split(e.Parameters, "|")(0)
+
+            If pAction = "SendEmail" Then
+                Dim A = "Test"
+            End If
+
+        Catch ex As Exception
+            show_error(MsgTypeEnum.ErrorMsg, ex.Message, 1)
+        End Try
+    End Sub
 #End Region
 
 End Class

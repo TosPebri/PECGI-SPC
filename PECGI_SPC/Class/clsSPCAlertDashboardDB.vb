@@ -1,34 +1,6 @@
 ﻿Imports System.Data.SqlClient
 
 Public Class clsSPCAlertDashboardDB
-    Public Shared Function Insert(pItemCheckByType As ClsSPCItemCheckByType) As Integer
-        Using Cn As New SqlConnection(Sconn.Stringkoneksi)
-            Cn.Open()
-            Dim q As String
-            q = "INSERT INTO spc_ItemCheckByType " & vbCrLf &
-                " VALUES ( @FactoryCode, @ItemTypeCode, @LineCode, @ItemCheck, @FrequencyCode, @RegistrationNo," &
-                " @SampleSize, @Remark, @Evaluation, @CharacteristicItem, @ActiveStatus, @CreateUser, GETDATE(), @CreateUser, GETDATE() ) "
-            Dim cmd As New SqlCommand(q, Cn)
-            Dim des As New clsDESEncryption("TOS")
-            With cmd.Parameters
-                .AddWithValue("FactoryCode", pItemCheckByType.FactoryCode)
-                .AddWithValue("ItemTypeCode", pItemCheckByType.ItemTypeCode)
-                .AddWithValue("LineCode", pItemCheckByType.LineCode)
-                .AddWithValue("ItemCheck", pItemCheckByType.ItemCheck)
-                .AddWithValue("FrequencyCode", pItemCheckByType.FrequencyCode)
-                .AddWithValue("RegistrationNo", pItemCheckByType.RegistrationNo)
-                .AddWithValue("SampleSize", pItemCheckByType.SampleSize)
-                .AddWithValue("Remark", pItemCheckByType.Remark)
-                .AddWithValue("Evaluation", pItemCheckByType.Evaluation)
-                .AddWithValue("CharacteristicItem", Val(pItemCheckByType.CharacteristicItem))
-                .AddWithValue("ActiveStatus", Val(pItemCheckByType.ActiveStatus & ""))
-                .AddWithValue("CreateUser", pItemCheckByType.CreateUser)
-
-            End With
-            Dim i As Integer = cmd.ExecuteNonQuery
-            Return i
-        End Using
-    End Function
 
     Public Shared Function Delete(pFactoryCode As String, pItemTypeCode As String, pLineCode As String, pItemCheck As String) As Integer
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
@@ -44,39 +16,36 @@ Public Class clsSPCAlertDashboardDB
         End Using
     End Function
 
-    Public Shared Function Update(pItemCheckByType As ClsSPCItemCheckByType) As Integer
-        Using Cn As New SqlConnection(Sconn.Stringkoneksi)
-            Cn.Open()
-            Dim q As String
-            q = "UPDATE spc_ItemCheckByType SET FrequencyCode = @FrequencyCode, RegistrationNo = @RegistrationNo, SampleSize = @SampleSize, Remark = @Remark, " &
-                " Evaluation = @Evaluation, CharacteristicStatus = @CharacteristicItem, ActiveStatus = @ActiveStatus, UpdateUser = @UpdateUser, UpdateDate = GETDATE() " &
-                " WHERE FactoryCode = @FactoryCode and ItemTypeCode = @ItemTypeCode and LineCode = @LineCode and ItemCheckCode = @ItemCheck "
-            Dim des As New clsDESEncryption("TOS")
-            Dim cmd As New SqlCommand(q, Cn)
-            With cmd.Parameters
-                .AddWithValue("FrequencyCode", pItemCheckByType.FrequencyCode)
-                .AddWithValue("RegistrationNo", pItemCheckByType.RegistrationNo)
-                .AddWithValue("SampleSize", pItemCheckByType.SampleSize)
-                .AddWithValue("Remark", pItemCheckByType.Remark)
-                .AddWithValue("Evaluation", pItemCheckByType.Evaluation)
-                .AddWithValue("CharacteristicItem", pItemCheckByType.CharacteristicItem)
-                .AddWithValue("ActiveStatus", pItemCheckByType.ActiveStatus)
-                .AddWithValue("UpdateUser", pItemCheckByType.UpdateUser)
-                .AddWithValue("FactoryCode", pItemCheckByType.FactoryCode)
-                .AddWithValue("ItemTypeCode", pItemCheckByType.ItemTypeCode)
-                .AddWithValue("LineCode", pItemCheckByType.LineCode)
-                .AddWithValue("ItemCheck", pItemCheckByType.ItemCheck)
-            End With
-            Dim i As Integer = cmd.ExecuteNonQuery
-            Return i
-        End Using
-    End Function
     Public Shared Function GetList(User As String, FactoryCode As String, Optional ByRef pErr As String = "") As DataTable
         Try
             Using conn As New SqlConnection(Sconn.Stringkoneksi)
                 conn.Open()
                 Dim sql As String = ""
                 sql = "sp_SPC_GetDelayInput"
+
+                Dim cmd As New SqlCommand(sql, conn)
+                cmd.CommandType = CommandType.StoredProcedure
+                With cmd.Parameters
+                    .AddWithValue("User", User)
+                    .AddWithValue("FactoryCode", FactoryCode)
+                End With
+                Dim da As New SqlDataAdapter(cmd)
+                Dim dt As New DataTable
+                da.Fill(dt)
+
+                Return dt
+            End Using
+        Catch ex As Exception
+            pErr = ex.Message
+            Return Nothing
+        End Try
+    End Function
+    Public Shared Function GetDelayVerificationGrid(User As String, FactoryCode As String, Optional ByRef pErr As String = "") As DataTable
+        Try
+            Using conn As New SqlConnection(Sconn.Stringkoneksi)
+                conn.Open()
+                Dim sql As String = ""
+                sql = "sp_SPC_GetDelayVerification"
 
                 Dim cmd As New SqlCommand(sql, conn)
                 cmd.CommandType = CommandType.StoredProcedure
@@ -318,5 +287,63 @@ Public Class clsSPCAlertDashboardDB
             pErr = ex.Message
             Return Nothing
         End Try
+    End Function
+    Public Shared Function SendEmail(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, LinkDate As String, ShiftCode As String, SequenceNo As String, Optional ByRef pErr As String = "") As Integer
+        Try
+            Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+                Cn.Open()
+                Dim q As String
+                q = "SP_SPC_SendEmailAlert"
+                Dim cmd As New SqlCommand(q, Cn)
+                'Dim des As New clsDESEncryption("TOS")
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
+                cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
+                cmd.Parameters.AddWithValue("LineCode", LineCode)
+                cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
+                cmd.Parameters.AddWithValue("ProdDate", LinkDate)
+                cmd.Parameters.AddWithValue("ShiftCode", ShiftCode)
+                cmd.Parameters.AddWithValue("SequenceNo", SequenceNo)
+                cmd.Parameters.AddWithValue("NotificationCategory", "DV")
+                cmd.Parameters.AddWithValue("LastUser", "spc")
+                Dim i As Integer = cmd.ExecuteNonQuery
+                Return i
+            End Using
+        Catch ex As Exception
+            pErr = ex.Message
+            Return Nothing
+        End Try
+
+    End Function
+    Public Shared Function CheckDataSendEmail(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, LinkDate As String, ShiftCode As String, SequenceNo As String, Optional ByRef pErr As String = "") As DataTable
+
+        Try
+            Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+                Cn.Open()
+                Dim q As String
+                q = "SP_SPC_CheckDataSendEmailAlert"
+                Dim cmd As New SqlCommand(q, Cn)
+                'Dim des As New clsDESEncryption("TOS")
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
+                cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
+                cmd.Parameters.AddWithValue("LineCode", LineCode)
+                cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
+                cmd.Parameters.AddWithValue("ProdDate", LinkDate)
+                cmd.Parameters.AddWithValue("ShiftCode", ShiftCode)
+                cmd.Parameters.AddWithValue("SequenceNo", SequenceNo)
+                cmd.Parameters.AddWithValue("NotificationCategory", "DV")
+
+                Dim da As New SqlDataAdapter(cmd)
+                Dim dt As New DataTable
+                da.Fill(dt)
+
+                Return dt
+            End Using
+        Catch ex As Exception
+            pErr = ex.Message
+            Return Nothing
+        End Try
+
     End Function
 End Class

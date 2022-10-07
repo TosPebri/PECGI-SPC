@@ -27,7 +27,7 @@ Public Class MeasurementDevice
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         sGlobal.getMenu(pMenuID)
-        Master.SiteTitle = sGlobal.menuName
+        Master.SiteTitle = pMenuID & " - " & sGlobal.menuName
         pUser = Session("user")
 
         Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)

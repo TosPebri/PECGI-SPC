@@ -264,7 +264,7 @@ Public Class ProdSampleQCSummary
     Private Sub up_FillcomboMachine()
         If HF.Get("Excel") = "0" Then
             Dim a As String = ""
-            dt = clsProdSampleQCSummaryDB.FillCombo("2", HF.Get("FactoryCode"), pUser)
+            dt = clsProdSampleQCSummaryDB.FillCombo("2", HF.Get("FactoryCode"), HF.Get("TypeCode"), pUser)
             With cboMachine
                 .DataSource = dt
                 .DataBind()
@@ -305,7 +305,7 @@ Public Class ProdSampleQCSummary
             With cboSequence
                 .DataSource = dt
                 .DataBind()
-                .SelectedIndex = -1 'IIf(dt.Rows.Count > 0, 0, -1)
+                .SelectedIndex = IIf(dt.Rows.Count > 0, 0, -1)
             End With
         End If
     End Sub

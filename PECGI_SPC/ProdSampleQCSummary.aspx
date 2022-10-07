@@ -168,6 +168,8 @@
                                         HF.Set('Excel', '0');
                                         var FactoryCode = cboFactory.GetValue();
                                         HF.Set('FactoryCode', FactoryCode);
+                                        var TypeCode = cboType.GetValue();
+                                        HF.Set('TypeCode', TypeCode);
 
                                         btnBrowse.SetEnabled(false);
                                         btnClear.SetEnabled(false);
@@ -175,12 +177,6 @@
 
                                         cboMachine.SetEnabled(false);
                                         cboMachine.PerformCallback();
-
-                                        cboFrequency.SetEnabled(false);
-                                        cboFrequency.PerformCallback();
-
-                                        cboSequence.SetEnabled(false);
-                                        cboSequence.PerformCallback();
                                 
                                         Grid.PerformCallback('Kosong');
                                     }" />
@@ -206,8 +202,8 @@
                                         btnClear.SetEnabled(false);
                                         btnExcel.SetEnabled(false);
 
-                                        cboSequence.SetEnabled(false);
-                                        cboSequence.PerformCallback();
+                                        cboFrequency.SetEnabled(false);
+                                        cboFrequency.PerformCallback();
 
                                         Grid.PerformCallback('Kosong');
                                     }" />
@@ -232,7 +228,9 @@
                                         btnClear.SetEnabled(false);
                                         btnExcel.SetEnabled(false);
 
+                                        cboSequence.SetEnabled(false);
                                         cboSequence.PerformCallback();
+
                                         Grid.PerformCallback('Kosong');
                                     }" />
                                 </dx:ASPxComboBox>
@@ -253,6 +251,10 @@
                                         HF.Set('Excel', '0');
                                         var TypeCode = cboType.GetValue();
                                         HF.Set('TypeCode', TypeCode);
+
+                                        cboMachine.SetEnabled(false);
+                                        cboMachine.PerformCallback();
+
                                         Grid.PerformCallback('Kosong');
                                     }" />
                                 </dx:ASPxComboBox>

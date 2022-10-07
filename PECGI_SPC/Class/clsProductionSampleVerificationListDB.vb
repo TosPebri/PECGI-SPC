@@ -10,7 +10,7 @@ Public Class clsProductionSampleVerificationListDB
                 cmd.CommandType = CommandType.StoredProcedure
                 cmd.Parameters.AddWithValue("Status", Status)
                 cmd.Parameters.AddWithValue("FactoryCode", If(data.FactoryCode, ""))
-                cmd.Parameters.AddWithValue("LineCode", If(data.LineCode, "-"))
+                cmd.Parameters.AddWithValue("LineCode", If(data.LineCode, ""))
                 cmd.Parameters.AddWithValue("ItemTypeCode", If(data.ItemType_Code, ""))
                 cmd.Parameters.AddWithValue("UserID", If(data.UserID, ""))
                 Dim da As New SqlDataAdapter(cmd)

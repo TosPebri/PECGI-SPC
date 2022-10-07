@@ -124,8 +124,9 @@ Public Class ProdSampleVerification
     Private Sub cboLineID_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboLineID.Callback
         Try
             Dim data As New clsProdSampleVerification()
+            data.FactoryCode = e.Parameter.Split("|")(0)
+            data.ItemType_Code = e.Parameter.Split("|")(1)
             data.User = pUser
-            data.FactoryCode = e.Parameter
 
             dt = clsProdSampleVerificationDB.FillCombo(Line_Sel, data)
             With cboLineID

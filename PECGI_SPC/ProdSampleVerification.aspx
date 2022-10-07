@@ -66,7 +66,7 @@
             HideValue.Set('FactoryCode', FactoryCode);
             HideValue.Set('ItemType_Code', ItemType_Code);
             HideValue.Set('LineCode', LineCode);
-            cboLineID.PerformCallback(FactoryCode);
+            cboLineID.PerformCallback(FactoryCode + ItemType_Code);
             cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode);
         }
 
@@ -77,6 +77,10 @@
             HideValue.Set('FactoryCode', FactoryCode);
             HideValue.Set('ItemType_Code', ItemType_Code);
             HideValue.Set('LineCode', LineCode);
+            if (LineCode == null) {
+                LineCode = ""
+            }
+            cboLineID.PerformCallback(FactoryCode + '|' + ItemType_Code);
             cboItemCheck.PerformCallback(FactoryCode + '|' + ItemType_Code + '|' + LineCode);
         }
 

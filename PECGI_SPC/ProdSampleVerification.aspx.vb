@@ -1092,7 +1092,7 @@ Public Class ProdSampleVerification
         End Try
     End Sub
     Private Sub Validation_Verify(cls As clsProdSampleVerification)
-        'VerifyStatus = clsProdSampleVerificationDB.Validation(GetVerifyPrivilege, cls)
+        VerifyStatus = clsProdSampleVerificationDB.Validation(GetVerifyPrivilege, cls)
         'Dim AllowSkill As Boolean = clsIOT.AllowSkill(cls.User, cls.FactoryCode, cls.LineCode, cls.ItemType_Code)
         Grid.JSProperties("cp_Verify") = VerifyStatus 'parameter to authorization verify
         'Grid.JSProperties("cp_AllowSkill") = AllowSkill 'parameter to authorization verify
@@ -1392,16 +1392,19 @@ Public Class ProdSampleVerification
                                 Dim data = dtGrid.Rows(i)(n)
                                 Dim RowIndex = Trim(dtGrid.Rows(i)(0))
                                 If n > 1 Then
-                                    If RowIndex = "EachData" Or RowIndex = "XBar" Or RowIndex = "Judgement" Or RowIndex = "Correction" Or RowIndex = "Correction" Or RowIndex = "Verification" Then
+                                    If RowIndex = "EachData" Or RowIndex = "XBar" Or RowIndex = "R" Or RowIndex = "Judgement" Or RowIndex = "Correction" Or RowIndex = "Correction" Or RowIndex = "Verification" Then
                                         If IsDBNull(data) Then
                                             .Cells(irow + i, n).Value = data
+                                        ElseIf RowIndex = "R" Then
+                                            .Cells(irow + i, n).Value = CDec(data)
+                                            .Cells(irow + i, n).Style.Numberformat.Format = "####0.000"
                                         Else
                                             Dim value = Split(data, "|")(0)
                                             Dim color = Split(data, "|")(1)
-                                            .Cells(irow + i, n).Value = value
                                             .Cells(irow + i, n).Style.Fill.PatternType = ExcelFillStyle.Solid
                                             .Cells(irow + i, n).Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(color))
                                             If RowIndex = "EachData" Or RowIndex = "XBar" Then
+                                                .Cells(irow + i, n).Value = CDec(value)
                                                 .Cells(irow + i, n).Style.Numberformat.Format = "####0.000"
                                             End If
                                         End If

@@ -540,11 +540,14 @@ Public Class SampleControlQuality
                 CType(.Diagram, XYDiagram).SecondaryAxesY.Add(myAxisY)
                 CType(.Series("Rule").View, XYDiagramSeriesViewBase).AxisY = myAxisY
                 CType(.Series("RuleYellow").View, XYDiagramSeriesViewBase).AxisY = myAxisY
+
             End If
             .DataBind()
-            If xr.Count > 10 Then
-                .Width = xr.Count * 12
+            Dim GridWidth As Integer = xr.Count * 12
+            If GridWidth < 500 Then
+                GridWidth = 500
             End If
+            .Width = GridWidth
         End With
     End Sub
 

@@ -506,7 +506,7 @@
 
 <div style="width:100%; overflow-x: auto; border:1px solid black">
 <dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
-        Height="434px" Width="1600px" CrosshairEnabled="True" SeriesDataMember="Description">
+        Height="434px" Width="800px" CrosshairEnabled="True" SeriesDataMember="Description">
         <seriestemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
             <viewserializable>
                 <cc1:PointSeriesView>                    

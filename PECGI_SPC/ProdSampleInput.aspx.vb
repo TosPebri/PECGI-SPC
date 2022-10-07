@@ -983,6 +983,8 @@ Public Class ProdSampleInput
         End With
     End Sub
 
+    Dim ChartType As String
+
     Private Sub LoadChartX(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String)
         Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartXR(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate)
         With chartX
@@ -998,8 +1000,8 @@ Public Class ProdSampleInput
 
             diagram.AxisY.NumericScaleOptions.CustomGridAlignment = 0.005
             diagram.AxisY.GridLines.MinorVisible = False
-            Dim ChartType As String = clsXRChartDB.GetChartType(FactoryCode, ItemTypeCode, Line, ItemCheckCode)
-            If ChartType = "1" Then
+            ChartType = clsXRChartDB.GetChartType(FactoryCode, ItemTypeCode, Line, ItemCheckCode)
+            If ChartType = "1" Or ChartType = "2" Then
                 .Titles(0).Text = "X Bar Control Chart"
             Else
                 .Titles(0).Text = "Graph Monitoring"
@@ -1129,7 +1131,11 @@ Public Class ProdSampleInput
                 If Value < LSL Or Value > USL Then
                     e.Cell.BackColor = Color.Red
                 ElseIf Value < LCL Or Value > UCL Then
-                    e.Cell.BackColor = Color.Pink
+                    If ChartType = "2" Then
+                        e.Cell.BackColor = Color.Pink
+                    Else
+                        e.Cell.BackColor = Color.Yellow
+                    End If
                 End If
             End If
         End If

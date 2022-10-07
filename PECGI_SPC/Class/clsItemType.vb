@@ -11,7 +11,7 @@ Public Class clsItemTypeDB
             Cn.Open()
             Dim q As String = "select distinct I.ItemTypeCode, M.Description " & vbCrLf &
                 "From spc_ItemCheckByType I inner Join MS_ItemType M on I.ItemTypeCode = M.ItemTypeCode  " & vbCrLf &
-                "Where I.FactoryCode = @FactoryCode "
+                "Where I.FactoryCode = @FactoryCode and ActiveStatus = 1 "
             Dim cmd As New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
             Dim rd As SqlDataReader = cmd.ExecuteReader

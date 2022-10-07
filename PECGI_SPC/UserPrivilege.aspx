@@ -271,7 +271,7 @@
                         <tr>
                             <td>
                                 <dx:ASPxButton ID="btnCancel" TabIndex="2" runat="server" AutoPostBack="False" ClientInstanceName="btnCancel"
-                                    Font-Names="Segoe UI" Font-Size="9pt" Text="Cancel" Theme="Office2010Silver"
+                                    Font-Names="Segoe UI" Font-Size="9pt" Text="Back" Theme="Office2010Silver"
                                     Width="80px">
                                     <ClientSideEvents Click="function close() {window.open('UserSetup.aspx', '_self' );}" />
                                 </dx:ASPxButton>

@@ -176,16 +176,16 @@ Public Class ClsSPCItemCheckByTypeDB
             Using Cn As New SqlConnection(Sconn.Stringkoneksi)
                 Cn.Open()
                 Dim q As String = "SELECT Number = 1, 'ALL' FactoryCode, 'ALL' ProcessCode, 'ALL' LineCode, 'ALL' LineName UNION" & vbCrLf &
-                "select distinct Number = 2, L.FactoryCode, L.ProcessCode, L.LineCode, L.LineCode + ' - ' + L.LineName as LineName  " & vbCrLf &
-                "from MS_Line L inner join spc_ItemCheckByType I " & vbCrLf &
-                "on L.FactoryCode = I.FactoryCode and L.LineCode = I.LineCode " & vbCrLf &
-                " where 1 = 1 " & vbCrLf
+                "select distinct Number = 2, L.FactoryCode, L.ProcessCode, L.LineCode, L.LineCode + ' - ' + L.LineName as LineName from MS_Line L " & vbCrLf
+                '"from MS_Line L inner join spc_ItemCheckByType I " & vbCrLf &
+                '"on L.FactoryCode = I.FactoryCode and L.LineCode = I.LineCode " & vbCrLf &
+                '" where 1 = 1 " & vbCrLf
                 If FactoryCode <> "" Then
-                    q = q & "and L.FactoryCode = @FactoryCode "
+                    q = q & "where L.FactoryCode = @FactoryCode "
                 End If
-                If ItemTypeCode <> "" Then
-                    q = q & "and I.ItemTypeCode = @ItemTypeCode "
-                End If
+                'If ItemTypeCode <> "" Then
+                '    q = q & "and I.ItemTypeCode = @ItemTypeCode "
+                'End If
                 q = q & "order by Number ASC, LineCode"
                 Dim cmd As New SqlCommand(q, Cn)
                 cmd.Parameters.AddWithValue("UserID", UserID)

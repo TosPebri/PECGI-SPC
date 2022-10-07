@@ -330,11 +330,8 @@ Public Class ItemCheckByBattery
         End Try
     End Sub
     Private Sub cboType_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboType.Callback
-        Dim FactoryCode As String = Split(e.Parameter, "|")(0)
-        cboType.DataSource = clsItemTypeDB.GetList(FactoryCode)
+        cboType.DataSource = ClsSPCItemCheckByTypeDB.GetListItemType()
         cboType.DataBind()
-        'FillCBRegNoGrid()
-        'dsRegNo.SelectParameters("FactoryCode1").DefaultValue = cboFactory.Value
     End Sub
     Private Sub cboLine_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboLine.Callback
         Dim FactoryCode As String = Split(e.Parameter, "|")(0)

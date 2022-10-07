@@ -294,4 +294,19 @@ Public Class ClsSPCItemCheckByTypeDB
             Return dt
         End Using
     End Function
+    Public Shared Function GetListItemType() As DataTable
+        Using cn As New SqlConnection(Sconn.Stringkoneksi)
+            cn.Open()
+            Dim sql As String
+            sql = "select ItemTypeCode, Description from MS_ItemType"
+            Dim cmd As New SqlCommand(sql, cn)
+            cmd.CommandType = CommandType.Text
+
+            Dim da As New SqlDataAdapter(cmd)
+            Dim dt As New DataTable
+
+            da.Fill(dt)
+            Return dt
+        End Using
+    End Function
 End Class

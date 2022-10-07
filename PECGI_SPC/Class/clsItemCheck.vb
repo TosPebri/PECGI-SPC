@@ -21,7 +21,7 @@ Public Class clsItemCheckDB
             If LineCode <> "" Then
                 q = q & "and LineCode = @LineCode "
             End If
-            q = q & "and I.ActiveStatus = '1' "
+            q = q & "and T.ActiveStatus = '1' "
             Dim cmd As New SqlCommand(q, Cn)
             cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
             cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)

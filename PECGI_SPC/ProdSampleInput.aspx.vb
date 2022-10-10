@@ -981,8 +981,10 @@ Public Class ProdSampleInput
                 End If
                 diagram.AxisY.WholeRange.MaxValue = MaxValue
                 diagram.AxisY.VisualRange.MaxValue = MaxValue
-                Dim GridAlignment As Double = Math.Round(MaxValue / 34, 4)
-                diagram.AxisY.NumericScaleOptions.CustomGridAlignment = GridAlignment
+                If MaxValue > 0 Then
+                    Dim GridAlignment As Double = Math.Round(MaxValue / 34, 4)
+                    diagram.AxisY.NumericScaleOptions.CustomGridAlignment = GridAlignment
+                End If
             End If
             .DataBind()
         End With
@@ -1072,8 +1074,10 @@ Public Class ProdSampleInput
                 diagram.AxisY.VisualRange.EndSideMargin = 0.015
 
                 Dim diff As Double = MaxValue - MinValue
-                Dim gridAlignment As Double = Math.Round(diff / 15, 3)
-                diagram.AxisY.NumericScaleOptions.CustomGridAlignment = gridAlignment
+                If diff > 0 Then
+                    Dim gridAlignment As Double = Math.Round(diff / 15, 3)
+                    diagram.AxisY.NumericScaleOptions.CustomGridAlignment = gridAlignment
+                End If
 
                 'CType(.Diagram, XYDiagram).SecondaryAxesY.Clear()
                 'Dim myAxisY As New SecondaryAxisY("my Y-Axis")

@@ -265,7 +265,7 @@ Public Class SampleControlQuality
                     Dim User As clsUserSetup = clsUserSetupDB.GetData(pUser)
                     If User IsNot Nothing Then
                         cboFactory.Value = User.FactoryCode
-                        cboType.DataSource = clsItemTypeDB.GetList(cboFactory.Value)
+                        cboType.DataSource = clsItemTypeDB.GetList(cboFactory.Value, pUser)
                         cboType.DataBind()
                     End If
                 End If
@@ -275,11 +275,12 @@ Public Class SampleControlQuality
     End Sub
 
     Private Sub InitCombo(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, ShiftCode As String, Sequence As String, ProdDate2 As String)
+        pUser = Session("user") & ""
         dtDate.Value = CDate(ProdDate)
         dtTo.Value = CDate(ProdDate2)
         cboFactory.Value = FactoryCode
 
-        cboType.DataSource = clsItemTypeDB.GetList(cboFactory.Value)
+        cboType.DataSource = clsItemTypeDB.GetList(cboFactory.Value, pUser)
         cboType.DataBind()
         cboType.Value = ItemTypeCode
 
@@ -616,7 +617,8 @@ Public Class SampleControlQuality
 
     Private Sub cboType_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboType.Callback
         Dim FactoryCode As String = Split(e.Parameter, "|")(0)
-        cboType.DataSource = clsItemTypeDB.GetList(FactoryCode)
+        Dim pUser As String = Session("user")
+        cboType.DataSource = clsItemTypeDB.GetList(FactoryCode, pUser)
         cboType.DataBind()
     End Sub
 

@@ -546,12 +546,15 @@ Public Class AlertDashboard
             Dim LinkDate = GridDelayVerif.GetRowValues(e.VisibleIndex, "LinkDate")
             Dim ShiftCode = GridDelayVerif.GetRowValues(e.VisibleIndex, "ShiftCode")
             Dim SequenceNo = GridDelayVerif.GetRowValues(e.VisibleIndex, "SequenceNo")
+            ItemCheck = ItemCheck.Substring(0, ItemCheck.IndexOf(" -"))
 
-            CheckAvailableData = clsSPCAlertDashboardDB.CheckDataSendEmail(FactoryCode, ItemTypeName, LineCode, ItemCheck, LinkDate, ShiftCode, SequenceNo)
+            CountSendEmail = clsSPCAlertDashboardDB.SendEmail(FactoryCode, ItemTypeName, LineCode, ItemCheck, LinkDate, ShiftCode, SequenceNo)
+
+            CheckAvailableData = clsSPCAlertDashboardDB.CheckDataSendNotification(FactoryCode, ItemTypeName, LineCode, ItemCheck, LinkDate, ShiftCode, SequenceNo)
 
             If CheckAvailableData.Rows.Count <= 0 Then
 
-                CountSendEmail = clsSPCAlertDashboardDB.SendEmail(FactoryCode, ItemTypeName, LineCode, ItemCheck, LinkDate, ShiftCode, SequenceNo)
+                CountSendEmail = clsSPCAlertDashboardDB.SendNotification(FactoryCode, ItemTypeName, LineCode, ItemCheck, LinkDate, ShiftCode, SequenceNo)
 
                 'If CountSendEmail > 1 Then
                 '    show_error(MsgTypeEnum.Success, "Send Email Success !", 1)

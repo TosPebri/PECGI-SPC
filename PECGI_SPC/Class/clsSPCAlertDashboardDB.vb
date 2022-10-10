@@ -304,7 +304,6 @@ Public Class clsSPCAlertDashboardDB
                 cmd.Parameters.AddWithValue("ProdDate", LinkDate)
                 cmd.Parameters.AddWithValue("ShiftCode", ShiftCode)
                 cmd.Parameters.AddWithValue("SequenceNo", SequenceNo)
-                cmd.Parameters.AddWithValue("NotificationCategory", "DV")
                 cmd.Parameters.AddWithValue("LastUser", "spc")
                 Dim i As Integer = cmd.ExecuteNonQuery
                 Return i
@@ -315,7 +314,7 @@ Public Class clsSPCAlertDashboardDB
         End Try
 
     End Function
-    Public Shared Function CheckDataSendEmail(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, LinkDate As String, ShiftCode As String, SequenceNo As String, Optional ByRef pErr As String = "") As DataTable
+    Public Shared Function CheckDataSendNotification(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, LinkDate As String, ShiftCode As String, SequenceNo As String, Optional ByRef pErr As String = "") As DataTable
 
         Try
             Using Cn As New SqlConnection(Sconn.Stringkoneksi)
@@ -339,6 +338,33 @@ Public Class clsSPCAlertDashboardDB
                 da.Fill(dt)
 
                 Return dt
+            End Using
+        Catch ex As Exception
+            pErr = ex.Message
+            Return Nothing
+        End Try
+
+    End Function
+    Public Shared Function SendNotification(FactoryCode As String, ItemTypeCode As String, LineCode As String, ItemCheckCode As String, LinkDate As String, ShiftCode As String, SequenceNo As String, Optional ByRef pErr As String = "") As Integer
+        Try
+            Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+                Cn.Open()
+                Dim q As String
+                q = "sp_SPC_NotificationLog_Ins"
+                Dim cmd As New SqlCommand(q, Cn)
+                'Dim des As New clsDESEncryption("TOS")
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
+                cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
+                cmd.Parameters.AddWithValue("LineCode", LineCode)
+                cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
+                cmd.Parameters.AddWithValue("ProdDate", LinkDate)
+                cmd.Parameters.AddWithValue("ShiftCode", ShiftCode)
+                cmd.Parameters.AddWithValue("SequenceNo", SequenceNo)
+                cmd.Parameters.AddWithValue("NotificationCategory", "DV")
+                cmd.Parameters.AddWithValue("LastUser", "spc")
+                Dim i As Integer = cmd.ExecuteNonQuery
+                Return i
             End Using
         Catch ex As Exception
             pErr = ex.Message

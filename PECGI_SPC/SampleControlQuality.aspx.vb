@@ -235,7 +235,7 @@ Public Class SampleControlQuality
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         GlobalPrm = Request.QueryString("FactoryCode") & ""
         sGlobal.getMenu("B060")
-        Master.SiteTitle = sGlobal.menuName
+        Master.SiteTitle = sGlobal.idMenu & " - " & sGlobal.menuName
         pUser = Session("user") & ""
         AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "B060")
         gridX.SettingsDataSecurity.AllowInsert = AuthUpdate
@@ -466,6 +466,20 @@ Public Class SampleControlQuality
         End If
     End Sub
 
+    Private Sub LoadHistogram(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, ProdDate2 As String)
+        With Histogram
+            Dim ht As List(Of clsHistogram) = clsXRChartDB.GetHistogram(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, ProdDate2)
+            .DataSource = ht
+            .DataBind()
+            Dim diagram As XYDiagram = CType(.Diagram, XYDiagram)
+            If ht.Count > 0 Then
+                diagram.AxisX.WholeRange.MaxValue = ht(0).MaxValue + 1
+                diagram.AxisX.NumericScaleOptions.GridAlignment = NumericGridAlignment.Ones
+            End If
+
+        End With
+    End Sub
+
     Private Sub LoadChartX(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, ProdDate2 As String)
         Dim xr As List(Of clsXRChart) = clsXRChartDB.GetChartXRMonthly(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, ProdDate2)
         With chartX
@@ -483,8 +497,8 @@ Public Class SampleControlQuality
             diagram.AxisY.GridLines.MinorVisible = False
 
             Dim ChartType As String = clsXRChartDB.GetChartType(FactoryCode, ItemTypeCode, Line, ItemCheckCode)
-            If ChartType = "1" Then
-                .Titles(0).Text = "Chart X"
+            If ChartType = "1" Or ChartType = "2" Then
+                .Titles(0).Text = "X Bar Control Chart"
             Else
                 .Titles(0).Text = "Graph Monitoring"
             End If
@@ -543,11 +557,11 @@ Public Class SampleControlQuality
 
             End If
             .DataBind()
-            Dim GridWidth As Integer = xr.Count * 12
-            If GridWidth < 500 Then
-                GridWidth = 500
+            Dim ChartWidth As Integer = xr.Count * 12
+            If ChartWidth < 400 Then
+                ChartWidth = 400
             End If
-            .Width = GridWidth
+            '.Width = 
         End With
     End Sub
 
@@ -608,5 +622,16 @@ Public Class SampleControlQuality
 
     Private Sub btnExcel_Click(sender As Object, e As EventArgs) Handles btnExcel.Click
         DownloadExcel()
+    End Sub
+
+    Private Sub Histogram_CustomCallback(sender As Object, e As CustomCallbackEventArgs) Handles Histogram.CustomCallback
+        Dim Prm As String = e.Parameter
+        Dim FactoryCode As String = Split(Prm, "|")(0)
+        Dim ItemTypeCode As String = Split(Prm, "|")(1)
+        Dim LineCode As String = Split(Prm, "|")(2)
+        Dim ItemCheckCode As String = Split(Prm, "|")(3)
+        Dim ProdDate As String = Split(Prm, "|")(4)
+        Dim ProdDate2 As String = Split(Prm, "|")(5)
+        LoadHistogram(FactoryCode, ItemTypeCode, LineCode, ItemCheckCode, ProdDate, ProdDate2)
     End Sub
 End Class

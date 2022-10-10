@@ -93,7 +93,7 @@ Public Class ProdSampleVerification
             Response.Redirect("~/Main.aspx")
         End If
         sGlobal.getMenu(MenuID)
-        Master.SiteTitle = sGlobal.menuName
+        Master.SiteTitle = MenuID & " - " & sGlobal.menuName
 
         AuthUpdate = sGlobal.Auth_UserUpdate(pUser, MenuID)
         If AuthUpdate = False Then

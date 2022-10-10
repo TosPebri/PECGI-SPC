@@ -13,6 +13,7 @@ Public Class UserSetup
 
 #Region "Declaration"
     Dim pUser As String = ""
+    Dim MenuID As String = ""
 
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
@@ -46,17 +47,18 @@ Public Class UserSetup
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        sGlobal.getMenu("Z010")
-        Master.SiteTitle = sGlobal.menuName
+        MenuID = "Z010"
+        sGlobal.getMenu(MenuID)
+        Master.SiteTitle = MenuID & " - " & sGlobal.menuName
         show_error(MsgTypeEnum.Info, "", 0)
 
         pUser = Session("user")
-        AuthAccess = sGlobal.Auth_UserAccess(pUser, "Z010")
+        AuthAccess = sGlobal.Auth_UserAccess(pUser, MenuID)
         If AuthAccess = False Then
             Response.Redirect("~/Main.aspx")
         End If
 
-        AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "Z010")
+        AuthUpdate = sGlobal.Auth_UserUpdate(pUser, MenuID)
         If AuthUpdate = False Then
             Dim commandColumn = TryCast(Grid.Columns(0), GridViewCommandColumn)
             commandColumn.ShowEditButton = False

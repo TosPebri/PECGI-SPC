@@ -17,7 +17,40 @@ Public Class clsXRChart
     Public Property RuleColor As String
 End Class
 
+Public Class clsHistogram
+    Public Property Range As String
+    Public Property Value As Double
+    Public Property MaxValue As Double
+End Class
+
 Public Class clsXRChartDB
+    Public Shared Function GetHistogram(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate As String, ProdDate2 As String) As List(Of clsHistogram)
+        Using Cn As New SqlConnection(Sconn.Stringkoneksi)
+            Cn.Open()
+            Dim cmd As New SqlCommand("sp_SPC_Histogram", Cn)
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
+            cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
+            cmd.Parameters.AddWithValue("Line", Line)
+            cmd.Parameters.AddWithValue("ItemCheckCode", ItemCheckCode)
+            cmd.Parameters.AddWithValue("ProdDate", ProdDate)
+            cmd.Parameters.AddWithValue("ProdDate2", ProdDate2)
+
+            Dim da As New SqlDataAdapter(cmd)
+            Dim dt As New DataTable
+            da.Fill(dt)
+            Dim HtList As New List(Of clsHistogram)
+            For i = 0 To dt.Rows.Count - 1
+                Dim ht As New clsHistogram
+                ht.Range = dt.Rows(i)("ValueRange") & ""
+                ht.Value = dt.Rows(i)("ValueCount")
+                ht.MaxValue = dt.Rows(i)("MaxValue")
+                HtList.Add(ht)
+            Next
+            Return HtList
+        End Using
+    End Function
+
     Public Shared Function GetChartXR(FactoryCode As String, ItemTypeCode As String, Line As String, ItemCheckCode As String, ProdDate2 As String) As List(Of clsXRChart)
         Using Cn As New SqlConnection(Sconn.Stringkoneksi)
             Cn.Open()
@@ -107,9 +140,13 @@ Public Class clsXRChartDB
                         value = .Item("Value")
                         xr.Value = value
                     End If
-                    value = .Item("AvgValue")
-                    xr.AvgValue = value
-                    xr.RValue = .Item("RValue")
+                    If Not IsDBNull(.Item("AvgValue")) Then
+                        value = .Item("AvgValue")
+                        xr.AvgValue = value
+                    End If
+                    If Not IsDBNull(.Item("RValue")) Then
+                        xr.RValue = .Item("RValue")
+                    End If
                     If Not IsDBNull(.Item("RuleValue")) Then
                         value = .Item("RuleValue")
                         xr.RuleValue = value

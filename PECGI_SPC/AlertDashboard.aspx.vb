@@ -423,8 +423,8 @@ Public Class AlertDashboard
                 If msg <> "" Then msg = msg & ";"
                 msg = msg & dt.Rows(i)("Label").ToString
 
-                If msg <> "" Then msg = msg & "|"
-                msg = msg & dt.Rows(i)("Link").ToString
+                If msg <> "" Then msg = msg & "||"
+                msg = msg & dt.Rows(i)("Link").ToString & "||"
             Next
         Else
             msg = ""
@@ -445,8 +445,8 @@ Public Class AlertDashboard
                 If msg <> "" Then msg = msg & ";"
                 msg = msg & dt.Rows(i)("Label").ToString
 
-                If msg <> "" Then msg = msg & "|"
-                msg = msg & dt.Rows(i)("Link").ToString
+                If msg <> "" Then msg = msg & "||"
+                msg = msg & dt.Rows(i)("Link").ToString & "||"
             Next
         Else
             msg = ""
@@ -467,8 +467,8 @@ Public Class AlertDashboard
                 If msg <> "" Then msg = msg & ";"
                 msg = msg & dt.Rows(i)("Label").ToString
 
-                If msg <> "" Then msg = msg & "|"
-                msg = msg & dt.Rows(i)("Link").ToString
+                If msg <> "" Then msg = msg & "||"
+                msg = msg & dt.Rows(i)("Link").ToString & "||"
             Next
         Else
             msg = ""

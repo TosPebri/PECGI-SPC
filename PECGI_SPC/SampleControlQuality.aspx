@@ -200,6 +200,7 @@
                 toastr.options.onclick = null;
             }
             chartX.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + dtTo.GetText());
+            Histogram.PerformCallback(cboFactory.GetValue() + '|' + cboType.GetValue() + '|' + cboLine.GetValue() + '|' + cboItemCheck.GetValue() + '|' + dtDate.GetText() + '|' + dtTo.GetText());
         }
     </script>
 </asp:Content>
@@ -506,7 +507,7 @@
 
 <div style="width:100%; overflow-x: auto; border:1px solid black">
 <dx:WebChartControl ID="chartX" runat="server" ClientInstanceName="chartX"
-        Height="434px" Width="800px" CrosshairEnabled="True" SeriesDataMember="Description">
+        Height="434px" Width="400px" CrosshairEnabled="True" SeriesDataMember="Description">
         <seriestemplate SeriesDataMember="Description" ArgumentDataMember="Seq" ValueDataMembersSerializable="Value">
             <viewserializable>
                 <cc1:PointSeriesView>                    
@@ -543,6 +544,7 @@
                     <Label Alignment="Center">
                         <ResolveOverlappingOptions AllowHide="False" />
                     </Label>
+                    <WholeRange AutoSideMargins="False" EndSideMargin="-0.5" StartSideMargin="-0.5" />
                     <GridLines MinorVisible="True">
                     </GridLines>
                     <NumericScaleOptions AutoGrid="False" />
@@ -569,4 +571,36 @@
     </dx:WebChartControl>
 </div>
 
+<div style="width:100%; overflow-x: auto; border:1px solid black">
+    <dx:WebChartControl ID="Histogram" runat="server" CrosshairEnabled="True" Height="350px" Width="1080px" ClientInstanceName="Histogram">
+
+        <Titles>
+            <cc1:ChartTitle Text="Histogram" />
+        </Titles>
+        <DiagramSerializable>
+<cc1:XYDiagram Rotated="True">
+<AxisX VisibleInPanesSerializable="-1" Visibility="True">
+    <NumericScaleOptions AutoGrid="False" ScaleMode="Automatic" />
+    </AxisX>
+
+<AxisY VisibleInPanesSerializable="-1" MinorCount="1" Visibility="True">
+    <Tickmarks MinorLength="1" MinorVisible="False" />
+    <WholeRange Auto="False" AutoSideMargins="False" EndSideMargin="0" MaxValueSerializable="10" MinValueSerializable="0" StartSideMargin="0" />
+    </AxisY>
+</cc1:XYDiagram>
+</DiagramSerializable>
+
+        <Legend Visibility="False"></Legend>
+
+        <SeriesSerializable>
+            <cc1:Series ArgumentDataMember="Range" Name="Series 4" ValueDataMembersSerializable="Value" ShowInLegend="False">
+                <ViewSerializable>
+                    <cc1:SideBySideBarSeriesView BarWidth="0.5" ColorEach="True">
+                        <Border Color="0, 0, 0" Visibility="True" />
+                    </cc1:SideBySideBarSeriesView>
+                </ViewSerializable>
+            </cc1:Series>
+        </SeriesSerializable>
+    </dx:WebChartControl>
+</div>
 </asp:Content>

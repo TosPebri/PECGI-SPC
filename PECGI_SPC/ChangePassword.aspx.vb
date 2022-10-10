@@ -11,6 +11,8 @@ Public Class ChangePassword
 #Region "DECLARATION"
     Public lb_AuthUpdate As Boolean = False
     Dim UserID As String = ""
+    Dim MenuID As String = ""
+
     Dim clsDESEncryption As New clsDESEncryption("TOS")
 
     Public AuthUpdate As Boolean = False
@@ -21,6 +23,7 @@ Public Class ChangePassword
 #Region "PROCEDURE"
     Private Function ValidasiInput() As Boolean
         Dim UserID As String = Session("user").ToString.Trim
+        Dim MenuID As String = ""
 
         Dim cUser As clsUserSetup = clsUserSetupDB.GetData(UserID)
         If txtCurrentPassword.Text <> cUser.Password Then
@@ -47,20 +50,20 @@ Public Class ChangePassword
 
 #Region "FORM EVENTS"
     Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
-
-        sGlobal.getMenu("Z030")
-        Master.SiteTitle = sGlobal.menuName
+        MenuID = "Z030"
+        sGlobal.getMenu(MenuID)
+        Master.SiteTitle = MenuID & " - " & sGlobal.menuName
 
         If Session("user") IsNot Nothing Then
             UserID = Session("user")
         End If
 
-        AuthAccess = sGlobal.Auth_UserAccess(UserID, "Z030")
+        AuthAccess = sGlobal.Auth_UserAccess(UserID, MenuID)
         If AuthAccess = False Then
             Response.Redirect("~/Main.aspx")
         End If
 
-        AuthUpdate = sGlobal.Auth_UserUpdate(UserID, "Z030")
+        AuthUpdate = sGlobal.Auth_UserUpdate(UserID, MenuID)
         If AuthUpdate = False Then
             btnSubmit.Enabled = False
         End If

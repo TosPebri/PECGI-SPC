@@ -354,7 +354,7 @@ Public Class SampleControlQuality
                 Dim colTime As New GridViewDataTextColumn
                 colTime.Caption = dtDay.Rows(iDay)("RegisterDate")
                 colTime.FieldName = dtDay.Rows(iDay)("ColName")
-                colTime.Width = 60
+                colTime.Width = 90
                 colTime.CellStyle.HorizontalAlign = HorizontalAlign.Center
                 BandShift.Columns.Add(colTime)
 
@@ -541,12 +541,29 @@ Public Class SampleControlQuality
                 diagram.AxisY.ConstantLines.Add(USL)
                 USL.AxisValue = Setup.SpecUSL
 
-                diagram.AxisY.WholeRange.MinValue = Setup.SpecLSL
-                diagram.AxisY.WholeRange.MaxValue = Setup.SpecUSL
-                diagram.AxisY.WholeRange.EndSideMargin = Setup.SpecUSL + 1
+                Dim MinValue As Double, MaxValue As Double
+                If xr.Count > 0 Then
+                    MinValue = xr(0).MinValue
+                    MaxValue = xr(0).MaxValue
+                End If
+                If Setup.SpecLSL < MinValue Then
+                    MinValue = Setup.SpecLSL
+                End If
+                If Setup.SpecUSL > MaxValue Then
+                    MaxValue = Setup.SpecUSL
+                End If
 
-                diagram.AxisY.VisualRange.MinValue = Setup.SpecLSL
-                diagram.AxisY.VisualRange.MaxValue = Setup.SpecUSL
+                diagram.AxisY.WholeRange.MinValue = MinValue
+                diagram.AxisY.WholeRange.MaxValue = MaxValue
+                diagram.AxisY.WholeRange.EndSideMargin = 0.015
+
+                diagram.AxisY.VisualRange.MinValue = MinValue
+                diagram.AxisY.VisualRange.MaxValue = MaxValue
+                diagram.AxisY.VisualRange.EndSideMargin = 0.015
+
+                Dim diff As Double = MaxValue - MinValue
+                Dim gridAlignment As Double = Math.Round(diff / 15, 3)
+                diagram.AxisY.NumericScaleOptions.CustomGridAlignment = gridAlignment
 
                 CType(.Diagram, XYDiagram).SecondaryAxesY.Clear()
                 Dim myAxisY As New SecondaryAxisY("my Y-Axis")
@@ -554,7 +571,6 @@ Public Class SampleControlQuality
                 CType(.Diagram, XYDiagram).SecondaryAxesY.Add(myAxisY)
                 CType(.Series("Rule").View, XYDiagramSeriesViewBase).AxisY = myAxisY
                 CType(.Series("RuleYellow").View, XYDiagramSeriesViewBase).AxisY = myAxisY
-
             End If
             .DataBind()
             Dim ChartWidth As Integer = xr.Count * 12

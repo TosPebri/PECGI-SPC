@@ -62,7 +62,7 @@ Public Class ProductionSampleVerificationList
         MenuID = "B030"
 
         sGlobal.getMenu(MenuID)
-        Master.SiteTitle = sGlobal.menuName
+        Master.SiteTitle = MenuID & " - " & sGlobal.menuName
         show_error(MsgTypeEnum.Info, "", 0)
 
         AuthAccess = sGlobal.Auth_UserAccess(pUser, MenuID)

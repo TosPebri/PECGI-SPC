@@ -13,6 +13,7 @@ Public Class UserPrivilege
 #Region "Declaration"
     Dim RegisterUser As String = ""
     Dim UserID As String = ""
+    Dim MenuID As String = ""
 
     Public AuthUpdate As Boolean = False
     Public AuthDelete As Boolean = False
@@ -74,19 +75,20 @@ Public Class UserPrivilege
 
 #Region "Initialization"
     Private Sub Page_Init(ByVal sender As Object, ByVale As System.EventArgs) Handles Me.Init
-        sGlobal.getMenu("Z020")
-        Master.SiteTitle = sGlobal.menuName
+        MenuID = "Z020"
+        sGlobal.getMenu(MenuID)
+        Master.SiteTitle = MenuID & " - " & sGlobal.menuName
         show_error(MsgTypeEnum.Info, "", 0)
         RegisterUser = Session("user")
 
-        AuthAccess = sGlobal.Auth_UserAccess(RegisterUser, "Z020")
+        AuthAccess = sGlobal.Auth_UserAccess(RegisterUser, MenuID)
         If AuthAccess = False Then
             If Not Page.IsPostBack Then
                 Response.Redirect("~/Main.aspx")
             End If
         End If
 
-        AuthUpdate = sGlobal.Auth_UserUpdate(RegisterUser, "Z020")
+        AuthUpdate = sGlobal.Auth_UserUpdate(RegisterUser, MenuID)
         If AuthUpdate = False Then
             btnSave.Enabled = False
         End If

@@ -139,12 +139,10 @@ Public Class ProdSampleInput
         grid.JSProperties("cp_val") = pVal
     End Sub
 
-
-
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         GlobalPrm = Request.QueryString("FactoryCode") & ""
         sGlobal.getMenu("B020 ")
-        Master.SiteTitle = sGlobal.menuName
+        Master.SiteTitle = sGlobal.idMenu & " - " & sGlobal.menuName
         pUser = Session("user") & ""
         AuthUpdate = sGlobal.Auth_UserUpdate(pUser, "B020 ")
         grid.SettingsDataSecurity.AllowInsert = True
@@ -334,11 +332,15 @@ Public Class ProdSampleInput
                 End If
             End With
         End If
-        Dim LastVerification As Integer = clsSPCResultDB.GetLastVerification(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Sequence)
+        Dim dtVer As DataTable = clsSPCResultDB.GetLastVerification(FactoryCode, ItemTypeCode, Line, ItemCheckCode, ProdDate, Sequence)
+        Dim LastVerification As Integer = dtVer.Rows(0)(0)
         grid.SettingsDataSecurity.AllowInsert = LastVerification = 1 And Not Verified And AuthUpdate
         grid.SettingsDataSecurity.AllowEdit = LastVerification = 1 And Not Verified And AuthUpdate
         If LastVerification = 0 Then
-            show_error(MsgTypeEnum.ErrorMsg, "Previous sequence is not verified yet", 1)
+            ProdDate = Format(dtVer.Rows(0)(1), "dd MMM yyyy")
+            Dim ShiftCode As String = dtVer.Rows(0)(2) & ""
+            Sequence = dtVer.Rows(0)(3)
+            show_error(MsgTypeEnum.Warning, "Date " & ProdDate & ", Shift " & ShiftCode & ", Sequence " & Sequence & " is not yet verified", 1)
         End If
     End Sub
 

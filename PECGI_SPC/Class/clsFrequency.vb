@@ -67,11 +67,20 @@ Public Class clsFrequencyDB
             '        "where T.FactoryCode = @FactoryCode and T.ItemTypeCode = @ItemTypeCode and T.LineCode = @LineCode and T.ItemCheckCode = @ItemCheckCode and R.ShiftCode = @ShiftCode and R.ProdDate = @ProdDate " & vbCrLf &
             '        "and T.ActiveStatus = 1 and F.ActiveStatus = 1  " & vbCrLf
             'End If
-            q = "select distinct F.SequenceNo, convert(char(5), StartTime, 114) StartTime " & vbCrLf &
+            If ProdDate = "" Then
+                q = "select distinct F.SequenceNo, convert(char(5), StartTime, 114) StartTime " & vbCrLf &
                 "From spc_ItemCheckByType T inner Join spc_MS_Frequency F on T.FrequencyCode = F.FrequencyCode " & vbCrLf &
                 "where T.FactoryCode = @FactoryCode and T.ItemTypeCode = @ItemTypeCode and T.LineCode = @LineCode and T.ItemCheckCode = @ItemCheckCode " & vbCrLf &
                 "and T.ActiveStatus = 1 and ShiftCode = @ShiftCode " & vbCrLf
+            Else
+                q = "select distinct R.SequenceNo, convert(char(5), R.RegisterDate, 114) StartTime from spc_Result R " & vbCrLf &
+                    "inner join uf_SPCResult_Detail(0) D on R.SPCResultID = D.SPCResultID " & vbCrLf &
+                    "where R.ProdDate = @ProdDate and R.FactoryCode = @FactoryCode and R.ItemTypeCode = @ItemTypeCode and R.LineCode = @LineCode and R.ItemCheckCode = @ItemCheckCode and ShiftCode = @ShiftCode " & vbCrLf
+            End If
             Dim cmd As New SqlCommand(q, Cn)
+            If ProdDate <> "" Then
+                cmd.Parameters.AddWithValue("ProdDate", ProdDate)
+            End If
             cmd.Parameters.AddWithValue("FactoryCode", FactoryCode)
             cmd.Parameters.AddWithValue("ItemTypeCode", ItemTypeCode)
             cmd.Parameters.AddWithValue("LineCode", LineCode)

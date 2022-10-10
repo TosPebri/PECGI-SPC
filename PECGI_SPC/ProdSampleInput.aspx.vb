@@ -171,7 +171,7 @@ Public Class ProdSampleInput
                     Dim User As clsUserSetup = clsUserSetupDB.GetData(pUser)
                     If User IsNot Nothing Then
                         cboFactory.Value = User.FactoryCode
-                        cboType.DataSource = clsItemTypeDB.GetList(cboFactory.Value)
+                        cboType.DataSource = clsItemTypeDB.GetList(cboFactory.Value, pUser)
                         cboType.DataBind()
                     End If
                 End If
@@ -185,7 +185,7 @@ Public Class ProdSampleInput
         dtDate.Value = CDate(ProdDate)
         cboFactory.Value = FactoryCode
 
-        cboType.DataSource = clsItemTypeDB.GetList(cboFactory.Value)
+        cboType.DataSource = clsItemTypeDB.GetList(cboFactory.Value, pUser)
         cboType.DataBind()
         cboType.Value = ItemTypeCode
 
@@ -431,7 +431,8 @@ Public Class ProdSampleInput
 
     Private Sub cboType_Callback(sender As Object, e As CallbackEventArgsBase) Handles cboType.Callback
         Dim FactoryCode As String = Split(e.Parameter, "|")(0)
-        cboType.DataSource = clsItemTypeDB.GetList(FactoryCode)
+        Dim UserID As String = Session("user")
+        cboType.DataSource = clsItemTypeDB.GetList(FactoryCode, UserID)
         cboType.DataBind()
     End Sub
 
